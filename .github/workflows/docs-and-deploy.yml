@@ -18,6 +18,7 @@ jobs:
           module-name: KukaiCoreSwift
           format: "html"
           output: "Documentation"
+          base-url: "https://kukai.app/kukai-core-swift/"
       - name: Update Permissions
         run: 'sudo chown --recursive $USER Documentation'
       - name: Deploy to GitHub Pages
