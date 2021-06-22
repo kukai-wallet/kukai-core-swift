@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
+        with:
+          ref: main
       - name: Swift Doc
         uses: SwiftDocOrg/swift-doc@1.0.0-rc.1
         with:
