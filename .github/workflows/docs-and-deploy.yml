@@ -18,6 +18,8 @@ jobs:
           module-name: KukaiCoreSwift
           format: "html"
           output: "Documentation"
+      - name: Update Permissions
+        run: 'sudo chown --recursive $USER Documentation'
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
