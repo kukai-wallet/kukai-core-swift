@@ -1,0 +1,68 @@
+{
+    "contents": [
+        {
+            "kind": "reveal",
+            "source": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
+            "fee": "1410",
+            "counter": "431675",
+            "gas_limit": "10500",
+            "storage_limit": "257",
+            "public_key": "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E",
+            "metadata": {
+                "balance_updates": [
+                    {
+                        "kind": "contract",
+                        "contract": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
+                        "change": "-1410",
+                        "origin": "block"
+                    },
+                    {
+                        "kind": "freezer",
+                        "category": "fees",
+                        "delegate": "tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU",
+                        "cycle": 131,
+                        "change": "1410",
+                        "origin": "block"
+                    }
+                ],
+                "operation_result": {
+                    "status": "applied",
+                    "consumed_gas": "1000",
+                    "consumed_milligas": "1000000"
+                }
+            }
+        },
+        {
+            "kind": "transaction",
+            "source": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
+            "fee": "0",
+            "counter": "431676",
+            "gas_limit": "1040000",
+            "storage_limit": "60000",
+            "amount": "1000000",
+            "destination": "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG",
+            "metadata": {
+                "balance_updates": [],
+                "operation_result": {
+                    "status": "applied",
+                    "balance_updates": [
+                        {
+                            "kind": "contract",
+                            "contract": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
+                            "change": "-1000000",
+                            "origin": "block"
+                        },
+                        {
+                            "kind": "contract",
+                            "contract": "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG",
+                            "change": "1000000",
+                            "origin": "block"
+                        }
+                    ],
+                    "consumed_gas": "1427",
+                    "consumed_milligas": "1427000"
+                }
+            }
+        }
+    ]
+}

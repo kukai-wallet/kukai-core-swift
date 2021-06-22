@@ -1,0 +1,16 @@
+{
+    "version": {
+        "major": 9,
+        "minor": 1,
+        "additional_info": "release"
+    },
+    "network_version": {
+        "chain_name": "TEZOS_FLORENCENOBANET_2021-03-04T20:00:00Z",
+        "distributed_db_version": 1,
+        "p2p_version": 1
+    },
+    "commit_info": {
+        "commit_hash": "31e6641db444bdb5d3fb9f232282b429b8c3ea7a",
+        "commit_date": "2021-04-30 16:58:29 +0200"
+    }
+}

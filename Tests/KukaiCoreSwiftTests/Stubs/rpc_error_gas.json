@@ -1,0 +1,44 @@
+[
+    {
+        "contents": [
+            {
+                "kind": "transaction",
+                "source": "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG",
+                "fee": "306",
+                "counter": "143231",
+                "gas_limit": "500",
+                "storage_limit": "0",
+                "amount": "10000000000",
+                "destination": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
+                "metadata": {
+                    "balance_updates": [
+                        {
+                            "kind": "contract",
+                            "contract": "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG",
+                            "change": "-306",
+                            "origin": "block"
+                        },
+                        {
+                            "kind": "freezer",
+                            "category": "fees",
+                            "delegate": "tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU",
+                            "cycle": 132,
+                            "change": "306",
+                            "origin": "block"
+                        }
+                    ],
+                    "operation_result": {
+                        "status": "failed",
+                        "errors": [
+                            {
+                                "kind": "temporary",
+                                "id": "proto.009-PsFLoren.gas_exhausted.operation"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "signature": "edsigtg1uhy3Uhkv4fsGkHUiMbneoHAmCTCZFePVEfzzujVe1eTkqbbjbLNPb7qUsytgvmhuvcs2ZdrFJhqqt6mxdFV84va4kSu"
+    }
+]
