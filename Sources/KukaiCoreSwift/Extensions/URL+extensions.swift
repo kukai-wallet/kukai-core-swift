@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Extensions to make adding query items easier
 extension URL {
 	
 	mutating func appendQueryItem(name: String, value: String?) {

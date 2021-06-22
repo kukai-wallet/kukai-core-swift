@@ -9,8 +9,11 @@
 import Foundation
 import os.log
 
+
+/// TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, and transactions
 public class TzKTClient {
 	
+	/// Unique Errors that TzKTClient can throw
 	public enum TzKTServiceError: Error {
 		case invalidURL
 		case parseError(String)
@@ -31,6 +34,18 @@ public class TzKTClient {
 	private var tempTransactions: [TzKTTransaction] = []
 	private var dispatchGroupTransactions = DispatchGroup()
 	
+	
+	
+	
+	
+	// MARK: - Init
+	
+	/**
+	Init a `TzKTClient` with a `NetworkService` and a `TezosNodeClientConfig` and a `BetterCallDevClient`.
+	- parameter networkService: `NetworkService` used to manage network communication.
+	- parameter config: `TezosNodeClientConfig` used to apss in settings.
+	- parameter betterCallDevClient: `BetterCallDevClient` used to fetch more detailed errors about operation failures involving smart contracts.
+	*/
 	public init(networkService: NetworkService, config: TezosNodeClientConfig, betterCallDevClient: BetterCallDevClient) {
 		self.networkService = networkService
 		self.config = config
@@ -39,8 +54,15 @@ public class TzKTClient {
 	
 	
 	
+	
+	
 	// MARK: - Block checker
 	
+	/**
+	Query details about the given operation
+	- parameter byHash: The operation hash to query.
+	- parameter completion: A completion colsure called when the request is done.
+	*/
 	public func getOperation(byHash hash: String, completion: @escaping (([TzKTOperation]?, ErrorResponse?) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/operations/" + hash)
@@ -57,6 +79,11 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	Poll the TzKT APi until a record of the given operation is found
+	- parameter ofHash: The operation hash to query.
+	- parameter completion: A completion colsure called when the API returns a valid operation response, or an error indicating a problem with the service.
+	*/
 	public func waitForInjection(ofHash hash: String, completion: @escaping ((Bool, Error?, ErrorResponse?) -> Void)) {
 		continueSearching = true
 		recurriselyCheckForOperation(byHash: hash) { (operations, serviceError, operationError) in
@@ -75,6 +102,9 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	Cancel the polling operation from `waitForInjection`
+	*/
 	public func cancelWait() {
 		// Cancelling the dataTask has some strange results on iOS 12 when mocking. Cancelling the work item instead seems to work more reliably
 		os_log(.debug, log: .kukaiCoreSwift, "Cancelling recurrsive search for Block")
@@ -84,12 +114,23 @@ public class TzKTClient {
 	
 	
 	
+	
+	
 	// MARK: - Transaction History
 	
+	/**
+	Clear the in RAM copy of transaction history
+	*/
 	public func clearHistory() {
 		transactionHistory = [:]
 	}
 	
+	/**
+	Get the current in RAM transation history, with optional filters
+	- parameter filterByToken: only retuns transactions where the primary or secondary token is of this type.
+	- parameter orFilterByAddress: only retuns transactions where the source or destination address matches this string
+	- returns transactions grouped by day in a dictionary with a key of `TimeInterval`.
+	*/
 	public func currentTransactionHistory(filterByToken: Token?, orFilterByAddress: String?) -> [TimeInterval: [TzKTTransaction]] {
 		
 		// Anything involving the given token
@@ -114,6 +155,12 @@ public class TzKTClient {
 		return transactionHistory
 	}
 	
+	/**
+	Query the lastest transaction history and store in RAM. Get access to the data via `currentTransactionHistory(...)`
+	- parameter forAddress: the wallet address to query the history for.
+	- parameter andSupportedTokens: a list of known tokens, used to add more detail to the transaction objects.
+	- parameter completion: a closure indicating the request and processing has finished.
+	*/
 	public func refreshTransactionHistory(forAddress address: String, andSupportedTokens: [Token], completion: @escaping (() -> Void)) {
 		self.currentWalletAddress = address
 		self.supportedTokens = andSupportedTokens
@@ -155,6 +202,9 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	Private helper function to seperately query the FA token recieve events
+	*/
 	private func queryNativeTokenReceives(forAddress address: String, lastTransaction: TzKTTransaction?) {
 		// Fetch Native Token Receives using a separate request
 		var url = config.tzktURL
@@ -183,6 +233,9 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	Private helper function to parse and process the JSON data into more useful objects
+	*/
 	private func parseTransactions(_ transactions: [TzKTTransaction]?) {
 		guard let transactions = transactions else {
 			return
@@ -274,8 +327,13 @@ public class TzKTClient {
 	
 	
 	
+	
+	
 	// MARK: - Helpers
 	
+	/**
+	Private helper function to wrap up the recurrsive check used to poll TzKT for operation injection status
+	*/
 	private func recurriselyCheckForOperation(byHash hash: String, completion: @escaping (([TzKTOperation]?, Error?, ErrorResponse?) -> Void)) {
 		workItem = DispatchWorkItem(block: { [weak self] in
 			os_log(.debug, log: .kukaiCoreSwift, "Searching for block for operation hash: %@", hash)

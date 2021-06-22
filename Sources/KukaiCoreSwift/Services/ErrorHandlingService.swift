@@ -11,6 +11,7 @@ import os.log
 
 // MARK: - Types
 
+/// High level error types, used to quickly categoise Tezos or system errors, in order to display error messages to user
 public enum ErrorResponseType: String, Codable {
 	case unknownError
 	case unknownWallet
@@ -42,16 +43,36 @@ public enum ErrorResponseType: String, Codable {
 	case dexterNotEnoughTez
 }
 
+
+
+/**
+This library deals with Errors in many forms that are cumbersome to handle in client applications if passed directly.
+This object seeks to wrap up all the necessary data into a single source of truth and provide access to all the necessary pieces of information
+*/
 public struct ErrorResponse: CustomStringConvertible, Error {
+	
+	/// The requested URL that returned the error
 	public var requestURL: URL?
+	
+	/// The JSON that was sent as part of the request
 	public var requestJSON: String?
+	
+	/// The raw JSON that was returned
 	public var responseJSON: String?
+	
+	/// The HTTP status code returned
 	public var httpStatusCode: Int?
+	
+	/// The raw Swift error object returned (e.g. to indicate the internet connection is offline, codable failed etc.)
 	public var errorObject: Error?
+	
+	/// A meaningful string containing error information (e.g. in some cases a full string version of a swift error, as opposed to `Error.localizedDescription` which usually contains nothing useful)
 	public var errorString: String?
 	
+	/// An enum to help differeniate high level error catgeories, to quickly and easily display generic error messages to users
 	public var errorType: ErrorResponseType
 	
+	/// Returns detailed error info inside a string, denoting whether it was a network related error, or an internal application error (e.g. couldn't find a file).
 	public var description: String {
 		get {
 			if let requestURL = requestURL {
@@ -62,6 +83,15 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 		}
 	}
 	
+	
+	
+	
+	
+	// MARK: - Init
+	
+	/**
+	Create an instance of `ErrorResponse` with the ability to set every property
+	*/
 	public init(requestURL: URL?, requestJSON: String?, responseJSON: String?, httpStatusCode: Int?, errorObject: Error?, errorString: String?, errorType: ErrorResponseType) {
 		self.requestURL = requestURL
 		self.requestJSON = requestJSON
@@ -72,22 +102,48 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 		self.errorType = errorType
 	}
 	
+	/**
+	Helper to quickly create an instance of `ErrorResponse` with just a string and a type
+	- parameter string: useful error information as a string
+	- parameter errorType: enum indicating the type of error
+	- returns `ErrorResponse`
+	*/
 	public static func error(string: String, errorType: ErrorResponseType) -> ErrorResponse {
 		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: string, errorType: errorType)
 	}
 	
+	/**
+	Helper to quickly create an instance of `ErrorResponse` indicating an internal application error (e.g. couldn't find file, invalid URL etc.)
+	- parameter error: the error object indicating the issue
+	- returns `ErrorResponse`
+	*/
 	public static func internalApplicationError(error: Error) -> ErrorResponse {
 		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: error, errorString: errorToString(error), errorType: .internalApplicationError)
 	}
 	
+	/**
+	Helper to quickly create an instance of `ErrorResponse` indicating an unknown parsing error occured. (e.g. invalid JSON, wrong model, missing data etc)
+	- parameter error: the error object thrown by JSONCoder or JSONSerialisation
+	- returns `ErrorResponse`
+	*/
 	public static func unknownParseError(error: Error) -> ErrorResponse {
 		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: errorToString(error), errorType: .unknownParseError)
 	}
 	
+	/**
+	Helper to quickly create an instance of `ErrorResponse` to use as a fallback for cases wihere the issue is a rare occurence that doesn't fit into one of the main types
+	- parameter error: the error object thrown by JSONCoder or JSONSerialisation
+	- returns `ErrorResponse`
+	*/
 	public static func unknownError() -> ErrorResponse {
 		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: nil, errorType: .unknownError)
 	}
 	
+	/**
+	Certian versions of iOS have issues calling  "\(error)". Return that if possible, or anything else avilable if not
+	- parameter error: the error object to convert
+	- returns full error object as a string
+	*/
 	public static func errorToString(_ error: Error?) -> String {
 		guard let err = error else {
 			return ""
@@ -103,14 +159,20 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 
 
 
+
+
 // MARK: - Service class
 
+/// A class used to process errors into more readable format, and optionally notifiy a global error handler of every error occuring
 public class ErrorHandlingService {
 	
 	
 	// MARK: - Properties
 	
+	/// Shared instance so that it can hold onto an event closure
 	public static let shared = ErrorHandlingService()
+	
+	/// Called everytime an error is parsed. Extremely useful to track / log errors globally, in order to run logic or record to external service
 	public var errorEventClosure: ((ErrorResponse) -> Void)? = nil
 	
 	private init() {}

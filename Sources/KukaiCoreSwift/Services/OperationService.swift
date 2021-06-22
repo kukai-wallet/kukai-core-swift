@@ -9,7 +9,7 @@
 import Foundation
 import os.log
 
-
+/// Several classes need to use pieces of the   forge-sign-parse-preapply-inject   flow. This class abstracts those functions away so that it can be shared throughout the library.
 public class OperationService {
 	
 	/// Errors that the OperationService is capable of returning

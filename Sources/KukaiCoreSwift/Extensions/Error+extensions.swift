@@ -8,19 +8,25 @@
 
 import Foundation
 
+/// Exposing underlying NSError properties not accessible to Swift Error without casting
 extension Error {
+	
+	/// Access NSError.code
 	var code: Int {
 		return (self as NSError).code
 	}
 	
+	/// Access NSError.domain
 	var domain: String {
 		return (self as NSError).domain
 	}
 	
+	/// Access NSError.userInfo
 	var userInfo: [String: Any] {
 		return (self as NSError).userInfo
 	}
 	
+	/// Access NSError.userInfo[NSUnderlyingErrorKey] and cast to swift Error
 	var underlyingError: NSError? {
 		return (self as NSError).userInfo[NSUnderlyingErrorKey] as? NSError
 	}
