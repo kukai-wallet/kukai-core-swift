@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - BetterCallDevClient</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#bettercalldevclient.init(networkservice:config:)">init(network​Service:​config:​)</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#bettercalldevclient.getmoredetailederror(byhash:completion:)">get​More​Detailed​Error(by​Hash:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.account(foraddress:completion:)">account(for​Address:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.accounttokencount(foraddress:completion:)">account​Token​Count(for​Address:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.tokenbalances(foraddress:offset:completion:)">token​Balances(for​Address:​offset:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.tokenmetadata(fortokenaddress:completion:)">token​Metadata(for​Token​Address:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.contractmetdata(forcontractaddress:completion:)">contract​Metdata(for​Contract​Address:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.cachedaccountinfo()">cached​Account​Info()</a></li><li class="function"><a href="#bettercalldevclient.fetchaccountinfo(foraddress:completion:)">fetch​Account​Info(for​Address:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.fetchtokencountandbalances(foraddress:completion:)">fetch​Token​Count​And​Balances(for​Address:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.fetchalltokenmetadata(fortokencount:completion:)">fetch​All​Token​Metadata(for​Token​Count:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.downloadandcacheimages(fortokencount:completion:)">download​And​Cache​Images(for​Token​Count:​completion:​)</a></li><li class="function"><a href="#bettercalldevclient.imageurl(fortoken:)">image​URL(for​Token:​)</a></li><li class="function"><a href="#bettercalldevclient.clearcachedimages()">clear​Cached​Images()</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Better​Call​Dev​Client</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">BetterCallDevClient</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>BetterCallDev (BCD) is an indexing/smart contract debugging tool, used for the Tezos blockchain.
+This class allows developers to interact with their API, to fetch data that would otherwise be impossible for a mobile app</p>
+
+</div>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Nested Types</h3>
+<dl>
+    <dt class="enumeration"><code><a href="./BetterCallDevClient_BetterCallDevClientError">BetterCallDevClient.BetterCallDevClientError</a></code></dt>
+<dd><p>Dedicated BCD errors</p>
+</dd>
+<dt class="structure"><code><a href="./BetterCallDevClient_Constants">BetterCallDevClient.Constants</a></code></dt>
+<dd><p>Constants for dealing with BCD API and cached data</p>
+</dd>
+</dl>
+</section>
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="bettercalldevclient.init(networkservice:config:)">
+    <h3>
+        <code><a href="#bettercalldevclient.init(networkservice:config:)">init(network​Service:​config:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">networkService</span>: <a href="./NetworkService"><span class="type">NetworkService</span></a>, <span class="variable">config</span>: <a href="./TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Init a <code>BetterCallDevClient</code> with a <code>NetworkService</code> and a <code>TezosNodeClientConfig</code>.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>network​Service</th>
+    <td><code class="type">Network​Service</code></td>
+    <td><p><code>NetworkService</code> used to manage network communication.</p>
+</td>
+</tr>
+<tr>
+    <th>config</th>
+    <td><code class="type">Tezos​Node​Client​Config</code></td>
+    <td><p><code>TezosNodeClientConfig</code> used to apss in settings.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="bettercalldevclient.getmoredetailederror(byhash:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.getmoredetailederror(byhash:completion:)">get​More​Detailed​Error(by​Hash:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getMoreDetailedError</span>(<span class="variable">byHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<a href="./BetterCallDevOperationError"><span class="type">BetterCallDevOperationError</span></a>?, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Primarily the <code>TzKTClient</code> is used to fetch details on operations. However for more complex calls involving smart contracts, TzKT will only return limited error message info.
+BetterCallDev includles all the details needed to display messages. This function allows developers to query the detailed error message.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>by​Hash</th>
+    <td><code class="type">String</code></td>
+    <td><p>The hash String of the operation.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Better​Call​Dev​Operation​Error?, Error​Response?) -&gt; Void)</code></td>
+    <td><p>Called with the result.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.account(foraddress:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.account(foraddress:completion:)">account(for​Address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">account</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="./BetterCallDevAccount"><span class="type">BetterCallDevAccount</span></a>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Fetches <code>v1/account/&lt;network&gt;/&lt;address&gt;</code> and returns the result. <code>&lt;network&gt;</code> is handled automatically by the config object passed into the constructor.
+This call returns information about the wallet such as its XTZ balance.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The address of the wallet to fetch info for.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Better​Call​Dev​Account, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when call finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.accounttokencount(foraddress:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.accounttokencount(foraddress:completion:)">account​Token​Count(for​Address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">accountTokenCount</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<span class="type">String</span>: <span class="type">Int</span>], <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Fetches <code>v1/account/&lt;network&gt;/&lt;address&gt;/count</code> and returns the result. <code>&lt;network&gt;</code> is handled automatically by the config object passed into the constructor.
+This call returns a list of every token contract address that the given wallet owns at least 1 of. The request also includes the number of instances the user owns.
+For fungible tokens, the number will always be 1. For non-fungible, the number will the count of how many of this NFT collection the user owns</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The address of the wallet to fetch info for.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;[String:​ Int], Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when call finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.tokenbalances(foraddress:offset:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.tokenbalances(foraddress:offset:completion:)">token​Balances(for​Address:​offset:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">tokenBalances</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">offset</span>: <span class="type">Int</span> = <span class="number literal">0</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="./BetterCallDevTokenBalances"><span class="type">BetterCallDevTokenBalances</span></a>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Fetches <code>v1/account/&lt;network&gt;/&lt;address&gt;/token_balances</code> and returns the result. <code>&lt;network&gt;</code> is handled automatically by the config object passed into the constructor.
+This call returns a page of up to 10 token balances, that the user owns. It will contain both fungible and non-fungible, there is no way to request these separately.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The address of the wallet to fetch info for.</p>
+</td>
+</tr>
+<tr>
+    <th>offset</th>
+    <td><code class="type">Int</code></td>
+    <td><p>The page number to request.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Better​Call​Dev​Token​Balances, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when call finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.tokenmetadata(fortokenaddress:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.tokenmetadata(fortokenaddress:completion:)">token​Metadata(for​Token​Address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">tokenMetadata</span>(<span class="variable">forTokenAddress</span> <span class="variable">token</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="./BetterCallDevTokenMetadata"><span class="type">BetterCallDevTokenMetadata</span></a>?, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Fetches <code>v1/tokens/&lt;network&gt;/metadata</code> and returns the result. <code>&lt;network&gt;</code> is handled automatically by the config object passed into the constructor.
+This call returns metadata information on the given token contract.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Token​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The token address to query data for..</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Better​Call​Dev​Token​Metadata?, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when call finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.contractmetdata(forcontractaddress:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.contractmetdata(forcontractaddress:completion:)">contract​Metdata(for​Contract​Address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">contractMetdata</span>(<span class="variable">forContractAddress</span> <span class="variable">contract</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="./BetterCallDevContract"><span class="type">BetterCallDevContract</span></a>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Fetches <code>v1/contract/&lt;network&gt;/&lt;contract-address&gt;</code> and returns the result. <code>&lt;network&gt;</code> is handled automatically by the config object passed into the constructor.
+This call returns information about the given contract address</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Contract​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The address of the contract to fetch info for.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Better​Call​Dev​Contract, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when call finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.cachedaccountinfo()">
+    <h3>
+        <code><a href="#bettercalldevclient.cachedaccountinfo()">cached​Account​Info()</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">cachedAccountInfo</span>() -&gt; <a href="./Account"><span class="type">Account</span></a>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Query the last cached <code>Acount</code> instance (if available)</p>
+
+</div>
+</div>
+<div role="article" class="function" id="bettercalldevclient.fetchaccountinfo(foraddress:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.fetchaccountinfo(foraddress:completion:)">fetch​Account​Info(for​Address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">fetchAccountInfo</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="./Account"><span class="type">Account</span></a>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Getting the users balance, token balances and NFT's is a very complex and invloved task. Even using BCD it requires many many networking requests, to fetch the balances, fetch them all 1 page at a time, fetch the metadata etc.
+This one request queries everything, and caches all the data to speed up subsequent calls. Applications should use this to drive their UI for 99% of use cases.
+Due to the level of caching, it is safe to call this method somewhat frequently, but no more often that once per block on the chain.
+What it does:
+- Queries the users XTZ balance via <code>self.account(forAddress: ...)</code>
+- Queries the tokenCount and every page of token balances via <code>self.fetchTokenCountAndBalances(forAddress: ... )</code>
+- Queries and caches all metadata for unknown tokens via <code>self.fetchAllTokenMetadata(forTokenCount: ...)</code>
+- Separates out NFT's and groups them under their parent collection
+- Fetches Token icon images using <code>Kingfisher</code>
+- Creates a readable <code>Account</code> object out of all of this data for easier consumption
+- Caches the <code>Account</code> object so it can be retrieved by <code>cachedAccountInfo()</code> for instant loading next time the app is opened</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The address to request all this information for.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Account, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when calls are finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.fetchtokencountandbalances(foraddress:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.fetchtokencountandbalances(foraddress:completion:)">fetch​Token​Count​And​Balances(for​Address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">fetchTokenCountAndBalances</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;(<span class="variable">count</span>: [<span class="type">String</span>: <span class="type">Int</span>], <span class="variable">balances</span>: <a href="./BetterCallDevTokenBalances"><span class="type">BetterCallDevTokenBalances</span></a>), <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Calls <code>self.accountTokenCount(forAddress: ...)</code> to get the list of tokens the user owns, and then queries all the balances in batches of 10</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The wallet address to query info for.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;(count:​ [String:​ Int], balances:​ Better​Call​Dev​Token​Balances), Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called when all calls finsihed.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.fetchalltokenmetadata(fortokencount:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.fetchalltokenmetadata(fortokencount:completion:)">fetch​All​Token​Metadata(for​Token​Count:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">fetchAllTokenMetadata</span>(<span class="variable">forTokenCount</span> <span class="variable">tokenCount</span>: [<span class="type">String</span>: <span class="type">Int</span>], <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<span class="type">String</span>: <a href="./BetterCallDevTokenMetadata"><span class="type">BetterCallDevTokenMetadata</span></a>], <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Fetching all of the necessary token method data requires 2 things. 1) Query the token contract from BCD to be able to see the <code>FaVersion</code>. 2) Query the token metadata itself to find out the rest of the info.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Token​Count</th>
+    <td><code class="type">[String:​ Int]</code></td>
+    <td><p>The tokenCount return from <code>accountTokenCount(forAddress: ...)</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;[String:​ Better​Call​Dev​Token​Metadata], Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Called after all calls finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.downloadandcacheimages(fortokencount:completion:)">
+    <h3>
+        <code><a href="#bettercalldevclient.downloadandcacheimages(fortokencount:completion:)">download​And​Cache​Images(for​Token​Count:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">downloadAndCacheImages</span>(<span class="variable">forTokenCount</span> <span class="variable">tokenCount</span>: [<span class="type">String</span>: <span class="type">Int</span>], <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Bool</span>) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Use <code>Kingfisher</code> to bulk download the token icons for all the tokens the user owns, allowing them to be called much easier.
+Developers can use https://github.com/onevcat/Kingfisher to display the images then throughout the app.
+E.g.  <code>imageView.kf.setImage(with: URL)</code></p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Token​Count</th>
+    <td><code class="type">[String:​ Int]</code></td>
+    <td><p>The tokenCount return from <code>accountTokenCount(forAddress: ...)</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Bool) -&gt; Void)</code></td>
+    <td><p>Called after all calls finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.imageurl(fortoken:)">
+    <h3>
+        <code><a href="#bettercalldevclient.imageurl(fortoken:)">image​URL(for​Token:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">imageURL</span>(<span class="variable">forToken</span> <span class="variable">token</span>: <span class="type">String</span>) -&gt; <span class="type">URL</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>In order to access the cached images, you need the URL it was downloaded from. This can either be found inside the <code>Token</code> objects returned as part of <code>Account</code> from the <code>fetchAccountInfo</code> func.
+Or, if you need to use it seperately, given the token address you can use this function</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Token</th>
+    <td><code class="type">String</code></td>
+    <td><p>The token address who's image you are looking for.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="bettercalldevclient.clearcachedimages()">
+    <h3>
+        <code><a href="#bettercalldevclient.clearcachedimages()">clear​Cached​Images()</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">clearCachedImages</span>()  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Used to manually clear the images cached on disk, to force them to be refreshed next time.</p>
+
+</div>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

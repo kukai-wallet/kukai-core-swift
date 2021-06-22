@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - TezosNodeClientConfig.defaultTestnetURLs</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Member Of</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#tezosnodeclientconfig.defaulttestneturls.primarynodeurl">primary​Node​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.defaulttestneturls.parsenodeurl">parse​Node​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.defaulttestneturls.tzkturl">tzkt​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.defaulttestneturls.bettercalldevurl">better​Call​Dev​URL</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Structure</small>
+    <code class="name">Tezos​Node​Client​Config.​default​Testnet​URLs</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">struct</span> <span class="type">defaultTestnetURLs</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Preconfigured struct with all the URL's needed to work with Tezos testnet</p>
+
+</div>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Member Of</h3>
+<dl>
+    <dt class="structure"><code><a href="./TezosNodeClientConfig">TezosNodeClientConfig</a></code></dt>
+<dd><p>A configuration object used to provide settings to the TezosNodeClient</p>
+</dd>
+</dl>
+</section>
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="tezosnodeclientconfig.defaulttestneturls.primarynodeurl">
+    <h3>
+        <code><a href="#tezosnodeclientconfig.defaulttestneturls.primarynodeurl">primary​Node​URL</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">primaryNodeURL</span> = <span class="variable">URL</span>(<span class="variable">string</span>: <span class="string literal">"</span><span class="string literal">https://florence-tezos.giganode.io/</span><span class="string literal">"</span>)! </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The default testnet URL to use for <code>primaryNodeURL</code>, For more information on this service, see: https://tezos.giganode.io/</p>
+
+</div>
+</div>
+<div role="article" class="variable" id="tezosnodeclientconfig.defaulttestneturls.parsenodeurl">
+    <h3>
+        <code><a href="#tezosnodeclientconfig.defaulttestneturls.parsenodeurl">parse​Node​URL</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">parseNodeURL</span> = <span class="variable">URL</span>(<span class="variable">string</span>: <span class="string literal">"</span><span class="string literal">https://api.tez.ie/rpc/florencenet</span><span class="string literal">"</span>)! </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The default testnet URL to use for <code>parseNodeURL</code></p>
+
+</div>
+</div>
+<div role="article" class="variable" id="tezosnodeclientconfig.defaulttestneturls.tzkturl">
+    <h3>
+        <code><a href="#tezosnodeclientconfig.defaulttestneturls.tzkturl">tzkt​URL</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">tzktURL</span> = <span class="variable">URL</span>(<span class="variable">string</span>: <span class="string literal">"</span><span class="string literal">https://api.florencenet.tzkt.io/</span><span class="string literal">"</span>)! </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The default testnet URL to use for <code>tzktURL</code>, For more information on this service, see: https://api.tzkt.io/</p>
+
+</div>
+</div>
+<div role="article" class="variable" id="tezosnodeclientconfig.defaulttestneturls.bettercalldevurl">
+    <h3>
+        <code><a href="#tezosnodeclientconfig.defaulttestneturls.bettercalldevurl">better​Call​Dev​URL</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">betterCallDevURL</span> = <span class="variable">URL</span>(<span class="variable">string</span>: <span class="string literal">"</span><span class="string literal">https://api.better-call.dev/</span><span class="string literal">"</span>)! </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The default testnet URL to use for <code>betterCallDevURL</code>, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html</p>
+
+</div>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - NetworkService</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#networkservice.init(urlsession:loggingconfig:)">init(url​Session:​logging​Config:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#networkservice.urlsession">url​Session</a></li><li class="variable"><a href="#networkservice.loggingconfig">logging​Config</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#networkservice.send(rpc:withbaseurl:completion:)">send(rpc:​with​Base​URL:​completion:​)</a></li><li class="function"><a href="#networkservice.request(url:ispost:withbody:forreturntype:completion:)">request(url:​is​POST:​with​Body:​for​Return​Type:​completion:​)</a></li><li class="function"><a href="#networkservice.logrequestfailed(loggingconfig:ispost:fullurl:payload:error:statuscode:responsedata:)">log​Request​Failed(logging​Config:​is​Post:​full​URL:​payload:​error:​status​Code:​response​Data:​)</a></li><li class="function"><a href="#networkservice.logrequestsucceded(loggingconfig:ispost:fullurl:payload:responsedata:)">log​Request​Succeded(logging​Config:​is​Post:​full​URL:​payload:​response​Data:​)</a></li><li class="function"><a href="#networkservice.logrequeststart(loggingconfig:fullurl:)">log​Request​Start(logging​Config:​full​URL:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Network​Service</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">NetworkService</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Class responsible for sending all the networking requests, checking for http errors, RPC errors, Decoding the responses and optionally logging progress</p>
+
+</div>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Nested Types</h3>
+<dl>
+    <dt class="enumeration"><code><a href="./NetworkService_NetworkError">NetworkService.NetworkError</a></code></dt>
+<dd><p>Errors that can be returned by the <code>NetworkService</code></p>
+</dd>
+</dl>
+</section>
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="networkservice.init(urlsession:loggingconfig:)">
+    <h3>
+        <code><a href="#networkservice.init(urlsession:loggingconfig:)">init(url​Session:​logging​Config:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Init an <code>NetworkService</code> with a <code>URLSession</code></p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>url​Session</th>
+    <td><code class="type">URLSession</code></td>
+    <td><p>A <code>URLSession</code> object</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="networkservice.urlsession">
+    <h3>
+        <code><a href="#networkservice.urlsession">url​Session</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">urlSession</span>: <span class="type">URLSession</span></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The <code>URLSession</code> used to preform all the networking operations</p>
+
+</div>
+</div>
+<div role="article" class="variable" id="networkservice.loggingconfig">
+    <h3>
+        <code><a href="#networkservice.loggingconfig">logging​Config</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The <code>URLSession</code> used to preform all the networking operations</p>
+
+</div>
+</div>
+    </section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="networkservice.send(rpc:withbaseurl:completion:)">
+    <h3>
+        <code><a href="#networkservice.send(rpc:withbaseurl:completion:)">send(rpc:​with​Base​URL:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">rpc</span>: <a href="./RPC"><span class="type">RPC</span></a>&lt;<span class="type">T</span>&gt;, <span class="variable">withBaseURL</span> <span class="variable">baseURL</span>: <span class="type">URL</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">T</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>A generic send function that takes an RPC, with a generic type conforming to <code>Decodable</code>, executes the request and returns the result.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>rpc</th>
+    <td><code class="type">RPC&lt;T&gt;</code></td>
+    <td><p>A instance of <code>RPC</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>with​Base​URL</th>
+    <td><code class="type">URL</code></td>
+    <td><p>The base URL needed. This will typically come from <code>TezosNodeConfig</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;T, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>A completion callback that will be executed on the main thread.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+  <h4>Returns</h4>
+  <p>Void</p>
+
+</div>
+<div role="article" class="function" id="networkservice.request(url:ispost:withbody:forreturntype:completion:)">
+    <h3>
+        <code><a href="#networkservice.request(url:ispost:withbody:forreturntype:completion:)">request(url:​is​POST:​with​Body:​for​Return​Type:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">request</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">url</span>: <span class="type">URL</span>, <span class="variable">isPOST</span>: <span class="type">Bool</span>, <span class="variable">withBody</span> <span class="variable">body</span>: <span class="type">Data</span>?, <span class="variable">forReturnType</span>: <span class="type">T</span>.<span class="type">Type</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">T</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>A generic network request function that takes a URL, optional payload and a <code>Decodable</code> response type. Function will execute teh request and attempt to parse the response.
+Using the Logging config, will auto log (or not) urls, response outputs, or fails to the console</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>url</th>
+    <td><code class="type">URL</code></td>
+    <td><p>The full url, including query parameters to execute.</p>
+</td>
+</tr>
+<tr>
+    <th>is​POST</th>
+    <td><code class="type">Bool</code></td>
+    <td><p>Bool indicating if its a POST or GET request.</p>
+</td>
+</tr>
+<tr>
+    <th>with​Body</th>
+    <td><code class="type">Data?</code></td>
+    <td><p>Optional Data to be passed as the body.</p>
+</td>
+</tr>
+<tr>
+    <th>for​Return​Type</th>
+    <td><code class="type">T.​Type</code></td>
+    <td><p>The Type to parse the response as.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;T, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>A completion block with a <code>Result&lt;T, Error&gt;</code> T being the supplied decoable type</p>
+</td>
+</tr>
+  </tbody>
+</table>
+  <h4>Returns</h4>
+  <p>Void</p>
+
+</div>
+<div role="article" class="function" id="networkservice.logrequestfailed(loggingconfig:ispost:fullurl:payload:error:statuscode:responsedata:)">
+    <h3>
+        <code><a href="#networkservice.logrequestfailed(loggingconfig:ispost:fullurl:payload:error:statuscode:responsedata:)">log​Request​Failed(logging​Config:​is​Post:​full​URL:​payload:​error:​status​Code:​response​Data:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestFailed</span>(<span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">isPost</span>: <span class="type">Bool</span>, <span class="variable">fullURL</span>: <span class="type">URL</span>, <span class="variable">payload</span>: <span class="type">Data</span>?, <span class="variable">error</span>: <span class="type">Error</span>?, <span class="variable">statusCode</span>: <span class="type">Int</span>?, <span class="variable">responseData</span>: <span class="type">Data</span>?)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Logging details of request failures using <code>os_log</code> global logging</p>
+
+</div>
+</div>
+<div role="article" class="function" id="networkservice.logrequestsucceded(loggingconfig:ispost:fullurl:payload:responsedata:)">
+    <h3>
+        <code><a href="#networkservice.logrequestsucceded(loggingconfig:ispost:fullurl:payload:responsedata:)">log​Request​Succeded(logging​Config:​is​Post:​full​URL:​payload:​response​Data:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestSucceded</span>(<span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">isPost</span>: <span class="type">Bool</span>, <span class="variable">fullURL</span>: <span class="type">URL</span>, <span class="variable">payload</span>: <span class="type">Data</span>?, <span class="variable">responseData</span>: <span class="type">Data</span>?)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Logging details of successful requests using <code>os_log</code> global logging</p>
+
+</div>
+</div>
+<div role="article" class="function" id="networkservice.logrequeststart(loggingconfig:fullurl:)">
+    <h3>
+        <code><a href="#networkservice.logrequeststart(loggingconfig:fullurl:)">log​Request​Start(logging​Config:​full​URL:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestStart</span>(<span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">fullURL</span>: <span class="type">URL</span>)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Logging details when a request starts using <code>os_log</code> global logging</p>
+
+</div>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

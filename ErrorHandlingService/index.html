@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - ErrorHandlingService</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#errorhandlingservice.shared">shared</a></li><li class="variable"><a href="#errorhandlingservice.erroreventclosure">error​Event​Closure</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#errorhandlingservice.parse(string:andlog:)">parse(string:​and​Log:​)</a></li><li class="function"><a href="#errorhandlingservice.parse(data:response:networkerror:requesturl:requestdata:)">parse(data:​response:​network​Error:​request​URL:​request​Data:​)</a></li><li class="function"><a href="#errorhandlingservice.containserrors(tzktoperations:)">contains​Errors(tzkt​Operations:​)</a></li><li class="function"><a href="#errorhandlingservice.extractmeaningfulerrors(fromtzktoperations:)">extract​Meaningful​Errors(from​TzKTOperations:​)</a></li><li class="function"><a href="#errorhandlingservice.extractmeaningfulerrors(fromrpcoperations:withrequesturl:requestpayload:responsepayload:httpstatuscode:)">extract​Meaningful​Errors(from​RPCOperations:​with​Request​URL:​request​Payload:​response​Payload:​http​Status​Code:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Error​Handling​Service</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">ErrorHandlingService</span>  </body></html></code></pre>
+</div>
+
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="errorhandlingservice.shared">
+    <h3>
+        <code><a href="#errorhandlingservice.shared">shared</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">shared</span>  </body></html></code></pre>
+</div>
+</div>
+<div role="article" class="variable" id="errorhandlingservice.erroreventclosure">
+    <h3>
+        <code><a href="#errorhandlingservice.erroreventclosure">error​Event​Closure</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">errorEventClosure</span>: ((<a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>) -&gt; <span class="type">Void</span>)? = <span class="keyword">nil</span></body></html></code></pre>
+</div>
+</div>
+    </section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="errorhandlingservice.parse(string:andlog:)">
+    <h3>
+        <code><a href="#errorhandlingservice.parse(string:andlog:)">parse(string:​and​Log:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">string</span>: <span class="type">String</span>, <span class="variable">andLog</span>: <span class="type">Bool</span> = <span class="keyword">true</span>) -&gt; <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>  </body></html></code></pre>
+</div>
+</div>
+<div role="article" class="function" id="errorhandlingservice.parse(data:response:networkerror:requesturl:requestdata:)">
+    <h3>
+        <code><a href="#errorhandlingservice.parse(data:response:networkerror:requesturl:requestdata:)">parse(data:​response:​network​Error:​request​URL:​request​Data:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">data</span>: <span class="type">Data</span>?, <span class="variable">response</span>: <span class="type">URLResponse</span>?, <span class="variable">networkError</span>: <span class="type">Error</span>?, <span class="variable">requestURL</span>: <span class="type">URL</span>, <span class="variable">requestData</span>: <span class="type">Data</span>?) -&gt; <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
+</div>
+</div>
+<div role="article" class="function" id="errorhandlingservice.containserrors(tzktoperations:)">
+    <h3>
+        <code><a href="#errorhandlingservice.containserrors(tzktoperations:)">contains​Errors(tzkt​Operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">containsErrors</span>(<span class="variable">tzktOperations</span>: [<a href="./TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+</div>
+<div role="article" class="function" id="errorhandlingservice.extractmeaningfulerrors(fromtzktoperations:)">
+    <h3>
+        <code><a href="#errorhandlingservice.extractmeaningfulerrors(fromtzktoperations:)">extract​Meaningful​Errors(from​TzKTOperations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">extractMeaningfulErrors</span>(<span class="variable">fromTzKTOperations</span> <span class="variable">operations</span>: [<a href="./TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>There are 2 types of high level errors in Tezos.</p>
+
+</div>
+<div class="discussion">
+    <ol>
+<li>Account state errors: These errors are global across the entire ecosystem, and will effect any application, or product. Examples: insufficent balance, invalid address, invalid baker.</li>
+<li>Script errors: These errors are specific to each application. Examples: Dexter-invalid requested exchange operation, TNS-the requested domain name is unavailable.
+When working with smart contracts on Tezos, operations may have internal child operations, each of which can have an error. When an error of type 2 mentioned above occurs,
+the array of operations will contain many generic &quot;a unknown script error occured&quot; messages, with one of the operations containing the detailed, application specific error. This function is an
+attempt to abstract this logic away from developers, by simply taking in an array of operations, and returning the most meaningful error it can, to reduce time and effort.</li>
+</ol>
+
+</div>
+  <h4>Returns</h4>
+  <p><code>nil</code> if no errors found, useful for checking status, <code>.unknownError</code> if no meaningful errors can be found, or some <code>ErrorResponseType</code> matching the meaningful error</p>
+
+</div>
+<div role="article" class="function" id="errorhandlingservice.extractmeaningfulerrors(fromrpcoperations:withrequesturl:requestpayload:responsepayload:httpstatuscode:)">
+    <h3>
+        <code><a href="#errorhandlingservice.extractmeaningfulerrors(fromrpcoperations:withrequesturl:requestpayload:responsepayload:httpstatuscode:)">extract​Meaningful​Errors(from​RPCOperations:​with​Request​URL:​request​Payload:​response​Payload:​http​Status​Code:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">extractMeaningfulErrors</span>(<span class="variable">fromRPCOperations</span> <span class="variable">operations</span>: [<a href="./OperationResponse"><span class="type">OperationResponse</span></a>], <span class="variable">withRequestURL</span>: <span class="type">URL</span>?, <span class="variable">requestPayload</span>: <span class="type">Data</span>?, <span class="variable">responsePayload</span>: <span class="type">Data</span>?, <span class="variable">httpStatusCode</span>: <span class="type">Int</span>?) -&gt; <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>There are 2 types of high level errors in Tezos.</p>
+
+</div>
+<div class="discussion">
+    <ol>
+<li>Account state errors: These errors are global across the entire ecosystem, and will effect any application, or product. Examples: insufficent balance, invalid address, invalid baker.</li>
+<li>Script errors: These errors are specific to each application. Examples: Dexter-invalid requested exchange operation, TNS-the requested domain name is unavailable.
+When working with smart contracts on Tezos, operations may have internal child operations, each of which can have an error. When an error of type 2 mentioned above occurs,
+the array of operations will contain many generic &quot;a unknown script error occured&quot; messages, with one of the operations containing the detailed, application specific error. This function is an
+attempt to abstract this logic away from developers, by simply taking in an array of operations, and returning the most meaningful error it can, to reduce time and effort.</li>
+</ol>
+
+</div>
+  <h4>Returns</h4>
+  <p><code>nil</code> if no errors found, useful for checking status, <code>.unknownError</code> if no meaningful errors can be found, or some <code>ErrorResponseType</code> matching the meaningful error</p>
+
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

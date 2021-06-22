@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - DiskService</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#methods">Methods</a><ul><li class="function"><a href="#diskservice.write(data:tofilename:)">write(data:​to​File​Name:​)</a></li><li class="function"><a href="#diskservice.write(encodable:tofilename:)">write(encodable:​to​File​Name:​)</a></li><li class="function"><a href="#diskservice.readdata(fromfilename:)">read​Data(from​File​Name:​)</a></li><li class="function"><a href="#diskservice.read(type:fromfilename:)">read(type:​from​File​Name:​)</a></li><li class="function"><a href="#diskservice.delete(filename:)">delete(file​Name:​)</a></li><li class="function"><a href="#diskservice.documentsdirectory()">documents​Directory()</a></li><li class="function"><a href="#diskservice.exists(filename:)">exists(file​Name:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Disk​Service</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">DiskService</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>A service class to write and read data from the devices documents directory</p>
+
+</div>
+
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="diskservice.write(data:tofilename:)">
+    <h3>
+        <code><a href="#diskservice.write(data:tofilename:)">write(data:​to​File​Name:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">write</span>(<span class="variable">data</span>: <span class="type">Data</span>, <span class="variable">toFileName</span>: <span class="type">String</span>) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Write an instance of <code>Data</code> to a given fileName</p>
+
+</div>
+  <h4>Returns</h4>
+  <p>Bool, indicating if the operation was successful</p>
+
+</div>
+<div role="article" class="function" id="diskservice.write(encodable:tofilename:)">
+    <h3>
+        <code><a href="#diskservice.write(encodable:tofilename:)">write(encodable:​to​File​Name:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">write</span>&lt;<span class="variable">T</span>: <span class="type">Encodable</span>&gt;(<span class="variable">encodable</span>: <span class="type">T</span>, <span class="variable">toFileName</span>: <span class="type">String</span>) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Write an instance of an object conforming to <code>Encodable</code> to a fileName</p>
+
+</div>
+  <h4>Returns</h4>
+  <p>Bool, indicating if the operation was successful</p>
+
+</div>
+<div role="article" class="function" id="diskservice.readdata(fromfilename:)">
+    <h3>
+        <code><a href="#diskservice.readdata(fromfilename:)">read​Data(from​File​Name:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">readData</span>(<span class="variable">fromFileName</span>: <span class="type">String</span>) -&gt; <span class="type">Data</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Read a fileName and return the contents as <code>Data</code></p>
+
+</div>
+  <h4>Returns</h4>
+  <p><code>Data</code>, if able to read file</p>
+
+</div>
+<div role="article" class="function" id="diskservice.read(type:fromfilename:)">
+    <h3>
+        <code><a href="#diskservice.read(type:fromfilename:)">read(type:​from​File​Name:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">read</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">type</span>: <span class="type">T</span>.<span class="type">Type</span>, <span class="variable">fromFileName</span>: <span class="type">String</span>) -&gt; <span class="type">T</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Read a fileName, and parse the contents as an instance of a <code>Decodable</code> object</p>
+
+</div>
+  <h4>Returns</h4>
+  <p>An instance of the <code>Decodable</code> type, if able to read file and parse it</p>
+
+</div>
+<div role="article" class="function" id="diskservice.delete(filename:)">
+    <h3>
+        <code><a href="#diskservice.delete(filename:)">delete(file​Name:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">delete</span>(<span class="variable">fileName</span>: <span class="type">String</span>) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Delete a fileName</p>
+
+</div>
+  <h4>Returns</h4>
+  <p>Bool, indicating if the operation was successful</p>
+
+</div>
+<div role="article" class="function" id="diskservice.documentsdirectory()">
+    <h3>
+        <code><a href="#diskservice.documentsdirectory()">documents​Directory()</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">documentsDirectory</span>() -&gt; <span class="type">URL</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Get the URL to the devices documents directory, if possible</p>
+
+</div>
+</div>
+<div role="article" class="function" id="diskservice.exists(filename:)">
+    <h3>
+        <code><a href="#diskservice.exists(filename:)">exists(file​Name:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">exists</span>(<span class="variable">fileName</span>: <span class="type">String</span>) -&gt; <span class="type">URL</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Check if a fileName exists in the documents directory or not</p>
+
+</div>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

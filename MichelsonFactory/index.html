@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - MichelsonFactory</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#methods">Methods</a><ul><li class="function"><a href="#michelsonfactory.ispair(_:)">is​Pair(_:​)</a></li><li class="function"><a href="#michelsonfactory.isint(_:)">is​Int(_:​)</a></li><li class="function"><a href="#michelsonfactory.isstring(_:)">is​String(_:​)</a></li><li class="function"><a href="#michelsonfactory.left(_:)">left(_:​)</a></li><li class="function"><a href="#michelsonfactory.right(_:)">right(_:​)</a></li><li class="function"><a href="#michelsonfactory.int(_:)">int(_:​)</a></li><li class="function"><a href="#michelsonfactory.string(_:)">string(_:​)</a></li><li class="function"><a href="#michelsonfactory.createint(_:)">create​Int(_:​)</a></li><li class="function"><a href="#michelsonfactory.createstring(_:)">create​String(_:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Michelson​Factory</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">MichelsonFactory</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>A temporary factory class (until a better solution can be found) with some helper methods for parsing / Creating Michelson objects.
+Also includes quicker functions to just extract values from raw JSON, useful for processing transaction history without having to implement the entire Michelson spec</p>
+
+</div>
+
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="michelsonfactory.ispair(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.ispair(_:)">is​Pair(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">isPair</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON and reutrn true if it matches a Michelson Pair type</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.isint(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.isint(_:)">is​Int(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">isInt</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON and reutrn true if it matches a Michelson Int type</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.isstring(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.isstring(_:)">is​String(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">isString</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON and reutrn true if it matches a Michelson String type</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.left(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.left(_:)">left(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">left</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]?) -&gt; [<span class="type">String</span>: <span class="keyword">Any</span>]?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON, check its a valid Pair type, and return the left side of the pair</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.right(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.right(_:)">right(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">right</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]?) -&gt; [<span class="type">String</span>: <span class="keyword">Any</span>]?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON, check its a valid Pair type, and return the right side of the pair</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.int(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.int(_:)">int(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">int</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]?) -&gt; <span class="type">Decimal</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON, check its a valid Int type, and return the underlying value as a Decimal</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.string(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.string(_:)">string(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">string</span>(<span class="keyword">_</span> <span class="variable">obj</span>: [<span class="type">String</span>: <span class="keyword">Any</span>]?) -&gt; <span class="type">String</span>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Take in undecoded JSON, check its a valid String type, and return the underlying value</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.createint(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.createint(_:)">create​Int(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">createInt</span>(<span class="keyword">_</span> <span class="variable">value</span>: <a href="./TokenAmount"><span class="type">TokenAmount</span></a>) -&gt; <a href="./MichelsonValue"><span class="type">MichelsonValue</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Helper to create a Michelson compliant object, containing an <code>Int</code> value. Passing in a <code>TokenAmount</code>, it will be converted to the appropriate RPC format
+The returned object can be passed into a <code>MichelsonPair</code> object, in order to send as part of a smart contract call</p>
+
+</div>
+</div>
+<div role="article" class="function" id="michelsonfactory.createstring(_:)">
+    <h3>
+        <code><a href="#michelsonfactory.createstring(_:)">create​String(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">createString</span>(<span class="keyword">_</span> <span class="variable">value</span>: <span class="type">String</span>) -&gt; <a href="./MichelsonValue"><span class="type">MichelsonValue</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Helper to create a Michelson compliant object, containing an <code>String</code> value.
+The returned object can be passed into a <code>MichelsonPair</code> object, in order to send as part of a smart contract call</p>
+
+</div>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

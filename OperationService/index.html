@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - OperationService</title>
+    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="./">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#operationservice.init(config:networkservice:)">init(config:​network​Service:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#operationservice.config">config</a></li><li class="variable"><a href="#operationservice.networkservice">network​Service</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#operationservice.remoteforgeparsesignpreapplyinject(operationmetadata:operationpayload:wallet:completion:)">remote​Forge​Parse​Sign​Preapply​Inject(operation​Metadata:​operation​Payload:​wallet:​completion:​)</a></li><li class="function"><a href="#operationservice.localforgesignpreapplyinject(operationmetadata:operationpayload:wallet:completion:)">local​Forge​Sign​Preapply​Inject(operation​Metadata:​operation​Payload:​wallet:​completion:​)</a></li><li class="function"><a href="#operationservice.remoteforge(operationmetadata:operationpayload:wallet:completion:)">remote​Forge(operation​Metadata:​operation​Payload:​wallet:​completion:​)</a></li><li class="function"><a href="#operationservice.remoteparse(forgeresult:operationmetadata:operationpayload:completion:)">remote​Parse(forge​Result:​operation​Metadata:​operation​Payload:​completion:​)</a></li><li class="function"><a href="#operationservice.preapply(operationmetadata:operationpayload:completion:)">preapply(operation​Metadata:​operation​Payload:​completion:​)</a></li><li class="function"><a href="#operationservice.inject(signedbytes:handlepreapplyresult:completion:)">inject(signed​Bytes:​handle​Preapply​Result:​completion:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Operation​Service</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">OperationService</span>  </body></html></code></pre>
+</div>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Nested Types</h3>
+<dl>
+    <dt class="enumeration"><code><a href="./OperationService_OperationServiceError">OperationService.OperationServiceError</a></code></dt>
+<dd><p>Errors that the OperationService is capable of returning</p>
+</dd>
+</dl>
+</section>
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="operationservice.init(config:networkservice:)">
+    <h3>
+        <code><a href="#operationservice.init(config:networkservice:)">init(config:​network​Service:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">config</span>: <a href="./TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a> = <span class="variable">TezosNodeClientConfig</span>(<span class="variable">withDefaultsForNetworkType</span>: .<span class="variable">mainnet</span>), <span class="variable">networkService</span>: <a href="./NetworkService"><span class="type">NetworkService</span></a>)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Init a <code>TezosNodeClient</code> with a <code>TezosNodeClientConfig</code>.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>config</th>
+    <td><code class="type">Tezos​Node​Client​Config</code></td>
+    <td><p>A configuration object containing all the necessary settings to connect and communicate with the Tezos node.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="operationservice.config">
+    <h3>
+        <code><a href="#operationservice.config">config</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">config</span>: <a href="./TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The configuration object containing all the necessary settings to connect and communicate with the Tezos node</p>
+
+</div>
+</div>
+<div role="article" class="variable" id="operationservice.networkservice">
+    <h3>
+        <code><a href="#operationservice.networkservice">network​Service</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">networkService</span>: <a href="./NetworkService"><span class="type">NetworkService</span></a></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The <code>NetworkService</code> object that will perform all the networking calls</p>
+
+</div>
+</div>
+    </section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="operationservice.remoteforgeparsesignpreapplyinject(operationmetadata:operationpayload:wallet:completion:)">
+    <h3>
+        <code><a href="#operationservice.remoteforgeparsesignpreapplyinject(operationmetadata:operationpayload:wallet:completion:)">remote​Forge​Parse​Sign​Preapply​Inject(operation​Metadata:​operation​Payload:​wallet:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">remoteForgeParseSignPreapplyInject</span>(<span class="variable">operationMetadata</span>: <a href="./OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">operationPayload</span>: <a href="./OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">wallet</span>: <a href="./Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>When using remote forging, every <code>Operation</code> needs to be Forged, Parsed, Signed, Preapply'd and Injected to make its way into the blockchain.
+This function will complete all of those steps and return an OperationID or an Error.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>operation​Metadata</th>
+    <td><code class="type">Operation​Metadata</code></td>
+    <td><p>The latest <code>OperationMetadata</code> from the TezosNodeClient</p>
+</td>
+</tr>
+<tr>
+    <th>operation​Payload</th>
+    <td><code class="type">Operation​Payload</code></td>
+    <td><p>The <code>OperationPayload</code> generated by the <code>OperationFactory</code></p>
+</td>
+</tr>
+<tr>
+    <th>wallet</th>
+    <td><code class="type">Wallet</code></td>
+    <td><p>The <code>Wallet</code> that will sign the operation</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;String, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Completion block either returning a String containing an OperationHash of the injected Operation, or an Error</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="operationservice.localforgesignpreapplyinject(operationmetadata:operationpayload:wallet:completion:)">
+    <h3>
+        <code><a href="#operationservice.localforgesignpreapplyinject(operationmetadata:operationpayload:wallet:completion:)">local​Forge​Sign​Preapply​Inject(operation​Metadata:​operation​Payload:​wallet:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">localForgeSignPreapplyInject</span>(<span class="variable">operationMetadata</span>: <a href="./OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">operationPayload</span>: <a href="./OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">wallet</span>: <a href="./Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>When using local forging, every <code>Operation</code> needs to be Forged, Signed, Preapply'd and Injected to make its way into the blockchain.
+This function will complete all of those steps and return an OperationID or an Error.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>operation​Metadata</th>
+    <td><code class="type">Operation​Metadata</code></td>
+    <td><p>The latest <code>OperationMetadata</code> from the TezosNodeClient</p>
+</td>
+</tr>
+<tr>
+    <th>operation​Payload</th>
+    <td><code class="type">Operation​Payload</code></td>
+    <td><p>The <code>OperationPayload</code> generated by the <code>OperationFactory</code></p>
+</td>
+</tr>
+<tr>
+    <th>wallet</th>
+    <td><code class="type">Wallet</code></td>
+    <td><p>The <code>Wallet</code> that will sign the operation</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;String, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Completion block either returning a String containing an OperationHash of the injected Operation, or an Error</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="operationservice.remoteforge(operationmetadata:operationpayload:wallet:completion:)">
+    <h3>
+        <code><a href="#operationservice.remoteforge(operationmetadata:operationpayload:wallet:completion:)">remote​Forge(operation​Metadata:​operation​Payload:​wallet:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">remoteForge</span>(<span class="variable">operationMetadata</span>: <a href="./OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">operationPayload</span>: <a href="./OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">wallet</span>: <a href="./Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Forge an <code>OperationPayload</code> remotely, so it can be sent to the RPC.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>operation​Metadata</th>
+    <td><code class="type">Operation​Metadata</code></td>
+    <td><p>fetched from <code>getOperationMetadata(...)</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>operation​Payload</th>
+    <td><code class="type">Operation​Payload</code></td>
+    <td><p>created from <code>OperationFactory.operationPayload()</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>wallet</th>
+    <td><code class="type">Wallet</code></td>
+    <td><p>The <code>Wallet</code> object that will sign the operations.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;String, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>callback with a forged hash or an error.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="operationservice.remoteparse(forgeresult:operationmetadata:operationpayload:completion:)">
+    <h3>
+        <code><a href="#operationservice.remoteparse(forgeresult:operationmetadata:operationpayload:completion:)">remote​Parse(forge​Result:​operation​Metadata:​operation​Payload:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">remoteParse</span>(<span class="variable">forgeResult</span>: <span class="type">Result</span>&lt;<span class="type">String</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;, <span class="variable">operationMetadata</span>: <a href="./OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">operationPayload</span>: <a href="./OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Parse a forged <code>OperationPayload</code> on a different server to ensure nobody maliciously tampared with the request.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>forge​Result</th>
+    <td><code class="type">Result&lt;String, Error​Response&gt;</code></td>
+    <td><p>The <code>Result</code> object from the <code>forge(...)</code> function.</p>
+</td>
+</tr>
+<tr>
+    <th>operation​Metadata</th>
+    <td><code class="type">Operation​Metadata</code></td>
+    <td><p>fetched from <code>getOperationMetadata(...)</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>operation​Payload</th>
+    <td><code class="type">Operation​Payload</code></td>
+    <td><p>the <code>OperationPayload</code> to compare against to ensure it matches.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;String, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>callback which just returns success or failure with an error.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="operationservice.preapply(operationmetadata:operationpayload:completion:)">
+    <h3>
+        <code><a href="#operationservice.preapply(operationmetadata:operationpayload:completion:)">preapply(operation​Metadata:​operation​Payload:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">preapply</span>(<span class="variable">operationMetadata</span>: <a href="./OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">operationPayload</span>: <a href="./OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="./OperationResponse"><span class="type">OperationResponse</span></a>], <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Preapply a signed <code>OperationPayload</code> to check for any errors.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>operation​Metadata</th>
+    <td><code class="type">Operation​Metadata</code></td>
+    <td><p>Fetched from <code>getOperationMetadata(...)</code>.</p>
+</td>
+</tr>
+<tr>
+    <th>operation​Payload</th>
+    <td><code class="type">Operation​Payload</code></td>
+    <td><p>An <code>OperationPayload</code>that has had a signature and a protcol added to it.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;[Operation​Response], Error​Response&gt;) -&gt; Void)</code></td>
+    <td><p>Callback which just returns success or failure with an error.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="operationservice.inject(signedbytes:handlepreapplyresult:completion:)">
+    <h3>
+        <code><a href="#operationservice.inject(signedbytes:handlepreapplyresult:completion:)">inject(signed​Bytes:​handle​Preapply​Result:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">inject</span>(<span class="variable">signedBytes</span>: <span class="type">String</span>, <span class="variable">handlePreapplyResult</span>: <span class="type">Result</span>&lt;[<a href="./OperationResponse"><span class="type">OperationResponse</span></a>], <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;?, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Inject a signed bytes to become part of the next block on the blockchain</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>signed​Bytes</th>
+    <td><code class="type">String</code></td>
+    <td><p>The result of the forge operation (as a string) with the signature (as a hex string) appended on.</p>
+</td>
+</tr>
+<tr>
+    <th>handle​Preapply​Result</th>
+    <td><code class="type">Result&lt;[Operation​Response], Error​Response&gt;?</code></td>
+    <td><p>Optionally pass in the result of the preapply function to reduce the indentation required to perform the full set of operations. Any error will be returned via the injection Result object.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>
