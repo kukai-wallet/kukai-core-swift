@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KukaiCoreSwift - NetworkService</title>
-    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="https://kukai.app/kukai-core-swift/all.css" media="all" />
 </head>
 <body>
     <header>
-        <a href="./">
+        <a href="https://kukai.app/kukai-core-swift/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -48,7 +48,7 @@
         
         <h3>Nested Types</h3>
 <dl>
-    <dt class="enumeration"><code><a href="./NetworkService_NetworkError">NetworkService.NetworkError</a></code></dt>
+    <dt class="enumeration"><code><a href="https://kukai.app/kukai-core-swift/NetworkService_NetworkError">NetworkService.NetworkError</a></code></dt>
 <dd><p>Errors that can be returned by the <code>NetworkService</code></p>
 </dd>
 </dl>
@@ -61,7 +61,7 @@
         <code><a href="#networkservice.init(urlsession:loggingconfig:)">init(url​Session:​logging​Config:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>)  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">loggingConfig</span>: <a href="https://kukai.app/kukai-core-swift/LoggingConfig"><span class="type">LoggingConfig</span></a>)  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Init an <code>NetworkService</code> with a <code>URLSession</code></p>
@@ -108,7 +108,7 @@
         <code><a href="#networkservice.loggingconfig">logging​Config</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">loggingConfig</span>: <a href="https://kukai.app/kukai-core-swift/LoggingConfig"><span class="type">LoggingConfig</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The <code>URLSession</code> used to preform all the networking operations</p>
@@ -124,7 +124,7 @@
         <code><a href="#networkservice.send(rpc:withbaseurl:completion:)">send(rpc:​with​Base​URL:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">rpc</span>: <a href="./RPC"><span class="type">RPC</span></a>&lt;<span class="type">T</span>&gt;, <span class="variable">withBaseURL</span> <span class="variable">baseURL</span>: <span class="type">URL</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">T</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">rpc</span>: <a href="https://kukai.app/kukai-core-swift/RPC"><span class="type">RPC</span></a>&lt;<span class="type">T</span>&gt;, <span class="variable">withBaseURL</span> <span class="variable">baseURL</span>: <span class="type">URL</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">T</span>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>A generic send function that takes an RPC, with a generic type conforming to <code>Decodable</code>, executes the request and returns the result.</p>
@@ -170,7 +170,7 @@
         <code><a href="#networkservice.request(url:ispost:withbody:forreturntype:completion:)">request(url:​is​POST:​with​Body:​for​Return​Type:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">request</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">url</span>: <span class="type">URL</span>, <span class="variable">isPOST</span>: <span class="type">Bool</span>, <span class="variable">withBody</span> <span class="variable">body</span>: <span class="type">Data</span>?, <span class="variable">forReturnType</span>: <span class="type">T</span>.<span class="type">Type</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">T</span>, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">request</span>&lt;<span class="variable">T</span>: <span class="type">Decodable</span>&gt;(<span class="variable">url</span>: <span class="type">URL</span>, <span class="variable">isPOST</span>: <span class="type">Bool</span>, <span class="variable">withBody</span> <span class="variable">body</span>: <span class="type">Data</span>?, <span class="variable">forReturnType</span>: <span class="type">T</span>.<span class="type">Type</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">T</span>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>A generic network request function that takes a URL, optional payload and a <code>Decodable</code> response type. Function will execute teh request and attempt to parse the response.
@@ -229,7 +229,7 @@ Using the Logging config, will auto log (or not) urls, response outputs, or fail
         <code><a href="#networkservice.logrequestfailed(loggingconfig:ispost:fullurl:payload:error:statuscode:responsedata:)">log​Request​Failed(logging​Config:​is​Post:​full​URL:​payload:​error:​status​Code:​response​Data:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestFailed</span>(<span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">isPost</span>: <span class="type">Bool</span>, <span class="variable">fullURL</span>: <span class="type">URL</span>, <span class="variable">payload</span>: <span class="type">Data</span>?, <span class="variable">error</span>: <span class="type">Error</span>?, <span class="variable">statusCode</span>: <span class="type">Int</span>?, <span class="variable">responseData</span>: <span class="type">Data</span>?)  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestFailed</span>(<span class="variable">loggingConfig</span>: <a href="https://kukai.app/kukai-core-swift/LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">isPost</span>: <span class="type">Bool</span>, <span class="variable">fullURL</span>: <span class="type">URL</span>, <span class="variable">payload</span>: <span class="type">Data</span>?, <span class="variable">error</span>: <span class="type">Error</span>?, <span class="variable">statusCode</span>: <span class="type">Int</span>?, <span class="variable">responseData</span>: <span class="type">Data</span>?)  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Logging details of request failures using <code>os_log</code> global logging</p>
@@ -241,7 +241,7 @@ Using the Logging config, will auto log (or not) urls, response outputs, or fail
         <code><a href="#networkservice.logrequestsucceded(loggingconfig:ispost:fullurl:payload:responsedata:)">log​Request​Succeded(logging​Config:​is​Post:​full​URL:​payload:​response​Data:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestSucceded</span>(<span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">isPost</span>: <span class="type">Bool</span>, <span class="variable">fullURL</span>: <span class="type">URL</span>, <span class="variable">payload</span>: <span class="type">Data</span>?, <span class="variable">responseData</span>: <span class="type">Data</span>?)  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestSucceded</span>(<span class="variable">loggingConfig</span>: <a href="https://kukai.app/kukai-core-swift/LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">isPost</span>: <span class="type">Bool</span>, <span class="variable">fullURL</span>: <span class="type">URL</span>, <span class="variable">payload</span>: <span class="type">Data</span>?, <span class="variable">responseData</span>: <span class="type">Data</span>?)  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Logging details of successful requests using <code>os_log</code> global logging</p>
@@ -253,7 +253,7 @@ Using the Logging config, will auto log (or not) urls, response outputs, or fail
         <code><a href="#networkservice.logrequeststart(loggingconfig:fullurl:)">log​Request​Start(logging​Config:​full​URL:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestStart</span>(<span class="variable">loggingConfig</span>: <a href="./LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">fullURL</span>: <span class="type">URL</span>)  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">logRequestStart</span>(<span class="variable">loggingConfig</span>: <a href="https://kukai.app/kukai-core-swift/LoggingConfig"><span class="type">LoggingConfig</span></a>?, <span class="variable">fullURL</span>: <span class="type">URL</span>)  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Logging details when a request starts using <code>os_log</code> global logging</p>
@@ -269,7 +269,7 @@ Using the Logging config, will auto log (or not) urls, response outputs, or fail
 
     <footer>
         <p>
-    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2021-06-22T13:39:19+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

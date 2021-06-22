@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KukaiCoreSwift - TzKTClient</title>
-    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="https://kukai.app/kukai-core-swift/all.css" media="all" />
 </head>
 <body>
     <header>
-        <a href="./">
+        <a href="https://kukai.app/kukai-core-swift/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -44,7 +44,7 @@
         
         <h3>Nested Types</h3>
 <dl>
-    <dt class="enumeration"><code><a href="./TzKTClient_TzKTServiceError">TzKTClient.TzKTServiceError</a></code></dt>
+    <dt class="enumeration"><code><a href="https://kukai.app/kukai-core-swift/TzKTClient_TzKTServiceError">TzKTClient.TzKTServiceError</a></code></dt>
 <dd></dd>
 </dl>
 </section>
@@ -56,7 +56,7 @@
         <code><a href="#tzktclient.init(networkservice:config:bettercalldevclient:)">init(network​Service:​config:​better​Call​Dev​Client:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">networkService</span>: <a href="./NetworkService"><span class="type">NetworkService</span></a>, <span class="variable">config</span>: <a href="./TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>, <span class="variable">betterCallDevClient</span>: <a href="./BetterCallDevClient"><span class="type">BetterCallDevClient</span></a>)  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">networkService</span>: <a href="https://kukai.app/kukai-core-swift/NetworkService"><span class="type">NetworkService</span></a>, <span class="variable">config</span>: <a href="https://kukai.app/kukai-core-swift/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>, <span class="variable">betterCallDevClient</span>: <a href="https://kukai.app/kukai-core-swift/BetterCallDevClient"><span class="type">BetterCallDevClient</span></a>)  </body></html></code></pre>
 </div>
 </div>
     </section>
@@ -68,7 +68,7 @@
         <code><a href="#tzktclient.getoperation(byhash:completion:)">get​Operation(by​Hash:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getOperation</span>(<span class="variable">byHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> (([<a href="./TzKTOperation"><span class="type">TzKTOperation</span></a>]?, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getOperation</span>(<span class="variable">byHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> (([<a href="https://kukai.app/kukai-core-swift/TzKTOperation"><span class="type">TzKTOperation</span></a>]?, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 </div>
 <div role="article" class="function" id="tzktclient.waitforinjection(ofhash:completion:)">
@@ -76,7 +76,7 @@
         <code><a href="#tzktclient.waitforinjection(ofhash:completion:)">wait​For​Injection(of​Hash:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">waitForInjection</span>(<span class="variable">ofHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Bool</span>, <span class="type">Error</span>?, <a href="./ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">waitForInjection</span>(<span class="variable">ofHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Bool</span>, <span class="type">Error</span>?, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 </div>
 <div role="article" class="function" id="tzktclient.cancelwait()">
@@ -100,7 +100,7 @@
         <code><a href="#tzktclient.currenttransactionhistory(filterbytoken:orfilterbyaddress:)">current​Transaction​History(filter​ByToken:​or​Filter​ByAddress:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">currentTransactionHistory</span>(<span class="variable">filterByToken</span>: <a href="./Token"><span class="type">Token</span></a>?, <span class="variable">orFilterByAddress</span>: <span class="type">String</span>?) -&gt; [<span class="type">TimeInterval</span>: [<a href="./TzKTTransaction"><span class="type">TzKTTransaction</span></a>]]  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">currentTransactionHistory</span>(<span class="variable">filterByToken</span>: <a href="https://kukai.app/kukai-core-swift/Token"><span class="type">Token</span></a>?, <span class="variable">orFilterByAddress</span>: <span class="type">String</span>?) -&gt; [<span class="type">TimeInterval</span>: [<a href="https://kukai.app/kukai-core-swift/TzKTTransaction"><span class="type">TzKTTransaction</span></a>]]  </body></html></code></pre>
 </div>
 </div>
 <div role="article" class="function" id="tzktclient.refreshtransactionhistory(foraddress:andsupportedtokens:completion:)">
@@ -108,7 +108,7 @@
         <code><a href="#tzktclient.refreshtransactionhistory(foraddress:andsupportedtokens:completion:)">refresh​Transaction​History(for​Address:​and​Supported​Tokens:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">refreshTransactionHistory</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">andSupportedTokens</span>: [<a href="./Token"><span class="type">Token</span></a>], <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> (() -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">refreshTransactionHistory</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">andSupportedTokens</span>: [<a href="https://kukai.app/kukai-core-swift/Token"><span class="type">Token</span></a>], <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> (() -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 </div>
     </section>
@@ -120,7 +120,7 @@
 
     <footer>
         <p>
-    Generated on <time datetime="2021-06-22T13:29:36+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2021-06-22T13:39:20+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>
