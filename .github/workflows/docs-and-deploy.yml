@@ -1,0 +1,23 @@
+name: Document Code
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Swift Doc
+        uses: SwiftDocOrg/swift-doc@1.0.0-rc.1
+        with:
+          inputs: "kukai-core-swift"
+          module-name: KukaiCoreSwift
+          format: "html"
+          output: "Documentation"
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: Documentation
