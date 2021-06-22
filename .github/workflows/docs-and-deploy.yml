@@ -14,7 +14,7 @@ jobs:
       - name: Swift Doc
         uses: SwiftDocOrg/swift-doc@1.0.0-rc.1
         with:
-          inputs: "kukai-core-swift"
+          inputs: "Sources"
           module-name: KukaiCoreSwift
           format: "html"
           output: "Documentation"
