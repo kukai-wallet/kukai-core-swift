@@ -1,0 +1,302 @@
+[
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 0,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 1,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 2,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 3,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 4,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 5,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 6,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 7,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 8,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    },
+    {
+        "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+        "network": "florencenet",
+        "level": 189961,
+        "timestamp": "2021-05-17T12:09:11Z",
+        "token_id": 9,
+        "symbol": "MATRX",
+        "name": "florence first mint",
+        "decimals": 0,
+        "description": "florence testnet first mints",
+        "artifact_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "display_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "thumbnail_uri": "ipfs://QmY48QfLVLJXxbBS8mbFmC2nGqtP4hjcVcPhBFeXGQqEr9",
+        "is_transferable": true,
+        "is_boolean_amount": true,
+        "creators": [
+            "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+        ],
+        "token_info": {
+            "@@empty": "ipfs://QmbfDxznxJsRCCQmKEusiUQoCvt1h3J8yaf5CsUNBLKgbC",
+            "category": "art",
+            "collectionId": 0,
+            "collectionName": "MATRIX",
+            "creatorName": "harsha13",
+            "creatorRoyalty": 1,
+            "editions": 25,
+            "keywords": "Florence"
+        },
+        "supply": "1"
+    }
+]

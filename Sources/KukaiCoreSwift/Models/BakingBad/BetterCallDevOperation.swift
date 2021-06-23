@@ -12,7 +12,7 @@ import Foundation
 public struct BetterCallDevOperation: Codable {
 	
 	/// An ID used by BCD
-	public let id: String
+	public let id: Int
 	
 	/// The operation hash
 	public let hash: String

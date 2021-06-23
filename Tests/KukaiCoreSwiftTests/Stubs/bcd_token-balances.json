@@ -1,0 +1,97 @@
+{
+    "balances": [
+        {
+            "contract": "KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "332639",
+            "symbol": "T1",
+            "name": "Token 1"
+        },
+        {
+            "contract": "KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "283620",
+            "symbol": "T2",
+            "name": "Token 2"
+        },
+        {
+            "contract": "KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "86210",
+            "symbol": "T3",
+            "name": "Token 3"
+        },
+        {
+            "contract": "KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "9706",
+            "symbol": "T4",
+            "name": "Token 4"
+        },
+        {
+            "contract": "KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "1663",
+            "symbol": "T5",
+            "name": "Token 5"
+        },
+        {
+            "contract": "KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "1192",
+            "symbol": "T6",
+            "name": "Token 6"
+        },
+        {
+            "contract": "KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj",
+            "network": "florencenet",
+            "token_id": 0,
+            "balance": "1110",
+            "symbol": "T7",
+            "name": "Token 7"
+        },
+        {
+            "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+            "network": "florencenet",
+            "token_id": 173,
+            "symbol": "MATRI",
+            "name": "matrix 6",
+            "decimals": 0,
+            "description": "florence first mints",
+            "artifact_uri": "ipfs://QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN",
+            "display_uri": "ipfs://QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN",
+            "thumbnail_uri": "ipfs://QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN",
+            "is_transferable": true,
+            "is_boolean_amount": true,
+            "creators": [
+                "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+            ],
+            "balance": "1"
+        },
+        {
+            "contract": "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH",
+            "network": "florencenet",
+            "token_id": 150,
+            "symbol": "MATRI",
+            "name": "matrix 6",
+            "decimals": 0,
+            "description": "florence first mints",
+            "artifact_uri": "ipfs://QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN",
+            "display_uri": "ipfs://QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN",
+            "thumbnail_uri": "ipfs://QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN",
+            "is_transferable": true,
+            "is_boolean_amount": true,
+            "creators": [
+                "tz1epVZfgJRDDo4pPy37N4eDpnkNn3D97Ws9"
+            ],
+            "balance": "1"
+        }
+    ],
+    "total": 9
+}

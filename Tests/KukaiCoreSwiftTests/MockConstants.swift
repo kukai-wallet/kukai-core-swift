@@ -21,6 +21,7 @@ public struct MockConstants {
 	public let loggingConfig: LoggingConfig
 	public let networkService: NetworkService
 	public let tezosNodeClient: TezosNodeClient
+	public let betterCallDevClient: BetterCallDevClient
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
@@ -39,6 +40,12 @@ public struct MockConstants {
 		
 		// Setup URL mocks
 		let baseURL = config.primaryNodeURL
+		let bcdURL = config.betterCallDevURL
+		
+		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/florencenet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
+		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
+		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 10)
+		bcdTokenBalanceURL.appendQueryItem(name: "sort_by", value: "balance")
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -57,7 +64,31 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("injection/operation"): (MockConstants.jsonStub(fromFilename: "inject"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/balance"): (MockConstants.jsonStub(fromFilename: "balance"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/delegate"): (MockConstants.jsonStub(fromFilename: "delegate"), MockConstants.http200),
-			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8/storage"): (MockConstants.jsonStub(fromFilename: "contract_storage"), MockConstants.http200)
+			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8/storage"): (MockConstants.jsonStub(fromFilename: "contract_storage"), MockConstants.http200),
+			
+			// BCD URLs
+			bcdURL.appendingPathComponent("v1/account/florencenet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "bcd_account"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/account/florencenet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/count"): (MockConstants.jsonStub(fromFilename: "bcd_token-count"), MockConstants.http200),
+			bcdTokenBalanceURL: (MockConstants.jsonStub(fromFilename: "bcd_token-balances"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/florencenet/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata-nft"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/opg/ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession
@@ -68,6 +99,14 @@ public struct MockConstants {
 		let opService = OperationService(config: config, networkService: networkService)
 		tezosNodeClient.operationService = opService
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
+		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
+	}
+	
+	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {
+		var bcdURL = config.betterCallDevURL.appendingPathComponent("v1/tokens/florencenet/metadata")
+		bcdURL.appendQueryItem(name: "contract", value: contract)
+		
+		return bcdURL
 	}
 	
 	
@@ -168,7 +207,7 @@ public struct MockConstants {
 	public static let sendOperationWithReveal = [OperationReveal(wallet: MockConstants.defaultHdWallet), OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)]
 	public static let sendOperationPayload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet)
 	public static let sendOperationForged = "43f597d84037e88354ed041cc6356f737cc6638691979bb64415451b58b4af2c6c00ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00bdac1a80bd3fe0d403e80700005134b25890279835eb946e6369a3d719bc0d617700"
-	
+	public static let operationHashToSearch = "ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"
 	
 	
 	

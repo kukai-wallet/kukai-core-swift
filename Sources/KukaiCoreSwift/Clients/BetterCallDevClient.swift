@@ -542,6 +542,14 @@ public class BetterCallDevClient {
 			return
 		}
 		
+		
+		// Don't donwload real images during unit tests. Investigate mocking kingfisher
+		if let _ = NSClassFromString("XCTest") {
+			completion(true)
+			return
+		}
+		
+		
 		// Set expiration and pre-fetch
 		ImageCache.default.diskStorage.config.expiration = .never
 		ImagePrefetcher(urls: imageURLs, options: nil, progressBlock: nil) { (skipped, failed, completed) in
