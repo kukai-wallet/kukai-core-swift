@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// A model matching the response that comes back from BetterCallDev's API: `v1/tokens/<network>/metadata?contract=<address>`
 public class BetterCallDevTokenMetadata: Codable {
 	
 	public let contract: String

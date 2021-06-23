@@ -8,10 +8,16 @@
 
 import Foundation
 
+/// A model matching the response that comes back from BetterCallDev's API: `v1/account/<network>/<address>`
 public struct BetterCallDevAccount: Codable {
 	
+	/// The wallet address
 	public let address: String
+	
+	/// The wallet's XTZ balance
 	public let balance: XTZAmount
+	
+	/// The network chain name the wallet is active on
 	public let network: TezosChainName
 	
 	

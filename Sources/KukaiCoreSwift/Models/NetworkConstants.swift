@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// The contants that a given Tezos node is using for block times, blakc size etc
 public struct NetworkConstants: Codable {
 	public let time_between_blocks: [String]
 	public let hard_gas_limit_per_operation: String

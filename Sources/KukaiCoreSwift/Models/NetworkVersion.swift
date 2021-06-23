@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// A enum representing the chain name for Tezos nodes, denoting the protocol version being run or mainnet
 public enum TezosChainName: String {
 	case mainnet
 	case alphanet
@@ -19,6 +20,7 @@ public enum TezosChainName: String {
 	case unknwon
 }
 
+/// The version of the Tezos code being run by the given node
 public struct NetworkVersion: Codable {
 	
 	let network_version: network_version

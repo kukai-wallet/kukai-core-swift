@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Payload object needed when sending operations to .../run_operation
 public struct RunOperationPayload: Codable {
 	
 	enum CodingKeys: String, CodingKey {

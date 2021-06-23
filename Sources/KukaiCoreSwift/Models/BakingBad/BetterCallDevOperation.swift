@@ -8,17 +8,32 @@
 
 import Foundation
 
+/// A model matching the response that comes back from BetterCallDev's API: `v1/opg/<operation-hash>`
 public struct BetterCallDevOperation: Codable {
+	
+	/// An ID used by BCD
 	public let id: String
+	
+	/// The operation hash
 	public let hash: String
+	
+	/// The operations numeric counter
 	public let counter: Int
+	
+	/// Indicating if the operation was successful, failed, backtracked etc.
 	public let status: String
+	
+	/// Detailed error objects, also including unique smart contract errors
 	public let errors: [BetterCallDevOperationError]?
 	
+	
+	/// Helper to determine if the operation failed or not
 	public func isFailed() -> Bool {
 		return status.lowercased() == "failed" || status.lowercased() == "backtracked"
 	}
 	
+	
+	/// Helper to check for existance of errors
 	public func containsError() -> Bool {
 		return errors != nil && errors?.count ?? 0 > 0
 	}
@@ -42,6 +57,7 @@ public struct BetterCallDevOperation: Codable {
 	}
 }
 
+/// BetterCallDev structure for errors
 public struct BetterCallDevOperationError: Codable {
 	public let id: String
 	public let title: String

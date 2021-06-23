@@ -8,11 +8,13 @@
 
 import Foundation
 
+/// A model matching the response that comes back from BetterCallDev's API: `v1/account/<network>/<address>/token_balances`
 public struct BetterCallDevTokenBalances: Codable {
 	public var balances: [BetterCallDevTokenBalance]
 	public let total: Int
 }
 
+/// A model matching the internal array type that comes back from BetterCallDev's API: `v1/account/<network>/<address>/token_balances`
 public struct BetterCallDevTokenBalance: Codable {
 	
 	public let token_id: Int
@@ -28,10 +30,13 @@ public struct BetterCallDevTokenBalance: Codable {
 	private let balance: TokenAmount
 	private let decimals: Int?
 	
+	
+	/// Make shift attempt to determine if the balance belongs to an NFT or not, until a better solution can be found
 	public func isNFT() -> Bool {
 		return is_boolean_amount ?? false
 	}
 	
+	/// Process the returned amount as a `TokenAmount`
 	public func amount() -> TokenAmount {
 		balance.decimalPlaces = self.decimals ?? 0
 		return balance

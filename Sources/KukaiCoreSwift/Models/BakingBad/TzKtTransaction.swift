@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// A model matching the response that comes back from TzKT's API: `v1/accounts/<address>/operations`
 public class TzKTTransaction: Decodable, CustomStringConvertible {
 	
 	// MARK: Types

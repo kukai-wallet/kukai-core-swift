@@ -181,6 +181,15 @@ public class ErrorHandlingService {
 	
 	// MARK: - Error parsers
 	
+	/**
+	Take in a string and check if it contains a known error string, if so parse into an `ErrorResponse` object.
+	Errors from the Tezos RPC will come down inside a large block of JSON, with the error being a string containing the protocol version that the server was running,
+	some other technical info depending on the circumstances and then a string constant detailing the type of error. THis function was created primarily to just take those
+	error strings and check to see which constant was present inside it. Its now grown to be more of a general purpose error catcher.
+	- parameter string: A string containing some kind of error, whether it be from Tezos RPC or a string version of a Swift error object
+	- parameter andLong: A bool used to decide whether or not to trigger a console log and the global event callback. Tezos responses often include many errors, some of which are extremely generic. In some cases we will run this function many times on one response and only log the meaningful error we care about.
+	- returns `ErrorResponse`
+	*/
 	public class func parse(string: String, andLog: Bool = true) -> ErrorResponse {
 		var errorResponse: ErrorResponse = ErrorResponse.unknownError()
 		
@@ -272,6 +281,15 @@ public class ErrorHandlingService {
 		return errorResponse
 	}
 	
+	/**
+	Helper method to wrap around `parse(string: ...)` in order to process generic network responses.
+	- parameter data: A data object returned from URLSession task
+	- parameter response: A URLResponse returned from URLSession task
+	- parameter networkError: A swift error object returned by the URLSession task
+	- parameter requestURL: The URL that was requested
+	- parameter requestData: The request Data() that was sent to the URL
+	- returns `ErrorResponse`
+	*/
 	public class func parse(data: Data?, response: URLResponse?, networkError: Error?, requestURL: URL, requestData: Data?) -> ErrorResponse? {
 		var errorResponse: ErrorResponse? = nil
 		
@@ -320,6 +338,11 @@ public class ErrorHandlingService {
 	
 	// MARK: - Error Extractors
 	
+	/**
+	Process an array of `TzKTOperation` to determine if they contain a tezos error object
+	- parameter tzktOperations: An array of operations returned from TzKT
+	- returns `Bool`
+	*/
 	public class func containsErrors(tzktOperations: [TzKTOperation]) -> Bool {
 		for op in tzktOperations {
 			if op.containsError() {
@@ -334,8 +357,8 @@ public class ErrorHandlingService {
 	There are 2 types of high level errors in Tezos.
 	1. Account state errors: These errors are global across the entire ecosystem, and will effect any application, or product. Examples: insufficent balance, invalid address, invalid baker.
 	2. Script errors: These errors are specific to each application. Examples: Dexter-invalid requested exchange operation, TNS-the requested domain name is unavailable.
-	When working with smart contracts on Tezos, operations may have internal child operations, each of which can have an error. When an error of type 2 mentioned above occurs,
-	the array of operations will contain many generic "a unknown script error occured" messages, with one of the operations containing the detailed, application specific error. This function is an
+	When working with smart contracts on Tezos, operations may have internal child operations, each of which can have an error. When an error of type 2 mentioned above,
+	occurs the array of operations will contain many generic "a unknown script error occured" messages, with one of the operations containing the detailed, application specific error. This function is an
 	attempt to abstract this logic away from developers, by simply taking in an array of operations, and returning the most meaningful error it can, to reduce time and effort.
 	- Returns: `nil` if no errors found, useful for checking status, `.unknownError` if no meaningful errors can be found, or some `ErrorResponseType` matching the meaningful error
 	*/

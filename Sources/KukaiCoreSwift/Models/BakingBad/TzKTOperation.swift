@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// A model matching the response that comes back from TzKT's API: `v1/operations/<operation-hash>`
 public struct TzKTOperation: Codable {
 	public let type: String
 	public let id: Int
@@ -28,6 +29,7 @@ public struct TzKTOperation: Codable {
 	}
 }
 
+/// TzKT's more basic error object response
 public struct TzKTOperationError: Codable {
 	public let type: String
 }
