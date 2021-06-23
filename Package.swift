@@ -14,10 +14,7 @@ let package = Package(
 		.package(name: "Sodium", url: "https://github.com/jedisct1/swift-sodium.git", from: "0.9.1"),
 		.package(name: "secp256k1", url: "https://github.com/Boilertalk/secp256k1.swift.git", from: "0.1.4"),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
-		
-		// Currently not working "invalid path 'Sources' for target 'WalletCore'".
-		// Need to manually download and build WalletCore as .xcframeworks using `tools/ios-xcframework`. Then include them as binary targets
-		//.package(url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
+		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
     ],
     targets: [
         .target(
@@ -28,23 +25,10 @@ let package = Package(
 				.product(name: "Clibsodium", package: "Sodium"),
 				"secp256k1",
 				"Kingfisher",
-				"SwiftProtobuf",
 				"WalletCore",
-				"WalletCoreTypes"
 			],
 			resources: [
 				.copy("Services/External")
-			],
-			cSettings: [
-				.headerSearchPath("include")
-			],
-			cxxSettings: [
-				.headerSearchPath("include")
-			],
-			linkerSettings: [
-				.linkedFramework("SwiftProtobuf"),
-				.linkedFramework("WalletCore"),
-				.linkedFramework("WalletCoreTypes")
 			]
 		),
 		
@@ -55,9 +39,5 @@ let package = Package(
 				.copy("Stubs")
 			]
 		),
-		
-		.binaryTarget(name: "SwiftProtobuf", path: "Binaries/SwiftProtobuf.xcframework"),
-		.binaryTarget(name: "WalletCore", path: "Binaries/WalletCore.xcframework"),
-		.binaryTarget(name: "WalletCoreTypes", path: "Binaries/WalletCoreTypes.xcframework"),
     ]
 )

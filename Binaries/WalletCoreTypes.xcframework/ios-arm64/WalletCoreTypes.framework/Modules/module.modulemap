@@ -1,4 +1,0 @@
-framework module WalletCoreTypes {
-  header "WalletCoreTypes-Swift.h"
-  requires objc
-}
