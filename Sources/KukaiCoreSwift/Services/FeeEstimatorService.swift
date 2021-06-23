@@ -86,7 +86,6 @@ public class FeeEstimatorService {
 		switch self.config.forgingType {
 			case .local:
 				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
-					print("\n\n\n Running local forge for estimation \n\n\n")
 					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, completion: completion)
 				}
 				

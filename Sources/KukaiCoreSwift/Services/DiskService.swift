@@ -43,7 +43,7 @@ public class DiskService {
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@. Full path: %@", toFileName, error.localizedDescription, fileURL.absoluteString)
 			return false
 		}
 	}
@@ -58,7 +58,7 @@ public class DiskService {
 			return write(data: encodedData, toFileName: toFileName)
 
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@. Full path: %@", toFileName, error.localizedDescription, fileURL.absoluteString)
 			return false
 		}
 	}

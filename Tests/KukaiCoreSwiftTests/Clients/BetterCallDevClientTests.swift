@@ -133,20 +133,20 @@ class BetterCallDevClientTests: XCTestCase {
 					XCTFail(error.description)
 			}
 			
+			
+			let cachedAccount = MockConstants.shared.betterCallDevClient.cachedAccountInfo()
+			XCTAssert(cachedAccount?.walletAddress == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", cachedAccount?.walletAddress ?? "-")
+			XCTAssert(cachedAccount?.tokens.count == 7, "\(cachedAccount?.tokens.count ?? 0)")
+			XCTAssert(cachedAccount?.tokens.first?.name == "Token 1", cachedAccount?.tokens.first?.name ?? "-")
+			XCTAssert(cachedAccount?.tokens.first?.symbol == "T1", cachedAccount?.tokens.first?.symbol ?? "-")
+			XCTAssert(cachedAccount?.nfts.count == 1, "\(cachedAccount?.nfts.count ?? 0)")
+			XCTAssert(cachedAccount?.nfts.first?.nfts?.count == 2, "\(cachedAccount?.nfts.first?.nfts?.count ?? 0)")
+			XCTAssert(cachedAccount?.nfts.first?.nfts?.first?.name == "matrix 6", cachedAccount?.nfts.first?.nfts?.first?.name ?? "-")
+			XCTAssert(cachedAccount?.nfts.first?.nfts?.first?.symbol == "MATRI", cachedAccount?.nfts.first?.nfts?.first?.symbol ?? "-")
+			
 			expectation.fulfill()
 		})
-		wait(for: [expectation], timeout: 3)
-		
-		
-		let cachedAccount = MockConstants.shared.betterCallDevClient.cachedAccountInfo()
-		XCTAssert(cachedAccount?.walletAddress == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", cachedAccount?.walletAddress ?? "-")
-		XCTAssert(cachedAccount?.tokens.count == 7, "\(cachedAccount?.tokens.count ?? 0)")
-		XCTAssert(cachedAccount?.tokens.first?.name == "Token 1", cachedAccount?.tokens.first?.name ?? "-")
-		XCTAssert(cachedAccount?.tokens.first?.symbol == "T1", cachedAccount?.tokens.first?.symbol ?? "-")
-		XCTAssert(cachedAccount?.nfts.count == 1, "\(cachedAccount?.nfts.count ?? 0)")
-		XCTAssert(cachedAccount?.nfts.first?.nfts?.count == 2, "\(cachedAccount?.nfts.first?.nfts?.count ?? 0)")
-		XCTAssert(cachedAccount?.nfts.first?.nfts?.first?.name == "matrix 6", cachedAccount?.nfts.first?.nfts?.first?.name ?? "-")
-		XCTAssert(cachedAccount?.nfts.first?.nfts?.first?.symbol == "MATRI", cachedAccount?.nfts.first?.nfts?.first?.symbol ?? "-")
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testImageURL() {
