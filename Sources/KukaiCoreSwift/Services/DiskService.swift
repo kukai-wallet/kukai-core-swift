@@ -44,7 +44,7 @@ public class DiskService {
 		} catch (let error) {
 			print("\n\n\n")
 			print("data to write: \(data)")
-			print("data string: \(String(data: data, encoding: .utf8))")
+			print("data string: \(String(data: data, encoding: .utf8) ?? "")")
 			print("path: \(fileURL.absoluteString)")
 			print("\n\n\n")
 			
