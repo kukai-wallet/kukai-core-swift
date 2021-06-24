@@ -42,7 +42,13 @@ public class DiskService {
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@. Full path: %@", toFileName, error.localizedDescription, fileURL.absoluteString)
+			print("\n\n\n")
+			print("data to write: \(data)")
+			print("data string: \(String(data: data, encoding: .utf8))")
+			print("path: \(fileURL.absoluteString)")
+			print("\n\n\n")
+			
+			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, "\(error)")
 			return false
 		}
 	}
@@ -138,11 +144,18 @@ public class DiskService {
 	Get the URL to the devices documents directory, if possible
 	*/
 	public static func documentsDirectory() -> URL? {
-		if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+		/*if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
 			return dir
-		}
+		}*/
 		
-		return nil
+		
+		do {
+			return try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+			
+		} catch (let error) {
+			os_log(.error, log: .kukaiCoreSwift, "Error fetching documents directory:  %@", "\(error)")
+			return nil
+		}
 	}
 	
 	/**
