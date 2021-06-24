@@ -39,13 +39,18 @@
 <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">TzKTClient</span>  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, and transactions</p>
+
+</div>
 <section id="relationships">
     <h2 hidden>Relationships</h2>
         
         <h3>Nested Types</h3>
 <dl>
     <dt class="enumeration"><code><a href="https://kukai.app/kukai-core-swift/TzKTClient_TzKTServiceError">TzKTClient.TzKTServiceError</a></code></dt>
-<dd></dd>
+<dd><p>Unique Errors that TzKTClient can throw</p>
+</dd>
 </dl>
 </section>
     <section id="initializers">
@@ -58,6 +63,41 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">networkService</span>: <a href="https://kukai.app/kukai-core-swift/NetworkService"><span class="type">NetworkService</span></a>, <span class="variable">config</span>: <a href="https://kukai.app/kukai-core-swift/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>, <span class="variable">betterCallDevClient</span>: <a href="https://kukai.app/kukai-core-swift/BetterCallDevClient"><span class="type">BetterCallDevClient</span></a>)  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Init a <code>TzKTClient</code> with a <code>NetworkService</code> and a <code>TezosNodeClientConfig</code> and a <code>BetterCallDevClient</code>.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>network​Service</th>
+    <td><code class="type">Network​Service</code></td>
+    <td><p><code>NetworkService</code> used to manage network communication.</p>
+</td>
+</tr>
+<tr>
+    <th>config</th>
+    <td><code class="type">Tezos​Node​Client​Config</code></td>
+    <td><p><code>TezosNodeClientConfig</code> used to apss in settings.</p>
+</td>
+</tr>
+<tr>
+    <th>better​Call​Dev​Client</th>
+    <td><code class="type">Better​Call​Dev​Client</code></td>
+    <td><p><code>BetterCallDevClient</code> used to fetch more detailed errors about operation failures involving smart contracts.</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
     </section>
     <section id="methods">
@@ -70,6 +110,35 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getOperation</span>(<span class="variable">byHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> (([<a href="https://kukai.app/kukai-core-swift/TzKTOperation"><span class="type">TzKTOperation</span></a>]?, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Query details about the given operation</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>by​Hash</th>
+    <td><code class="type">String</code></td>
+    <td><p>The operation hash to query.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping (([TzKTOperation]?, Error​Response?) -&gt; Void)</code></td>
+    <td><p>A completion colsure called when the request is done.</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
 <div role="article" class="function" id="tzktclient.waitforinjection(ofhash:completion:)">
     <h3>
@@ -78,6 +147,35 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">waitForInjection</span>(<span class="variable">ofHash</span> <span class="variable">hash</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Bool</span>, <span class="type">Error</span>?, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Poll the TzKT APi until a record of the given operation is found</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>of​Hash</th>
+    <td><code class="type">String</code></td>
+    <td><p>The operation hash to query.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Bool, Error?, Error​Response?) -&gt; Void)</code></td>
+    <td><p>A completion colsure called when the API returns a valid operation response, or an error indicating a problem with the service.</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
 <div role="article" class="function" id="tzktclient.cancelwait()">
     <h3>
@@ -85,6 +183,10 @@
     </h3>
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">cancelWait</span>()  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Cancel the polling operation from <code>waitForInjection</code></p>
+
 </div>
 </div>
 <div role="article" class="function" id="tzktclient.clearhistory()">
@@ -94,6 +196,10 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">clearHistory</span>()  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Clear the in RAM copy of transaction history</p>
+
+</div>
 </div>
 <div role="article" class="function" id="tzktclient.currenttransactionhistory(filterbytoken:orfilterbyaddress:)">
     <h3>
@@ -102,6 +208,43 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">currentTransactionHistory</span>(<span class="variable">filterByToken</span>: <a href="https://kukai.app/kukai-core-swift/Token"><span class="type">Token</span></a>?, <span class="variable">orFilterByAddress</span>: <span class="type">String</span>?) -&gt; [<span class="type">TimeInterval</span>: [<a href="https://kukai.app/kukai-core-swift/TzKTTransaction"><span class="type">TzKTTransaction</span></a>]]  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Get the current in RAM transation history, with optional filters</p>
+
+</div>
+<div class="discussion">
+    <ul>
+<li>
+<p>returns transactions grouped by day in a dictionary with a key of <code>TimeInterval</code>.</p>
+</li>
+</ul>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>filter​ByToken</th>
+    <td><code class="type">Token?</code></td>
+    <td><p>only retuns transactions where the primary or secondary token is of this type.</p>
+</td>
+</tr>
+<tr>
+    <th>or​Filter​ByAddress</th>
+    <td><code class="type">String?</code></td>
+    <td><p>only retuns transactions where the source or destination address matches this string</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
 <div role="article" class="function" id="tzktclient.refreshtransactionhistory(foraddress:andsupportedtokens:completion:)">
     <h3>
@@ -110,6 +253,41 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">refreshTransactionHistory</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">andSupportedTokens</span>: [<a href="https://kukai.app/kukai-core-swift/Token"><span class="type">Token</span></a>], <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> (() -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Query the lastest transaction history and store in RAM. Get access to the data via <code>currentTransactionHistory(...)</code></p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>for​Address</th>
+    <td><code class="type">String</code></td>
+    <td><p>the wallet address to query the history for.</p>
+</td>
+</tr>
+<tr>
+    <th>and​Supported​Tokens</th>
+    <td><code class="type">[Token]</code></td>
+    <td><p>a list of known tokens, used to add more detail to the transaction objects.</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping (() -&gt; Void)</code></td>
+    <td><p>a closure indicating the request and processing has finished.</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
     </section>
 
@@ -120,7 +298,7 @@
 
     <footer>
         <p>
-    Generated on <time datetime="2021-06-22T15:11:46+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2021-06-24T13:42:40+0000">June 24, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

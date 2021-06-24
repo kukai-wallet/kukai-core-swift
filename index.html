@@ -61,7 +61,8 @@ It will also convert amounts from the network into <code>Token</code> objects to
     </a>
 </dt>
 <dd>
-    
+    <p>TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, and transactions</p>
+
 </dd>
 <dt class="class">
     <a href="https://kukai.app/kukai-core-swift/MichelsonFactory" title="class - MichelsonFactory">
@@ -89,7 +90,8 @@ Although not every action requires more than one operation, all functions will r
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/tokens/&lt;network&gt;/metadata?contract=&lt;address&gt;</code></p>
+
 </dd>
 <dt class="class">
     <a href="https://kukai.app/kukai-core-swift/TzKTTransaction" title="class - TzKTTransaction">
@@ -97,7 +99,8 @@ Although not every action requires more than one operation, all functions will r
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from TzKT's API: <code>v1/accounts/&lt;address&gt;/operations</code></p>
+
 </dd>
 <dt class="class">
     <a href="https://kukai.app/kukai-core-swift/HDWallet" title="class - HDWallet">
@@ -283,7 +286,8 @@ It also serves as a means to more quickly create <code>TokenAmount</code>'s conf
     </a>
 </dt>
 <dd>
-    
+    <p>A class used to process errors into more readable format, and optionally notifiy a global error handler of every error occuring</p>
+
 </dd>
 <dt class="class">
     <a href="https://kukai.app/kukai-core-swift/FeeEstimatorService" title="class - FeeEstimatorService">
@@ -310,7 +314,8 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
     </a>
 </dt>
 <dd>
-    
+    <p>Several classes need to use pieces of the   forge-sign-parse-preapply-inject   flow. This class abstracts those functions away so that it can be shared throughout the library.</p>
+
 </dd>
 <dt class="class">
     <a href="https://kukai.app/kukai-core-swift/TaquitoService" title="class - TaquitoService">
@@ -372,7 +377,9 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>Fetching all the account balances is a lengthy task, involving many requests and parsing different structures.
+This struct abstract the developer away from knowing all these details, and instead allows developers to access wallets balances in a more normal approach</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/BetterCallDevAccount" title="structure - BetterCallDevAccount">
@@ -380,7 +387,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/account/&lt;network&gt;/&lt;address&gt;</code></p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/BetterCallDevContract" title="structure - BetterCallDevContract">
@@ -388,7 +396,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/contract/&lt;network&gt;/&lt;address&gt;</code></p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/BetterCallDevOperation" title="structure - BetterCallDevOperation">
@@ -396,7 +405,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/opg/&lt;operation-hash&gt;</code></p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/BetterCallDevOperationError" title="structure - BetterCallDevOperationError">
@@ -404,7 +414,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>BetterCallDev structure for errors</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/BetterCallDevTokenBalances" title="structure - BetterCallDevTokenBalances">
@@ -412,7 +423,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/account/&lt;network&gt;/&lt;address&gt;/token_balances</code></p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/BetterCallDevTokenBalance" title="structure - BetterCallDevTokenBalance">
@@ -420,7 +432,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the internal array type that comes back from BetterCallDev's API: <code>v1/account/&lt;network&gt;/&lt;address&gt;/token_balances</code></p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/TzKTOperation" title="structure - TzKTOperation">
@@ -428,7 +441,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from TzKT's API: <code>v1/operations/&lt;operation-hash&gt;</code></p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/TzKTOperationError" title="structure - TzKTOperationError">
@@ -436,7 +450,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>TzKT's more basic error object response</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/TzKTTransaction_TransactionLocation" title="structure - TzKTTransaction.TransactionLocation">
@@ -505,7 +520,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>An indiviual NFT (not the parent token/collection) holding a URI to an asset somewhere on the internet</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/NetworkConstants" title="structure - NetworkConstants">
@@ -513,7 +529,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>The contants that a given Tezos node is using for block times, blakc size etc</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/NetworkVersion" title="structure - NetworkVersion">
@@ -521,7 +538,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>The version of the Tezos code being run by the given node</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/OperationFees" title="structure - OperationFees">
@@ -628,7 +646,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>Payload object needed when sending operations to .../run_operation</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/WalletUtils" title="structure - WalletUtils">
@@ -654,7 +673,9 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>This library deals with Errors in many forms that are cumbersome to handle in client applications if passed directly.
+This object seeks to wrap up all the necessary data into a single source of truth and provide access to all the necessary pieces of information</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai.app/kukai-core-swift/FeeEstimatorService_FeeConstants" title="structure - FeeEstimatorService.FeeConstants">
@@ -694,7 +715,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>Unique Errors that TzKTClient can throw</p>
+
 </dd>
 <dt class="enumeration">
     <a href="https://kukai.app/kukai-core-swift/Prefix" title="enumeration - Prefix">
@@ -827,7 +849,8 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
     </a>
 </dt>
 <dd>
-    
+    <p>A enum representing the chain name for Tezos nodes, denoting the protocol version being run or mainnet</p>
+
 </dd>
 <dt class="enumeration">
     <a href="https://kukai.app/kukai-core-swift/OperationFees_NetworkFeeType" title="enumeration - OperationFees.NetworkFeeType">
@@ -907,7 +930,8 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
     </a>
 </dt>
 <dd>
-    
+    <p>High level error types, used to quickly categoise Tezos or system errors, in order to display error messages to user</p>
+
 </dd>
 <dt class="enumeration">
     <a href="https://kukai.app/kukai-core-swift/FeeEstimatorService_FeeEstimatorServiceError" title="enumeration - FeeEstimatorService.FeeEstimatorServiceError">
@@ -1014,7 +1038,7 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 
     <footer>
         <p>
-    Generated on <time datetime="2021-06-22T15:11:46+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2021-06-24T13:42:40+0000">June 24, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

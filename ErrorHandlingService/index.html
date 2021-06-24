@@ -39,6 +39,10 @@
 <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">ErrorHandlingService</span>  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>A class used to process errors into more readable format, and optionally notifiy a global error handler of every error occuring</p>
+
+</div>
 
     <section id="properties">
         <h2>Properties</h2>
@@ -50,6 +54,10 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">shared</span>  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Shared instance so that it can hold onto an event closure</p>
+
+</div>
 </div>
 <div role="article" class="variable" id="errorhandlingservice.erroreventclosure">
     <h3>
@@ -57,6 +65,10 @@
     </h3>
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">errorEventClosure</span>: ((<a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>) -&gt; <span class="type">Void</span>)? = <span class="keyword">nil</span></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Called everytime an error is parsed. Extremely useful to track / log errors globally, in order to run logic or record to external service</p>
+
 </div>
 </div>
     </section>
@@ -70,6 +82,46 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">string</span>: <span class="type">String</span>, <span class="variable">andLog</span>: <span class="type">Bool</span> = <span class="keyword">true</span>) -&gt; <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Take in a string and check if it contains a known error string, if so parse into an <code>ErrorResponse</code> object.
+Errors from the Tezos RPC will come down inside a large block of JSON, with the error being a string containing the protocol version that the server was running,
+some other technical info depending on the circumstances and then a string constant detailing the type of error. THis function was created primarily to just take those
+error strings and check to see which constant was present inside it. Its now grown to be more of a general purpose error catcher.</p>
+
+</div>
+<div class="discussion">
+    <ul>
+<li>
+<p>returns <code>ErrorResponse</code></p>
+</li>
+</ul>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>string</th>
+    <td><code class="type">String</code></td>
+    <td><p>A string containing some kind of error, whether it be from Tezos RPC or a string version of a Swift error object</p>
+</td>
+</tr>
+<tr>
+    <th>and​Long</th>
+    <td></td>
+    <td><p>A bool used to decide whether or not to trigger a console log and the global event callback. Tezos responses often include many errors, some of which are extremely generic. In some cases we will run this function many times on one response and only log the meaningful error we care about.</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
 <div role="article" class="function" id="errorhandlingservice.parse(data:response:networkerror:requesturl:requestdata:)">
     <h3>
@@ -78,6 +130,61 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">data</span>: <span class="type">Data</span>?, <span class="variable">response</span>: <span class="type">URLResponse</span>?, <span class="variable">networkError</span>: <span class="type">Error</span>?, <span class="variable">requestURL</span>: <span class="type">URL</span>, <span class="variable">requestData</span>: <span class="type">Data</span>?) -&gt; <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Helper method to wrap around <code>parse(string: ...)</code> in order to process generic network responses.</p>
+
+</div>
+<div class="discussion">
+    <ul>
+<li>
+<p>returns <code>ErrorResponse</code></p>
+</li>
+</ul>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>data</th>
+    <td><code class="type">Data?</code></td>
+    <td><p>A data object returned from URLSession task</p>
+</td>
+</tr>
+<tr>
+    <th>response</th>
+    <td><code class="type">URLResponse?</code></td>
+    <td><p>A URLResponse returned from URLSession task</p>
+</td>
+</tr>
+<tr>
+    <th>network​Error</th>
+    <td><code class="type">Error?</code></td>
+    <td><p>A swift error object returned by the URLSession task</p>
+</td>
+</tr>
+<tr>
+    <th>request​URL</th>
+    <td><code class="type">URL</code></td>
+    <td><p>The URL that was requested</p>
+</td>
+</tr>
+<tr>
+    <th>request​Data</th>
+    <td><code class="type">Data?</code></td>
+    <td><p>The request Data() that was sent to the URL</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
 <div role="article" class="function" id="errorhandlingservice.containserrors(tzktoperations:)">
     <h3>
@@ -86,6 +193,37 @@
     <div class="declaration">
 <pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">containsErrors</span>(<span class="variable">tzktOperations</span>: [<a href="https://kukai.app/kukai-core-swift/TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
 </div>
+<div class="summary" role="doc-abstract">
+    <p>Process an array of <code>TzKTOperation</code> to determine if they contain a tezos error object</p>
+
+</div>
+<div class="discussion">
+    <ul>
+<li>
+<p>returns <code>Bool</code></p>
+</li>
+</ul>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>tzkt​Operations</th>
+    <td><code class="type">[TzKTOperation]</code></td>
+    <td><p>An array of operations returned from TzKT</p>
+</td>
+</tr>
+  </tbody>
+</table>
 </div>
 <div role="article" class="function" id="errorhandlingservice.extractmeaningfulerrors(fromtzktoperations:)">
     <h3>
@@ -102,8 +240,8 @@
     <ol>
 <li>Account state errors: These errors are global across the entire ecosystem, and will effect any application, or product. Examples: insufficent balance, invalid address, invalid baker.</li>
 <li>Script errors: These errors are specific to each application. Examples: Dexter-invalid requested exchange operation, TNS-the requested domain name is unavailable.
-When working with smart contracts on Tezos, operations may have internal child operations, each of which can have an error. When an error of type 2 mentioned above occurs,
-the array of operations will contain many generic &quot;a unknown script error occured&quot; messages, with one of the operations containing the detailed, application specific error. This function is an
+When working with smart contracts on Tezos, operations may have internal child operations, each of which can have an error. When an error of type 2 mentioned above,
+occurs the array of operations will contain many generic &quot;a unknown script error occured&quot; messages, with one of the operations containing the detailed, application specific error. This function is an
 attempt to abstract this logic away from developers, by simply taking in an array of operations, and returning the most meaningful error it can, to reduce time and effort.</li>
 </ol>
 
@@ -146,7 +284,7 @@ attempt to abstract this logic away from developers, by simply taking in an arra
 
     <footer>
         <p>
-    Generated on <time datetime="2021-06-22T15:11:46+0000">June 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2021-06-24T13:42:40+0000">June 24, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>
