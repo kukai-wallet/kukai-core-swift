@@ -135,7 +135,7 @@ class BetterCallDevClientTests: XCTestCase {
 			
 			
 			let cachedAccount = MockConstants.shared.betterCallDevClient.cachedAccountInfo()
-			XCTAssert(cachedAccount?.walletAddress == "", cachedAccount?.walletAddress ?? "-")
+			XCTAssert(cachedAccount?.walletAddress == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", cachedAccount?.walletAddress ?? "-")
 			XCTAssert(cachedAccount?.tokens.count == 7, "\(cachedAccount?.tokens.count ?? 0)")
 			XCTAssert(cachedAccount?.tokens.first?.name == "Token 1", cachedAccount?.tokens.first?.name ?? "-")
 			XCTAssert(cachedAccount?.tokens.first?.symbol == "T1", cachedAccount?.tokens.first?.symbol ?? "-")

@@ -43,7 +43,7 @@ extension Base58 {
 	Base58 decode a message, removing the supplied prefix
 	*/
 	public static func decode(string: String, prefix: [UInt8]) -> [UInt8]? {
-		guard let bytes = Base58.decode(string: string), bytes.prefix(prefix.count).elementsEqual(prefix)else {
+		guard let bytes = Base58.decode(string: string), bytes.prefix(prefix.count).elementsEqual(prefix) else {
 			return nil
 		}
 		

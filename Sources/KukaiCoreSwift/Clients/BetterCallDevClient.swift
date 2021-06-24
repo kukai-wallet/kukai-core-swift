@@ -488,7 +488,7 @@ public class BetterCallDevClient {
 										if let meta = tokenMetadata {
 											metadata[token] = meta
 										} else {
-											print("no token metadata found for: \(token)")
+											os_log(.debug, log: .bcd, "no token metadata found for: %@", token)
 										}
 								}
 								

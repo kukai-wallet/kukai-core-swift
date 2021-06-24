@@ -1,0 +1,48 @@
+[
+    {
+        "type": "transaction",
+        "id": 34616551,
+        "level": 1190194,
+        "timestamp": "2020-10-28T00:40:28Z",
+        "block": "BL4AgfjH9Mk6ZknQc7Ygf66CX2nbUH3E2w2mN3tZ9nnVq7zHpwu",
+        "hash": "oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf",
+        "counter": 7388570,
+        "sender": {
+            "address": "tz1PMiUhz8HQ8KmKTYt1M6smQVWBb8w5QGrQ"
+        },
+        "gasLimit": 613968,
+        "gasUsed": 0,
+        "storageLimit": 257,
+        "storageUsed": 0,
+        "bakerFee": 61961,
+        "storageFee": 0,
+        "allocationFee": 0,
+        "target": {
+            "alias": "Dexter tzBTC/XTZ Old",
+            "address": "KT1DrJV8vhkdLEj76h1H9Q4irZDqAkMPo1Qf"
+        },
+        "amount": 1000000,
+        "parameter": {
+            "entrypoint": "xtzToToken",
+            "value": {
+                "to": "tz1PMiUhz8HQ8KmKTYt1M6smQVWBb8w5QGrQ",
+                "deadline": "2020-10-28T00:40:16Z",
+                "minTokensBought": "15308"
+            }
+        },
+        "status": "failed",
+        "errors": [
+            {
+                "type": "michelson_v1.runtime_error"
+            },
+            {
+                "type": "michelson_v1.script_rejected"
+            }
+        ],
+        "hasInternals": false,
+        "quote": {
+            "usd": 2.094512713361724
+        },
+        "parameters": "{\"entrypoint\":\"xtzToToken\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"string\":\"tz1PMiUhz8HQ8KmKTYt1M6smQVWBb8w5QGrQ\"},{\"prim\":\"Pair\",\"args\":[{\"int\":\"15308\"},{\"string\":\"2020-10-28T00:40:16Z\"}]}]}}"
+    }
+]

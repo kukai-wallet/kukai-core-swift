@@ -11,7 +11,7 @@ on:
       - main
       - develop
 
-# Generate an Xcode project, and run unit tests on an iPhone 12
+# Checkout the code, and run mxcl's xcodebuild action to run the unit tests
 jobs:
   build:
     runs-on: macOS-latest
@@ -24,6 +24,5 @@ jobs:
       - uses: mxcl/xcodebuild@v1
         with:
           platform: ${{ matrix.platform }}
-
-    #- name: Run tests
-    #  run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12'
+          action: test
+          code-coverage: true

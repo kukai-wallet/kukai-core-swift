@@ -22,6 +22,7 @@ public struct MockConstants {
 	public let networkService: NetworkService
 	public let tezosNodeClient: TezosNodeClient
 	public let betterCallDevClient: BetterCallDevClient
+	public let tzktClient: TzKTClient
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
@@ -41,11 +42,23 @@ public struct MockConstants {
 		// Setup URL mocks
 		let baseURL = config.primaryNodeURL
 		let bcdURL = config.betterCallDevURL
+		let tzktURL = config.tzktURL
 		
 		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/florencenet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
 		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
 		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 10)
 		bcdTokenBalanceURL.appendQueryItem(name: "sort_by", value: "balance")
+		
+		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
+		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
+		
+		var tzktHistoryNativeReceiveURL = tzktURL.appendingPathComponent("v1/operations/transactions")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "entrypoint", value: "transfer")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "parameter.to", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "initiator.null", value: nil)
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "sort.desc", value: "level")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "timestamp.gt", value: "2020-10-16T16:55:51Z")
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -89,6 +102,13 @@ public struct MockConstants {
 			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
 			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
 			bcdURL.appendingPathComponent("v1/opg/ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/opg/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
+			
+			// TzKT URLs
+			tzktURL.appendingPathComponent("v1/operations/ooT5uBirxWi9GXRqf6eGCEjoPhQid3U8yvsbP9JQHBXifVsinY8"): (MockConstants.jsonStub(fromFilename: "tzkt_operation"), MockConstants.http200),
+			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
+			tzktHistoryMainURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main"), MockConstants.http200),
+			tzktHistoryNativeReceiveURL: (MockConstants.jsonStub(fromFilename: "tzkt_transaction-native-receive"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession
@@ -100,6 +120,7 @@ public struct MockConstants {
 		tezosNodeClient.operationService = opService
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
 		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
+		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient)
 	}
 	
 	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {

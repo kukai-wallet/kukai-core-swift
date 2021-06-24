@@ -49,25 +49,12 @@ public class RPC<T: Decodable> {
 	
 	/// Helper function to wrap up `JSONEncoder().encode` and log any errors.
 	public static func encodableToData<T: Encodable>(encodable: T) -> Data? {
-		
-		// iOS 12 can't use JSONEncoder() to encode a string fragment. As a workaround, detect strings and just always use `JSONSerialization`
-		if encodable is String {
-			do {
-				return try JSONSerialization.data(withJSONObject: encodable, options: .fragmentsAllowed)
-				
-			} catch (let error) {
-				os_log(.error, log: .kukaiCoreSwift, "Unable to encode object as string: %@", "\(error)")
-				return nil
-			}
+		do {
+			return try JSONEncoder().encode(encodable)
 			
-		} else {
-			do {
-				return try JSONEncoder().encode(encodable)
-				
-			} catch(let error) {
-				os_log(.error, log: .kukaiCoreSwift, "Unable to encode object as string: %@", "\(error)")
-				return nil
-			}
+		} catch(let error) {
+			os_log(.error, log: .kukaiCoreSwift, "Unable to encode object as string: %@", "\(error)")
+			return nil
 		}
 	}
 }

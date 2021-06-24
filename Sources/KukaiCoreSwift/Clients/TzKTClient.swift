@@ -28,7 +28,7 @@ public class TzKTClient {
 	
 	private var dataTask: URLSessionDataTask?
 	private var workItem: DispatchWorkItem?
-	private let searchFrequency: Double = 20 // seconds
+	private var searchFrequency: Double = 20 // seconds
 	private var continueSearching = false
 	private var transactionHistory: [TimeInterval: [TzKTTransaction]] = [:]
 	private var tempTransactions: [TzKTTransaction] = []
@@ -50,6 +50,11 @@ public class TzKTClient {
 		self.networkService = networkService
 		self.config = config
 		self.betterCallDevClient = betterCallDevClient
+		
+		// Reduce searchFrequency for XCTTest
+		if let _ = NSClassFromString("XCTest") {
+			searchFrequency = 2
+		}
 	}
 	
 	

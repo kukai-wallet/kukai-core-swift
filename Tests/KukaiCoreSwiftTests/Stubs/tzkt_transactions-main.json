@@ -1,0 +1,333 @@
+[
+	{
+        "type": "delegation",
+        "id": 8582318,
+        "level": 588975,
+        "timestamp": "2020-07-23T11:54:52Z",
+        "block": "BMLFnUqHzASDWh5JyaVogNQ1dmYsTtEe5JgFirdM8dMayTX4drP",
+        "hash": "ooPWdDR8L1zz6uAmdCPFLf5rVwba7HrStZX1PxKc8vKuS9y1tBh",
+        "counter": 627156,
+        "sender": {
+            "address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+        },
+        "gasLimit": 10100,
+        "gasUsed": 10000,
+        "bakerFee": 1380,
+        "amount": 1969362383,
+        "prevDelegate": {
+            "address": "tz1KxFpyYzkcgq5CAok8fNvszrRcD2MUFMXy"
+        },
+        "newDelegate": {
+            "address": "tz1YH2LE6p7Sj16vF6irfHX92QV45XAZYHnX"
+        },
+        "status": "applied"
+    },
+	{
+		"type": "transaction",
+		"id": 13045807,
+		"level": 833998,
+		"timestamp": "2020-10-27T12:08:11Z",
+		"block": "BKp4y6MGqfKWUWagJG81Z2ntqf2TXTTuWV6NBq5tz87FcUSxwGk",
+		"hash": "ooapauxHDiruwLnPMBCi7TjrEvFpB9M2Yf1M84GxLkzG9c446Ua",
+		"counter": 627227,
+		"sender": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"gasLimit": 57218,
+		"gasUsed": 57118,
+		"storageLimit": 331,
+		"storageUsed": 74,
+		"bakerFee": 6302,
+		"storageFee": 74000,
+		"allocationFee": 0,
+		"target": {
+			"address": "<TZBTC-CONTRACT-ADDRESS>"
+		},
+		"amount": 0,
+		"parameter": {
+			"entrypoint": "transfer",
+			"value": {
+				"to": "tz1RKLWbGm7T4mnxDZHWazkbnvaryKsxxZTF",
+				"from": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN",
+				"value": "10"
+			}
+		},
+		"parameters": "{\"entrypoint\":\"transfer\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"string\":\"tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN\"},{\"prim\":\"Pair\",\"args\":[{\"string\":\"tz1RKLWbGm7T4mnxDZHWazkbnvaryKsxxZTF\"},{\"int\":\"10\"}]}]}}",
+		"status": "applied",
+		"hasInternals": false
+	},
+	{
+		"type": "transaction",
+		"id": 13045984,
+		"level": 834011,
+		"timestamp": "2020-10-27T12:19:16Z",
+		"block": "BM3drQoitjAuTm3J6ZKXQ6JW6jFQkewS4ZMbaJgYLuVydjcjamR",
+		"hash": "ooRXrm9wNiguRhJSAfy58ta2ZE89W3aW5ZPprAhSWojwNQFdwb9",
+		"counter": 627231,
+		"initiator": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"sender": {
+			"address": "<TZBTC-DEXTER-ADDRESS>"
+		},
+		"nonce": 0,
+		"gasLimit": 0,
+		"gasUsed": 10207,
+		"storageLimit": 0,
+		"storageUsed": 0,
+		"bakerFee": 0,
+		"storageFee": 0,
+		"allocationFee": 0,
+		"target": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"amount": 29787038,
+		"status": "applied",
+		"hasInternals": false
+	},
+	{
+		"type": "transaction",
+		"id": 13045983,
+		"level": 834011,
+		"timestamp": "2020-10-27T12:19:16Z",
+		"block": "BM3drQoitjAuTm3J6ZKXQ6JW6jFQkewS4ZMbaJgYLuVydjcjamR",
+		"hash": "ooRXrm9wNiguRhJSAfy58ta2ZE89W3aW5ZPprAhSWojwNQFdwb9",
+		"counter": 627231,
+		"initiator": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"sender": {
+			"address": "<TZBTC-DEXTER-ADDRESS>"
+		},
+		"nonce": 1,
+		"gasLimit": 0,
+		"gasUsed": 57495,
+		"storageLimit": 0,
+		"storageUsed": 0,
+		"bakerFee": 0,
+		"storageFee": 0,
+		"allocationFee": 0,
+		"target": {
+			"address": "<TZBTC-CONTRACT-ADDRESS>"
+		},
+		"amount": 0,
+		"parameter": {
+			"entrypoint": "transfer",
+			"value": {
+				"to": "<TZBTC-DEXTER-ADDRESS>",
+				"from": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN",
+				"value": "500"
+			}
+		},
+		"parameters": "{\"entrypoint\":\"transfer\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"bytes\":\"0000ca1c5dd7f6665501b57c692f0726a1db46fd1d18\"},{\"prim\":\"Pair\",\"args\":[{\"bytes\":\"01b381697d7811f126f77945d42aae7fc9e5398f3e00\"},{\"int\":\"500\"}]}]}}",
+		"status": "applied",
+		"hasInternals": false
+	},
+	{
+		"type": "transaction",
+		"id": 13045982,
+		"level": 834011,
+		"timestamp": "2020-10-27T12:19:16Z",
+		"block": "BM3drQoitjAuTm3J6ZKXQ6JW6jFQkewS4ZMbaJgYLuVydjcjamR",
+		"hash": "ooRXrm9wNiguRhJSAfy58ta2ZE89W3aW5ZPprAhSWojwNQFdwb9",
+		"counter": 627231,
+		"sender": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"gasLimit": 650000,
+		"gasUsed": 300267,
+		"storageLimit": 500,
+		"storageUsed": 0,
+		"bakerFee": 65300,
+		"storageFee": 0,
+		"allocationFee": 0,
+		"target": {
+			"address": "<TZBTC-DEXTER-ADDRESS>"
+		},
+		"amount": 0,
+		"parameter": {
+			"entrypoint": "tokenToXtz",
+			"value": {
+				"to": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN",
+				"owner": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN",
+				"deadline": "2020-10-27T12:29:30Z",
+				"tokensSold": "500",
+				"minXtzBought": "29346189"
+			}
+		},
+		"parameters": "{\"entrypoint\":\"tokenToXtz\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"prim\":\"Pair\",\"args\":[{\"string\":\"tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN\"},{\"string\":\"tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN\"}]},{\"prim\":\"Pair\",\"args\":[{\"int\":\"500\"},{\"prim\":\"Pair\",\"args\":[{\"int\":\"29346189\"},{\"string\":\"2020-10-27T12:29:30Z\"}]}]}]}}",
+		"status": "applied",
+		"hasInternals": true
+	},
+	{
+		"type": "transaction",
+		"id": 13045981,
+		"level": 834011,
+		"timestamp": "2020-10-27T12:19:16Z",
+		"block": "BM3drQoitjAuTm3J6ZKXQ6JW6jFQkewS4ZMbaJgYLuVydjcjamR",
+		"hash": "ooRXrm9wNiguRhJSAfy58ta2ZE89W3aW5ZPprAhSWojwNQFdwb9",
+		"counter": 627230,
+		"sender": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"gasLimit": 210000,
+		"gasUsed": 55922,
+		"storageLimit": 500,
+		"storageUsed": 1,
+		"bakerFee": 21300,
+		"storageFee": 1000,
+		"allocationFee": 0,
+		"target": {
+			"address": "<TZBTC-CONTRACT-ADDRESS>"
+		},
+		"amount": 0,
+		"parameter": {
+			"entrypoint": "approve",
+			"value": {
+				"value": "500",
+				"spender": "<TZBTC-DEXTER-ADDRESS>"
+			}
+		},
+		"parameters": "{\"entrypoint\":\"approve\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"string\":\"<TZBTC-DEXTER-ADDRESS>\"},{\"int\":\"500\"}]}}",
+		"status": "applied",
+		"hasInternals": false
+	},
+	{
+		"type": "transaction",
+		"id": 13070136,
+		"level": 835588,
+		"timestamp": "2020-10-28T11:52:27Z",
+		"block": "BLHQ2ZfLo5Ag15oUs2rW53KvS74AZxmsPKjU77joQpzRPov3bvG",
+		"hash": "ooVkQGcqMdtYbbrNAmE1Ht1v46LD4NQVnDCLCviL5QQ9HukUJUJ",
+		"counter": 627233,
+		"initiator": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"sender": {
+			"address": "<TZBTC-DEXTER-ADDRESS>"
+		},
+		"nonce": 0,
+		"gasLimit": 0,
+		"gasUsed": 119564,
+		"storageLimit": 0,
+		"storageUsed": 73,
+		"bakerFee": 0,
+		"storageFee": 73000,
+		"allocationFee": 0,
+		"target": {
+			"address": "<TZBTC-CONTRACT-ADDRESS>"
+		},
+		"amount": 0,
+		"parameter": {
+			"entrypoint": "transfer",
+			"value": {
+				"to": "<TZBTC-DEXTER-ADDRESS>",
+				"from": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN",
+				"value": "11460"
+			}
+		},
+		"parameters": "{\"entrypoint\":\"transfer\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"bytes\":\"01486f5ce64c3190e0bb3044f8a6e24298c8858fd000\"},{\"prim\":\"Pair\",\"args\":[{\"bytes\":\"0000ca1c5dd7f6665501b57c692f0726a1db46fd1d18\"},{\"int\":\"11460\"}]}]}}",
+		"status": "applied",
+		"hasInternals": false
+	},
+	{
+		"type": "transaction",
+		"id": 13070135,
+		"level": 835588,
+		"timestamp": "2020-10-28T11:52:27Z",
+		"block": "BLHQ2ZfLo5Ag15oUs2rW53KvS74AZxmsPKjU77joQpzRPov3bvG",
+		"hash": "ooVkQGcqMdtYbbrNAmE1Ht1v46LD4NQVnDCLCviL5QQ9HukUJUJ",
+		"counter": 627233,
+		"sender": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"gasLimit": 447944,
+		"gasUsed": 328280,
+		"storageLimit": 330,
+		"storageUsed": 0,
+		"bakerFee": 45359,
+		"storageFee": 0,
+		"allocationFee": 0,
+		"target": {
+			"address": "<TZBTC-DEXTER-ADDRESS>"
+		},
+		"amount": 10000000,
+		"parameter": {
+			"entrypoint": "xtzToToken",
+			"value": {
+				"to": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN",
+				"deadline": "2020-10-28T12:02:40Z",
+				"minTokensBought": "11422"
+			}
+		},
+		"parameters": "{\"entrypoint\":\"xtzToToken\",\"value\":{\"prim\":\"Pair\",\"args\":[{\"string\":\"tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN\"},{\"prim\":\"Pair\",\"args\":[{\"int\":\"11422\"},{\"string\":\"2020-10-28T12:02:40Z\"}]}]}}",
+		"status": "applied",
+		"hasInternals": true
+	},
+	{
+		"type": "transaction",
+		"id": 34251938,
+		"level": 1180181,
+		"timestamp": "2020-10-21T00:46:56Z",
+		"block": "BMF4DxoaEToSCMTD8ZvhG2HtyV1GJx6acza5Yibfp9usfAeo5rT",
+		"hash": "ooNikcHDL1DUsfuh7N8DkJwbcHPBhgyij2FxQvA99NtuRWTzcnk",
+		"counter": 7388557,
+		"sender": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"gasLimit": 20307,
+		"gasUsed": 10207,
+		"storageLimit": 257,
+		"storageUsed": 0,
+		"bakerFee": 2415,
+		"storageFee": 0,
+		"allocationFee": 257000,
+		"target": {
+			"address": "tz1SqjMCv8XBEejXKF8D1zfoeLSDEyEoNiEV"
+		},
+		"amount": 10000000,
+		"status": "applied",
+		"hasInternals": false
+	},
+	{
+		"type": "reveal",
+		"id": 34251937,
+		"level": 1180181,
+		"timestamp": "2020-10-21T00:46:56Z",
+		"block": "BMF4DxoaEToSCMTD8ZvhG2HtyV1GJx6acza5Yibfp9usfAeo5rT",
+		"hash": "ooNikcHDL1DUsfuh7N8DkJwbcHPBhgyij2FxQvA99NtuRWTzcnk",
+		"sender": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"counter": 7388556,
+		"gasLimit": 10000,
+		"gasUsed": 10000,
+		"bakerFee": 1268,
+		"status": "applied"
+	},
+	{
+		"type": "transaction",
+		"id": 34001198,
+		"level": 1174016,
+		"timestamp": "2020-10-16T16:55:51Z",
+		"block": "BLxJpE6Y8XZLMeipfzsiNw5ZN4TcUWJbb1YMrTvapHivu7Vc8He",
+		"hash": "opND5nyS1GWgxvp3xhFwi9heLjUvgvbTCSLsgRcSU3xghk1hCYd",
+		"counter": 5035838,
+		"sender": {
+			"address": "tz1RKLWbGm7T4mnxDZHWazkbnvaryKsxxZTF"
+		},
+		"gasLimit": 10307,
+		"gasUsed": 10207,
+		"storageLimit": 257,
+		"storageUsed": 0,
+		"bakerFee": 1413,
+		"storageFee": 0,
+		"allocationFee": 257000,
+		"target": {
+			"address": "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN"
+		},
+		"amount": 25000000,
+		"status": "applied",
+		"hasInternals": false
+	}
+]
