@@ -34,7 +34,6 @@ public class DiskService {
 			return false
 		}
 		
-		
 		// Write the current contents to disk
 		do {
 			try data.write(to: fileURL)
