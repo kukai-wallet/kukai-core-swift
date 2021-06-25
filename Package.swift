@@ -20,9 +20,10 @@ let package = Package(
         .target(
 			name: "KukaiCoreSwift",
 			dependencies: [
+				.product(name: "Clibsodium", package: "Sodium"),
+				"Sodium",
 				"BigInt",
 				"Sodium",
-				.product(name: "Clibsodium", package: "Sodium"),
 				"secp256k1",
 				"Kingfisher",
 				"WalletCore",
