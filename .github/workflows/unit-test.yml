@@ -26,4 +26,4 @@ jobs:
           platform: ${{ matrix.platform }}
           action: test
           code-coverage: true
-          upload-logs: true
+          upload-logs: always
