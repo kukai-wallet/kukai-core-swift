@@ -33,5 +33,17 @@ class SecretKeyTests: XCTestCase {
 		
 		let publicKey2 = PublicKey(secretKey: secretKey2!)
 		XCTAssert(publicKey2?.publicKeyHash == "tz29nzoG5nkTe3rJzEQx5EoDT5LgKVhxLQXj", publicKey2?.publicKeyHash ?? "-")
+		
+		
+		
+		let hexToSign = "123456"
+		let signature1 = secretKey?.sign(hex: hexToSign) ?? []
+		let signature2 = secretKey2?.sign(hex: hexToSign) ?? []
+		
+		XCTAssert(publicKey?.verify(signature: signature1, hex: hexToSign) ?? false)
+		XCTAssert(publicKey2?.verify(signature: signature2, hex: hexToSign) ?? false)
+		
+		XCTAssertFalse(publicKey?.verify(signature: signature1, hex: "654321") ?? false)
+		XCTAssertFalse(publicKey2?.verify(signature: signature2, hex: "654321") ?? false)
 	}
 }

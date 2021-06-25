@@ -23,7 +23,6 @@ let package = Package(
 				.product(name: "Clibsodium", package: "Sodium"),
 				"Sodium",
 				"BigInt",
-				"Sodium",
 				"secp256k1",
 				"Kingfisher",
 				"WalletCore",

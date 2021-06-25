@@ -5,7 +5,7 @@
         "additional_info": "release"
     },
     "network_version": {
-        "chain_name": "TEZOS_FLORENCENOBANET_2021-03-04T20:00:00Z",
+        "chain_name": "TEZOS_FLORENCENET_2021-03-04T20:00:00Z",
         "distributed_db_version": 1,
         "p2p_version": 1
     },

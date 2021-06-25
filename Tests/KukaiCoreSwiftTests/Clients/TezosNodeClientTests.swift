@@ -147,6 +147,8 @@ class TezosNodeClientTests: XCTestCase {
 		MockConstants.shared.tezosNodeClient.getNetworkInformation(completion: { success, error in
 			XCTAssert(success)
 			XCTAssert(error == nil)
+			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.isMainnet() == false)
+			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.chainName() == .florencenet, MockConstants.shared.tezosNodeClient.networkVersion?.chainName().rawValue ?? "-")
 			
 			expectation.fulfill()
 		})
