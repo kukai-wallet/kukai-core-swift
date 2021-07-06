@@ -17,7 +17,18 @@ public class BetterCallDevTokenMetadata: Codable {
 	public let symbol: String
 	public let name: String
 	public let decimals: Int
+	public let `decription`: String?
+	public let artifact_uri: String?
+	public let display_uri: String?
+	public let thumbnail_uri: String?
+	public let is_transferable: Bool?
+	public let is_boolean_amount: Bool?
 	
 	public var faVersion: FaVersion?
 	public var imageURL: URL?
+	
+	/// Make shift attempt to determine if the balance belongs to an NFT or not, until a better solution can be found
+	public func isNFT() -> Bool {
+		return is_boolean_amount ?? false
+	}
 }

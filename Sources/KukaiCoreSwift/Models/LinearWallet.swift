@@ -62,8 +62,6 @@ public class LinearWallet: Wallet {
 			return nil
 		}
 		
-		print("shortenedSeed: \(shortenedSeed)")
-		
 		self.seed = shortenedSeed
 		self.privateKey = secretKey
 		self.publicKey = publicKey

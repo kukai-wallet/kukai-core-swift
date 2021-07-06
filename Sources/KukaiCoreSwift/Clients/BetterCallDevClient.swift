@@ -440,14 +440,7 @@ public class BetterCallDevClient {
 		var metadataUpdated = false
 		
 		
-		// Bulk Cache token icons, if doesn't already exist
-		dispatchGroup.enter()
-		self.downloadAndCacheImages(forTokenCount: tokenCount, completion: { success in
-			dispatchGroup.leave()
-		})
-		
-		
-		// Query existing sotred metadata, and load into dictionary
+		// Query existing stored metadata, and load into dictionary
 		if let readResult = DiskService.read(type: [String: BetterCallDevTokenMetadata].self, fromFileName: BetterCallDevClient.Constants.tokenMetadataFilename) {
 			metadata = readResult
 			os_log(.debug, log: .bcd, "Metadata fetched from disk")
@@ -500,19 +493,27 @@ public class BetterCallDevClient {
 		}
 		
 		
-		// When all requests finished, return on main thread
-		dispatchGroup.notify(queue: .main) {
+		// Notify on background thread when done, as we still need to process token images
+		dispatchGroup.notify(queue: DispatchQueue.global(qos: .background)) {
+			
+			// Check if any critical errors encountered during metadata fetching, and exit early
 			if let err = errorFound {
-				completion(Result.failure(err))
+				DispatchQueue.main.async { completion(Result.failure(err)) }
 				return
 			}
-				
-			if metadataUpdated {
-				let writeSuccess = DiskService.write(encodable: metadata, toFileName: BetterCallDevClient.Constants.tokenMetadataFilename)
-				os_log(.debug, log: .bcd, "Metadata cache write success: %@", "\(writeSuccess)") // If it fails, can be queried again, no need to alert user
-			}
 			
-			completion(Result.success(metadata))
+			// Bulk Cache token icons, if doesn't already exist
+			self.downloadAndCacheImages(forTokenCount: tokenCount, metadata: metadata, completion: { success in
+				
+				// Write fetched metadata to disk
+				if metadataUpdated {
+					let writeSuccess = DiskService.write(encodable: metadata, toFileName: BetterCallDevClient.Constants.tokenMetadataFilename)
+					os_log(.debug, log: .bcd, "Metadata cache write success: %@", "\(writeSuccess)") // If it fails, can be queried again, no need to alert user and break UI flow
+				}
+				
+				// Finished, call completion success
+				DispatchQueue.main.async { completion(Result.success(metadata)) }
+			})
 		}
 	}
 	
@@ -523,12 +524,14 @@ public class BetterCallDevClient {
 	- parameter forTokenCount: The tokenCount return from `accountTokenCount(forAddress: ...)`.
 	- parameter completion: Called after all calls finished.
 	*/
-	public func downloadAndCacheImages(forTokenCount tokenCount: [String: Int], completion: @escaping ((Bool) -> Void)) {
+	public func downloadAndCacheImages(forTokenCount tokenCount: [String: Int], metadata: [String: BetterCallDevTokenMetadata], completion: @escaping ((Bool) -> Void)) {
 		
-		// Create all the image URL's we need
+		// Create all the image URL's we need (non-NFT's only)
 		var imageURLs: [URL] = []
 		for token in tokenCount.keys {
-			guard let imageURL = imageURL(forToken: token) else {
+			
+			// Only fetch icon for token that has valid metadata (nil if can't be found), and is not an NFT as they don't have token icons
+			guard metadata[token]?.isNFT() == false, let imageURL = imageURL(forToken: token) else {
 				continue
 			}
 			

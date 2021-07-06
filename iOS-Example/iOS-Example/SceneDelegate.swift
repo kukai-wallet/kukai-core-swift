@@ -54,6 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
+		
 		/*
 		var errors: [String] = []
 		for i in 0...10000 {

@@ -14,10 +14,10 @@ public class ClientsAndData {
 	public static let shared = ClientsAndData()
 	
 	// Clients
-	let clientConfig: TezosNodeClientConfig
-	let tezosNodeClient: TezosNodeClient
-	let bcdClient: BetterCallDevClient
-	let tzktClient: TzKTClient
+	var clientConfig: TezosNodeClientConfig
+	var tezosNodeClient: TezosNodeClient
+	var bcdClient: BetterCallDevClient
+	var tzktClient: TzKTClient
 	
 	
 	// Data
@@ -26,6 +26,13 @@ public class ClientsAndData {
 	
 	private init() {
 		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
+		tezosNodeClient = TezosNodeClient(config: clientConfig)
+		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
+	}
+	
+	public func updateNetwork(network: TezosNodeClientConfig.NetworkType) {
+		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: network)
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)

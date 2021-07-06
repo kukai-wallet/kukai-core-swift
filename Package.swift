@@ -15,6 +15,8 @@ let package = Package(
 		.package(name: "secp256k1", url: "https://github.com/Boilertalk/secp256k1.swift.git", from: "0.1.4"),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
 		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
+		//.package(url: "https://github.com/rathishubham7/web3swift", .branch("develop")),
+		//.package(url: "https://github.com/torusresearch/torus-direct-swift-sdk", from: "0.3.1"),
     ],
     targets: [
         .target(
