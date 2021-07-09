@@ -86,7 +86,7 @@ public class TorusAuthService {
 		
 		torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: .ROPSTEN, loglevel: .none)
 		torus.triggerLogin(controller: displayOver).done { data in
-			os_log("Torus returned succesful data: %@", log: .torus, type: .debug, "\(data)")
+			os_log("Torus returned succesful data", log: .torus, type: .debug)
 			
 			var username: String? = nil
 			var userId: String? = nil
@@ -109,8 +109,13 @@ public class TorusAuthService {
 					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 					
 				case .reddit:
-					print("\n\n\n Unimplemented \nReddit data: \(data) \n\n\n")
-					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					if let userInfoDict = data["userInfo"] as? [String: Any] {
+						username = userInfoDict["name"] as? String
+						userId = nil
+						profile = userInfoDict["icon_img"] as? String
+					}
+					
+					pk = data["privateKey"] as? String
 					
 				case .facebook:
 					print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")

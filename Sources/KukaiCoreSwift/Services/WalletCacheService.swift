@@ -74,15 +74,16 @@ public class WalletCacheService {
 	- Parameter wallet: An object conforming to `Wallet` to be stored
 	- Returns: Bool, indicating if the storage was successful or not
 	*/
-	public func cache<T: Wallet>(wallet: inout T) -> Bool {
+	public func cache<T: Wallet>(wallet: T) -> Bool {
 		guard let existingWallets = readFromDiskAndDecrypt() else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets")
 			return false
 		}
 		
 		var newWallets = existingWallets
-		wallet.sortIndex = newWallets.count
-		newWallets.append(wallet)
+		var tempWallet = wallet
+		tempWallet.sortIndex = newWallets.count
+		newWallets.append(tempWallet)
 		
 		return encryptAndWriteToDisk(wallets: newWallets)
 	}

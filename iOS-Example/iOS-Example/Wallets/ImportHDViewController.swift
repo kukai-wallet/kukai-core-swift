@@ -32,7 +32,7 @@ class ImportHDViewController: UIViewController {
 			
 			let cacheService = WalletCacheService()
 			let _ = cacheService.deleteCacheAndKeys()
-			let _ = cacheService.cache(wallet: w, andPassphrase: nil)
+			let _ = cacheService.cache(wallet: w)
 			
 		} else {
 			let alert = UIAlertController(title: "Error", message: "An error occured creating the wallet object", preferredStyle: .alert)

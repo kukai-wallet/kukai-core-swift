@@ -40,7 +40,7 @@ class NewWalletViewController: UIViewController {
 		
 		let cacheService = WalletCacheService()
 		let _ = cacheService.deleteCacheAndKeys()
-		let saveResult = cacheService.cache(wallet: w, andPassphrase: nil)
+		let saveResult = cacheService.cache(wallet: w)
 		print("Wallet saved to encrypted file: \(saveResult)")
 	}
 }

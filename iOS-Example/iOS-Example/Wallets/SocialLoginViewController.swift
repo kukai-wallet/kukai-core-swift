@@ -39,30 +39,45 @@ class SocialLoginViewController: UIViewController {
 	@IBAction func twitterTapped(_ sender: Any) {
 		showActivity()
 		torusService.createWallet(from: .twitter, displayOver: self) { [weak self] result in
-			
-			switch result {
-				case .success(let wallet):
-					self?.importedAddressLabel.text = wallet.address
-					
-					let cacheService = WalletCacheService()
-					let _ = cacheService.deleteCacheAndKeys()
-					let _ = cacheService.cache(wallet: wallet, andPassphrase: nil)
-					
-				case .failure(let error):
-					let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)
-					self?.present(alert, animated: true, completion: nil)
-			}
-			
-			self?.hideActiviy()
+			self?.handleResult(result: result)
 		}
 	}
 	
 	@IBAction func googleTapped(_ sender: Any) {
+		showActivity()
+		torusService.createWallet(from: .google, displayOver: self) { [weak self] result in
+			self?.handleResult(result: result)
+		}
 	}
 	
 	@IBAction func redditTapped(_ sender: Any) {
+		showActivity()
+		torusService.createWallet(from: .reddit, displayOver: self) { [weak self] result in
+			self?.handleResult(result: result)
+		}
 	}
 	
 	@IBAction func facebookTapped(_ sender: Any) {
+		showActivity()
+		torusService.createWallet(from: .facebook, displayOver: self) { [weak self] result in
+			self?.handleResult(result: result)
+		}
+	}
+	
+	func handleResult(result: Result<TorusWallet, ErrorResponse>) {
+		switch result {
+			case .success(let wallet):
+				self.importedAddressLabel.text = wallet.address
+				
+				let cacheService = WalletCacheService()
+				let _ = cacheService.deleteCacheAndKeys()
+				let _ = cacheService.cache(wallet: wallet)
+				
+			case .failure(let error):
+				let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)
+				self.present(alert, animated: true, completion: nil)
+		}
+		
+		self.hideActiviy()
 	}
 }
