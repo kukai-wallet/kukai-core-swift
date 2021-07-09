@@ -22,7 +22,7 @@ class ImportNonHDViewController: UIViewController {
 	}
 	
 	@IBAction func importTapped(_ sender: Any) {
-		let wallet = LinearWallet.create(withMnemonic: textview.text ?? "", passphrase: "")
+		let wallet = LinearWallet(withMnemonic: textview.text ?? "", passphrase: "")
 		
 		if let w = wallet {
 			importedAddressLabel.text = w.address

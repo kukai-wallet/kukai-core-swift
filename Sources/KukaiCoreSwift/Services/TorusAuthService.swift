@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import TorusSwiftDirectSDK
+import os.log
 
 public class TorusAuthService {
 	
@@ -20,11 +21,12 @@ public class TorusAuthService {
 	
 	public enum TorusAuthError: Error {
 		case missingVerifier
+		case invalidTorusResponse
 	}
 	
 	private let networkType: TezosNodeClientConfig.NetworkType
-	private let testnetVerifiers: [TorusAuthProvider: (verifierName: String verifier: SubVerifierDetails)]
-	private let mainnetVerifiers: [TorusAuthProvider: (verifierName: String verifier: SubVerifierDetails)]
+	private let testnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
+	private let mainnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
 	private var torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
 	
 	
@@ -33,6 +35,7 @@ public class TorusAuthService {
 	// googleRedirect = "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
 	// browserRedirect = "https://scripts.toruswallet.io/redirect.html"
 	
+	// need to borrow instructions from: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
 	
 	public init(networkType: TezosNodeClientConfig.NetworkType, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String) {
 		self.networkType = networkType
@@ -75,16 +78,59 @@ public class TorusAuthService {
 		mainnetVerifiers = testnetVerifiers
 	}
 	
-	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController, completion: @escaping ((Result<Wallet, ErrorResponse>) -> Void)) {
+	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
 		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
 		
-		torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: .ROPSTEN, loglevel: .debug)
+		torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: .ROPSTEN, loglevel: .none)
 		torus.triggerLogin(controller: displayOver).done { data in
+			os_log("Torus returned succesful data: %@", log: .torus, type: .debug, "\(data)")
 			
-			print("\n\n\n Data: \(data) \n\n\n")
+			var username: String? = nil
+			var userId: String? = nil
+			var profile: String? = nil
+			var pk: String? = nil
+			
+			switch authType {
+				case .twitter:
+					
+					if let userInfoDict = data["userInfo"] as? [String: Any] {
+						username = userInfoDict["nickname"] as? String
+						userId = userInfoDict["sub"] as? String
+						profile = userInfoDict["picture"] as? String
+					}
+					
+					pk = data["privateKey"] as? String
+					
+				case .google:
+					print("\n\n\n Unimplemented \nGoogle data: \(data) \n\n\n")
+					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					
+				case .reddit:
+					print("\n\n\n Unimplemented \nReddit data: \(data) \n\n\n")
+					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					
+				case .facebook:
+					print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
+					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+			}
+			
+			
+			// Create wallet with details and return
+			guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: .twitter, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
+				os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
+				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+				return
+			}
+			
+			completion(Result.success(wallet))
+			
+		}.catch { error in
+			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			return
 		}
 	}
 	

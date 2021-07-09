@@ -25,7 +25,7 @@ class ImportHDViewController: UIViewController {
     }
 	
 	@IBAction func importTapped(_ sender: Any) {
-		let wallet = HDWallet.create(withMnemonic: textview.text ?? "", passphrase: "", derivationPath: textfield.text ?? "")
+		let wallet = HDWallet(withMnemonic: textview.text ?? "", passphrase: "", derivationPath: textfield.text ?? "")
 		
 		if let w = wallet {
 			importedAddressLabel.text = w.address

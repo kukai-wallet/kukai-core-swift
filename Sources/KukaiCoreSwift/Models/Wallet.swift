@@ -15,6 +15,7 @@ import WalletCore
 public enum WalletType: String, Codable {
 	case linear
 	case hd
+	case torus
 }
 
 /// Helper enum used to choose the number of words for a mnemonic
@@ -37,19 +38,14 @@ public enum EllipticalCurve: String, Codable {
 // MARK: - Protocols
 
 /// Wallet protocol to allow generic handling of all wallets types for signing operations and caching data locally.
-public protocol Wallet {
+public protocol Wallet: Codable {
 	
 	/// Which underlying `WalletType` is the wallet using
 	var type: WalletType { get }
 	
-	/// The cryptographic seed string, used to generate the key pairs
-	var seed: String { get }
-	
 	/// The public TZ1 or TZ2 address of the wallet
 	var address: String { get }
 	
-	/// The Bip39 mnemonic used to generate the wallet
-	var mnemonic: String { get }
 	
 	
 	/// Take in a forged operation hex string, and sign it with the private key
@@ -61,7 +57,6 @@ public protocol Wallet {
 	/// Base58 encoded version of the publicKey, used when performing a reveal operation
 	func publicKeyBase58encoded() -> String
 }
-
 
 
 // MARK: - Objects

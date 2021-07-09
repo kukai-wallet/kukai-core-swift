@@ -21,8 +21,8 @@ class NewWalletViewController: UIViewController {
 	@IBAction func createButtonTapped(_ sender: Any) {
 		
 		// We can create HD Wallets or linear wallets in a single line of code, creating a new Mnemonic and using the default derivation path (for HD)
-		let wallet = HDWallet.create(withMnemonicLength: .twelve, passphrase: "")
-		// wallet = LinearWallet.create(withMnemonicLength: .twelve, passphrase: "")
+		let wallet = HDWallet(withMnemonicLength: .twelve, passphrase: "")
+		// wallet = LinearWallet(withMnemonicLength: .twelve, passphrase: "")
 		
 		addressLabel.text = wallet?.address
 		derivationPathLabel.text = wallet?.derivationPath

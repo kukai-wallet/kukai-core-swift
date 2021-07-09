@@ -21,7 +21,8 @@ class WalletSearchViewController: UIViewController {
 		
 		// Prefil the textfield with the address thats encrypted on disk, if available
 		let cacheService = WalletCacheService()
-		textfield.text = cacheService.fetchPrimaryWallet()?.address ?? ""
+		let wallet = cacheService.fetchPrimaryWallet()
+		textfield.text = wallet?.address ?? ""
     }
 
 	@IBAction func searchTapped(_ sender: Any) {

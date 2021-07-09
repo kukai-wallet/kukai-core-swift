@@ -75,35 +75,51 @@ public class WalletCacheService {
 	- Parameter andPassphrase: The passphrase the user entered to create the wallet
 	- Returns: Bool, indicating if the storage was successful or not
 	*/
-	public func cache(wallet: Wallet, andPassphrase: String?) -> Bool {
-		guard let existingWalletItems = readFromDiskAndDecrypt() else {
+	public func cache<T: Wallet>(wallet: T, andPassphrase: String?) -> Bool {
+		guard let existingWallets = readFromDiskAndDecrypt() else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets")
 			return false
 		}
 		
-		var newWallets = existingWalletItems
-		var derivationPath: String? = nil
+		var newWallets = existingWallets
+		newWallets.append(wallet)
 		
-		switch wallet.type {
-			case .linear:
-				derivationPath = nil
-				
-			case .hd:
-				derivationPath = (wallet as? HDWallet)?.derivationPath
-		}
-		
-		newWallets.append(WalletCacheItem(address: wallet.address, mnemonic: wallet.mnemonic, passphrase: andPassphrase, sortIndex: newWallets.count, type: wallet.type, ellipticalCurve: wallet.privateKeyCurve(), derivationPath: derivationPath))
-		
-		return encryptAndWriteToDisk(walletItems: newWallets)
+		return encryptAndWriteToDisk(wallets: newWallets)
 	}
 	
 	/**
 	Take an array of `WalletCacheItem` serialise to JSON, encrypt and then write to disk
 	- Returns: Bool, indicating if the process was successful
 	*/
-	public func encryptAndWriteToDisk(walletItems: [WalletCacheItem]) -> Bool {
+	public func encryptAndWriteToDisk(wallets: [Wallet]) -> Bool {
 		do {
-			let jsonData = try JSONEncoder().encode(walletItems)
+			
+			var jsonArray: [Any] = []
+			var walletData: Data = Data()
+			for wallet in wallets {
+				switch wallet.type {
+					case .linear:
+						if let walletObj = wallet as? LinearWallet {
+							walletData = try JSONEncoder().encode(walletObj)
+						}
+						
+					case .hd:
+						if let walletObj = wallet as? HDWallet {
+							walletData = try JSONEncoder().encode(walletObj)
+						}
+					
+					case .torus:
+						if let walletObj = wallet as? TorusWallet {
+							walletData = try JSONEncoder().encode(walletObj)
+						}
+				}
+				
+				let jsonObj = try JSONSerialization.jsonObject(with: walletData, options: .allowFragments)
+				jsonArray.append(jsonObj)
+			}
+			
+			let jsonData = try JSONSerialization.data(withJSONObject: jsonArray, options: .fragmentsAllowed)
+			
 			
 			guard loadOrCreateKeys(),
 				  let plaintext = String(data: jsonData, encoding: .utf8),
@@ -125,7 +141,7 @@ public class WalletCacheService {
 	Go to the file on disk (if present), decrypt its contents and retrieve an array of `WalletCacheItem`
 	- Returns: An array of `WalletCacheItem` if present on disk
 	*/
-	public func readFromDiskAndDecrypt() -> [WalletCacheItem]? {
+	public func readFromDiskAndDecrypt() -> [Wallet]? {
 		guard let data = DiskService.readData(fromFileName: WalletCacheService.cacheFileName) else {
 			return [] // No such file
 		}
@@ -138,10 +154,41 @@ public class WalletCacheService {
 		}
 		
 		do {
-			var cacheItems = try JSONDecoder().decode([WalletCacheItem].self, from: plaintextData)
-			cacheItems.sort(by: { $0.sortIndex < $1.sortIndex })
+			//let cacheItems = try JSONDecoder().decode([Wallet].self, from: plaintextData)
 			
-			return cacheItems
+			var wallets: [Wallet] = []
+			let jsonArray = try JSONSerialization.jsonObject(with: plaintextData, options: .allowFragments) as? [[String: Any]]
+			for jsonObj in jsonArray ?? [[:]] {
+				guard let type = WalletType(rawValue: (jsonObj["type"] as? String) ?? "") else {
+					os_log("Unable to parse wallet object of type: %@", log: .kukaiCoreSwift, type: .error, (jsonObj["type"] as? String) ?? "")
+					continue
+				}
+				
+				let jsonObjAsData = try JSONSerialization.data(withJSONObject: jsonObj, options: .fragmentsAllowed)
+				
+				switch type {
+					case .linear:
+						let wallet = try JSONDecoder().decode(LinearWallet.self, from: jsonObjAsData)
+						wallets.append(wallet)
+						
+					case .hd:
+						let wallet = try JSONDecoder().decode(HDWallet.self, from: jsonObjAsData)
+						wallets.append(wallet)
+					
+					case .torus:
+						let wallet = try JSONDecoder().decode(TorusWallet.self, from: jsonObjAsData)
+						wallets.append(wallet)
+				}
+			}
+			
+			return wallets
+			
+			
+			
+			// TODO: consider
+			//cacheItems.sort(by: { $0.sortIndex < $1.sortIndex })
+			
+			//return cacheItems
 			
 		} catch (let error) {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items: %@", "\(error)")
@@ -159,7 +206,7 @@ public class WalletCacheService {
 			return nil
 		}
 		
-		return parse(cacheItems: cacheItems)
+		return cacheItems
 	}
 	
 	/**
@@ -173,31 +220,9 @@ public class WalletCacheService {
 			return nil
 		}
 		
-		return parse(cacheItems: [first]).first
+		return first
 	}
-	
-	/**
-	Convert an array of `WalletCacheItem`'s to `Wallet`'s by performing the various private / public key operations
-	- Returns: An array of `Wallet` objects
-	*/
-	public func parse(cacheItems: [WalletCacheItem]) -> [Wallet] {
-		var wallets: [Wallet] = []
-		
-		cacheItems.forEach { (walletCacheItem) in
-			switch walletCacheItem.type {
-				case .linear:
-					let wallet = LinearWallet.create(withMnemonic: walletCacheItem.mnemonic, passphrase: walletCacheItem.passphrase ?? "", ellipticalCurve: walletCacheItem.ellipticalCurve)
-					wallets.append(wallet!)
-					
-				case .hd:
-					let wallet = HDWallet.create(withMnemonic: walletCacheItem.mnemonic, passphrase: walletCacheItem.passphrase ?? "", derivationPath: walletCacheItem.derivationPath ?? HDWallet.defaultDerivationPath)
-					wallets.append(wallet!)
-			}
-		}
-		
-		return wallets
-	}
-	
+
 	/**
 	Delete the cached file and the assoicate keys used to encrypt it
 	- Returns: Bool, indicating if the process was successful or not

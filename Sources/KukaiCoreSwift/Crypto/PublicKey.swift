@@ -12,7 +12,7 @@ import Sodium
 
 
 /// A struct representing a PublicKey for `LinearWallet` classes
-public struct PublicKey {
+public struct PublicKey: Codable {
 	
 	
 	// MARK: - Properties

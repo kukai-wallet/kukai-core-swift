@@ -19,4 +19,5 @@ extension OSLog {
 	static let bcd = OSLog(subsystem: subsystem, category: "BetterCallDev")
 	static let tzkt = OSLog(subsystem: subsystem, category: "TzKT")
 	static let taquitoService = OSLog(subsystem: subsystem, category: "TaquitoService")
+	static let torus = OSLog(subsystem: subsystem, category: "Torus")
 }
