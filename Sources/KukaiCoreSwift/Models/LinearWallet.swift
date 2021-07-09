@@ -19,10 +19,14 @@ This wallet is a non-HD wallet, sometimes referred to as a "legacy" wallet. It f
 */
 public class LinearWallet: Wallet {
 	
+	/// enum used to differientate wallet class types. Needed for applications that allow users to create many different types of wallets
 	public let type: WalletType
 	
+	/// The TZ1 or TZ2 address of the wallet
 	public let address: String
 	
+	/// USed by `WalletCacheService` to control the order wallets are returned
+	public var sortIndex: Int
 	
 	/// An object representing the PrivateKey used to generate the wallet
 	public var privateKey: SecretKey
@@ -35,11 +39,14 @@ public class LinearWallet: Wallet {
 	
 	
 	
-	
-	
-	
 	// MARK: - Init
 	
+	/**
+	Attempt to create an instance of a `LinearWallet` from an encode string containing a private key
+	- parameter withPrivateKey: String containing the BAse58 encoded private key, prefixed with the curve's secret
+	- parameter ellipticalCurve: The ellipcatical curve used to create the key
+	- parameter type: WalletType indicating the top most type of wallet
+	*/
 	public init?(withPrivateKey: String, ellipticalCurve: EllipticalCurve, type: WalletType) {
 		guard let secretKey = SecretKey(withPrivateKey, signingCurve: ellipticalCurve),
 			  let pubKey = PublicKey(secretKey: secretKey),
@@ -53,6 +60,7 @@ public class LinearWallet: Wallet {
 		self.privateKey = secretKey
 		self.publicKey = pubKey
 		self.mnemonic = nil
+		self.sortIndex = 0
 	}
 	
 	/**
@@ -97,6 +105,7 @@ public class LinearWallet: Wallet {
 		self.privateKey = secretKey
 		self.publicKey = pubKey
 		self.mnemonic = trustWallet.mnemonic
+		self.sortIndex = 0
 	}
 	
 	/// Automatically scrub the memory of any sensitive data
@@ -108,18 +117,25 @@ public class LinearWallet: Wallet {
 	
 	
 	
+	// MARK: - Crypto Functions
 	
-	
-	
-	
+	/**
+	Sign a hex payload with the private key
+	*/
 	public func sign(_ hex: String) -> [UInt8]? {
 		return privateKey.sign(hex: hex)
 	}
 	
+	/**
+	Return the curve used to create the key
+	*/
 	public func privateKeyCurve() -> EllipticalCurve {
 		return privateKey.signingCurve
 	}
 	
+	/**
+	Get a Base58 encoded version of the public key, in order to reveal the address on the network
+	*/
 	public func publicKeyBase58encoded() -> String {
 		return publicKey.base58CheckRepresentation
 	}

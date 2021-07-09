@@ -29,7 +29,7 @@ enum WalletCacheError: Error {
 
 
 /**
-A service class used to store and retrieve `Wallet` objects such as `LinearWallet` and `HDWallet` from the devices disk.
+A service class used to store and retrieve `Wallet` objects such as `LinearWallet`, `HDWallet` and `TorusWallet` from the devices disk.
 This class will use the secure enclave (keychain if not available) to generate a key used to encrypt the contents locally, and retrieve.
 The class can be used to take the decrypted JSON and convert it back into Wallet classes, ready to be used.
 */
@@ -50,7 +50,7 @@ public class WalletCacheService {
 	fileprivate static let applicationKey = "app.kukai.kukai-core-swift.walletcache.encryption"
 	
 	// The filename where the data will be stored
-	fileprivate static let cacheFileName = "wallets.txt"
+	fileprivate static let cacheFileName = "kukai-core-wallets.txt"
 	
 	
 	
@@ -72,28 +72,32 @@ public class WalletCacheService {
 	/**
 	Add a `Wallet` object to the local encrypted storage
 	- Parameter wallet: An object conforming to `Wallet` to be stored
-	- Parameter andPassphrase: The passphrase the user entered to create the wallet
 	- Returns: Bool, indicating if the storage was successful or not
 	*/
-	public func cache<T: Wallet>(wallet: T, andPassphrase: String?) -> Bool {
+	public func cache<T: Wallet>(wallet: inout T) -> Bool {
 		guard let existingWallets = readFromDiskAndDecrypt() else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets")
 			return false
 		}
 		
 		var newWallets = existingWallets
+		wallet.sortIndex = newWallets.count
 		newWallets.append(wallet)
 		
 		return encryptAndWriteToDisk(wallets: newWallets)
 	}
 	
 	/**
-	Take an array of `WalletCacheItem` serialise to JSON, encrypt and then write to disk
+	Take an array of `Wallet` objects, serialise to JSON, encrypt and then write to disk
 	- Returns: Bool, indicating if the process was successful
 	*/
 	public func encryptAndWriteToDisk(wallets: [Wallet]) -> Bool {
 		do {
 			
+			/// Because `Wallet` is a generic protocl, `JSONEncoder` can't be called on an array of it.
+			/// Instead we must iterate through each item in the array, use its `type` to determine the corresponding class, and encode each one
+			/// The only way to encode all of these items indivudally, without loosing data, is to convert each one to a JSON object, pack in an array and call `JSONSerialization.data`
+			/// This results in a JSON blov containing all of the unique properties of each subclass, while allowing the caller to pass in any conforming `Wallet` type
 			var jsonArray: [Any] = []
 			var walletData: Data = Data()
 			for wallet in wallets {
@@ -121,6 +125,7 @@ public class WalletCacheService {
 			let jsonData = try JSONSerialization.data(withJSONObject: jsonArray, options: .fragmentsAllowed)
 			
 			
+			/// Take the JSON blob, encrypt and store on disk
 			guard loadOrCreateKeys(),
 				  let plaintext = String(data: jsonData, encoding: .utf8),
 				  let ciphertextData = try? encrypt(plaintext),
@@ -138,8 +143,8 @@ public class WalletCacheService {
 	}
 	
 	/**
-	Go to the file on disk (if present), decrypt its contents and retrieve an array of `WalletCacheItem`
-	- Returns: An array of `WalletCacheItem` if present on disk
+	Go to the file on disk (if present), decrypt its contents and retrieve an array of `Wallet`
+	- Returns: An array of `Wallet` if present on disk
 	*/
 	public func readFromDiskAndDecrypt() -> [Wallet]? {
 		guard let data = DiskService.readData(fromFileName: WalletCacheService.cacheFileName) else {
@@ -154,8 +159,9 @@ public class WalletCacheService {
 		}
 		
 		do {
-			//let cacheItems = try JSONDecoder().decode([Wallet].self, from: plaintextData)
-			
+			/// Similar to the issue mentioned in `encryptAndWriteToDisk`, we can't ask `JSONEncoder` to encode an array of `Wallet`.
+			/// We must read the raw JSON, extract the `type` field and use it to determine the appropriate class
+			/// Once we have that, we simply call `JSONDecode` for each obj, with the correct class and put in an array
 			var wallets: [Wallet] = []
 			let jsonArray = try JSONSerialization.jsonObject(with: plaintextData, options: .allowFragments) as? [[String: Any]]
 			for jsonObj in jsonArray ?? [[:]] {
@@ -181,14 +187,9 @@ public class WalletCacheService {
 				}
 			}
 			
+			
+			wallets.sort(by: { $0.sortIndex < $1.sortIndex })
 			return wallets
-			
-			
-			
-			// TODO: consider
-			//cacheItems.sort(by: { $0.sortIndex < $1.sortIndex })
-			
-			//return cacheItems
 			
 		} catch (let error) {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items: %@", "\(error)")

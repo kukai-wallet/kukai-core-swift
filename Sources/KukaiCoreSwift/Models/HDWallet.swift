@@ -35,6 +35,9 @@ public class HDWallet: Wallet {
 	/// The public TZ1 address of the wallet
 	public var address: String
 	
+	/// USed by `WalletCacheService` to control the order wallets are returned
+	public var sortIndex: Int
+	
 	/// An WalletCore object representing the PrivateKey used to generate the wallet
 	public var privateKey: WalletCore.PrivateKey
 	
@@ -47,8 +50,10 @@ public class HDWallet: Wallet {
 	/// The Bip44 derivationPath used to create the wallet
 	public var derivationPath: String
 	
+	/// The raw seed data from TrustWallet. Needed to recreate wallet object using `Codable`
 	private var seed: Data
 	
+	/// The passphrase used to create the wallet. Needed to recreate wallet object using `Codable`
 	private var passphrase: String?
 	
 	/// A private instance of TrustWallet's Wallet object, used to generate private and public keys based on menmonic and derivation path
@@ -93,6 +98,7 @@ public class HDWallet: Wallet {
 		
 		self.type = .hd
 		self.address = tempAddress
+		self.sortIndex = 0
 		self.privateKey = key
 		self.publicKey = key.getPublicKeyEd25519()
 		self.mnemonic = trustWallet.mnemonic
@@ -120,12 +126,14 @@ public class HDWallet: Wallet {
 	enum CodingKeys: String, CodingKey {
 		case type
 		case address
+		case sortIndex
 		case mnemonic
 		case derivationPath
 		case seed
 		case passphrase
 	}
 	
+	/// Decodable init
 	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		
@@ -133,6 +141,7 @@ public class HDWallet: Wallet {
 		type = WalletType(rawValue: typeString) ?? .hd
 		
 		address = try container.decode(String.self, forKey: .address)
+		sortIndex = try container.decode(Int.self, forKey: .sortIndex)
 		mnemonic = try container.decode(String.self, forKey: .mnemonic)
 		derivationPath = try container.decode(String.self, forKey: .derivationPath)
 		seed = try container.decode(Data.self, forKey: .seed)
@@ -148,10 +157,12 @@ public class HDWallet: Wallet {
 		internalTrustWallet = trustWallet
 	}
 	
+	/// Encodable encode func
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		try container.encode(type.rawValue, forKey: .type)
 		try container.encode(address, forKey: .address)
+		try container.encode(sortIndex, forKey: .sortIndex)
 		try container.encode(mnemonic, forKey: .mnemonic)
 		try container.encode(derivationPath, forKey: .derivationPath)
 		try container.encode(seed, forKey: .seed)
@@ -160,14 +171,11 @@ public class HDWallet: Wallet {
 	
 	
 	
+	// MARK: - Crypto Functions
 	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	Sign a hex payload with the private key
+	*/
 	public func sign(_ hex: String) -> [UInt8]? {
 		guard let data = Data(hexString: hex) else {
 			return nil
@@ -181,10 +189,16 @@ public class HDWallet: Wallet {
 		return signedData?.bytes
 	}
 	
+	/**
+	Return the curve used to create the key
+	*/
 	public func privateKeyCurve() -> EllipticalCurve {
 		return EllipticalCurve.ed25519
 	}
 	
+	/**
+	Get a Base58 encoded version of the public key, in order to reveal the address on the network
+	*/
 	public func publicKeyBase58encoded() -> String {
 		return Base58.encode(message: publicKey.data.bytes, prefix: Prefix.Keys.Ed25519.public)
 	}
