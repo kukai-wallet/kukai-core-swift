@@ -43,9 +43,15 @@ class SocialLoginViewController: UIViewController {
 	}
 	
 	@IBAction func twitterTapped(_ sender: Any) {
-		showActivity()
+		/*showActivity()
 		torusService.createWallet(from: .twitter, displayOver: self) { [weak self] result in
 			self?.handleResult(result: result)
+		}*/
+		
+		
+		showActivity()
+		torusService.getAddress(from: .twitter, for: "twitter|163484202") { result in
+			print("\n\n\n Result: \(result) \n\n\n")
 		}
 	}
 	

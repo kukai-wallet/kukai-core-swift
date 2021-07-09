@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 import TorusSwiftDirectSDK
+import FetchNodeDetails
+import TorusUtils
+import Sodium
+import WalletCore
 import os.log
 
 public class TorusAuthService {
@@ -23,27 +27,33 @@ public class TorusAuthService {
 	public enum TorusAuthError: Error {
 		case missingVerifier
 		case invalidTorusResponse
+		case cryptoError
+		case invalidNodeDetails
 	}
 	
 	private let networkType: TezosNodeClientConfig.NetworkType
+	private let ethereumNetworkType: EthereumNetwork
 	private let testnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
 	private let mainnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
+	private let testnetProxyAddress = "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
+	private let mainnetProxyAddress = "0x638646503746d5456209e33a2ff5e3226d698bea"
 	private var torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
+	private let torusUtils = TorusUtils()
+	private let fetchNodeDetails: FetchNodeDetails
+	private var nodeDetails: NodeDetails? = nil
 	
 	
-	// Sample test torus URLs
-	// nativeRedirectURL = "tdsdk://tdsdk/oauthCallback"
-	// googleRedirect = "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
-	// browserRedirect = "https://scripts.toruswallet.io/redirect.html"
 	
 	// need to borrow instructions from: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
 	
 	public init(networkType: TezosNodeClientConfig.NetworkType, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String) {
 		self.networkType = networkType
+		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
+		self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
 		
 		testnetVerifiers = [
 			.apple: (verifierName: "torus-auth0-apple-lrc", verifier: SubVerifierDetails(
-				loginType: .installed,
+				loginType: .web,
 				loginProvider: .apple,
 				clientId: "m1Q0gvDfOyZsJCZ3cucSQEe9XMvl9d9L",
 				verifierName: "torus-auth0-apple-lrc",
@@ -93,7 +103,7 @@ public class TorusAuthService {
 			return
 		}
 		
-		torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: .ROPSTEN, loglevel: .none)
+		torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: self.ethereumNetworkType, loglevel: .none)
 		torus.triggerLogin(controller: displayOver).done { data in
 			os_log("Torus returned succesful data", log: .torus, type: .debug)
 			
@@ -155,6 +165,87 @@ public class TorusAuthService {
 	}
 	
 	public func getAddress(from authType: TorusAuthProvider, for socialId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
+			return
+		}
 		
+		self.getNodeDetailsOnBackgroundThread { [weak self] in
+			guard let nd = self?.nodeDetails else {
+				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
+				return
+			}
+			
+			// TODO: if twitter, get twitter id instead of username
+			
+			
+			self?.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierTuple.verifierName, verifierId: socialId, isExtended: true).done { [weak self] data in
+				guard let pubX = data["pub_key_X"],
+					  let pubY = data["pub_key_Y"],
+					  let bytesX = Sodium.shared.utils.hex2bin(pubX),
+					  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
+					os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
+					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					return
+				}
+				
+				// Compute prefix and pad data to ensure always 32 bytes
+				let prefixVal: UInt8 = ((bytesY[bytesY.count - 1] % 2) != 0) ? 3 : 2;
+				var pad = [UInt8](repeating: 0, count: 32)
+				pad.append(contentsOf: bytesX)
+				
+				var publicKey = [prefixVal]
+				publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
+				
+				
+				// Generate Base58 encoded version of binary data, so we can check for inverted keys
+				let pk = Base58.encode(message: publicKey, prefix: Prefix.Keys.Secp256k1.public)
+				
+				
+				// Check results are valid
+				if bytesY.count < 32 && prefixVal == 3 && self?.isInvertedPk(pk: pk) == true {
+					publicKey = [2]
+					publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
+				}
+				
+				
+				// Run Blake2b hashing on public key
+				guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
+					os_log("Finding address - generating hash failed", log: .torus, type: .error)
+					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.cryptoError)))
+					return
+				}
+				
+				// Create tz2 address and return
+				let tz2Address = Base58.encode(message: hash, prefix: Prefix.Address.tz2)
+				completion(Result.success(tz2Address))
+				
+			}.catch { error in
+				os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
+				completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+				return
+			}
+		}
+	}
+	
+	private func getNodeDetailsOnBackgroundThread(completion: @escaping (() -> Void)) {
+		DispatchQueue.global(qos: .background).async { [weak self] in
+			self?.nodeDetails = self?.fetchNodeDetails.getNodeDetails()
+			
+			DispatchQueue.main.async {
+				completion()
+			}
+		}
+	}
+	
+	private func isInvertedPk(pk: String) -> Bool {
+		// Detect keys with flipped sign and correct them.
+		let invertedPks = [
+		  "sppk7cqh7BbgUMFh4yh95mUwEeg5aBPG1MBK1YHN7b9geyygrUMZByr", // test variable
+		  "sppk7bMTva1MwF7cXjrcfoj6XVfcYgjrVaR9JKP3JxvPB121Ji5ftHT",
+		  "sppk7bLtXf9CAVZh5jjDACezPnuwHf9CgVoAneNXQFgHknNtCyE5k8A"
+		]
+		
+		return invertedPks.contains(pk);
 	}
 }
