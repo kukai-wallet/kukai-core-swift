@@ -35,6 +35,12 @@ class SocialLoginViewController: UIViewController {
 		activityView.stopAnimating()
 	}
 	
+	@IBAction func appleTapped(_ sender: Any) {
+		showActivity()
+		torusService.createWallet(from: .apple, displayOver: self) { [weak self] result in
+			self?.handleResult(result: result)
+		}
+	}
 	
 	@IBAction func twitterTapped(_ sender: Any) {
 		showActivity()

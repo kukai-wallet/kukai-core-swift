@@ -1175,71 +1175,81 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Imported Address:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="naA-6Y-set">
-                                <rect key="frame" x="24" y="328" width="366" height="21"/>
+                                <rect key="frame" x="24" y="374" width="366" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocu-iI-szk">
-                                <rect key="frame" x="24" y="357" width="366" height="21"/>
+                                <rect key="frame" x="24" y="403" width="366" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NnY-jL-T5u">
-                                <rect key="frame" x="24" y="112" width="366" height="30"/>
+                                <rect key="frame" x="24" y="158" width="366" height="30"/>
                                 <state key="normal" title="Twitter"/>
                                 <connections>
                                     <action selector="twitterTapped:" destination="982-3Y-zJC" eventType="touchUpInside" id="WOQ-4g-gay"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XeY-Hd-p2s">
-                                <rect key="frame" x="24" y="158" width="366" height="30"/>
+                                <rect key="frame" x="24" y="204" width="366" height="30"/>
                                 <state key="normal" title="Google"/>
                                 <connections>
                                     <action selector="googleTapped:" destination="982-3Y-zJC" eventType="touchUpInside" id="D8u-Ac-rGv"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="10p-XA-3LJ">
-                                <rect key="frame" x="24" y="204" width="366" height="30"/>
+                                <rect key="frame" x="24" y="250" width="366" height="30"/>
                                 <state key="normal" title="Reddit"/>
                                 <connections>
                                     <action selector="redditTapped:" destination="982-3Y-zJC" eventType="touchUpInside" id="H1n-fh-Z3k"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hlE-sY-sdM">
-                                <rect key="frame" x="24" y="250" width="366" height="30"/>
+                                <rect key="frame" x="24" y="296" width="366" height="30"/>
                                 <state key="normal" title="Facebook"/>
                                 <connections>
                                     <action selector="facebookTapped:" destination="982-3Y-zJC" eventType="touchUpInside" id="pXB-vs-Xw0"/>
                                 </connections>
                             </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="UGw-YJ-C5h">
-                                <rect key="frame" x="197" y="402" width="20" height="20"/>
+                                <rect key="frame" x="197" y="448" width="20" height="20"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rrJ-z9-eN5">
+                                <rect key="frame" x="24" y="112" width="366" height="30"/>
+                                <state key="normal" title="Apple"/>
+                                <connections>
+                                    <action selector="appleTapped:" destination="982-3Y-zJC" eventType="touchUpInside" id="w2b-gE-9fP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ZKF-6Y-Wnf"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ocu-iI-szk" firstAttribute="leading" secondItem="ZKF-6Y-Wnf" secondAttribute="leading" constant="24" id="1rj-wl-bZW"/>
                             <constraint firstItem="hlE-sY-sdM" firstAttribute="top" secondItem="10p-XA-3LJ" secondAttribute="bottom" constant="16" id="4eE-ot-cqo"/>
+                            <constraint firstItem="ZKF-6Y-Wnf" firstAttribute="trailing" secondItem="rrJ-z9-eN5" secondAttribute="trailing" constant="24" id="5wm-pj-8Ht"/>
                             <constraint firstItem="ZKF-6Y-Wnf" firstAttribute="trailing" secondItem="naA-6Y-set" secondAttribute="trailing" constant="24" id="8HT-IO-WI1"/>
                             <constraint firstItem="10p-XA-3LJ" firstAttribute="leading" secondItem="NnY-jL-T5u" secondAttribute="leading" id="9ZC-Dt-giO"/>
                             <constraint firstItem="ocu-iI-szk" firstAttribute="top" secondItem="naA-6Y-set" secondAttribute="bottom" constant="8" id="KHs-Vp-pJt"/>
                             <constraint firstItem="XeY-Hd-p2s" firstAttribute="leading" secondItem="NnY-jL-T5u" secondAttribute="leading" id="KvI-xw-d3z"/>
                             <constraint firstItem="XeY-Hd-p2s" firstAttribute="top" secondItem="NnY-jL-T5u" secondAttribute="bottom" constant="16" id="L5k-eb-7C3"/>
-                            <constraint firstItem="NnY-jL-T5u" firstAttribute="top" secondItem="ZKF-6Y-Wnf" secondAttribute="top" constant="24" id="NHO-Gc-2A7"/>
                             <constraint firstItem="naA-6Y-set" firstAttribute="top" secondItem="hlE-sY-sdM" secondAttribute="bottom" constant="48" id="PTj-4P-Bvi"/>
                             <constraint firstItem="10p-XA-3LJ" firstAttribute="trailing" secondItem="NnY-jL-T5u" secondAttribute="trailing" id="Pz4-vM-SUq"/>
                             <constraint firstItem="hlE-sY-sdM" firstAttribute="trailing" secondItem="NnY-jL-T5u" secondAttribute="trailing" id="QtG-wJ-hzP"/>
                             <constraint firstItem="ZKF-6Y-Wnf" firstAttribute="trailing" secondItem="ocu-iI-szk" secondAttribute="trailing" constant="24" id="RoL-df-gTW"/>
+                            <constraint firstItem="rrJ-z9-eN5" firstAttribute="leading" secondItem="ZKF-6Y-Wnf" secondAttribute="leading" constant="24" id="WG9-cI-DPJ"/>
                             <constraint firstItem="UGw-YJ-C5h" firstAttribute="top" secondItem="ocu-iI-szk" secondAttribute="bottom" constant="24" id="e2w-2P-zME"/>
                             <constraint firstItem="NnY-jL-T5u" firstAttribute="leading" secondItem="ZKF-6Y-Wnf" secondAttribute="leading" constant="24" id="g7X-GU-xEM"/>
                             <constraint firstItem="ZKF-6Y-Wnf" firstAttribute="trailing" secondItem="NnY-jL-T5u" secondAttribute="trailing" constant="24" id="h0j-i0-4Wf"/>
+                            <constraint firstItem="rrJ-z9-eN5" firstAttribute="top" secondItem="ZKF-6Y-Wnf" secondAttribute="top" constant="24" id="hRR-cJ-tdd"/>
                             <constraint firstItem="hlE-sY-sdM" firstAttribute="leading" secondItem="NnY-jL-T5u" secondAttribute="leading" id="pBR-PN-GTo"/>
                             <constraint firstItem="naA-6Y-set" firstAttribute="leading" secondItem="ZKF-6Y-Wnf" secondAttribute="leading" constant="24" id="pW0-fT-3UT"/>
                             <constraint firstItem="XeY-Hd-p2s" firstAttribute="trailing" secondItem="NnY-jL-T5u" secondAttribute="trailing" id="qfg-IO-u0q"/>
                             <constraint firstItem="10p-XA-3LJ" firstAttribute="top" secondItem="XeY-Hd-p2s" secondAttribute="bottom" constant="16" id="vVp-wZ-oZz"/>
+                            <constraint firstItem="NnY-jL-T5u" firstAttribute="top" secondItem="rrJ-z9-eN5" secondAttribute="bottom" constant="16" id="xGr-B4-Ebx"/>
                             <constraint firstItem="UGw-YJ-C5h" firstAttribute="centerX" secondItem="Szh-g4-dvO" secondAttribute="centerX" id="xNf-bL-OJD"/>
                         </constraints>
                     </view>

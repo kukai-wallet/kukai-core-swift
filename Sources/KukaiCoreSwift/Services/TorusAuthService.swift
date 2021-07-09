@@ -13,6 +13,7 @@ import os.log
 public class TorusAuthService {
 	
 	public enum TorusAuthProvider: String {
+		case apple
 		case twitter
 		case google
 		case reddit
@@ -41,6 +42,14 @@ public class TorusAuthService {
 		self.networkType = networkType
 		
 		testnetVerifiers = [
+			.apple: (verifierName: "torus-auth0-apple-lrc", verifier: SubVerifierDetails(
+				loginType: .installed,
+				loginProvider: .apple,
+				clientId: "m1Q0gvDfOyZsJCZ3cucSQEe9XMvl9d9L",
+				verifierName: "torus-auth0-apple-lrc",
+				redirectURL: nativeRedirectURL,
+				jwtParams: ["domain": "torus-test.auth0.com"]
+			)),
 			.twitter: (verifierName: "torus-auth0-twitter-lrc", verifier: SubVerifierDetails(
 				loginType: .web,
 				loginProvider: .twitter,
@@ -93,15 +102,22 @@ public class TorusAuthService {
 			var profile: String? = nil
 			var pk: String? = nil
 			
+			// Each serach returns required data in a different format. Grab the private key and social profile info needed
 			switch authType {
+				case .apple:
+					if let userInfoDict = data["userInfo"] as? [String: Any] {
+						username = userInfoDict["name"] as? String
+						userId = userInfoDict["email"] as? String
+						profile = userInfoDict["picture"] as? String
+					}
+					pk = data["privateKey"] as? String
+				
 				case .twitter:
-					
 					if let userInfoDict = data["userInfo"] as? [String: Any] {
 						username = userInfoDict["nickname"] as? String
 						userId = userInfoDict["sub"] as? String
 						profile = userInfoDict["picture"] as? String
 					}
-					
 					pk = data["privateKey"] as? String
 					
 				case .google:
@@ -114,7 +130,6 @@ public class TorusAuthService {
 						userId = nil
 						profile = userInfoDict["icon_img"] as? String
 					}
-					
 					pk = data["privateKey"] as? String
 					
 				case .facebook:
