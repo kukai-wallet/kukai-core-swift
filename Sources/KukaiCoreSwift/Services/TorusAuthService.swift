@@ -29,9 +29,12 @@ public class TorusAuthService {
 		case invalidTorusResponse
 		case cryptoError
 		case invalidNodeDetails
+		case invalidTwitterURL
+		case noTwiiterUserIdFound
 	}
 	
 	private let networkType: TezosNodeClientConfig.NetworkType
+	private let networkSerice: NetworkService
 	private let ethereumNetworkType: EthereumNetwork
 	private let testnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
 	private let mainnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
@@ -46,8 +49,9 @@ public class TorusAuthService {
 	
 	// need to borrow instructions from: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
 	
-	public init(networkType: TezosNodeClientConfig.NetworkType, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String) {
+	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String) {
 		self.networkType = networkType
+		self.networkSerice = networkService
 		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
 		self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
 		
@@ -164,7 +168,7 @@ public class TorusAuthService {
 		}
 	}
 	
-	public func getAddress(from authType: TorusAuthProvider, for socialId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
@@ -176,55 +180,68 @@ public class TorusAuthService {
 				return
 			}
 			
-			// TODO: if twitter, get twitter id instead of username
-			
-			
-			self?.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierTuple.verifierName, verifierId: socialId, isExtended: true).done { [weak self] data in
-				guard let pubX = data["pub_key_X"],
-					  let pubY = data["pub_key_Y"],
-					  let bytesX = Sodium.shared.utils.hex2bin(pubX),
-					  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
-					os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
-					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
-					return
+			if authType == .twitter {
+				self?.twitterLookup(username: socialUsername) { [weak self] twitterResult in
+					switch twitterResult {
+						case .success(let twitterUserId):
+							self?.getPublicAddress(nodeDetails: nd, verifierName: verifierTuple.verifierName, socialUserId: "twitter|\(twitterUserId)", completion: completion)
+							
+						case .failure(let twitterError):
+							completion(Result.failure(twitterError))
+					}
 				}
-				
-				// Compute prefix and pad data to ensure always 32 bytes
-				let prefixVal: UInt8 = ((bytesY[bytesY.count - 1] % 2) != 0) ? 3 : 2;
-				var pad = [UInt8](repeating: 0, count: 32)
-				pad.append(contentsOf: bytesX)
-				
-				var publicKey = [prefixVal]
-				publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
-				
-				
-				// Generate Base58 encoded version of binary data, so we can check for inverted keys
-				let pk = Base58.encode(message: publicKey, prefix: Prefix.Keys.Secp256k1.public)
-				
-				
-				// Check results are valid
-				if bytesY.count < 32 && prefixVal == 3 && self?.isInvertedPk(pk: pk) == true {
-					publicKey = [2]
-					publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
-				}
-				
-				
-				// Run Blake2b hashing on public key
-				guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
-					os_log("Finding address - generating hash failed", log: .torus, type: .error)
-					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.cryptoError)))
-					return
-				}
-				
-				// Create tz2 address and return
-				let tz2Address = Base58.encode(message: hash, prefix: Prefix.Address.tz2)
-				completion(Result.success(tz2Address))
-				
-			}.catch { error in
-				os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			} else {
+				self?.getPublicAddress(nodeDetails: nd, verifierName: verifierTuple.verifierName, socialUserId: socialUsername, completion: completion)
+			}
+		}
+	}
+	
+	private func getPublicAddress(nodeDetails: NodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { [weak self] data in
+			guard let pubX = data["pub_key_X"],
+				  let pubY = data["pub_key_Y"],
+				  let bytesX = Sodium.shared.utils.hex2bin(pubX),
+				  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
+				os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
+				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 				return
 			}
+			
+			// Compute prefix and pad data to ensure always 32 bytes
+			let prefixVal: UInt8 = ((bytesY[bytesY.count - 1] % 2) != 0) ? 3 : 2;
+			var pad = [UInt8](repeating: 0, count: 32)
+			pad.append(contentsOf: bytesX)
+			
+			var publicKey = [prefixVal]
+			publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
+			
+			
+			// Generate Base58 encoded version of binary data, so we can check for inverted keys
+			let pk = Base58.encode(message: publicKey, prefix: Prefix.Keys.Secp256k1.public)
+			
+			
+			// Check results are valid
+			if bytesY.count < 32 && prefixVal == 3 && self?.isInvertedPk(pk: pk) == true {
+				publicKey = [2]
+				publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
+			}
+			
+			
+			// Run Blake2b hashing on public key
+			guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
+				os_log("Finding address - generating hash failed", log: .torus, type: .error)
+				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.cryptoError)))
+				return
+			}
+			
+			// Create tz2 address and return
+			let tz2Address = Base58.encode(message: hash, prefix: Prefix.Address.tz2)
+			completion(Result.success(tz2Address))
+			
+		}.catch { error in
+			os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			return
 		}
 	}
 	
@@ -234,6 +251,30 @@ public class TorusAuthService {
 			
 			DispatchQueue.main.async {
 				completion()
+			}
+		}
+	}
+	
+	public func twitterLookup(username: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+		let sanitizedUsername = username.replacingOccurrences(of: "@", with: "")
+		
+		guard let url = URL(string: "https://api.tezos.help/twitter-lookup/") else {
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTwitterURL)))
+			return
+		}
+		
+		let data = "{\"username\": \"\(sanitizedUsername)\"}".data(using: .utf8)
+		networkSerice.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
+			switch result {
+				case .success(let dict):
+					if let id = dict["id"] {
+						completion(Result.success(id))
+					} else {
+						completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.noTwiiterUserIdFound)))
+					}
+					
+				case .failure(let error):
+					completion(Result.failure(error))
 			}
 		}
 	}
