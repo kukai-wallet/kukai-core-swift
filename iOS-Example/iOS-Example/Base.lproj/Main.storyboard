@@ -357,7 +357,7 @@
                                 <rect key="frame" x="346" y="149" width="48" height="30"/>
                                 <state key="normal" title="Search"/>
                                 <connections>
-                                    <action selector="searchTapped:" destination="jaI-8G-LOI" eventType="touchUpInside" id="gic-HD-jHn"/>
+                                    <action selector="tz1SearchTapped:" destination="jaI-8G-LOI" eventType="touchUpInside" id="PjU-zS-S0f"/>
                                 </connections>
                             </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="o8n-tb-CdE">
@@ -368,26 +368,53 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Twitter username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vgm-g5-ZMG">
+                                <rect key="frame" x="20" y="231" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9wd-ke-5zM">
+                                <rect key="frame" x="346" y="268" width="48" height="30"/>
+                                <state key="normal" title="Search"/>
+                                <connections>
+                                    <action selector="twitterSearchTapped:" destination="jaI-8G-LOI" eventType="touchUpInside" id="VmF-X2-6yH"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s8d-F5-zjr">
+                                <rect key="frame" x="20" y="268" width="310" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3cn-tE-goN"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Vgm-g5-ZMG" firstAttribute="leading" secondItem="i6g-sv-udp" secondAttribute="leading" id="2d3-BE-vLI"/>
+                            <constraint firstItem="9wd-ke-5zM" firstAttribute="top" secondItem="Vgm-g5-ZMG" secondAttribute="bottom" constant="16" id="2mo-Jg-rI3"/>
                             <constraint firstItem="Fee-jA-l1M" firstAttribute="leading" secondItem="3cn-tE-goN" secondAttribute="leading" constant="16" id="3RK-hP-de7"/>
                             <constraint firstItem="i6g-sv-udp" firstAttribute="top" secondItem="3cn-tE-goN" secondAttribute="top" constant="24" id="8bP-Ws-1OZ"/>
+                            <constraint firstItem="9wd-ke-5zM" firstAttribute="leading" secondItem="s8d-F5-zjr" secondAttribute="trailing" constant="16" id="9Xk-YT-P7l"/>
                             <constraint firstItem="3cn-tE-goN" firstAttribute="trailing" secondItem="i6g-sv-udp" secondAttribute="trailing" constant="20" id="Ans-Ts-uIb"/>
                             <constraint firstItem="i6g-sv-udp" firstAttribute="leading" secondItem="3cn-tE-goN" secondAttribute="leading" constant="20" id="DoA-Tc-KyJ"/>
                             <constraint firstItem="aBH-2z-cpN" firstAttribute="leading" secondItem="Fee-jA-l1M" secondAttribute="trailing" constant="16" id="MII-Lu-3uL"/>
                             <constraint firstItem="o8n-tb-CdE" firstAttribute="centerX" secondItem="fy1-PQ-66I" secondAttribute="centerX" id="NtQ-jL-zEQ"/>
+                            <constraint firstItem="Vgm-g5-ZMG" firstAttribute="trailing" secondItem="i6g-sv-udp" secondAttribute="trailing" id="WEj-uc-Hx2"/>
+                            <constraint firstItem="s8d-F5-zjr" firstAttribute="top" secondItem="Vgm-g5-ZMG" secondAttribute="bottom" constant="16" id="acQ-rh-Y0s"/>
                             <constraint firstItem="Fee-jA-l1M" firstAttribute="top" secondItem="i6g-sv-udp" secondAttribute="bottom" constant="16" id="bsQ-SR-RQP"/>
                             <constraint firstItem="3cn-tE-goN" firstAttribute="trailing" secondItem="aBH-2z-cpN" secondAttribute="trailing" constant="20" id="g3q-cT-5c5"/>
+                            <constraint firstItem="Vgm-g5-ZMG" firstAttribute="top" secondItem="Fee-jA-l1M" secondAttribute="bottom" constant="48" id="kWb-cu-Dfd"/>
+                            <constraint firstItem="9wd-ke-5zM" firstAttribute="trailing" secondItem="Vgm-g5-ZMG" secondAttribute="trailing" id="mRP-cp-UIN"/>
                             <constraint firstItem="o8n-tb-CdE" firstAttribute="centerY" secondItem="fy1-PQ-66I" secondAttribute="centerY" id="q01-E9-G1F"/>
                             <constraint firstItem="aBH-2z-cpN" firstAttribute="top" secondItem="i6g-sv-udp" secondAttribute="bottom" constant="16" id="wVm-xk-30O"/>
+                            <constraint firstItem="s8d-F5-zjr" firstAttribute="leading" secondItem="Vgm-g5-ZMG" secondAttribute="leading" id="wpS-GM-1XU"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Search" id="gpm-ut-brP"/>
                     <connections>
                         <outlet property="activityIndicator" destination="o8n-tb-CdE" id="H3G-Uo-pBS"/>
-                        <outlet property="textfield" destination="Fee-jA-l1M" id="cJA-Cc-6IE"/>
+                        <outlet property="twitterTextfield" destination="s8d-F5-zjr" id="Gfu-HI-8tB"/>
+                        <outlet property="tz1Textfield" destination="Fee-jA-l1M" id="8EC-6L-UQV"/>
                         <segue destination="7rF-4K-4JI" kind="show" identifier="account" id="cqr-pr-GSN"/>
                     </connections>
                 </viewController>

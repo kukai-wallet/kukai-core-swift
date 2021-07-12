@@ -13,15 +13,6 @@ class SocialLoginViewController: UIViewController {
 	@IBOutlet weak var importedAddressLabel: UILabel!
 	@IBOutlet weak var activityView: UIActivityIndicatorView!
 	
-	
-	let torusService = TorusAuthService(
-		networkType: ClientsAndData.shared.clientConfig.networkType,
-		networkService: ClientsAndData.shared.tezosNodeClient.networkService,
-		nativeRedirectURL: "tdsdk://tdsdk/oauthCallback",
-		googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
-		browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
-	)
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		activityView.isHidden = true
@@ -39,41 +30,35 @@ class SocialLoginViewController: UIViewController {
 	
 	@IBAction func appleTapped(_ sender: Any) {
 		showActivity()
-		torusService.createWallet(from: .apple, displayOver: self) { [weak self] result in
+		ClientsAndData.shared.torusAuthService.createWallet(from: .apple, displayOver: self) { [weak self] result in
 			self?.handleResult(result: result)
 		}
 	}
 	
 	@IBAction func twitterTapped(_ sender: Any) {
 		showActivity()
-		torusService.createWallet(from: .twitter, displayOver: self) { [weak self] result in
+		ClientsAndData.shared.torusAuthService.createWallet(from: .twitter, displayOver: self) { [weak self] result in
 			self?.handleResult(result: result)
 		}
-		
-		/*
-		torusService.getAddress(from: .twitter, for: "simon_mcl") { result in
-			print("\n\n\n Result: \(result) \n\n\n")
-		}
-		*/
 	}
 	
 	@IBAction func googleTapped(_ sender: Any) {
 		showActivity()
-		torusService.createWallet(from: .google, displayOver: self) { [weak self] result in
+		ClientsAndData.shared.torusAuthService.createWallet(from: .google, displayOver: self) { [weak self] result in
 			self?.handleResult(result: result)
 		}
 	}
 	
 	@IBAction func redditTapped(_ sender: Any) {
 		showActivity()
-		torusService.createWallet(from: .reddit, displayOver: self) { [weak self] result in
+		ClientsAndData.shared.torusAuthService.createWallet(from: .reddit, displayOver: self) { [weak self] result in
 			self?.handleResult(result: result)
 		}
 	}
 	
 	@IBAction func facebookTapped(_ sender: Any) {
 		showActivity()
-		torusService.createWallet(from: .facebook, displayOver: self) { [weak self] result in
+		ClientsAndData.shared.torusAuthService.createWallet(from: .facebook, displayOver: self) { [weak self] result in
 			self?.handleResult(result: result)
 		}
 	}
