@@ -14,7 +14,7 @@ let package = Package(
 		.package(name: "Sodium", url: "https://github.com/jedisct1/swift-sodium.git", from: "0.9.1"),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
 		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
-		.package(name: "TorusSwiftDirectSDK", url: "https://github.com/torusresearch/torus-direct-swift-sdk", from: "0.3.1"),
+		.package(name: "TorusSwiftDirectSDK", url: "https://github.com/simonmcl/torus-direct-swift-sdk", .branch("master")),
     ],
     targets: [
         .target(

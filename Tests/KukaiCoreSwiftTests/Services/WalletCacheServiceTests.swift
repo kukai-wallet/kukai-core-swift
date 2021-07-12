@@ -23,19 +23,16 @@ class WalletCacheServiceTests: XCTestCase {
 		
     }
 	
-	func testFake() {
-		
-	}
-	
 	// Can't run these tests without a host application, which SPM doesn't support. Need to investigate a workaround
-	/*
 	func testCache() {
+		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		
 		// Check its empty to begin with
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, andPassphrase: ""))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, andPassphrase: ""))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
 		
 		// Check they have been stored
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 2)
@@ -55,9 +52,9 @@ class WalletCacheServiceTests: XCTestCase {
 	}
 	
 	func testCurves() {
-		let wallet = LinearWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
+		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
 		
-		XCTAssert(walletCacheService.cache(wallet: wallet, andPassphrase: ""))
+		XCTAssert(walletCacheService.cache(wallet: wallet))
 		
 		
 		let wallets = walletCacheService.fetchWallets()
@@ -67,9 +64,9 @@ class WalletCacheServiceTests: XCTestCase {
 	}
 	
 	func testDerivationPaths() {
-		let wallet = HDWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: "", derivationPath: MockConstants.hdWallet_non_hardened.derivationPath)!
+		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", derivationPath: MockConstants.hdWallet_non_hardened.derivationPath)!
 		
-		XCTAssert(walletCacheService.cache(wallet: wallet, andPassphrase: ""))
+		XCTAssert(walletCacheService.cache(wallet: wallet))
 		
 		
 		let wallets = walletCacheService.fetchWallets()
@@ -82,9 +79,9 @@ class WalletCacheServiceTests: XCTestCase {
 	}
 	
 	func testPassphrase() {
-		let wallet = LinearWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)!
+		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)!
 		
-		XCTAssert(walletCacheService.cache(wallet: wallet, andPassphrase: MockConstants.passphrase))
+		XCTAssert(walletCacheService.cache(wallet: wallet))
 		
 		
 		let wallets = walletCacheService.fetchWallets()
@@ -92,5 +89,4 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(wallets?.first?.address == MockConstants.linearWalletEd255519_withPassphrase.address, wallets?.first?.address ?? "-")
 		XCTAssert(walletCacheService.deleteCacheAndKeys())
 	}
-	*/
 }

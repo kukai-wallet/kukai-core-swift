@@ -109,6 +109,9 @@ public struct MockConstants {
 			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
 			tzktHistoryMainURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main"), MockConstants.http200),
 			tzktHistoryNativeReceiveURL: (MockConstants.jsonStub(fromFilename: "tzkt_transaction-native-receive"), MockConstants.http200),
+			
+			// Misc
+			URL(string: "https://api.tezos.help/twitter-lookup/")!: (MockConstants.jsonStub(fromFilename: "twitter_lookup"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession
@@ -138,8 +141,8 @@ public struct MockConstants {
 	public static let passphrase = "superSecurePassphrase"
 	public static let messageToSign = "something very interesting that needs to be signed"
 	
-	public static let defaultLinearWallet = LinearWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: "")!
-	public static let defaultHdWallet = HDWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: "")!
+	public static let defaultLinearWallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")!
+	public static let defaultHdWallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")!
 	
 	public struct linearWalletEd255519 {
 		public static let address = "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG"

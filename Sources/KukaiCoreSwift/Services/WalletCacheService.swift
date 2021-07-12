@@ -44,7 +44,7 @@ public class WalletCacheService {
 	fileprivate var privateKey: SecKey?
 	
 	/// The algorithm used by the enclave or keychain
-	fileprivate static let encryptionAlgorithm = SecKeyAlgorithm.eciesEncryptionCofactorX963SHA256AESGCM
+	fileprivate static var encryptionAlgorithm = SecKeyAlgorithm.eciesEncryptionCofactorX963SHA256AESGCM
 	
 	/// The application key used to identify the encryption keys
 	fileprivate static let applicationKey = "app.kukai.kukai-core-swift.walletcache.encryption"
@@ -230,7 +230,15 @@ public class WalletCacheService {
 	- Returns: Bool, indicating if the process was successful or not
 	*/
 	public func deleteCacheAndKeys() -> Bool {
-		try? deleteKey()
+		
+		if Thread.current.isRunningXCTest {
+			self.publicKey = nil
+			self.privateKey = nil
+			
+		} else {
+			try? deleteKey()
+		}
+		
 		return DiskService.delete(fileName: WalletCacheService.cacheFileName)
 	}
 }
@@ -246,6 +254,19 @@ extension WalletCacheService {
 	- Returns: Bool, indicating if operation was successful
 	*/
 	public func loadOrCreateKeys() -> Bool {
+		
+		/// Can't use the secure enclave when running unit tests in SPM. For now, hacky workaround to just just mock ones
+		if Thread.current.isRunningXCTest {
+			let keyTuple = loadMockKeys()
+			self.publicKey = keyTuple.public
+			self.privateKey = keyTuple.private
+			
+			return true
+		}
+		
+		
+		
+		/// Else create the real keys
 		do {
 			if let key = try loadKey() {
 				privateKey = key
@@ -276,8 +297,7 @@ extension WalletCacheService {
 	/**
 	Create the public/private keys in the secure enclave (or keychain)
 	*/
-	fileprivate func createKeys() throws  -> (public: SecKey, private: SecKey?) {
-		
+	fileprivate func createKeys() throws -> (public: SecKey, private: SecKey?) {
 		var error: Unmanaged<CFError>?
 		
 		let privateKeyAccessControl: SecAccessControlCreateFlags = CurrentDevice.hasSecureEnclave ?  [.privateKeyUsage] : []
@@ -318,6 +338,43 @@ extension WalletCacheService {
 		}
 		
 		return (public: publicKey, private: privateKey)
+	}
+	
+	/// Can't use the secure enclave or keychain when running unit tests in SPM, due to no host application. For now, hacky workaround to just use hardcoded keys, and skip the generation, to allow testing over everything else
+	fileprivate func loadMockKeys() -> (public: SecKey, private: SecKey?) {
+		
+		guard let mockPubData = Data.init(base64Encoded: "MIICCgKCAgEAnwNp78w93NLeUOD02O4hIHc+GsWrj+s+zyBCpJi3a754P+DGGfB/8k7PYvS7fYaTiDQ3SpkYfSBYthxLv37/5RW9+6/PBM/zWlHFL2sXk6rSWqs4CJ0q4Lp+PuJIIKtiLv5agrztAZZTIt0TMR5eYJeRO1GrjMfQU5KCpzXMU2h43TOdOQezsV93fxQou4SDBYfkX+MBRTHeV2o6FeoGJCj/D3unrOHJqeBkMTMbECNrho1yUb0PJVp8i3zdOFKmHW4h91Ftk/i6Bq8roR8tKtxlgcYrB691okSyD6ytoVE2agniI83OOPAKUNm7aigbz1ZtYiJ/RORtQD6myyYDcXKN8c2EfK3aqMDRT7289cdDTw58FZgaYoXG0SS6ffl6+xFCGEtI9L/QgCm1tdet/x1N1piVHenNyNz7wDePnIyaP8iJz3YAwoYlaI2n5i7V7b1ocz+r10d/8IRVFE3Sef3v2cN6VeIB/WjKLlvQErHIc5wFmzHaNslcemaAWtSK2bebYqQb53JOy1THyHoREFe5P7or4InEYnTZHT3PYQ1gYYzA7lNK5ytdFh84+qYaY9Q+quR9y6S+ELoRA4bWsDhvnGy6h+3gixKJCewR2AWVU4jbqdxjPlBfUyZ78xTBdXFWqOjQO0KYvi395Y+0bBwEczN0GstxmLLJZc172uUCAwEAAQ=="),
+			  
+			  let mockPrivData = Data.init(base64Encoded: "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") else {
+			fatalError("Can't create data")
+		}
+		
+		WalletCacheService.encryptionAlgorithm = .rsaEncryptionOAEPSHA512AESGCM
+		
+		let keyDictPublic: [NSObject:NSObject] = [
+			kSecAttrKeyType: kSecAttrKeyTypeRSA,
+			kSecAttrKeyClass: kSecAttrKeyClassPublic,
+			kSecAttrKeySizeInBits: NSNumber(value: 4096),
+			kSecReturnPersistentRef: true as NSObject
+		]
+		
+		let keyDictPrivate: [NSObject:NSObject] = [
+			kSecAttrKeyType: kSecAttrKeyTypeRSA,
+			kSecAttrKeyClass: kSecAttrKeyClassPrivate,
+			kSecAttrKeySizeInBits: NSNumber(value: 4096),
+			kSecReturnPersistentRef: true as NSObject
+		]
+		
+		guard let mockPubKey = SecKeyCreateWithData(mockPubData as CFData, keyDictPublic as CFDictionary, nil) else {
+			fatalError("Can't create public key")
+		}
+		
+		guard let mockPrivKey = SecKeyCreateWithData(mockPrivData as CFData, keyDictPrivate as CFDictionary, nil) else {
+			fatalError("Can't create private key")
+		}
+		
+		return (public: mockPubKey, private: mockPrivKey)
+		
 	}
 	
 	/**
@@ -373,6 +430,8 @@ extension WalletCacheService {
 		}
 		
 		var error: Unmanaged<CFError>?
+		
+		//guard let cipherText = SecKeyCreateEncryptedData(pubKey, .rsaEncryptionOAEPSHA512AESGCM, data as CFData, &error) as Data? else {
 		guard let cipherText = SecKeyCreateEncryptedData(pubKey, WalletCacheService.encryptionAlgorithm, data as CFData, &error) as Data? else {
 			if let err = error { throw err.takeRetainedValue() as Error }
 			else { throw WalletCacheError.unableToEncrypt }

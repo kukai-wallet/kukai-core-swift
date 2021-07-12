@@ -52,7 +52,7 @@ public class TzKTClient {
 		self.betterCallDevClient = betterCallDevClient
 		
 		// Reduce searchFrequency for XCTTest
-		if let _ = NSClassFromString("XCTest") {
+		if Thread.current.isRunningXCTest {
 			searchFrequency = 2
 		}
 	}

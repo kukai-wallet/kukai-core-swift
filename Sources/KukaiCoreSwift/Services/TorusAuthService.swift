@@ -72,7 +72,7 @@ public class TorusAuthService {
 	private var torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
 	
 	/// Shared instance of the Torus Util object
-	private let torusUtils = TorusUtils()
+	private let torusUtils: TorusUtils
 	
 	/// Shared instance of the Torus object used for fetching details about the Ethereum node, in order to query it for public tz2 addresses
 	private let fetchNodeDetails: FetchNodeDetails
@@ -92,11 +92,22 @@ public class TorusAuthService {
 	- parameter googleRedirectURL: Google works differently and requires that you redirect to a google cloud app, which in turn will redirect to the native app. If using Google auth you must supply a valid URL or else it won't function
 	- parameter browserRedirectURL: Some services can't return to the native app directly, but instead must go to an intermediary webpage that in turn redirects. This page must be created by you and the URL passed in here
 	*/
-	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String) {
+	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String,
+				utils: TorusUtils = TorusUtils(), 			// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
+				fetchNodeDetails: FetchNodeDetails? = nil) 	// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
+	{
 		self.networkType = networkType
 		self.networkSerice = networkService
 		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
-		self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
+		self.torusUtils = utils
+		
+		// TODO: remove when Torus SDK fixed
+		if let fetch = fetchNodeDetails {
+			self.fetchNodeDetails = fetch
+		} else {
+			self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
+		}
+		
 		
 		testnetVerifiers = [
 			.apple: (verifierName: "torus-auth0-apple-lrc", verifier: SubVerifierDetails(
@@ -154,13 +165,19 @@ public class TorusAuthService {
 	- parameter displayOver: The `UIViewController` that the webpage will display on top of
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
-	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
+	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: TorusSwiftDirectSDK? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
 		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
 		
-		torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: self.ethereumNetworkType, loglevel: .none)
+		// TODO: remove when Torus SDK fixed
+		if let mockTorus = mockedTorus {
+			torus = mockTorus
+		} else {
+			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: self.ethereumNetworkType, loglevel: .trace)
+		}
+		
 		torus.triggerLogin(controller: displayOver).done { data in
 			os_log("Torus returned succesful data", log: .torus, type: .debug)
 			
@@ -206,7 +223,7 @@ public class TorusAuthService {
 			
 			
 			// Create wallet with details and return
-			guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: .twitter, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
+			guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
 				os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
 				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 				return
@@ -331,6 +348,9 @@ public class TorusAuthService {
 		
 		let data = "{\"username\": \"\(sanitizedUsername)\"}".data(using: .utf8)
 		networkSerice.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
+			
+			print("result: \(result)")
+			
 			switch result {
 				case .success(let dict):
 					if let id = dict["id"] {

@@ -547,7 +547,7 @@ public class BetterCallDevClient {
 		
 		
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
-		if let _ = NSClassFromString("XCTest") {
+		if Thread.current.isRunningXCTest {
 			completion(true)
 			return
 		}
