@@ -14,8 +14,17 @@ import Sodium
 import WalletCore
 import os.log
 
+/**
+TorusAuthService is a wrapper around the SDK provided by: https://tor.us/ to allow the creation of `TorusWallet`'s.
+This allows users to create a wallet from their social media accounts without having to use a seed phrase / mnemonic.
+TorusAuthService allows Tezos apps to leverage this service for a number of providers, and also has the ability to query the network for someone else's wallet address,
+based on their social profile. This allows you to send XTZ or tokens to your friend based on their twitter username for example
+*/
 public class TorusAuthService {
 	
+	// MARK: - Types
+	
+	/// List of providers currently supported and available on the Tezos network
 	public enum TorusAuthProvider: String {
 		case apple
 		case twitter
@@ -24,6 +33,7 @@ public class TorusAuthService {
 		case facebook
 	}
 	
+	/// Custom TorusAuthService errors that cna be thrown
 	public enum TorusAuthError: Error {
 		case missingVerifier
 		case invalidTorusResponse
@@ -33,22 +43,55 @@ public class TorusAuthService {
 		case noTwiiterUserIdFound
 	}
 	
+	
+	
+	// MARK: - Private properties
+	
+	/// Tezos mainnet or testnet
 	private let networkType: TezosNodeClientConfig.NetworkType
+	
+	/// Shared Network service for a small number of requests
 	private let networkSerice: NetworkService
+	
+	/// Torus relies on the Ethereum network for smart contracts. Need to specify which network it uses
 	private let ethereumNetworkType: EthereumNetwork
+	
+	/// Torus verifier settings used on Testnet
 	private let testnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
+	
+	/// Torus verifier settings used on mainnet
 	private let mainnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
+	
+	/// The Ethereum contract address to use on testnet
 	private let testnetProxyAddress = "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
+	
+	/// The Ethereum contract address to use on mainent
 	private let mainnetProxyAddress = "0x638646503746d5456209e33a2ff5e3226d698bea"
+	
+	/// Shared instance of the Torus SDK object, with a temprary init
 	private var torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
+	
+	/// Shared instance of the Torus Util object
 	private let torusUtils = TorusUtils()
+	
+	/// Shared instance of the Torus object used for fetching details about the Ethereum node, in order to query it for public tz2 addresses
 	private let fetchNodeDetails: FetchNodeDetails
+	
+	/// Stored copy of the Torus NodeDetails object. The fetching of this is forced onto the main thread, blocking the UI. Need to push it onto a background thread and store it for other code to access
 	private var nodeDetails: NodeDetails? = nil
 	
 	
 	
-	// need to borrow instructions from: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
+	// MARK: - Init
 	
+	/**
+	Setup the TorusAuthService verifiers and networking clients for testnet and mainnet, so they can be queried easier.
+	- parameter networkType: Testnet or mainnet
+	- parameter networkService: A networking service instance used for converting twitter handles into twitter id's
+	- parameter nativeRedirectURL: The callback URL fired to reopen your native app, after the social handshake has been completed. Must register the URL scheme with your application before it will work. See: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
+	- parameter googleRedirectURL: Google works differently and requires that you redirect to a google cloud app, which in turn will redirect to the native app. If using Google auth you must supply a valid URL or else it won't function
+	- parameter browserRedirectURL: Some services can't return to the native app directly, but instead must go to an intermediary webpage that in turn redirects. This page must be created by you and the URL passed in here
+	*/
 	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String) {
 		self.networkType = networkType
 		self.networkSerice = networkService
@@ -101,6 +144,16 @@ public class TorusAuthService {
 		mainnetVerifiers = testnetVerifiers
 	}
 	
+	
+	
+	// MARK: - Public functions
+	
+	/**
+	Create a `TorusWallet` insteace from a social media provider
+	- parameter from: The `TorusAuthProvider` that you want to invoke
+	- parameter displayOver: The `UIViewController` that the webpage will display on top of
+	- parameter completion: The callback returned when all the networking and cryptography is complete
+	*/
 	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
 		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
@@ -168,6 +221,12 @@ public class TorusAuthService {
 		}
 	}
 	
+	/**
+	Get a TZ2 address from a social media user name. If Twitter, will first convert the username to a userid and then query
+	- parameter from: The `TorusAuthProvider` that you want to invoke
+	- parameter for: The social media username to search for
+	- parameter completion: The callback returned when all the networking and cryptography is complete
+	*/
 	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
@@ -196,6 +255,7 @@ public class TorusAuthService {
 		}
 	}
 	
+	/// Private wrapper to avoid duplication in the previous function
 	private func getPublicAddress(nodeDetails: NodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { [weak self] data in
 			guard let pubX = data["pub_key_X"],
@@ -245,6 +305,7 @@ public class TorusAuthService {
 		}
 	}
 	
+	/// Torus SDK runs this logic on the main thread by default, blocking the UI thread freezing animations. Need to push it onto a background thread.
 	private func getNodeDetailsOnBackgroundThread(completion: @escaping (() -> Void)) {
 		DispatchQueue.global(qos: .background).async { [weak self] in
 			self?.nodeDetails = self?.fetchNodeDetails.getNodeDetails()
@@ -255,6 +316,11 @@ public class TorusAuthService {
 		}
 	}
 	
+	/**
+	Take in a Twitter username and fetch the Twitter userId instead.
+	- parameter username: The users username. Can contain an `@` symbol, but will be stripped out by the code as its not required
+	- parameter completion: The callback fired when the userId has been found
+	*/
 	public func twitterLookup(username: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		let sanitizedUsername = username.replacingOccurrences(of: "@", with: "")
 		
@@ -279,6 +345,7 @@ public class TorusAuthService {
 		}
 	}
 	
+	/// Its possible for private keys to be returned inverted. This function provides a quick sanity check, so the key can be flipped if necessary
 	private func isInvertedPk(pk: String) -> Bool {
 		// Detect keys with flipped sign and correct them.
 		let invertedPks = [
