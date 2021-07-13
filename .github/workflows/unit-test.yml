@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: xcode.xcresult
+          path: /Users/runner/work/kukai-core-swift/kukai-core-swift/xcode.xcresult
 
 
       # Issue using the wrong scheme coming from a dependency
