@@ -23,12 +23,12 @@ jobs:
       - uses: actions/checkout@v2.3.4
 
       - name: Test
-        run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -resultBundlePath xcode.xcresult
+        run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -enableCodeCoverage YES -resultBundlePath xcode.xcresult
       
       - name: Upload results
         uses: actions/upload-artifact@v2
         with:
-          name: test-results
+          name: test-results.xcresult
           path: /Users/runner/work/kukai-core-swift/kukai-core-swift/xcode.xcresult
 
 
