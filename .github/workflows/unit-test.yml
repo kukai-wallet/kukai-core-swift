@@ -21,8 +21,15 @@ jobs:
           - iOS
     steps:
       - uses: actions/checkout@v2.3.4
+
       - name: Test
-        run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12'
+        run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -resultBundlePath xcode.xcresult
+      
+      - name: Upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: xcode.xcresult
 
 
       # Issue using the wrong scheme coming from a dependency
