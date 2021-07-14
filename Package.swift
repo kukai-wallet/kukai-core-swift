@@ -13,7 +13,7 @@ let package = Package(
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
 		
 		// TODO: problem with the offical swift-sodium (https://github.com/jedisct1/swift-sodium), using someone elses fork with a bug fix until merged into main repo or SPM bug fixed
-		.package(name: "Sodium", url: "https://github.com/junelife/swift-sodium.git", .branch("master")),
+		.package(name: "Sodium", url: "https://github.com/junelife/swift-sodium.git", .branch("spm")),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
 		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
 		.package(name: "TorusSwiftDirectSDK", url: "https://github.com/simonmcl/torus-direct-swift-sdk", .branch("master")),
