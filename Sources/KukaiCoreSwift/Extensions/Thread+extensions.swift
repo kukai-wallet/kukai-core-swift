@@ -7,7 +7,8 @@
 
 import Foundation
 
-extension Thread {
+public extension Thread {
+	
 	var isRunningXCTest: Bool {
 		for key in self.threadDictionary.allKeys {
 			guard let keyAsString = key as? String else {
