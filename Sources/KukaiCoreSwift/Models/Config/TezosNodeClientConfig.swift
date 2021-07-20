@@ -14,13 +14,13 @@ public struct TezosNodeClientConfig {
 	// MARK: - Types
 	
 	/// An enum indicating whether the network is mainnet or testnet
-	public enum NetworkType {
+	public enum NetworkType: String {
 		case mainnet
 		case testnet
 	}
 	
 	/// Allow switching between local forging or remote forging+parsing
-	public enum ForgingType {
+	public enum ForgingType: String {
 		case local
 		case remote
 	}
