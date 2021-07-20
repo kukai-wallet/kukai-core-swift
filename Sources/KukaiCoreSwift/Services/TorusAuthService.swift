@@ -175,7 +175,7 @@ public class TorusAuthService {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 		} else {
-			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: self.ethereumNetworkType, loglevel: .trace)
+			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: self.ethereumNetworkType, loglevel: .none)
 		}
 		
 		torus.triggerLogin(controller: displayOver).done { data in
