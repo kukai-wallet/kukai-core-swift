@@ -7,7 +7,7 @@ let package = Package(
     name: "KukaiCoreSwift",
 	platforms: [.iOS(.v14)],
     products: [
-        .library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
+		.library(name: "KukaiCoreSwift", type: .dynamic, targets: ["KukaiCoreSwift"]),
     ],
     dependencies: [
         .package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
