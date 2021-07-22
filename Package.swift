@@ -19,10 +19,19 @@ let package = Package(
 		.package(name: "TorusSwiftDirectSDK", url: "https://github.com/simonmcl/torus-direct-swift-sdk", .branch("master")),
     ],
     targets: [
+		/*.binaryTarget(
+			name: "Clibsodium",
+			path: "Clibsodium.xcframework"
+		),
+		.binaryTarget(
+			name: "Sodium",
+			path: "Sodium.xcframework"
+		),*/
         .target(
 			name: "KukaiCoreSwift",
 			dependencies: [
 				//.product(name: "Clibsodium", package: "Sodium"),
+				//"Clibsodium",
 				"Sodium",
 				"BigInt",
 				"Kingfisher",

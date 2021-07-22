@@ -64,6 +64,8 @@ class CreateAndSendOpViewController: UIViewController {
 								
 								// It may fail for many resons, display the error
 								let alert = UIAlertController(title: "Error", message: sendError.description, preferredStyle: .alert)
+								alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+								
 								self?.present(alert, animated: true, completion: nil)
 						}
 					}
