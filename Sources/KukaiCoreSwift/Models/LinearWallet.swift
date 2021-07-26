@@ -140,3 +140,17 @@ public class LinearWallet: Wallet {
 		return publicKey.base58CheckRepresentation
 	}
 }
+
+extension LinearWallet: Equatable {
+	
+	public static func == (lhs: LinearWallet, rhs: LinearWallet) -> Bool {
+		return lhs.address == rhs.address
+	}
+}
+
+extension LinearWallet: Hashable {
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(address)
+	}
+}

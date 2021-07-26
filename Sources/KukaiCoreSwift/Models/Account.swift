@@ -10,7 +10,7 @@ import Foundation
 
 /// Fetching all the account balances is a lengthy task, involving many requests and parsing different structures.
 /// This struct abstract the developer away from knowing all these details, and instead allows developers to access wallets balances in a more normal approach
-public struct Account: Codable {
+public struct Account: Codable, Hashable {
 	
 	/// The wallet address
 	public let walletAddress: String

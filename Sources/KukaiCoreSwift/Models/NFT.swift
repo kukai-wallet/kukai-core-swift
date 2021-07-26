@@ -9,7 +9,7 @@
 import Foundation
 
 /// An indiviual NFT (not the parent token/collection) holding a URI to an asset somewhere on the internet
-public struct NFT: Codable {
+public struct NFT: Codable, Hashable {
 	
 	/// Each NFT of a token has a unique ID
 	public let tokenId: Int

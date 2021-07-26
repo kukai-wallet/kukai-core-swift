@@ -371,3 +371,12 @@ extension TokenAmount: CustomStringConvertible {
 		return normalisedRepresentation
 	}
 }
+
+extension TokenAmount: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(rpcRepresentation)
+		hasher.combine(decimalPlaces)
+	}
+}

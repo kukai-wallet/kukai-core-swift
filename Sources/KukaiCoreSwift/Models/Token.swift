@@ -112,3 +112,27 @@ public class Token: Codable, CustomStringConvertible {
 		return "{Symbol: \(symbol), Name: \(name), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
 	}
 }
+
+extension Token: Equatable {
+	
+	/// Conforming to `Equatable` to enable working with UITableViewDiffableDataSource
+	public static func == (lhs: Token, rhs: Token) -> Bool {
+		return lhs.name == rhs.name &&
+			lhs.symbol == rhs.symbol &&
+			lhs.description == rhs.description &&
+			lhs.tokenContractAddress == rhs.tokenContractAddress &&
+			lhs.balance == rhs.balance &&
+			lhs.nfts == rhs.nfts
+	}
+}
+
+extension Token: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(tokenType.rawValue)
+		hasher.combine(name)
+		hasher.combine(symbol)
+		hasher.combine(tokenContractAddress)
+	}
+}

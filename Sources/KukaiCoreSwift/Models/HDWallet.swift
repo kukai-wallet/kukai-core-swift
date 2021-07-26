@@ -203,3 +203,17 @@ public class HDWallet: Wallet {
 		return Base58.encode(message: publicKey.data.bytes, prefix: Prefix.Keys.Ed25519.public)
 	}
 }
+
+extension HDWallet: Equatable {
+	
+	public static func == (lhs: HDWallet, rhs: HDWallet) -> Bool {
+		return lhs.address == rhs.address
+	}
+}
+
+extension HDWallet: Hashable {
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(address)
+	}
+}
