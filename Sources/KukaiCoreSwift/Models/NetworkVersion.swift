@@ -17,6 +17,7 @@ public enum TezosChainName: String {
 	case delphinet
 	case edonet = "edo2net"
 	case florencenet
+	case granadanet
 	case unknwon
 }
 
