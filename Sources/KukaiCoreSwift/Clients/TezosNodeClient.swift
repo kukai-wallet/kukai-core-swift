@@ -396,9 +396,8 @@ public class TezosNodeClient {
 		self.getContractStorage(contractAddress: contract.address) { (result) in
 			switch result {
 				case .success(let michelsonPair):
-					
 					if michelsonPair.args.count > 2,
-					   let tokenRpcBalance = michelsonPair.argIndexAsValue(3)?.value,
+					   let tokenRpcBalance = michelsonPair.argIndexAsValue(0)?.value,
 					   let tokenAmount = TokenAmount(fromRpcAmount: tokenRpcBalance, decimalPlaces: contract.decimalPlaces) {
 						completion(Result.success(tokenAmount))
 						
