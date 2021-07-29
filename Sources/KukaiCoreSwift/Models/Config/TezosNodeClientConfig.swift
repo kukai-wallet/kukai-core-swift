@@ -49,13 +49,13 @@ public struct TezosNodeClientConfig {
 	public struct defaultTestnetURLs {
 		
 		/// The default testnet URL to use for `primaryNodeURL`, For more information on this service, see: https://tezos.giganode.io/
-		public static let primaryNodeURL = URL(string: "https://florence-tezos.giganode.io/")!
+		public static let primaryNodeURL = URL(string: "https://api.tez.ie/rpc/granadanet")! // Doesn't seem to be available on Giganode atm
 		
 		/// The default testnet URL to use for `parseNodeURL`
-		public static let parseNodeURL = URL(string: "https://api.tez.ie/rpc/florencenet")!
+		public static let parseNodeURL = URL(string: "https://api.tez.ie/rpc/granadanet")!
 		
 		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
-		public static let tzktURL = URL(string: "https://api.florencenet.tzkt.io/")!
+		public static let tzktURL = URL(string: "https://api.granadanet.tzkt.io/")!
 		
 		/// The default testnet URL to use for `betterCallDevURL`, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html
 		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
@@ -140,7 +140,7 @@ public struct TezosNodeClientConfig {
 				primaryNodeURL = TezosNodeClientConfig.defaultTestnetURLs.primaryNodeURL
 				parseNodeURL = TezosNodeClientConfig.defaultMainnetURLs.parseNodeURL
 				forgingType = .local
-				tezosChainName = .florencenet
+				tezosChainName = .granadanet
 				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultTestnetURLs.betterCallDevURL
 		}

@@ -73,13 +73,16 @@ public class OperationFactory {
 		return [OperationDelegation(source: address, delegate: nil)]
 	}
 	
-	/*
 	/**
-	Create the operations necessary to perform an exchange of XTZ for a given FA token, using Dexter
-	- parameter xxxxx: yyyyy
+	Create the operations necessary to perform an exchange of XTZ for a given FA token, using liquidity baking contracts
+	- parameter xtzAmount: The amount of XTZ to be swaped
+	- parameter minTokenAmount: The minimum token amount you will accept
+	- parameter contract: The address of the swap contract
+	- parameter wallet: The wallet signing the operation
+	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func dexterXtzToToken(xtzAmount: XTZAmount, minTokenAmount: TokenAmount, token: Token, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func liquidityBakingXtzToToken(xtzAmount: XTZAmount, minTokenAmount: TokenAmount, contract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		
 		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.xtzToToken.rawValue
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
@@ -90,20 +93,21 @@ public class OperationFactory {
 		let destinationMichelson = MichelsonFactory.createString(wallet.address)
 		let michelson = MichelsonPair (args: [destinationMichelson, innerPair])
 		
-		return [OperationSmartContractInvocation(source: wallet.address, amount: xtzAmount, destinationContract: token.dexterExchangeAddress ?? "", entrypoint: entrypoint, value: michelson)]
+		return [OperationSmartContractInvocation(source: wallet.address, amount: xtzAmount, destinationContract: contract, entrypoint: entrypoint, value: michelson)]
 	}
 	
 	/**
-	Create the operations necessary to perform an exchange of a given FA token for XTZ, using Dexter
-	- parameter xxxxx: yyyyy
+	Create the operations necessary to perform an exchange of a given FA token for XTZ, using liquidity baking contracts
+	- parameter tokenAmount: The amount of Token to be swapped
+	- parameter minXTZAmount: The minimum xtz amount you will accept
+	- parameter contract: The address of the swap contract
+	- parameter tokenContract: The address of the returned token
+	- parameter currentAllowance: The users current approved allowance to spend
+	- parameter wallet: The wallet signing the operation
+	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func dexterTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, token: Token, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
-		guard let tokenAddress = token.tokenContractAddress, let dexterAddress = token.dexterExchangeAddress else {
-			os_log(.error, log: .kukaiCoreSwift, "Token `%@` doesn't have a `tokenContractAddress` and/or `dexterExchangeAddress`", token.symbol)
-			return []
-		}
-		
+	public static func liquidityBakingTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, contract: String, tokenContract: String, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.tokenToXtz.rawValue
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
@@ -113,12 +117,12 @@ public class OperationFactory {
 		var operations: [Operation] = []
 		if currentAllowance.toRpcDecimal() ?? 0 > 0 {
 			operations = [
-				dexterAllowanceOperation(tokenAddress: tokenAddress, spenderAddress: dexterAddress, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				dexterAllowanceOperation(tokenAddress: tokenAddress, spenderAddress: dexterAddress, allowance: tokenAmount, wallet: wallet)
+				allowanceOperation(tokenAddress: tokenContract, spenderAddress: contract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+				allowanceOperation(tokenAddress: tokenContract, spenderAddress: contract, allowance: tokenAmount, wallet: wallet)
 			]
 			
 		} else {
-			operations = [ dexterAllowanceOperation(tokenAddress: tokenAddress, spenderAddress: dexterAddress, allowance: tokenAmount, wallet: wallet) ]
+			operations = [ allowanceOperation(tokenAddress: tokenContract, spenderAddress: contract, allowance: tokenAmount, wallet: wallet) ]
 		}
 		
 		// Create the michelson
@@ -136,21 +140,18 @@ public class OperationFactory {
 		
 		
 		// Add the last operation to perform the swap
-		operations.append(OperationSmartContractInvocation(source: wallet.address, destinationContract: token.dexterExchangeAddress ?? "", entrypoint: entrypoint, value: michelson))
+		operations.append(OperationSmartContractInvocation(source: wallet.address, destinationContract: contract, entrypoint: entrypoint, value: michelson))
 		
 		return operations
 	}
 	
-	/// Not implmented yet
-	public static func dexterTokenToToken() -> [Operation] {
-		return []
-	}
-	*/
-
 	/**
 	Create the operations necessary to register an allowance, allowing another address to send FA tokens on your behalf.
 	Used when interacting with smart contract applications like Dexter or QuipuSwap
-	- parameter xxxxx: yyyyy
+	- parameter tokenAddress: The address of the token contract
+	- parameter spenderAddress: The address that is being given permission to spend the users balance
+	- parameter allowance: The allowance to set for the given contract
+	- parameter wallet: The wallet signing the operation
 	- returns: An array of `Operation` subclasses.
 	*/
 	public static func allowanceOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {

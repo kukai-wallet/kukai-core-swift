@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import KukaiCoreSwift
 import TorusSwiftDirectSDK
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -62,6 +63,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	
 	func experiment() {
+		
+		
+		/*
+		ClientsAndData.shared.tezosNodeClient.getLiquidityBakingPoolData(forContract: (address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", decimalPlaces: 8)) { [weak self] result in
+			switch result {
+				case .success(let poolData):
+					print("Pooldata: \(poolData)")
+					
+				case .failure(let error):
+					print("Error: \(error)")
+			}
+		}
+		*/
+		
+		
+		
+		
+		
 		
 		
 		/*
