@@ -289,26 +289,26 @@ public class TezosNodeClient {
 		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withBaseURL: config.primaryNodeURL, completion: completion)
 	}
 	
-	/*
 	/**
-	Get the dexter pool data for each `Token` passed in (tokenType = .xtz will be ignored). Once returned, the values will be automatically applied to the token objects (if successful), avoiding the need to extract and store separately
-	- parameter forTokens: An array of `Token` objects to query balances for..
+	Get the Liquidity Baking pool data for each tuple passed in.
+	- parameter forContracts: An array of tuples `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
 	- parameter completion: An empty callback to alert that the balances, if avialable, have bene fetched
 	*/
-	public func getDexterPoolData(forTokens tokens: [Token], completion: @escaping (([ErrorResponse]?) -> Void)) {
+	public func getLiquidityBakingPoolData(forContracts contracts: [(address: String, decimalPlaces: Int)], completion: @escaping ((Result<[String: (xtzPool: XTZAmount, tokenPool: TokenAmount)], ErrorResponse>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		var errors: [ErrorResponse] = []
 		
-		for token in tokens where token.tokenType != .xtz {
+		var poolDict: [String: (xtzPool: XTZAmount, tokenPool: TokenAmount)] = [:]
+		
+		for contract in contracts {
 			
 			dispatchGroup.enter()
-			os_log(.debug, log: .kukaiCoreSwift, "Fetching pool data for %@", token.symbol)
+			os_log(.debug, log: .kukaiCoreSwift, "Fetching pool data for %@", contract.address)
 			
-			getDexterPoolData(forToken: token) { (result) in
+			getLiquidityBakingPoolData(forContract: contract) { (result) in
 				switch result {
 					case .success(let poolData):
-						token.dexterXTZPool = poolData.xtzPool
-						token.dexterTokenPool = poolData.tokenPool
+						poolDict[contract.address] = poolData
 						
 					case .failure(let error):
 						errors.append(error)
@@ -319,24 +319,28 @@ public class TezosNodeClient {
 		}
 		
 		dispatchGroup.notify(queue: .main) {
-			completion( (errors.count > 0 ? errors : nil) )
+			if errors.count > 0 {
+				completion(Result.failure(errors[0]))
+			} else {
+				completion(Result.success(poolDict))
+			}
 		}
 	}
 	
 	/**
 	A helper function to fetch both the xtzPool and the tokenPool in one callback. Will return two values of zero if there is an error
-	- parameter forToken: The `Token` object whose data we want.
+	- parameter forContract: Tuple of `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
 	- parameter completion: A callback with a tuple of `xtzPool` of type `XTZAmount` and `tokenPool` of type `TokenAmount`
 	*/
-	public func getDexterPoolData(forToken token: Token, completion: @escaping (( Result<(xtzPool: XTZAmount, tokenPool: TokenAmount), ErrorResponse>) -> Void)) {
+	public func getLiquidityBakingPoolData(forContract contract: (address: String, decimalPlaces: Int), completion: @escaping (( Result<(xtzPool: XTZAmount, tokenPool: TokenAmount), ErrorResponse>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		var errorResponse: ErrorResponse? = nil
 		var xtzAmount = XTZAmount.zero()
-		var tokenAmount = TokenAmount.zeroBalance(decimalPlaces: token.decimalPlaces)
+		var tokenAmount = TokenAmount.zeroBalance(decimalPlaces: contract.decimalPlaces)
 		
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
-			self?.getDexterXtzPool(forToken: token, completion: { (result) in
+			self?.getLiquidityBakingXtzPool(forContract: contract.address, completion: { (result) in
 				switch result {
 					case .success(let xtz):
 						xtzAmount = xtz
@@ -351,7 +355,7 @@ public class TezosNodeClient {
 		
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
-			self?.getDexterTokenPool(forToken: token, completion: { (result) in
+			self?.getLiquidityBakingTokenPool(forContract: contract, completion: { (result) in
 				switch result {
 					case .success(let token):
 						tokenAmount = token
@@ -375,41 +379,31 @@ public class TezosNodeClient {
 	}
 	
 	/**
-	Get the xtzPool available for the given dexter token/xtz pair
-	- parameter forToken: The `Token` object whose data we want.
+	Get the xtzPool available for the given Liquidity Baking token/xtz pair
+	- parameter forContract: The contract address to query the data for
 	- parameter completion: A callback with a `Result` object, with either a `XTZAmount` or an `Error`
 	*/
-	public func getDexterXtzPool(forToken token: Token, completion: @escaping ((Result<XTZAmount, ErrorResponse>) -> Void)) {
-		guard let dexterAddress = token.dexterExchangeAddress else {
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TezosNodeClientError.noDexterExchangeAddressFound)))
-			return
-		}
-		
-		self.getBalance(forAddress: dexterAddress, completion: completion)
+	public func getLiquidityBakingXtzPool(forContract contract: String, completion: @escaping ((Result<XTZAmount, ErrorResponse>) -> Void)) {
+		self.getBalance(forAddress: contract, completion: completion)
 	}
 	
 	/**
-	Get the tokenPool available for the given dexter token/xtz pair
-	- parameter forToken: The `Token` object whose data we want.
+	Get the tokenPool available for the given Liquidity Baking token/xtz pair
+	- parameter forContract: Tuple of `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
 	- parameter completion: A callback with a `Result` object, with either a `TokenAmount` or an `Error`
 	*/
-	public func getDexterTokenPool(forToken token: Token, completion: @escaping ((Result<TokenAmount, ErrorResponse>) -> Void)) {
-		guard let dexterAddress = token.dexterExchangeAddress else {
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TezosNodeClientError.noDexterExchangeAddressFound)))
-			return
-		}
-		
-		self.getContractStorage(contractAddress: dexterAddress) { (result) in
+	public func getLiquidityBakingTokenPool(forContract contract: (address: String, decimalPlaces: Int), completion: @escaping ((Result<TokenAmount, ErrorResponse>) -> Void)) {
+		self.getContractStorage(contractAddress: contract.address) { (result) in
 			switch result {
 				case .success(let michelsonPair):
 					
 					if michelsonPair.args.count > 2,
 					   let tokenRpcBalance = michelsonPair.argIndexAsValue(3)?.value,
-					   let tokenAmount = TokenAmount(fromRpcAmount: tokenRpcBalance, decimalPlaces: token.decimalPlaces) {
+					   let tokenAmount = TokenAmount(fromRpcAmount: tokenRpcBalance, decimalPlaces: contract.decimalPlaces) {
 						completion(Result.success(tokenAmount))
 						
 					} else if let tokenRpcBalance = michelsonPair.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsValue(0)?.value,
-					   let tokenAmount = TokenAmount(fromRpcAmount: tokenRpcBalance, decimalPlaces: token.decimalPlaces) {
+					   let tokenAmount = TokenAmount(fromRpcAmount: tokenRpcBalance, decimalPlaces: contract.decimalPlaces) {
 						
 						// Only needed for backwards compatibility with Delphi, can be removed once Edo is realeased and adopted
 						completion(Result.success(tokenAmount))
@@ -423,7 +417,6 @@ public class TezosNodeClient {
 			}
 		}
 	}
-	*/
 	
 	/**
 	Query the server for the `NetworkVersion` and `NetworkConstants`, and store the responses in the tezosNodeClient properties `networkVersion` and `networkConstants`,
