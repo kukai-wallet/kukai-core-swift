@@ -89,9 +89,8 @@ public class OperationFactory {
 		
 		let timestampMichelson = MichelsonFactory.createString(dateString)
 		let minTokensToBuyMichelson = MichelsonFactory.createInt(minTokenAmount)
-		let innerPair = MichelsonPair(args: [minTokensToBuyMichelson, timestampMichelson])
 		let destinationMichelson = MichelsonFactory.createString(wallet.address)
-		let michelson = MichelsonPair (args: [destinationMichelson, innerPair])
+		let michelson = MichelsonPair (args: [destinationMichelson, minTokensToBuyMichelson, timestampMichelson])
 		
 		return [OperationSmartContractInvocation(source: wallet.address, amount: xtzAmount, destinationContract: contract, entrypoint: entrypoint, value: michelson)]
 	}
@@ -129,14 +128,8 @@ public class OperationFactory {
 		let timestampMichelson = MichelsonFactory.createString(dateString)
 		let minMutezToBuyMichelson = MichelsonFactory.createInt(minXTZAmount)
 		let tokensToSellMichelson = MichelsonFactory.createInt(tokenAmount)
-		let amountInnerPair = MichelsonPair(args: [minMutezToBuyMichelson, timestampMichelson])
-		let amountPair = MichelsonPair(args: [tokensToSellMichelson, amountInnerPair])
-		
 		let destinationMichelson = MichelsonFactory.createString(wallet.address)
-		let ownerMichelson = MichelsonFactory.createString(wallet.address)
-		let addressPair = MichelsonPair(args: [ownerMichelson, destinationMichelson])
-		
-		let michelson = MichelsonPair(args: [addressPair, amountPair])
+		let michelson = MichelsonPair(args: [destinationMichelson, tokensToSellMichelson, minMutezToBuyMichelson, timestampMichelson])
 		
 		
 		// Add the last operation to perform the swap
