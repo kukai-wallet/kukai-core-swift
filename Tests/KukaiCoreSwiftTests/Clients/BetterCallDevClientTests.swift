@@ -103,7 +103,7 @@ class BetterCallDevClientTests: XCTestCase {
 			switch result {
 				case .success(let contract):
 					XCTAssert(contract.address == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", contract.address)
-					XCTAssert(contract.manager == "tz1UhnGg2ND5toEkWjybfvXKTsFEsQ9rj2B8", contract.manager)
+					XCTAssert(contract.manager == "tz1UhnGg2ND5toEkWjybfvXKTsFEsQ9rj2B8", contract.manager ?? "")
 					XCTAssert(contract.faVersionFromTags() == .fa1_2, contract.faVersionFromTags().rawValue)
 					
 				case .failure(let error):
