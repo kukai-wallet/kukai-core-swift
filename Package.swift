@@ -38,7 +38,8 @@ let package = Package(
 			name: "KukaiCoreSwiftTests",
 			dependencies: ["KukaiCoreSwift"],
 			resources: [
-				.copy("Stubs")
+				.copy("Stubs"),
+				.copy("Services/MockData")
 			]
 		),
 	]

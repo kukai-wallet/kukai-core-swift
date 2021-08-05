@@ -1,0 +1,93 @@
+[
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "1000",
+    "xtz_out": "11233127",
+    "price_impact": "0.5005"
+  },
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "100",
+    "xtz_out": "2041551",
+    "price_impact": "0.09181866666666667"
+  },  
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "10",
+    "xtz_out": "222329",
+    "price_impact": "0.010893333333333333"
+  },
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "1",
+    "xtz_out": "22432",
+    "price_impact": "0.0020444444444444447"
+  },
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "240",
+    "xtz_out": "4346974",
+    "price_impact": "0.194355"
+  },
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "116",
+    "xtz_out": "2334277",
+    "price_impact": "0.10483908045977011"
+  },
+  {
+    "xtz_pool": "20000000",
+    "token_pool": "1000",
+    "token_in": "923",
+    "xtz_out": "10783119",
+    "price_impact": "0.4804992897556278"
+  },
+  {
+    "xtz_pool": "19500000",
+    "token_pool": "919",
+    "token_in": "100",
+    "xtz_out": "2154875",
+    "price_impact": "0.09903746363636357"
+  },
+  {
+    "xtz_pool": "17591539",
+    "token_pool": "1019",
+    "token_in": "81",
+    "xtz_out": "1476619",
+    "price_impact": "0.07456360634883522"
+  },
+  {
+    "xtz_pool": "29764960047",
+    "token_pool": "351871420",
+    "token_in": "110000000",
+    "xtz_out": "7076977193",
+    "price_impact": "0.23892335985820817"
+  },
+  {
+    "xtz_pool": "5210275350",
+    "token_pool": "9597584059140809000",
+    "token_in": "12000000000000000000",
+    "xtz_out": "2892127448",
+    "price_impact": "0.5560620833610556"
+  },
+  {
+    "xtz_pool": "5836211738",
+    "token_pool": "32669725403",
+    "token_in": "112233000",
+    "xtz_out": "19949645",
+    "price_impact": "0.004420265534379381"
+  },
+  {
+    "xtz_pool": "169488009",
+    "token_pool": "59084008",
+    "token_in": "16700000",
+    "xtz_out": "37832388",
+    "price_impact": "0.22114275988163895"
+  }
+]

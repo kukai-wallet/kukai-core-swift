@@ -1,0 +1,149 @@
+[
+  {
+    "xtz_pool": "1000000000",
+    "token_pool": "250000",
+    "xtz_in": "1000000",
+    "token_out": "248",
+    "price_impact": "0.005519999999999903"
+  },
+  {
+    "xtz_pool": "1000000000",
+    "token_pool": "250000",
+    "xtz_in": "2000000",
+    "token_out": "496",
+    "price_impact": "0.0035149999999999023"
+  },
+  {
+    "xtz_pool": "1000000000",
+    "token_pool": "250000",
+    "xtz_in": "5000000",
+    "token_out": "1238",
+    "price_impact": "0.006322000000000016"
+  },
+  {
+    "xtz_pool": "1000000000",
+    "token_pool": "250000",
+    "xtz_in": "10000000",
+    "token_out": "2464",
+    "price_impact": "0.011134000000000015"
+  },
+  {
+    "xtz_pool": "1000000000",
+    "token_pool": "250000",
+    "xtz_in": "100000000",
+    "token_out": "22634",
+    "price_impact": "0.09153449999999992"
+  },
+  {
+    "xtz_pool": "355200000",
+    "token_pool": "30000",
+    "xtz_in": "1000000",
+    "token_out": "83",
+    "price_impact": "0.010363333333333306"
+  },
+  {
+    "xtz_pool": "355200000",
+    "token_pool": "30000",
+    "xtz_in": "34020000",
+    "token_out": "2600",
+    "price_impact": "0.08770027434842245"
+  },
+  {
+    "xtz_pool": "10000000000",
+    "token_pool": "15200",
+    "xtz_in": "10000000",
+    "token_out": "15",
+    "price_impact": "0.01291118421052632"
+  },
+  {
+    "xtz_pool": "10000000000",
+    "token_pool": "15200",
+    "xtz_in": "23100000",
+    "token_out": "34",
+    "price_impact": "0.03142800182273865"
+  },
+  {
+    "xtz_pool": "10000000000",
+    "token_pool": "15200",
+    "xtz_in": "67000000",
+    "token_out": "100",
+    "price_impact": "0.008000294579732935"
+  },
+  {
+    "xtz_pool": "10000000000",
+    "token_pool": "15200",
+    "xtz_in": "1050000",
+    "token_out": "1",
+    "price_impact": "0.3732769423558897"
+  },
+  {
+    "xtz_pool": "10000000000",
+    "token_pool": "15200",
+    "xtz_in": "4423000",
+    "token_out": "6",
+    "price_impact": "0.10731285029213321"
+  },
+  {
+    "xtz_pool": "103000000",
+    "token_pool": "101000",
+    "xtz_in": "1000000",
+    "token_out": "946",
+    "price_impact": "0.010806930693069303"
+  },
+  {
+    "xtz_pool": "10000000",
+    "token_pool": "1000",
+    "xtz_in": "2000000",
+    "token_out": "137",
+    "price_impact": "0.14375"
+  },
+  {
+    "xtz_pool": "12000000",
+    "token_pool": "834",
+    "xtz_in": "2500000",
+    "token_out": "122",
+    "price_impact": "0.15155875299760196"
+  },
+  {
+    "xtz_pool": "14500000",
+    "token_pool": "691",
+    "xtz_in": "6125000",
+    "token_out": "182",
+    "price_impact": "0.26896836882365105"
+  },
+  {
+    "xtz_pool": "14500000",
+    "token_pool": "1234",
+    "xtz_in": "5000000",
+    "token_out": "280",
+    "price_impact": "0.22852512155591573"
+  },
+  {
+    "xtz_pool": "29764960047",
+    "token_pool": "351871420",
+    "xtz_in": "324234000",
+    "token_out": "3783870",
+    "price_impact": "0.01175349118808035"
+  },
+  {
+    "xtz_pool": "5210275350",
+    "token_pool": "9597584059140809000",
+    "xtz_in": "123000000",
+    "token_out": "220810890476850364",
+    "price_impact": "0.02400639452268658"
+  },
+  {
+    "xtz_pool": "5836211738",
+    "token_pool": "32669725403",
+    "xtz_in": "1000000000",
+    "token_out": "4769019830",
+    "price_impact": "0.14695540714189312"
+  },
+  {
+    "xtz_pool": "169488009",
+    "token_pool": "59084008",
+    "xtz_in": "34000000",
+    "token_out": "9736014",
+    "price_impact": "0.16575541156416942"
+  }
+]
