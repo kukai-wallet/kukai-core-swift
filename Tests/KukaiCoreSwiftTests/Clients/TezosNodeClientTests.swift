@@ -155,4 +155,23 @@ class TezosNodeClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 3)
 	}
+	
+	func testGetLiquidityData() {
+		let expectation = XCTestExpectation(description: "tezos node client")
+		MockConstants.shared.tezosNodeClient.getLiquidityBakingPoolData(forContracts: [(address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", decimalPlaces: 8)], completion: { result in
+			switch result {
+				case .success(let poolData):
+					XCTAssert(poolData.count == 1)
+					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.xtzPool.normalisedRepresentation == "240862.069602", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.xtzPool.normalisedRepresentation ?? "-")
+					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenPool.normalisedRepresentation == "0.76232227", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenPool.normalisedRepresentation ?? "-")
+					
+				case .failure(let error):
+					XCTFail(error.description)
+			}
+			
+			expectation.fulfill()
+		})
+		
+		wait(for: [expectation], timeout: 3)
+	}
 }

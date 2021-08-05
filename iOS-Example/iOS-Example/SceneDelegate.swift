@@ -64,6 +64,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
+		// Liquidity baking
+		// Granadanet dex contract: 	KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5
+		// Granadanet lq token:			KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo
+		// Granadanet tzBTC token:		KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn (docs / comment says this one)   or   KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN (tzkt says this one)
+		
+		
 		
 		/*
 		ClientsAndData.shared.tezosNodeClient.getLiquidityBakingPoolData(forContract: (address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", decimalPlaces: 8)) { [weak self] result in
@@ -76,7 +82,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			}
 		}
 		*/
-		
 		
 		
 		
