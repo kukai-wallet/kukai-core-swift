@@ -18,7 +18,7 @@ public struct BetterCallDevContract: Codable {
 	public let address: String
 	
 	/// The manager address of the contract
-	public let manager: String
+	public let manager: String?
 	
 	/// string tags to denote useful infomration about the contract. Currently used to denote which FA version the contract supports
 	public let tags: [String]
