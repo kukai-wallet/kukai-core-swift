@@ -164,6 +164,9 @@ class TezosNodeClientTests: XCTestCase {
 					XCTAssert(poolData.count == 1)
 					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.xtzPool.normalisedRepresentation == "240862.069602", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.xtzPool.normalisedRepresentation ?? "-")
 					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenPool.normalisedRepresentation == "0.76232227", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenPool.normalisedRepresentation ?? "-")
+					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.totalLiquidity.normalisedRepresentation == "68617", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.totalLiquidity.normalisedRepresentation ?? "-")
+					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenContractAddress == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenContractAddress ?? "-")
+					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.liquidityTokenContractAddress == "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.liquidityTokenContractAddress ?? "-")
 					
 				case .failure(let error):
 					XCTFail(error.description)
