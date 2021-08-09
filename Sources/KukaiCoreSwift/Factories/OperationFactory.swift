@@ -82,7 +82,7 @@ public class OperationFactory {
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func liquidityBakingXtzToToken(xtzAmount: XTZAmount, minTokenAmount: TokenAmount, contract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func liquidityBakingXtzToToken(xtzAmount: XTZAmount, minTokenAmount: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		
 		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.xtzToToken.rawValue
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
@@ -92,7 +92,7 @@ public class OperationFactory {
 		let destinationMichelson = MichelsonFactory.createString(wallet.address)
 		let michelson = MichelsonPair (args: [destinationMichelson, minTokensToBuyMichelson, timestampMichelson])
 		
-		return [OperationSmartContractInvocation(source: wallet.address, amount: xtzAmount, destinationContract: contract, entrypoint: entrypoint, value: michelson)]
+		return [OperationSmartContractInvocation(source: wallet.address, amount: xtzAmount, destinationContract: dexContract, entrypoint: entrypoint, value: michelson)]
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class OperationFactory {
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func liquidityBakingTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, contract: String, tokenContract: String, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func liquidityBakingTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, dexContract: String, tokenContract: String, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.tokenToXtz.rawValue
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
@@ -116,12 +116,12 @@ public class OperationFactory {
 		var operations: [Operation] = []
 		if currentAllowance.toRpcDecimal() ?? 0 > 0 {
 			operations = [
-				allowanceOperation(tokenAddress: tokenContract, spenderAddress: contract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				allowanceOperation(tokenAddress: tokenContract, spenderAddress: contract, allowance: tokenAmount, wallet: wallet)
+				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokenAmount, wallet: wallet)
 			]
 			
 		} else {
-			operations = [ allowanceOperation(tokenAddress: tokenContract, spenderAddress: contract, allowance: tokenAmount, wallet: wallet) ]
+			operations = [ allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokenAmount, wallet: wallet) ]
 		}
 		
 		// Create the michelson
@@ -133,7 +133,7 @@ public class OperationFactory {
 		
 		
 		// Add the last operation to perform the swap
-		operations.append(OperationSmartContractInvocation(source: wallet.address, destinationContract: contract, entrypoint: entrypoint, value: michelson))
+		operations.append(OperationSmartContractInvocation(source: wallet.address, destinationContract: dexContract, entrypoint: entrypoint, value: michelson))
 		
 		return operations
 	}
@@ -155,6 +155,61 @@ public class OperationFactory {
 		let michelson = MichelsonPair(args: [spenderMichelson, allowanceMichelson])
 		
 		return OperationSmartContractInvocation(source: wallet.address, destinationContract: tokenAddress, entrypoint: entrypoint, value: michelson)
+	}
+	
+	/**
+	TODO:
+	- parameter _:
+	- returns: An array of `Operation` subclasses.
+	*/
+	public static func liquidityBakingAddLiquidity(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, tokenContract: String, dexContract: String, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+		
+		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.addLiquidity.rawValue
+		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
+		
+		
+		// If the current allowance is zero, set the allowance tot he amount we are trying to send.
+		// Else, for secuirty, we must set the allowance to zero, then set the allwaonce to what we need.
+		var operations: [Operation] = []
+		if currentAllowance.toRpcDecimal() ?? 0 > 0 {
+			operations = [
+				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokensToDeposit, wallet: wallet)
+			]
+			
+		} else {
+			operations = [ allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokensToDeposit, wallet: wallet) ]
+		}
+		
+		let timestampMichelson = MichelsonFactory.createString(dateString)
+		let token = MichelsonFactory.createInt(tokensToDeposit)
+		let lqt = MichelsonFactory.createInt(minLiquidtyMinted)
+		let owner = MichelsonFactory.createString(wallet.address)
+		let michelson = MichelsonPair (args: [owner, lqt, token, timestampMichelson])
+		
+		operations.append(OperationSmartContractInvocation(source: wallet.address, amount: xtzToDeposit, destinationContract: dexContract, entrypoint: entrypoint, value: michelson))
+		
+		return operations
+	}
+	
+	/**
+	TODO:
+	- parameter _:
+	- returns: An array of `Operation` subclasses.
+	*/
+	public static func liquidityBakingRemoveLiquidity(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+		
+		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.removeLiquidity.rawValue
+		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
+		
+		let timestampMichelson = MichelsonFactory.createString(dateString)
+		let xtz = MichelsonFactory.createInt(minXTZ)
+		let token = MichelsonFactory.createInt(minToken)
+		let lqt = MichelsonFactory.createInt(liquidityToBurn)
+		let destination = MichelsonFactory.createString(wallet.address)
+		let michelson = MichelsonPair (args: [destination, lqt, xtz, token, timestampMichelson])
+		
+		return [OperationSmartContractInvocation(source: wallet.address, amount: XTZAmount.zero(), destinationContract: dexContract, entrypoint: entrypoint, value: michelson)]
 	}
 	
 	

@@ -84,7 +84,7 @@ public class LiquidityBakingCalculationService {
 	- parameter maxSlippage: `Double` containing the max slippage a user will accept for their trade.
 	- returns: `LiquidityBakingCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calcualteTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingCalculationResult? {
+	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingCalculationResult? {
 		guard let expected = tokenToXtzExpectedReturn(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
 			  let minimum = tokenToXtzMinimumReturn(xtzAmount: expected, slippage: maxSlippage),
 			  let rate = tokenToXtzExchangeRateDisplay(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
@@ -95,6 +95,57 @@ public class LiquidityBakingCalculationService {
 		let impactDouble = Double(priceImpact.description) ?? 0
 		
 		return LiquidityBakingCalculationResult(expected: expected, minimum: minimum, displayExchangeRate: rate, displayPriceImpact: impactDouble)
+	}
+	
+	/**
+	A helper function to create all the necessary calculations for adding liquidity, with an XTZ input
+	- parameter xtz: The amount of XTZ to deposit
+	- parameter xtzPool: The total XTZ held in the dex contract
+	- parameter tokenPool: The total token held in the dex contract
+	- parameter totalLiquidity: The ttotal liquidity held in the liquidity contract
+	- returns: `(tokenRequired: TokenAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
+	*/
+	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount) -> (tokenRequired: TokenAmount, liquidity: TokenAmount)? {
+		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool),
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, tokenToDeposit: tokenRequired, totalLiquidity: totalLiquidity) else {
+			return nil
+		}
+		
+		return (tokenRequired: tokenRequired, liquidity: liquidityReturned)
+	}
+	
+	/**
+	A helper function to create all the necessary calculations for adding liquidity, with an Token input
+	- parameter token: The amount of Token to deposit
+	- parameter xtzPool: The total XTZ held in the dex contract
+	- parameter tokenPool: The total token held in the dex contract
+	- parameter totalLiquidity: The ttotal liquidity held in the liquidity contract
+	- returns: `(xtzRequired: XTZAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
+	*/
+	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount) -> (xtzRequired: XTZAmount, liquidity: TokenAmount)? {
+		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool),
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, tokenToDeposit: token, totalLiquidity: totalLiquidity) else {
+			return nil
+		}
+		
+		return (xtzRequired: xtzRequired, liquidity: liquidityReturned)
+	}
+	
+	/**
+	A helper function to create all the necessary calculations for removing liquidity, to return everything the user will get out
+	- parameter liquidityBurned: The amount of Liquidity tokens the user wants to burn or sell
+	- parameter totalLiquidity: The total volume of liquidity held in the contract
+	- parameter xtzPool: The xtz pool held in the dex contract
+	- parameter tokenPool: The token pool held in the dex contract
+	- returns: `(xtz: XTZAmount, token: TokenAmount)` containing the results of all the necessary calculations.
+	*/
+	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> (xtz: XTZAmount, token: TokenAmount)? {
+		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool),
+			  let tokenOut = removeLiquidityTokenReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, tokenPool: tokenPool) else {
+			return nil
+		}
+		
+		return (xtz: xtzOut, token: tokenOut)
 	}
 	
 	
@@ -416,5 +467,118 @@ public class LiquidityBakingCalculationService {
 		}
 		
 		return (Decimal(string: result.toString())?.rounded(scale: 4, roundingMode: .bankers) ?? 0) * 100
+	}
+	
+	
+	
+	// MARK: Add Liquidity
+	
+	/**
+	Calculate the amount of liquidity tokens a user can expect back for an amount of XTZ and Token
+	- parameter xtzToDeposit: The XTZ to send to the dex contract
+	- parameter tokenToDeposit: The Token to send to the dex contract
+	- parameter totalLiquidity: The total liquidity already in the contract
+	- returns: `TokenAmount` an amount of Liquidity token you will receive
+	*/
+	public func addLiquidityReturn(xtzToDeposit: XTZAmount, tokenToDeposit: TokenAmount, totalLiquidity: TokenAmount) -> TokenAmount? {
+		let xtzIn = xtzToDeposit.rpcRepresentation
+		let tokenIn = tokenToDeposit.rpcRepresentation
+		let totalLqt = totalLiquidity.rpcRepresentation
+		
+		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
+			  let inner = outer.objectForKeyedSubscript("addLiquidityLiquidityCreated"),
+			  let result = inner.call(withArguments: [xtzIn, tokenIn, totalLqt]) else {
+			return nil
+		}
+		
+		return TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: totalLiquidity.decimalPlaces)
+	}
+	
+	/**
+	Calculate the amount of Token that is required to send along side your XTZ
+	- parameter xtzToDeposit: The amount of XTZ to send
+	- parameter xtzPool: The XTZ currently held in the dex contract
+	- parameter tokenPool: The Token currently held in the dex contract
+	- returns: `TokenAmount` The amount of token required to send with the given amount of XTZ
+	*/
+	public func addLiquidityTokenRequired(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> TokenAmount? {
+		let xtzIn = xtzToDeposit.rpcRepresentation
+		let xPool = xtzPool.rpcRepresentation
+		let tPool = tokenPool.rpcRepresentation
+		
+		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
+			  let inner = outer.objectForKeyedSubscript("addLiquidityTokenIn"),
+			  let result = inner.call(withArguments: [xtzIn, xPool, tPool]) else {
+			return nil
+		}
+		
+		return TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: tokenPool.decimalPlaces)
+	}
+	
+	/**
+	Calculate the amount of XTZ that is required to send along side your Token
+	- parameter tokenToDeposit: The amount of Token to send
+	- parameter xtzPool: The XTZ currently held in the dex contract
+	- parameter tokenPool: The Token currently held in the dex contract
+	- returns: `XTZAmount` The amount of XTZ required to send with the given amount of Token
+	*/
+	public func addLiquidityXtzRequired(tokenToDeposit: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> XTZAmount? {
+		let tokenIn = tokenToDeposit.rpcRepresentation
+		let xPool = xtzPool.rpcRepresentation
+		let tPool = tokenPool.rpcRepresentation
+		
+		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
+			  let inner = outer.objectForKeyedSubscript("addLiquidityXtzIn"),
+			  let result = inner.call(withArguments: [tokenIn, xPool, tPool]) else {
+			return nil
+		}
+		
+		return XTZAmount(fromRpcAmount: result.toString())
+	}
+	
+	
+	
+	// MARK: Remove Liquidity
+	
+	/**
+	Calculate the amount of token a user would revice back if they burned X liquidity
+	- parameter liquidityBurned: The amount of liquidity to burn
+	- parameter totalLiquidity: The totla liquidity held in the dex contract
+	- parameter tokenPool: The total token held in the dex contract
+	- returns: `TokenAmount` The amount of Token that would be returned
+	*/
+	public func removeLiquidityTokenReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, tokenPool: TokenAmount) -> TokenAmount? {
+		let lqtBurned = liquidityBurned.rpcRepresentation
+		let tLqt = totalLiquidity.rpcRepresentation
+		let tPool = tokenPool.rpcRepresentation
+		
+		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
+			  let inner = outer.objectForKeyedSubscript("removeLiquidityTokenOut"),
+			  let result = inner.call(withArguments: [lqtBurned, tLqt, tPool]) else {
+			return nil
+		}
+		
+		return TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: tokenPool.decimalPlaces)
+	}
+	
+	/**
+	Calculate the amount of XTZ a user would revice back if they burned X liquidity
+	- parameter liquidityBurned: The amount of liquidity to burn
+	- parameter totalLiquidity: The totla liquidity held in the dex contract
+	- parameter xtzPool: The total XTZ held in the dex contract
+	- returns: `XTZAmount` The amount of XTZ that would be returned
+	*/
+	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount) -> XTZAmount? {
+		let lqtBurned = liquidityBurned.rpcRepresentation
+		let tLqt = totalLiquidity.rpcRepresentation
+		let xPool = xtzPool.rpcRepresentation
+		
+		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
+			  let inner = outer.objectForKeyedSubscript("removeLiquidityXtzOut"),
+			  let result = inner.call(withArguments: [lqtBurned, tLqt, xPool]) else {
+			return nil
+		}
+		
+		return XTZAmount(fromRpcAmount: result.toString())
 	}
 }

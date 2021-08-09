@@ -69,7 +69,7 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testXtzToToken() {
-		let op = OperationFactory.liquidityBakingXtzToToken(xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), contract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.liquidityBakingXtzToToken(xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -96,7 +96,7 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testTokenToXTZ() {
-		let op = OperationFactory.liquidityBakingTokenToXTZ(tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), contract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.liquidityBakingTokenToXTZ(tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 3)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -164,6 +164,112 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
 			XCTAssert(amount == "150000000", amount ?? "-")
 			XCTAssert(minAmount == "1000000", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+	}
+	
+	func testAddLiquidity() {
+		let op = OperationFactory.liquidityBakingAddLiquidity(xtzToDeposit: XTZAmount(fromNormalisedAmount: 1), tokensToDeposit: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidtyMinted: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		
+		XCTAssert(op.count == 3)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[1].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[2].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[1].counter == "0")
+		XCTAssert(op[2].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[1].operationKind == .transaction)
+		XCTAssert(op[2].operationKind == .transaction)
+		XCTAssert(op[0] is OperationSmartContractInvocation)
+		XCTAssert(op[1] is OperationSmartContractInvocation)
+		XCTAssert(op[2] is OperationSmartContractInvocation)
+		
+		if let smartOp1 = op[0] as? OperationSmartContractInvocation {
+			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
+			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
+			
+			let entrypoint = smartOp1.parameters["entrypoint"] as? String
+			let value = smartOp1.parameters["value"] as? MichelsonPair
+			let address = value?.argIndexAsValue(0)?.value
+			let amount = value?.argIndexAsValue(1)?.value
+			
+			XCTAssert(entrypoint == "approve", entrypoint ?? "-")
+			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
+			XCTAssert(amount == "0", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+		
+		
+		
+		if let smartOp2 = op[1] as? OperationSmartContractInvocation {
+			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
+			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
+			
+			let entrypoint = smartOp2.parameters["entrypoint"] as? String
+			let value = smartOp2.parameters["value"] as? MichelsonPair
+			let address = value?.argIndexAsValue(0)?.value
+			let amount = value?.argIndexAsValue(1)?.value
+			
+			XCTAssert(entrypoint == "approve", entrypoint ?? "-")
+			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
+			XCTAssert(amount == "150000000", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+		
+		
+		
+		if let smartOp3 = op[2] as? OperationSmartContractInvocation {
+			XCTAssert(smartOp3.amount == "1000000", smartOp3.amount)
+			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
+			
+			let entrypoint = smartOp3.parameters["entrypoint"] as? String
+			let value = smartOp3.parameters["value"] as? MichelsonPair
+			let address = value?.argIndexAsValue(0)?.value
+			let xtzAmount = value?.argIndexAsValue(1)?.value
+			let minLqtAmount = value?.argIndexAsValue(2)?.value
+			
+			XCTAssert(entrypoint == "addLiquidity", entrypoint ?? "-")
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(xtzAmount == "150000000", xtzAmount ?? "-")
+			XCTAssert(minLqtAmount == "150000000", minLqtAmount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+	}
+	
+	func testRemoveLiquidity() {
+		let op = OperationFactory.liquidityBakingRemoveLiquidity(minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
+		
+		XCTAssert(op.count == 1)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[0] is OperationSmartContractInvocation)
+		
+		if let smartOp = op[0] as? OperationSmartContractInvocation {
+			XCTAssert(smartOp.amount == "0", smartOp.amount)
+			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
+			
+			let entrypoint = smartOp.parameters["entrypoint"] as? String
+			let value = smartOp.parameters["value"] as? MichelsonPair
+			let address = value?.argIndexAsValue(0)?.value
+			let lqtBurnAmount = value?.argIndexAsValue(1)?.value
+			let xtzAmount = value?.argIndexAsValue(2)?.value
+			let tokenAmount = value?.argIndexAsValue(3)?.value
+			
+			XCTAssert(entrypoint == "removeLiquidity", entrypoint ?? "-")
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(lqtBurnAmount == "150000000", lqtBurnAmount ?? "-")
+			XCTAssert(xtzAmount == "1000000", xtzAmount ?? "-")
+			XCTAssert(tokenAmount == "150000000", tokenAmount ?? "-")
 			
 		} else {
 			XCTFail("invalid op type")
