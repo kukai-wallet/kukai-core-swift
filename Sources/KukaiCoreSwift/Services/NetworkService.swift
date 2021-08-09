@@ -176,7 +176,7 @@ public class NetworkService {
 		
 		let errorString = ErrorResponse.errorToString(error)
 		let payloadString = String(data: payload ?? Data(), encoding: .utf8) ?? ""
-		let dataString = String(data: responseData ?? Data(), encoding: .utf8) ?? ""
+		let dataString = NetworkService.dataToStringStippingMichelsonContractCode(data: responseData)
 		
 		if isPost {
 			os_log(.error, log: .network, "Request Failed to: %@ \nRequest Body: %@ \nError: %@ \nStatusCode: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, errorString, "\(String(describing: statusCode))", dataString)
@@ -190,7 +190,7 @@ public class NetworkService {
 		if !(loggingConfig?.logNetworkSuccesses ?? false) { return }
 		
 		let payloadString = String(data: payload ?? Data(), encoding: .utf8) ?? ""
-		let dataString = String(data: responseData ?? Data(), encoding: .utf8) ?? ""
+		let dataString = NetworkService.dataToStringStippingMichelsonContractCode(data: responseData)
 		
 		if isPost {
 			os_log(.debug, log: .network, "Request Succeeded to: %@ \nRequest Body: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, dataString)
@@ -204,5 +204,21 @@ public class NetworkService {
 		if !(loggingConfig?.logNetworkFailures ?? false) && !(loggingConfig?.logNetworkSuccesses ?? false) { return }
 		
 		os_log(.debug, log: .network, "Sending request to: %@", fullURL.absoluteString)
+	}
+	
+	/**
+	When an error occurs involving a smart contract, the RPC will return the entire contract as part of the JSON, exceeding the logging's max size.
+	We check can we parse it to our object and strip out all the unnecessary attributes to avoid overloading the logger and making it possible to debug
+	*/
+	private static func dataToStringStippingMichelsonContractCode(data: Data?) -> String {
+		if let d = data,
+		   let asOperation = try? JSONDecoder().decode(OperationResponse.self, from: d),
+		   let data = try? JSONEncoder().encode(asOperation) {
+			
+			return String(data: data, encoding: .utf8) ?? ""
+			
+		} else {
+			return String(data: data ?? Data(), encoding: .utf8) ?? ""
+		}
 	}
 }
