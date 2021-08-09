@@ -480,14 +480,14 @@ public class LiquidityBakingCalculationService {
 	- parameter totalLiquidity: The total liquidity already in the contract
 	- returns: `TokenAmount` an amount of Liquidity token you will receive
 	*/
-	public func addLiquidityReturn(xtzToDeposit: XTZAmount, tokenToDeposit: TokenAmount, totalLiquidity: TokenAmount) -> TokenAmount? {
+	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount) -> TokenAmount? {
 		let xtzIn = xtzToDeposit.rpcRepresentation
-		let tokenIn = tokenToDeposit.rpcRepresentation
+		let xPool = xtzPool.rpcRepresentation
 		let totalLqt = totalLiquidity.rpcRepresentation
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("addLiquidityLiquidityCreated"),
-			  let result = inner.call(withArguments: [xtzIn, tokenIn, totalLqt]) else {
+			  let result = inner.call(withArguments: [xtzIn, xPool, totalLqt]) else {
 			return nil
 		}
 		
