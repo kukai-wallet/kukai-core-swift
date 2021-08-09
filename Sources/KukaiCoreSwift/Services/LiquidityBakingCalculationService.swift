@@ -107,7 +107,7 @@ public class LiquidityBakingCalculationService {
 	*/
 	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount) -> (tokenRequired: TokenAmount, liquidity: TokenAmount)? {
 		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, tokenToDeposit: tokenRequired, totalLiquidity: totalLiquidity) else {
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity) else {
 			return nil
 		}
 		
@@ -124,7 +124,7 @@ public class LiquidityBakingCalculationService {
 	*/
 	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount) -> (xtzRequired: XTZAmount, liquidity: TokenAmount)? {
 		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, tokenToDeposit: token, totalLiquidity: totalLiquidity) else {
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity) else {
 			return nil
 		}
 		
