@@ -9,9 +9,9 @@ import Foundation
 
 public struct LiquidityBakingData: Codable {
 	
-	let xtzPool: XTZAmount
-	let tokenPool: TokenAmount
-	let totalLiquidity: TokenAmount
-	let tokenContractAddress: String
-	let liquidityTokenContractAddress: String
+	public let xtzPool: XTZAmount
+	public let tokenPool: TokenAmount
+	public let totalLiquidity: TokenAmount
+	public let tokenContractAddress: String
+	public let liquidityTokenContractAddress: String
 }
