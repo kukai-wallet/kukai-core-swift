@@ -378,62 +378,76 @@ class LiquidityBakingCalculationServiceTests: XCTestCase {
 	// MARK: - Liquidity
 	
 	func testAddLiquidityXTZ() {
-		var xtzIn = XTZAmount(fromRpcAmount: 10000) ?? XTZAmount.zero()
+		var xtzIn = XTZAmount(fromRpcAmount: 27000) ?? XTZAmount.zero()
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
-		var tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
+		var tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = liquidityBakingCalcualtionService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt)
+		var result = liquidityBakingCalcualtionService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5)
 		
-		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.000001", result?.tokenRequired.normalisedRepresentation ?? "-")
-		XCTAssert(result?.liquidity.normalisedRepresentation == "3.999998", result?.liquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.0012", result?.tokenRequired.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "1.2", result?.expectedLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumLiquidity.normalisedRepresentation == "0.6", result?.minimumLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.exchangeRate.description == "0.000443", result?.exchangeRate.description ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 2103460) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
-		tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
+		tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = liquidityBakingCalcualtionService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt)
+		result = liquidityBakingCalcualtionService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5)
 		
-		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.000094", result?.tokenRequired.normalisedRepresentation ?? "-")
-		XCTAssert(result?.liquidity.normalisedRepresentation == "841.352365", result?.liquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.093488", result?.tokenRequired.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "93.487111", result?.expectedLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumLiquidity.normalisedRepresentation == "46.743555", result?.minimumLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.exchangeRate.description == "0.000406", result?.exchangeRate.description ?? "-")
 	}
 	
 	func testAddLiquidityToken() {
 		var tokenIn = TokenAmount(fromRpcAmount: 10000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
-		var tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
+		var tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = liquidityBakingCalcualtionService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt)
+		var result = liquidityBakingCalcualtionService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5)
 		
-		XCTAssert(result?.xtzRequired.normalisedRepresentation == "225", result?.xtzRequired.normalisedRepresentation ?? "-")
-		XCTAssert(result?.liquidity.normalisedRepresentation == "89641.434262", result?.liquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.225", result?.tokenRequired.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "10", result?.expectedLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumLiquidity.normalisedRepresentation == "5", result?.minimumLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.exchangeRate.description == "0.000439", result?.exchangeRate.description ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 2103460, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
-		tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
+		tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = liquidityBakingCalcualtionService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt)
+		result = liquidityBakingCalcualtionService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5)
 		
-		XCTAssert(result?.xtzRequired.normalisedRepresentation == "47327.85", result?.xtzRequired.normalisedRepresentation ?? "-")
-		XCTAssert(result?.liquidity.normalisedRepresentation == "10280929.996133", result?.liquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.tokenRequired.normalisedRepresentation == "47.32785", result?.tokenRequired.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "2103.46", result?.expectedLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumLiquidity.normalisedRepresentation == "1051.73", result?.minimumLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.exchangeRate.description == "0.000143", result?.exchangeRate.description ?? "-")
 	}
 	
 	func testRemoveLiquidity() {
 		var burnedLqt = TokenAmount(fromRpcAmount: 5000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
-		var tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = liquidityBakingCalcualtionService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool)
+		var tokenPool = TokenAmount(fromRpcAmount: 100000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
+		var result = liquidityBakingCalcualtionService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5)
 		
-		XCTAssert(result?.token.normalisedRepresentation == "0.000005", result?.token.normalisedRepresentation ?? "-")
-		XCTAssert(result?.xtz.normalisedRepresentation == "0.1125", result?.xtz.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedToken.normalisedRepresentation == "0.0005", result?.expectedToken.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumToken.normalisedRepresentation == "0.00025", result?.minimumToken.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedXTZ.normalisedRepresentation == "0.1125", result?.expectedXTZ.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumXTZ.normalisedRepresentation == "0.05625", result?.minimumXTZ.normalisedRepresentation ?? "-")
+		XCTAssert(result?.exchangeRate.description == "0.000044", result?.exchangeRate.description ?? "-")
 		
 		burnedLqt = TokenAmount(fromRpcAmount: 5000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 2000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 35000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = liquidityBakingCalcualtionService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool)
+		result = liquidityBakingCalcualtionService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5)
 		
-		XCTAssert(result?.token.normalisedRepresentation == "0.000175", result?.token.normalisedRepresentation ?? "-")
-		XCTAssert(result?.xtz.normalisedRepresentation == "0.0225", result?.xtz.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedToken.normalisedRepresentation == "0.000175", result?.expectedToken.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumToken.normalisedRepresentation == "0.000087", result?.minimumToken.normalisedRepresentation ?? "-")
+		XCTAssert(result?.expectedXTZ.normalisedRepresentation == "0.0225", result?.expectedXTZ.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumXTZ.normalisedRepresentation == "0.01125", result?.minimumXTZ.normalisedRepresentation ?? "-")
+		XCTAssert(result?.exchangeRate.description == "0.000077", result?.exchangeRate.description ?? "-")
 	}
 }

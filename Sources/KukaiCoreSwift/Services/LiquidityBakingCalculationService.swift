@@ -11,7 +11,7 @@ import JavaScriptCore
 import os.log
 
 /// A struct to hold all the necessary calculations for a LiquidityBaking trade
-public struct LiquidityBakingCalculationResult {
+public struct LiquidityBakingSwapCalculationResult {
 	public let expected: TokenAmount
 	public let minimum: TokenAmount
 	public let displayExchangeRate: Decimal
@@ -24,6 +24,40 @@ public struct LiquidityBakingCalculationResult {
 		self.displayPriceImpact = displayPriceImpact
 	}
 }
+
+/// A struct to hold all the necessary calculations for adding liquidity to a dex contract
+public struct LiquidityBakingAddCalculationResult {
+	public let expectedLiquidity: TokenAmount
+	public let minimumLiquidity: TokenAmount
+	public let tokenRequired: TokenAmount
+	public let exchangeRate: Decimal
+	
+	public init(expectedLiquidity: TokenAmount, minimumLiquidity: TokenAmount, tokenRequired: TokenAmount, exchangeRate: Decimal) {
+		self.expectedLiquidity = expectedLiquidity
+		self.minimumLiquidity = minimumLiquidity
+		self.tokenRequired = tokenRequired
+		self.exchangeRate = exchangeRate
+	}
+}
+
+/// A struct to hold all the necessary calculations for removing liquidity from a dex contract
+public struct LiquidityBakingRemoveCalculationResult {
+	public let expectedXTZ: XTZAmount
+	public let minimumXTZ: XTZAmount
+	public let expectedToken: TokenAmount
+	public let minimumToken: TokenAmount
+	public let exchangeRate: Decimal
+	
+	public init(expectedXTZ: XTZAmount, minimumXTZ: XTZAmount, expectedToken: TokenAmount, minimumToken: TokenAmount, exchangeRate: Decimal) {
+		self.expectedXTZ = expectedXTZ
+		self.minimumXTZ = minimumXTZ
+		self.expectedToken = expectedToken
+		self.minimumToken = minimumToken
+		self.exchangeRate = exchangeRate
+	}
+}
+
+
 
 /// Wrapper around the LiquidityBaking JS library for performing calculations: https://gitlab.com/sophiagold/dexter-calculations/-/tree/liquidity_baking
 public class LiquidityBakingCalculationService {
@@ -60,10 +94,10 @@ public class LiquidityBakingCalculationService {
 	- parameter xtzToSell: The `XTZAmount` to sell.
 	- parameter xtzPool: The `XTZAmount` representing the current pool of XTZ that the LiquidityBaking contract holds. Can be fetched with xxxxx.
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking contract holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
-	- parameter maxSlippage: `Double` containing the max slippage a user will accept for their trade.
+	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `LiquidityBakingCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingCalculationResult? {
+	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingSwapCalculationResult? {
 		guard let expected = xtzToTokenExpectedReturn(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool),
 			  let minimum = xtzToTokenMinimumReturn(tokenAmount: expected, slippage: maxSlippage),
 			  let rate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool),
@@ -73,7 +107,7 @@ public class LiquidityBakingCalculationService {
 		
 		let impactDouble = Double(priceImpact.description) ?? 0
 		
-		return LiquidityBakingCalculationResult(expected: expected, minimum: minimum, displayExchangeRate: rate, displayPriceImpact: impactDouble)
+		return LiquidityBakingSwapCalculationResult(expected: expected, minimum: minimum, displayExchangeRate: rate, displayPriceImpact: impactDouble)
 	}
 	
 	/**
@@ -81,10 +115,10 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenToSell: The `TokenAmount` to sell.
 	- parameter xtzPool: The `XTZAmount` representing the current pool of XTZ that the LiquidityBaking contract holds. Can be fetched with xxxxx.
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking contract holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
-	- parameter maxSlippage: `Double` containing the max slippage a user will accept for their trade.
+	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `LiquidityBakingCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingCalculationResult? {
+	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingSwapCalculationResult? {
 		guard let expected = tokenToXtzExpectedReturn(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
 			  let minimum = tokenToXtzMinimumReturn(xtzAmount: expected, slippage: maxSlippage),
 			  let rate = tokenToXtzExchangeRateDisplay(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
@@ -94,7 +128,7 @@ public class LiquidityBakingCalculationService {
 		
 		let impactDouble = Double(priceImpact.description) ?? 0
 		
-		return LiquidityBakingCalculationResult(expected: expected, minimum: minimum, displayExchangeRate: rate, displayPriceImpact: impactDouble)
+		return LiquidityBakingSwapCalculationResult(expected: expected, minimum: minimum, displayExchangeRate: rate, displayPriceImpact: impactDouble)
 	}
 	
 	/**
@@ -103,15 +137,17 @@ public class LiquidityBakingCalculationService {
 	- parameter xtzPool: The total XTZ held in the dex contract
 	- parameter tokenPool: The total token held in the dex contract
 	- parameter totalLiquidity: The ttotal liquidity held in the liquidity contract
+	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(tokenRequired: TokenAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount) -> (tokenRequired: TokenAmount, liquidity: TokenAmount)? {
+	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double) -> LiquidityBakingAddCalculationResult? {
 		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity) else {
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage),
+			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtz, xtzPool: xtzPool, tokenPool: tokenPool) else {
 			return nil
 		}
 		
-		return (tokenRequired: tokenRequired, liquidity: liquidityReturned)
+		return LiquidityBakingAddCalculationResult(expectedLiquidity: liquidityReturned.expected, minimumLiquidity: liquidityReturned.minimum, tokenRequired: tokenRequired, exchangeRate: exchangeRate)
 	}
 	
 	/**
@@ -120,15 +156,17 @@ public class LiquidityBakingCalculationService {
 	- parameter xtzPool: The total XTZ held in the dex contract
 	- parameter tokenPool: The total token held in the dex contract
 	- parameter totalLiquidity: The ttotal liquidity held in the liquidity contract
+	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(xtzRequired: XTZAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount) -> (xtzRequired: XTZAmount, liquidity: TokenAmount)? {
+	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double) -> LiquidityBakingAddCalculationResult? {
 		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity) else {
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage),
+			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzRequired, xtzPool: xtzPool, tokenPool: tokenPool) else {
 			return nil
 		}
 		
-		return (xtzRequired: xtzRequired, liquidity: liquidityReturned)
+		return LiquidityBakingAddCalculationResult(expectedLiquidity: liquidityReturned.expected, minimumLiquidity: liquidityReturned.minimum, tokenRequired: xtzRequired, exchangeRate: exchangeRate)
 	}
 	
 	/**
@@ -137,15 +175,17 @@ public class LiquidityBakingCalculationService {
 	- parameter totalLiquidity: The total volume of liquidity held in the contract
 	- parameter xtzPool: The xtz pool held in the dex contract
 	- parameter tokenPool: The token pool held in the dex contract
+	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(xtz: XTZAmount, token: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> (xtz: XTZAmount, token: TokenAmount)? {
-		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool),
-			  let tokenOut = removeLiquidityTokenReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, tokenPool: tokenPool) else {
+	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingRemoveCalculationResult? {
+		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool, slippage: maxSlippage),
+			  let tokenOut = removeLiquidityTokenReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, tokenPool: tokenPool, slippage: maxSlippage),
+			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzOut.expected, xtzPool: xtzPool, tokenPool: tokenPool) else {
 			return nil
 		}
 		
-		return (xtz: xtzOut, token: tokenOut)
+		return LiquidityBakingRemoveCalculationResult(expectedXTZ: xtzOut.expected, minimumXTZ: xtzOut.minimum, expectedToken: tokenOut.expected, minimumToken: tokenOut.minimum, exchangeRate: exchangeRate)
 	}
 	
 	
@@ -478,9 +518,15 @@ public class LiquidityBakingCalculationService {
 	- parameter xtzToDeposit: The XTZ to send to the dex contract
 	- parameter tokenToDeposit: The Token to send to the dex contract
 	- parameter totalLiquidity: The total liquidity already in the contract
+	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `TokenAmount` an amount of Liquidity token you will receive
 	*/
-	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount) -> TokenAmount? {
+	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount, slippage: Double) -> (expected: TokenAmount, minimum: TokenAmount)? {
+		guard slippage >= 0, slippage <= 1 else {
+			os_log("slippage value supplied to `addLiquidityReturn` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			return nil
+		}
+		
 		let xtzIn = xtzToDeposit.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let totalLqt = totalLiquidity.rpcRepresentation
@@ -491,7 +537,15 @@ public class LiquidityBakingCalculationService {
 			return nil
 		}
 		
-		return TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: totalLiquidity.decimalPlaces)
+		if let expectedAmount = TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: totalLiquidity.decimalPlaces) {
+			let minimum = expectedAmount * Decimal(slippage)
+			let minAmount = TokenAmount(fromNormalisedAmount: minimum, decimalPlaces: expectedAmount.decimalPlaces)
+			
+			return (expected: expectedAmount, minimum: minAmount)
+			
+		} else {
+			return nil
+		}
 	}
 	
 	/**
@@ -545,9 +599,15 @@ public class LiquidityBakingCalculationService {
 	- parameter liquidityBurned: The amount of liquidity to burn
 	- parameter totalLiquidity: The totla liquidity held in the dex contract
 	- parameter tokenPool: The total token held in the dex contract
+	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `TokenAmount` The amount of Token that would be returned
 	*/
-	public func removeLiquidityTokenReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, tokenPool: TokenAmount) -> TokenAmount? {
+	public func removeLiquidityTokenReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, tokenPool: TokenAmount, slippage: Double) -> (expected: TokenAmount, minimum: TokenAmount)? {
+		guard slippage >= 0, slippage <= 1 else {
+			os_log("slippage value supplied to `removeLiquidityTokenReceived` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			return nil
+		}
+		
 		let lqtBurned = liquidityBurned.rpcRepresentation
 		let tLqt = totalLiquidity.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -558,7 +618,15 @@ public class LiquidityBakingCalculationService {
 			return nil
 		}
 		
-		return TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: tokenPool.decimalPlaces)
+		if let expectedAmount = TokenAmount(fromRpcAmount: result.toString(), decimalPlaces: tokenPool.decimalPlaces) {
+			let minimum = expectedAmount * Decimal(slippage)
+			let minAmount = TokenAmount(fromNormalisedAmount: minimum, decimalPlaces: expectedAmount.decimalPlaces)
+			
+			return (expected: expectedAmount, minimum: minAmount)
+			
+		} else {
+			return nil
+		}
 	}
 	
 	/**
@@ -566,9 +634,15 @@ public class LiquidityBakingCalculationService {
 	- parameter liquidityBurned: The amount of liquidity to burn
 	- parameter totalLiquidity: The totla liquidity held in the dex contract
 	- parameter xtzPool: The total XTZ held in the dex contract
+	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `XTZAmount` The amount of XTZ that would be returned
 	*/
-	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount) -> XTZAmount? {
+	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, slippage: Double) -> (expected: XTZAmount, minimum: XTZAmount)? {
+		guard slippage >= 0, slippage <= 1 else {
+			os_log("slippage value supplied to `removeLiquidityXtzReceived` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			return nil
+		}
+		
 		let lqtBurned = liquidityBurned.rpcRepresentation
 		let tLqt = totalLiquidity.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
@@ -579,6 +653,14 @@ public class LiquidityBakingCalculationService {
 			return nil
 		}
 		
-		return XTZAmount(fromRpcAmount: result.toString())
+		if let expectedAmount = XTZAmount(fromRpcAmount: result.toString()) {
+			let minimum = expectedAmount * Decimal(slippage)
+			let minAmount = XTZAmount(fromNormalisedAmount: minimum)
+			
+			return (expected: expectedAmount, minimum: minAmount)
+			
+		} else {
+			return nil
+		}
 	}
 }

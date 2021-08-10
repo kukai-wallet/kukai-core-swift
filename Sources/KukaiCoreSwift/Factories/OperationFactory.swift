@@ -101,12 +101,12 @@ public class OperationFactory {
 	- parameter minXTZAmount: The minimum xtz amount you will accept
 	- parameter contract: The address of the swap contract
 	- parameter tokenContract: The address of the returned token
-	- parameter currentAllowance: The users current approved allowance to spend
+	- parameter currentAllowance: The users current approved allowance to spend  (non zero number will trigger a safe reset operation first, followed by a new allowance. If unsure, set to non-zero number)
 	- parameter wallet: The wallet signing the operation
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func liquidityBakingTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, dexContract: String, tokenContract: String, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func liquidityBakingTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, dexContract: String, tokenContract: String, currentAllowance: TokenAmount = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 0), wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.tokenToXtz.rawValue
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
@@ -158,11 +158,18 @@ public class OperationFactory {
 	}
 	
 	/**
-	TODO:
-	- parameter _:
+	Create the operations necessary to add liquidity to a liquidity baking contract. Use LiquidityBakingCalculationService to figure out the numbers required
+	- parameter xtzToDeposit: The amount of XTZ to deposit
+	- parameter tokensToDeposit: The amount of Token to deposit
+	- parameter minLiquidtyMinted: The minimum amount of liquidity tokens you will accept
+	- parameter tokenContract: The address of the token contract
+	- parameter dexContract: The address of the dex contract
+	- parameter currentAllowance: The current allowance set on `tokenContract` for `dexContract` (non zero number will trigger a safe reset operation first, followed by a new allowance. If unsure, set to non-zero number)
+	- parameter wallet: The wallet that will sign the operation
+	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func liquidityBakingAddLiquidity(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, tokenContract: String, dexContract: String, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func liquidityBakingAddLiquidity(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, tokenContract: String, dexContract: String, currentAllowance: TokenAmount = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 0), wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		
 		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.addLiquidity.rawValue
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
@@ -193,8 +200,13 @@ public class OperationFactory {
 	}
 	
 	/**
-	TODO:
-	- parameter _:
+	Create the operations necessary to remove liquidity from the liquidity baking contract. Use LiquidityBakingCalculationService to figure out the numbers required
+	- parameter minXTZ: The minimum XTZ to accept in return for the burned amount of Liquidity
+	- parameter minToken: The minimum Token to accept in return for the burned amount of Liquidity
+	- parameter liquidityToBurn: The amount of Liqudity to burn
+	- parameter dexContract: The address of the dex contract
+	- parameter wallet: The wallet that will sign the operation
+	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
 	public static func liquidityBakingRemoveLiquidity(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
