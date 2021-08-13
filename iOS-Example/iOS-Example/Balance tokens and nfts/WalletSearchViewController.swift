@@ -33,6 +33,7 @@ class WalletSearchViewController: UIViewController {
 			switch result {
 				case .failure(let error):
 					let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 					self?.present(alert, animated: true, completion: nil)
 					
 				case .success(let account):
@@ -59,6 +60,7 @@ class WalletSearchViewController: UIViewController {
 						switch bcdResult {
 							case .failure(let error):
 								let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)
+								alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 								self?.present(alert, animated: true, completion: nil)
 								
 							case .success(let account):
@@ -71,6 +73,7 @@ class WalletSearchViewController: UIViewController {
 					
 				case .failure(let torusError):
 					let alert = UIAlertController(title: "Error", message: torusError.description, preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 					self?.present(alert, animated: true, completion: nil)
 					self?.stopActivity()
 			}

@@ -87,7 +87,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		
 		
 		
-		
 		/*
 		var errors: [String] = []
 		for i in 0...10000 {

@@ -74,6 +74,7 @@ class SocialLoginViewController: UIViewController {
 				
 			case .failure(let error):
 				let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 				self.present(alert, animated: true, completion: nil)
 		}
 		

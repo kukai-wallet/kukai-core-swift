@@ -135,7 +135,7 @@ public class BetterCallDevClient {
 	public func tokenBalances(forAddress address: String, offset: Int = 0, completion: @escaping ((Result<BetterCallDevTokenBalances, ErrorResponse>) -> Void)) {
 		var url = config.betterCallDevURL
 		url.appendPathComponent("v1/account/\(config.tezosChainName.rawValue)/\(address)/token_balances")
-		url.appendQueryItem(name: "offset", value: offset)
+		url.appendQueryItem(name: "offset", value: offset * BetterCallDevClient.Constants.tokenBalanceQuerySize)
 		url.appendQueryItem(name: "size", value: BetterCallDevClient.Constants.tokenBalanceQuerySize)
 		url.appendQueryItem(name: "sort_by", value: "balance")
 		
@@ -345,10 +345,14 @@ public class BetterCallDevClient {
 		// Take NFT's and add them to `Token` instances
 		for nftContract in tempNFT.keys {
 			if let meta = tokenMetadata[nftContract] {
-				nftGroups.append(Token(icon: meta.imageURL, name: meta.name, symbol: meta.symbol ?? "", tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
+				
+				// Sort individual tokens in descending order (this correlates to being created first, or an order of importance. e.g. on pixel potus, goerge washington will appear first)
+				tempNFT[nftContract]?.sort(by: { $0.tokenId < $1.tokenId })
+				
+				let nftGroupName = OfflineConstants.dappDisplayName(forContractAddress: meta.contract, onChain: config.tezosChainName)
+				nftGroups.append(Token(icon: meta.imageURL, name: nftGroupName, symbol: meta.symbol ?? "", tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
 			}
 		}
-		
 		
 		return (tokens: tokens, nftGroups: nftGroups)
 	}

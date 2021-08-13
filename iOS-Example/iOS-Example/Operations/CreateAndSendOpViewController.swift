@@ -30,6 +30,7 @@ class CreateAndSendOpViewController: UIViewController {
 		// Check we have a wallet saved in the wallet cahce
 		guard let wallet = WalletCacheService().fetchPrimaryWallet() else {
 			let alert = UIAlertController(title: "Error", message: "No Wallet cached on device. Please use the wallet creation / import feature first", preferredStyle: .alert)
+			alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 			self.present(alert, animated: true, completion: nil)
 			return
 		}
@@ -65,6 +66,7 @@ class CreateAndSendOpViewController: UIViewController {
 								// It may fail for many resons, display the error
 								let alert = UIAlertController(title: "Error", message: sendError.description, preferredStyle: .alert)
 								alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+								alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 								
 								self?.present(alert, animated: true, completion: nil)
 						}
@@ -74,6 +76,7 @@ class CreateAndSendOpViewController: UIViewController {
 					
 				case .failure(let estimationError):
 					let alert = UIAlertController(title: "Error", message: estimationError.description, preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 					self.present(alert, animated: true, completion: nil)
 			}
 		}
