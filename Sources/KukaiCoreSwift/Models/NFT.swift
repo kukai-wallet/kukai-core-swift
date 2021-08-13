@@ -21,7 +21,7 @@ public struct NFT: Codable, Hashable {
 	public let name: String
 	
 	/// Human readbale symbol (e.g. "XTZ")
-	public let symbol: String
+	public let symbol: String?
 	
 	/// Human readable description (e.g. "This NFT was created too...")
 	public let `description`: String

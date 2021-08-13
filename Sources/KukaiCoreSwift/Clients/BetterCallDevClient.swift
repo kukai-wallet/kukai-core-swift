@@ -345,7 +345,7 @@ public class BetterCallDevClient {
 		// Take NFT's and add them to `Token` instances
 		for nftContract in tempNFT.keys {
 			if let meta = tokenMetadata[nftContract] {
-				nftGroups.append(Token(icon: meta.imageURL, name: meta.name, symbol: meta.symbol, tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
+				nftGroups.append(Token(icon: meta.imageURL, name: meta.name, symbol: meta.symbol ?? "", tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
 			}
 		}
 		
@@ -398,7 +398,10 @@ public class BetterCallDevClient {
 		var tokenBalances = BetterCallDevTokenBalances(balances: [], total: numberOfTokens)
 		var errorFound: ErrorResponse? = nil
 		
-		
+		// TODO: Need to experiment with this code to see if it automatically adheres to the HTTP Max simultaneous calls per server
+		// Or if we need to add Semaphores into the code to force it to only run a certain number at a time
+		// https://betterprogramming.pub/limit-concurrent-network-requests-with-dispatchsemaphore-in-swift-f313afd938c6
+		//
 		for index in 0..<numberOfPages {
 			dispatchGroup.enter()
 			tokenBalanceQueue.async { [weak self] in

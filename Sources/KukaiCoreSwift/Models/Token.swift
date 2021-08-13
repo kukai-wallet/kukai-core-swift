@@ -37,7 +37,7 @@ public class Token: Codable, CustomStringConvertible {
 	public let name: String
 	
 	/// The short name or the symbol of a token. e.g. "XTZ".
-	public let symbol: String
+	public let symbol: String?
 	
 	/// The type of this token. e.g. xtz, fungible, nonfungible
 	public let tokenType: TokenType
@@ -109,7 +109,7 @@ public class Token: Codable, CustomStringConvertible {
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
 	public var description: String {
-		return "{Symbol: \(symbol), Name: \(name), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
+		return "{Symbol: \(symbol ?? ""), Name: \(name), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
 	}
 }
 
