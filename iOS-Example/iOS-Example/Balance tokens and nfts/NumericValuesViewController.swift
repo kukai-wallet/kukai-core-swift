@@ -50,17 +50,17 @@ class NumericValuesViewController: UIViewController {
 		let textAsDecimal = Decimal(string: textfield.text ?? "0") ?? 0
 		
 		let xtzAmount = XTZAmount(fromNormalisedAmount: textAsDecimal)
-		xtzNormalLabel.text = xtzAmount.normalisedRepresentation + " \(TokenXTZ.symbol)"
+		xtzNormalLabel.text = xtzAmount.normalisedRepresentation + " \(TokenXTZ.symbol ?? "")"
 		xtzRpcLabel.text = xtzAmount.rpcRepresentation
 		xtzLocalisedLabel.text = xtzAmount.formatNormalisedRepresentation(locale: Locale(identifier: "en-us"))
 		
 		let token1Amount = TokenAmount(fromNormalisedAmount: textAsDecimal, decimalPlaces: 3)
-		token1NormalLabel.text = token1Amount.normalisedRepresentation + " \(Token1.symbol)"
+		token1NormalLabel.text = token1Amount.normalisedRepresentation + " \(Token1.symbol ?? "")"
 		token1RpcLabel.text = token1Amount.rpcRepresentation
 		token1Localisedlabel.text = token1Amount.formatNormalisedRepresentation(locale: Locale(identifier: "es_ES"))
 		
 		let token2Amount = TokenAmount(fromNormalisedAmount: textAsDecimal, decimalPlaces: 10)
-		token2NormalLabel.text = token2Amount.normalisedRepresentation + " \(Token2.symbol)"
+		token2NormalLabel.text = token2Amount.normalisedRepresentation + " \(Token2.symbol ?? "")"
 		token2RpcLabel.text = token2Amount.rpcRepresentation
 		token2LocalisedLabel.text = token2Amount.formatNormalisedRepresentation(locale: Locale.current)
 	}

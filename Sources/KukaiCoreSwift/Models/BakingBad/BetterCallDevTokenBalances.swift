@@ -12,6 +12,17 @@ import Foundation
 public struct BetterCallDevTokenBalances: Codable {
 	public var balances: [BetterCallDevTokenBalance]
 	public let total: Int
+	
+	/// Retrieve a specific balance object based on a contract address
+	func balance(forAddress address: String) -> BetterCallDevTokenBalance? {
+		for balance in balances {
+			if balance.contract == address {
+				return balance
+			}
+		}
+		
+		return nil
+	}
 }
 
 /// A model matching the internal array type that comes back from BetterCallDev's API: `v1/account/<network>/<address>/token_balances`

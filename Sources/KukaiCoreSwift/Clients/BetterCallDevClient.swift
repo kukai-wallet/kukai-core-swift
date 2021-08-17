@@ -39,6 +39,9 @@ public class BetterCallDevClient {
 	/// Queue used for fetching token metadata
 	private let metadataQueue: DispatchQueue
 	
+	/// Queue used for converting ipfs URLs into urls pointing to cached image assets
+	private let nftImageURLQueue: DispatchQueue
+	
 	
 	
 	
@@ -55,6 +58,7 @@ public class BetterCallDevClient {
 		self.config = config
 		self.tokenBalanceQueue = DispatchQueue(label: "BetterCallDevClient.tokens", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 		self.metadataQueue = DispatchQueue(label: "BetterCallDevClient.metadata", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
+		self.nftImageURLQueue = DispatchQueue(label: "BetterCallDevClient.nft-image", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 	}
 	
 	
@@ -259,12 +263,17 @@ public class BetterCallDevClient {
 						switch innerResult {
 							case .failure(let err):
 								error = err
+								dispatchGroup.leave()
 							
 							case .success(let metadataArray):
 								tokenMetadata = metadataArray
 								groupedData = self?.groupTokens(tokenBalances: tokenBalances, tokenMetadata: tokenMetadata)
+								
+								self?.fetchNftURLs(forNFTs: groupedData?.nftGroups ?? []) { updatedNFTs in
+									groupedData?.nftGroups = updatedNFTs
+									dispatchGroup.leave()
+								}
 						}
-						dispatchGroup.leave()
 					})
 			}
 		}
@@ -314,7 +323,7 @@ public class BetterCallDevClient {
 		// Loop through balances, group NFT's and create Token instances
 		for bcdToken in sortedBalances {
 			
-			// Group individual NFT's by thier parent contract. Will add them to a `Token` later from the metadata
+			// Group individual NFT's by their parent contract. Will add them to a `Token` later from the metadata
 			if bcdToken.isNFT() {
 				let nft = NFT(fromBcdBalance: bcdToken)
 				
@@ -333,7 +342,7 @@ public class BetterCallDevClient {
 			
 			// Find corresponding Metadata object
 			if let currentMetadata = tokenMetadata[bcdToken.contract] {
-				imageURL = currentMetadata.imageURL
+				imageURL = avatarURL(forToken: bcdToken.contract)
 				faVersion = currentMetadata.faVersion
 			}
 			
@@ -346,15 +355,41 @@ public class BetterCallDevClient {
 		for nftContract in tempNFT.keys {
 			if let meta = tokenMetadata[nftContract] {
 				
-				// Sort individual tokens in descending order (this correlates to being created first, or an order of importance. e.g. on pixel potus, goerge washington will appear first)
-				tempNFT[nftContract]?.sort(by: { $0.tokenId < $1.tokenId })
-				
-				let nftGroupName = OfflineConstants.dappDisplayName(forContractAddress: meta.contract, onChain: config.tezosChainName)
-				nftGroups.append(Token(icon: meta.imageURL, name: nftGroupName, symbol: meta.symbol ?? "", tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
+				let staticNFTData = OfflineConstants.dappDisplayName(forContractAddress: meta.contract, onChain: config.tezosChainName)
+				nftGroups.append(Token(icon: staticNFTData.thumbnail, name: staticNFTData.name, symbol: meta.symbol ?? "", tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
 			}
 		}
 		
 		return (tokens: tokens, nftGroups: nftGroups)
+	}
+	
+	// NFT display and thumbnail URLS need to be processed, and extremely likely converted into URLs pointing to a cache server
+	private func fetchNftURLs(forNFTs nfts: [Token], completion: @escaping (([Token]) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		
+		let updatedTokens: [Token] = nfts
+		
+		for (outerIndex, nftParent) in updatedTokens.enumerated() {
+			for (innerIndex, nftChild) in (nftParent.nfts ?? []).enumerated() {
+				dispatchGroup.enter()
+				dispatchGroup.enter()
+				
+				imageURL(fromIpfsUri: nftChild.displayURI) { displayURL in
+					updatedTokens[outerIndex].nfts?[innerIndex].displayURL = displayURL
+					dispatchGroup.leave()
+				}
+				
+				imageURL(fromIpfsUri: nftChild.thumbnailURI) { thumbnailURL in
+					updatedTokens[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
+					dispatchGroup.leave()
+				}
+			}
+		}
+		
+		// When all requests finished, return on main thread
+		dispatchGroup.notify(queue: .main) {
+			completion(updatedTokens)
+		}
 	}
 	
 	/**
@@ -446,13 +481,11 @@ public class BetterCallDevClient {
 		var errorFound: ErrorResponse? = nil
 		var metadataUpdated = false
 		
-		
 		// Query existing stored metadata, and load into dictionary
 		if let readResult = DiskService.read(type: [String: BetterCallDevTokenMetadata].self, fromFileName: BetterCallDevClient.Constants.tokenMetadataFilename) {
 			metadata = readResult
 			os_log(.debug, log: .bcd, "Metadata fetched from disk")
 		}
-		
 		
 		// Fetch contract faVersion and token metadata, for tokens not already present in Realm
 		for token in tokenCount.keys {
@@ -482,7 +515,6 @@ public class BetterCallDevClient {
 									
 									case .success(let tokenMetadata):
 										tokenMetadata?.faVersion = faVersion
-										tokenMetadata?.imageURL = self?.imageURL(forToken: token)
 										
 										// Add the FaVersion to the metadata and store
 										if let meta = tokenMetadata {
@@ -537,12 +569,18 @@ public class BetterCallDevClient {
 		var imageURLs: [URL] = []
 		for token in tokenCount.keys {
 			
-			// Only fetch icon for token that has valid metadata (nil if can't be found), and is not an NFT as they don't have token icons
-			guard metadata[token]?.isNFT() == false, let imageURL = imageURL(forToken: token) else {
-				continue
+			// If token get Tzkt avatar URL, else check if the NFT group is in our offline cache and grab that
+			var urlForAsset: URL? = nil
+			if metadata[token]?.isNFT() == false {
+				urlForAsset = avatarURL(forToken: token)
+				
+			} else if let nftThumbnail = OfflineConstants.dappDisplayName(forContractAddress: token, onChain: config.tezosChainName).thumbnail {
+				urlForAsset = nftThumbnail
 			}
 			
-			if !ImageCache.default.isCached(forKey: imageURL.absoluteString) {
+			
+			// Check if we got a URL, if so, add to cache
+			if let imageURL = urlForAsset, !ImageCache.default.isCached(forKey: imageURL.absoluteString) {
 				imageURLs.append(imageURL)
 			}
 		}
@@ -583,12 +621,85 @@ public class BetterCallDevClient {
 	Or, if you need to use it seperately, given the token address you can use this function
 	- parameter forToken: The token address who's image you are looking for.
 	*/
-	public func imageURL(forToken token: String) -> URL? {
+	public func avatarURL(forToken token: String) -> URL? {
 		guard let imageURL = URL(string: "https://services.tzkt.io/v1/avatars/\(token)") else {
 			return nil
 		}
 		
 		return imageURL
+	}
+	
+	/**
+	Cloudflare provides an IPFS gateway, take the IPFS URL and reformat to work with cloudflares URL structure
+	*/
+	private func ipfsURIToCloudflareURL(uri: URL) -> URL? {
+		if let strippedURI = uri.absoluteString.components(separatedBy: "ipfs://").last, let url = URL(string: "https://cloudflare-ipfs.com/ipfs/\(strippedURI)") {
+			return url
+		}
+		
+		return nil
+	}
+	
+	/**
+	Get cached metadata file from Kukai's backend
+	*/
+	private func ipfsKukaiMetadata(url: URL, completion: @escaping ((Result<IpfsKukaiMetadata, ErrorResponse>) -> Void)) {
+		guard let destinationURL = URL(string: "https://backend.kukai.network/file/info?src=\(url.absoluteString)") else {
+			os_log("Invalid URL: %@", log: .bcd, type: .error, url.absoluteString)
+			completion(Result.failure(ErrorResponse.unknownError()))
+			return
+		}
+		
+		networkService.request(url: destinationURL, isPOST: false, withBody: nil, forReturnType: IpfsKukaiMetadata.self) { result in
+			switch result {
+				case .success(let metadata):
+					if metadata.Status == "ok" && metadata.Filename != nil && metadata.Extension != nil && metadata.Extension != "unknown" {
+						completion(Result.success(metadata))
+					} else {
+						os_log("kukai metadata backend returned a status that was not \"ok\"", log: .bcd, type: .error)
+						completion(Result.failure(ErrorResponse.unknownError()))
+					}
+					
+				case .failure(let error):
+					completion(Result.failure(error))
+			}
+		}
+	}
+	
+	/**
+	Convert the IPFS URI, into a cloudflare URL, pass this URL to the Kukai metadata cache service to extract info about the asset. If a non IPFS URI is passed in, it is simply returned
+	If all goes well, a URL to the asset cached on Kukai's server will be returned
+	- parameter fromIpfsUri: The IPFS URI to the given asset
+	- parameter ofSize: Optional, the size string of the asset to query (e.g. "150x150")
+	- parameter completion: Block returning a new URL if possible
+	*/
+	public func imageURL(fromIpfsUri uri: URL?, ofSize: String = "150x150", completion: @escaping ((URL?) -> Void)) {
+		guard let uri = uri else {
+			completion(nil)
+			return
+		}
+		
+		if String(uri.absoluteString.prefix(5)) == "https" {
+			completion(uri)
+			return
+		}
+		
+		guard let cloudflareURL = ipfsURIToCloudflareURL(uri: uri) else {
+			completion(nil)
+			return
+		}
+		
+		ipfsKukaiMetadata(url: cloudflareURL) { result in
+			guard let metadata = try? result.get(),
+				  let filename = metadata.Filename,
+				  let ext = metadata.Extension,
+				  let fileURL = URL(string: "https://backend.kukai.network/file/\(filename)_\(ofSize).\(ext)") else {
+				completion(nil)
+				return
+			}
+			
+			completion(fileURL)
+		}
 	}
 	
 	/**
@@ -599,3 +710,160 @@ public class BetterCallDevClient {
 		ImageCache.default.clearDiskCache()
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// is NFT logic:
+/*
+isNFT(asset: TokenResponseType): boolean {
+	if (!asset) { return false; }
+	if (CONSTANTS.MAINNET) {
+	  return !CONSTANTS.NFT_CONTRACT_OVERRIDES.includes(`${asset.contractAddress}:${asset.id}`);
+	} else {
+	  return (asset?.isBooleanAmount || asset?.decimals == 0) && !CONSTANTS.NFT_CONTRACT_OVERRIDES.includes(`${asset.contractAddress}`) ? true : false;
+	}
+  }
+*/
+
+
+
+
+
+
+
+
+
+
+
+// For tokens icons, for both:
+// displayUri  and  thumbnailUri
+
+
+// get cloudflare IPFS url
+/*
+let url: UR? = nil
+if (uri.startsWith('ipfs://')) {
+	url = `https://cloudflare-ipfs.com/ipfs/${uri.slice(7)}`;
+} else {
+	url = uri
+}
+*/
+
+
+
+// fetch cache metadata from kukai backend:
+// const cacheMeta = await this.fetchApi(`https://backend.kukai.network/file/info?src=${url}`);
+
+
+
+// Do query, and then check for:
+/*
+if (data?.Status === 'ok' && data.Filename && data.Extension) {
+  const asset: CachedAsset  = {
+	filename: data.Filename,
+	extension: data.Extension
+  }
+
+if (asset.extension !== 'unknown') {
+		   return asset;
+		 }
+*/
+
+
+// this gives back filename and extension, store these on metadata object instead of ipfs url
+// also handling exceptions:
+
+/*
+// Exceptions
+  if (data?.isBooleanAmount === undefined && typeof data?.isBooleanAmount === "string" && data?.isBooleanAmount === "true"
+  ) {
+	// mandala
+	metadata.isBooleanAmount = true;
+  }
+  if (data?.symbol === "OBJKT") {
+	if (!data.displayUri) {
+	  // hicetnunc
+	  metadata.displayUri = await this.uriToAsset(
+		rawData.formats[0].uri
+	  );
+	}
+	if (metadata?.displayUri) {
+	  metadata.thumbnailUri = '';
+	}
+  }
+*/
+
+
+
+// fetching assets is done by:
+/*
+import mimes from 'mime-db/db.json'
+
+size = '150x150';
+baseUrl = 'https://backend.kukai.network/file';
+mimeType = 'image/*';      							*/
+
+if obj {
+	this.mimeType = Object.keys(mimes).filter(key => !!mimes[key]?.extensions?.length).find((key) => mimes[key].extensions.includes((this.meta as CachedAsset)?.extension));
+	this.src = `${this.baseUrl}/${this.meta.filename}_${this.size}.${this.meta.extension}`;
+}
+else if string {
+	// use URL
+} else {
+	// use question mark icon
+}
+*/
+
+
+
+
+
+// for NFT's
+// App icons come from the offline static cache
+
+// For indivual nft tokens, passing around tokenId string consisting of "<token-contract-address>:<token-id>"
+
+// assign contract override for quicker looking up in static offline list
+
+
+
+
+
+
+
+
+
+
+
+// Where app thumbnail doesn't exist, convert address string to image data:
+/*
+getThumbnailUrl(address: string): string {
+	const pixels = decode(address.slice(0, 22), 5, 5);
+	const canvas = document.createElement("canvas");
+	canvas.width = canvas.height = 5;
+	const ctx = canvas.getContext("2d");
+	const imageData = ctx.createImageData(5, 5);
+	imageData.data.set(pixels);
+	ctx.putImageData(imageData, 0, 0);
+	return canvas.toDataURL();
+  }
+*/

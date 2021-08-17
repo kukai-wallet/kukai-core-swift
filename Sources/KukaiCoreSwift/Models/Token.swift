@@ -62,7 +62,7 @@ public class Token: Codable, CustomStringConvertible {
 	public let tokenContractAddress: String?
 	
 	/// The individual NFT's owned of this token type
-	public let nfts: [NFT]?
+	public var nfts: [NFT]?
 	
 	
 	

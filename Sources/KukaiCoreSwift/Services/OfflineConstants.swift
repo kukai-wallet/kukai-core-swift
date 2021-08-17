@@ -153,19 +153,19 @@ public struct OfflineConstants {
 		]
 	]
 	
-	static func dappDisplayName(forContractAddress address: String, onChain chain: TezosChainName) -> String {
+	static func dappDisplayName(forContractAddress address: String, onChain chain: TezosChainName) -> (name: String, thumbnail: URL?) {
 		guard let networkList = dApps[chain] else {
-			return address
+			return (name: address, thumbnail: nil)
 		}
 		
 		for dapp in networkList {
 			for contract in dapp.parentContractAddress {
 				if contract == address {
-					return dapp.name
+					return (name: dapp.name, thumbnail: dapp.thumbnailURL)
 				}
 			}
 		}
 		
-		return address
+		return (name: address, thumbnail: nil)
 	}
 }

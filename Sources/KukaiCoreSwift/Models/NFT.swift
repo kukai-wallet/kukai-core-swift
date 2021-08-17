@@ -30,10 +30,16 @@ public struct NFT: Codable, Hashable {
 	public let artifactURI: String?
 	
 	/// A URI used to display media of the artifact
-	public let displayURI: String?
+	public let displayURI: URL?
 	
 	/// A smaller thumbnail used to display meda of the artifact
-	public let thumbnailURI: String?
+	public let thumbnailURI: URL?
+	
+	/// The URL to a cached version of the asset
+	public var displayURL: URL? = nil
+	
+	/// The URL to the cached version of the asset
+	public var thumbnailURL: URL? = nil
 	
 	/**
 	Create a more developer friednly `NFT` from a generic `BetterCallDevTokenBalance` object
@@ -46,7 +52,7 @@ public struct NFT: Codable, Hashable {
 		symbol = bcd.symbol ?? ""
 		description = bcd.description ?? ""
 		artifactURI = bcd.artifact_uri
-		displayURI = bcd.display_uri
-		thumbnailURI = bcd.thumbnail_uri
+		displayURI = URL(string: bcd.display_uri ?? "")
+		thumbnailURI = URL(string: bcd.thumbnail_uri ?? "")
 	}
 }

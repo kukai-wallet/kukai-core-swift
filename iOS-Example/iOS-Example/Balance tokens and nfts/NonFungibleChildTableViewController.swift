@@ -8,6 +8,7 @@
 
 import UIKit
 import KukaiCoreSwift
+import Kingfisher
 
 class NonFungibleChildTableViewController: UITableViewController {
 	
@@ -43,8 +44,7 @@ class NonFungibleChildTableViewController: UITableViewController {
 		}
 		
 		if let ftCell = cell as? NonFungibleTokenCell {
-			//ftCell.iconView?.kf.setImage(with: token?.icon, options: [.processor( DownsamplingImageProcessor(size: CGSize(width: 30, height: 30)) )])
-			
+			ftCell.iconView?.kf.setImage(with: nft.thumbnailURL, options: [.processor( DownsamplingImageProcessor(size: CGSize(width: 30, height: 30)) )])
 			ftCell.label.text = nft.name
 			ftCell.desc.text = nft.description
 		}
