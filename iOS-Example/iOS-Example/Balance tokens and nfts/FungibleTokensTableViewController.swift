@@ -31,7 +31,7 @@ class FungibleTokensTableViewController: UITableViewController {
 		let token = ClientsAndData.shared.account?.tokens[indexPath.row]
 		
 		if let ftCell = cell as? FungibleTokenCell {
-			ftCell.iconView?.kf.setImage(with: token?.icon, options: [.processor( DownsamplingImageProcessor(size: CGSize(width: 30, height: 30)) )])
+			ftCell.iconView?.setKuakiImage(withURL: token?.icon, downSampleStandardImage: (width: 30, height: 30))
 			ftCell.label.text = (token?.balance.normalisedRepresentation ?? "0") + " \(token?.symbol ?? "?")"
 		}
 		

@@ -44,7 +44,7 @@ class NonFungibleChildTableViewController: UITableViewController {
 		}
 		
 		if let ftCell = cell as? NonFungibleTokenCell {
-			ftCell.iconView?.kf.setImage(with: nft.thumbnailURL, options: [.processor( DownsamplingImageProcessor(size: CGSize(width: 30, height: 30)) )])
+			ftCell.iconView.setKuakiImage(withURL: nft.displayURL, downSampleStandardImage: (width: 150, height: 150))
 			ftCell.label.text = nft.name
 			ftCell.desc.text = nft.description
 		}

@@ -599,9 +599,9 @@ public class BetterCallDevClient {
 		
 		
 		// Set expiration and pre-fetch
-		ImageCache.default.diskStorage.config.expiration = .never
+		ImageCache.default.diskStorage.config.expiration = .days(7)
 		ImagePrefetcher(urls: imageURLs, options: nil, progressBlock: nil) { (skipped, failed, completed) in
-			os_log(.debug, log: .bcd, "Baker images downloaded")
+			os_log(.debug, log: .bcd, "Token icons downloaded")
 			
 			if !skipped.isEmpty {
 				os_log(.error, log: .bcd, "Some images skipped")
