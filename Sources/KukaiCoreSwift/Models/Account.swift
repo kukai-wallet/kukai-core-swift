@@ -23,4 +23,8 @@ public struct Account: Codable, Hashable {
 	
 	/// All the wallets NFT's, grouped into parent FA2 objects so they can be displayed in groups or individaully
 	public let nfts: [Token]
+	
+	/// Flag to indicate whether or not the object is different since the last query. Defaulted to true.
+	/// Can be set to false by BCD fetch all account info code. In this case it denotes that the inital queried data matched the previous inital data and no expensive update operations should be performed
+	public var changedSinceLastFetch: Bool = true
 }

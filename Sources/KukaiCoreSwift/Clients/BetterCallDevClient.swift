@@ -22,9 +22,10 @@ public class BetterCallDevClient {
 	
 	/// Constants for dealing with BCD API and cached data
 	public struct Constants {
-		public static let tokenBalanceQuerySize = 10
+		public static let tokenBalanceQuerySize = 50
 		public static let tokenMetadataFilename = "bcd-token_metadata"
 		public static let parsedAccountFilename = "bcd-parsed_account"
+		public static let accountHashFilename = "bcd-account_hash"
 	}
 	
 	/// The networking service used to fire requests
@@ -125,6 +126,7 @@ public class BetterCallDevClient {
 	public func accountTokenCount(forAddress address: String, completion: @escaping ((Result<[String: Int], ErrorResponse>) -> Void)) {
 		var url = config.betterCallDevURL
 		url.appendPathComponent("v1/account/\(config.tezosChainName.rawValue)/\(address)/count")
+		url.appendQueryItem(name: "hide_empty", value: "true")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [String: Int].self, completion: completion)
 	}
@@ -142,8 +144,24 @@ public class BetterCallDevClient {
 		url.appendQueryItem(name: "offset", value: offset * BetterCallDevClient.Constants.tokenBalanceQuerySize)
 		url.appendQueryItem(name: "size", value: BetterCallDevClient.Constants.tokenBalanceQuerySize)
 		url.appendQueryItem(name: "sort_by", value: "balance")
+		url.appendQueryItem(name: "hide_empty", value: "true")
 		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: BetterCallDevTokenBalances.self, completion: completion)
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: BetterCallDevTokenBalances.self) { result in
+			guard let balancesObj = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
+			}
+			
+			var sanitisedBalances: [BetterCallDevTokenBalance] = []
+			let zeroToken = TokenAmount.zero()
+			for balance in balancesObj.balances {
+				if balance.amount() > zeroToken {
+					sanitisedBalances.append(balance)
+				}
+			}
+			
+			completion(Result.success(BetterCallDevTokenBalances(balances: sanitisedBalances, total: balancesObj.total)))
+		}
 	}
 	
 	
@@ -208,11 +226,12 @@ public class BetterCallDevClient {
 	
 	/**
 	Getting the users balance, token balances and NFT's is a very complex and invloved task. Even using BCD it requires many many networking requests, to fetch the balances, fetch them all 1 page at a time, fetch the metadata etc.
-	This one request queries everything, and caches all the data to speed up subsequent calls. Applications should use this to drive their UI for 99% of use cases.
+	This one function queries everything, and caches all the data to speed up subsequent calls. Applications should use this to drive their UI for 99% of use cases.
 	Due to the level of caching, it is safe to call this method somewhat frequently, but no more often that once per block on the chain.
 	What it does:
 		- Queries the users XTZ balance via `self.account(forAddress: ...)`
 		- Queries the tokenCount and every page of token balances via `self.fetchTokenCountAndBalances(forAddress: ... )`
+		- Computes a MD5 hash of this data and saves it. In future, if the MD5 matches the stored, further steps are ignored and the cachedData is returned
 		- Queries and caches all metadata for unknown tokens via `self.fetchAllTokenMetadata(forTokenCount: ...)`
 		- Separates out NFT's and groups them under their parent collection
 		- Fetches Token icon images using `Kingfisher`
@@ -229,71 +248,107 @@ public class BetterCallDevClient {
 		var tokenBalances: BetterCallDevTokenBalances? = nil
 		var tokenMetadata: [String: BetterCallDevTokenMetadata]? = nil
 		var groupedData: (tokens: [Token], nftGroups: [Token])? = nil
+		var dataIsUnchanged = false
 		
+		
+		dispatchGroup.enter()
 		
 		// Query XTZ balance
-		dispatchGroup.enter()
 		self.account(forAddress: address) { result in
-			switch result {
-				case .failure(let err):
-					error = err
-				
-				case .success(let bcdAcc):
-					bcdAccount = bcdAcc
+			guard let bcdAcc = try? result.get() else {
+				error = result.getFailure()
+				dispatchGroup.leave()
+				return
 			}
 			
-			dispatchGroup.leave()
-		}
-		
-		
-		// Query token balances
-		dispatchGroup.enter()
-		self.fetchTokenCountAndBalances(forAddress: address) { [weak self] result in
-			switch result {
-				case .failure(let err):
-					error = err
+			bcdAccount = bcdAcc
+			
+			// Wait for account balance to come in, and then query balances and check for any updates
+			self.fetchTokenCountAndBalances(forAddress: address) { [weak self] innerResult in
+				guard let countAndBalances = try? innerResult.get() else {
+					error = innerResult.getFailure()
+					dispatchGroup.leave()
+					return
+				}
+				
+				tokenBalances = countAndBalances.balances
+				
+				// Compute MD5 hash of current data, to determine if the account data has changed, before performing more expensive account queries
+				let tokenData = (try? JSONEncoder().encode(tokenBalances ?? BetterCallDevTokenBalances(balances: [], total: 0))) ?? Data()
+				let dataString = "\(bcdAcc.balance)\(bcdAcc.lastAction)\( String(data: tokenData, encoding: .utf8) ?? "" )"
+				let currentMD5String = dataString.md5()
+				
+				
+				// If we have a previous hash, and a previous stored data file. Hash the current payload and see if there is any difference
+				// If no difference, return current cached data
+				// else continue fetching extra data, grouping tokens, fetching URLs and images etc.
+				if DiskService.exists(fileName: BetterCallDevClient.Constants.accountHashFilename) != nil,
+				   DiskService.exists(fileName: BetterCallDevClient.Constants.parsedAccountFilename) != nil,
+				   let storedMD5 = DiskService.read(type: String.self, fromFileName: BetterCallDevClient.Constants.accountHashFilename),
+				   currentMD5String == storedMD5 {
+					
+					os_log("MD5 hash matched stored MD5, returning cached data", log: .bcd, type: .debug)
+					dataIsUnchanged = true
 					dispatchGroup.leave()
 					
-				case .success(let countAndBalances):
-					tokenBalances = countAndBalances.balances
+				} else {
 					
+					// Write the MD5 hash for next query
+					let cacheResult = DiskService.write(encodable: currentMD5String, toFileName: BetterCallDevClient.Constants.accountHashFilename)
+					os_log("MD5 cache succeeded: %@", log: .bcd, type: .debug, "\(cacheResult)")
 					
 					// Query token metadata (if required or read from disk)
-					self?.fetchAllTokenMetadata(forTokenCount: countAndBalances.count, completion: { [weak self] innerResult in
-						switch innerResult {
-							case .failure(let err):
-								error = err
-								dispatchGroup.leave()
-							
-							case .success(let metadataArray):
-								tokenMetadata = metadataArray
-								groupedData = self?.groupTokens(tokenBalances: tokenBalances, tokenMetadata: tokenMetadata)
-								
-								self?.fetchNftURLs(forNFTs: groupedData?.nftGroups ?? []) { updatedNFTs in
-									groupedData?.nftGroups = updatedNFTs
-									dispatchGroup.leave()
-								}
+					self?.fetchAllTokenMetadata(forTokenCount: countAndBalances.count, completion: { [weak self] metaResult in
+						guard let metadataArray = try? metaResult.get() else {
+							error = metaResult.getFailure()
+							dispatchGroup.leave()
+							return
+						}
+						
+						tokenMetadata = metadataArray
+						groupedData = self?.groupTokens(tokenBalances: tokenBalances, tokenMetadata: tokenMetadata)
+						
+						self?.fetchNftURLs(forNFTs: groupedData?.nftGroups ?? []) { updatedNFTs in
+							groupedData?.nftGroups = updatedNFTs
+							dispatchGroup.leave()
 						}
 					})
+				}
 			}
 		}
-		
 		
 		
 		// When all requests finished, parse/group/filter and return as an `Account`
-		dispatchGroup.notify(queue: .main) {
+		dispatchGroup.notify(queue: .main) { [weak self] in
+			
+			// Check if any errors were recorded
 			if let err = error {
 				completion(Result.failure(err))
 				return
 			}
 			
+			// Check if data was unchanged, and retrieve cache if so
+			if dataIsUnchanged == true {
+				var cachedAccount = self?.cachedAccountInfo()
+				cachedAccount?.changedSinceLastFetch = false
+				
+				if let acc = cachedAccount {
+					completion(Result.success(acc))
+					os_log("Returning cached BCD account info", log: .bcd, type: .debug)
+					return
+				}
+			}
+			
+			// Check if all required new data is ready to go
 			guard let bcdAcc = bcdAccount, let bcdTokens = groupedData?.tokens, let bcdNfts = groupedData?.nftGroups else {
 				completion(Result.failure(ErrorResponse.unknownError()))
 				return
 			}
 			
+			// Construct new object and return
 			let account = Account(walletAddress: bcdAcc.address, xtzBalance: bcdAcc.balance, tokens: bcdTokens, nfts: bcdNfts)
 			let _ = DiskService.write(encodable: account, toFileName: BetterCallDevClient.Constants.parsedAccountFilename)
+			os_log("Returning new BCD account info", log: .bcd, type: .debug)
 			
 			completion(Result.success(account))
 		}
