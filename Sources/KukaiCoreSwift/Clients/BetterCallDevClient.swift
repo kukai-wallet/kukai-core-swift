@@ -143,7 +143,6 @@ public class BetterCallDevClient {
 		url.appendPathComponent("v1/account/\(config.tezosChainName.rawValue)/\(address)/token_balances")
 		url.appendQueryItem(name: "offset", value: offset * BetterCallDevClient.Constants.tokenBalanceQuerySize)
 		url.appendQueryItem(name: "size", value: BetterCallDevClient.Constants.tokenBalanceQuerySize)
-		url.appendQueryItem(name: "sort_by", value: "balance")
 		url.appendQueryItem(name: "hide_empty", value: "true")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: BetterCallDevTokenBalances.self) { result in
@@ -366,7 +365,7 @@ public class BetterCallDevClient {
 		// Sort BCD balances in descending order
 		var sortedBalances = tokenBalances.balances
 		sortedBalances.sort(by: { a, b in
-			a.amount() > b.amount()
+			"\(a.contract):\(a.token_id)" > "\(b.contract):\(b.token_id)"
 		})
 		
 		
