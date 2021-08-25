@@ -30,9 +30,6 @@ public class Token: Codable, CustomStringConvertible {
 		case nonfungible
 	}
 	
-	/// The icon used to display next to a given token.
-	public var icon: URL?
-	
 	/// The long name of a token. e.g. "Tezos".
 	public let name: String
 	
@@ -55,6 +52,12 @@ public class Token: Codable, CustomStringConvertible {
 		}
 	}
 	
+	/// A URI used to locate the tokens icon image (raw data coming from third party)
+	public let thumbnailURI: URL?
+	
+	/// The URL to a cached version of the asset (data that we add later on through other service calls)
+	public var thumbnailURL: URL? = nil
+	
 	/// The current local currency rate of this token. Used to show the user the net worth of their holdings.
 	public var localCurrencyRate: Decimal = 0
 	
@@ -70,22 +73,22 @@ public class Token: Codable, CustomStringConvertible {
 	
 	/**
 	Init a `Token` object that will hold all the necessary data to interact with the Tezos network, and the Dexter exchange
-	- parameter icon: An image used to denote the token.
 	- parameter name: The long name of the token. e.g. "Tezos"
 	- parameter symbol: The short name of the token, or the symbol. e.g. "XTZ"
 	- parameter tokenType: The type of the token. e.g. xtz, fa1.2, fa2 etc.
 	- parameter faVersion: The FA standard / version used to create this token.
 	- parameter decimalPlaces: The number of decimal places this token contains.
+	- parameter thumbnailURI: URI to network asset to use to display an icon for the token
 	- parameter tokenContractAddress: The KT1 address of the contract (nil if xtz).
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(icon: URL?, name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, tokenContractAddress: String?, nfts: [NFT]?) {
-		self.icon = icon
+	public init(name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURI: URL?, tokenContractAddress: String?, nfts: [NFT]?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
 		self.faVersion = faVersion
 		self.balance = balance
+		self.thumbnailURI = thumbnailURI
 		self.tokenContractAddress = tokenContractAddress
 		self.nfts = nfts
 	}
@@ -95,7 +98,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`
 	*/
 	public static func xtz() -> Token {
-		return Token(icon: nil, name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), tokenContractAddress: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
 	}
 	
 	/**
@@ -104,7 +107,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`.
 	*/
 	public static func xtz(withAmount amount: TokenAmount) -> Token {
-		return Token(icon: nil, name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, tokenContractAddress: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
 	}
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type

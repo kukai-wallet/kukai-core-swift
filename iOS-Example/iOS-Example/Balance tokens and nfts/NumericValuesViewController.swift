@@ -26,8 +26,8 @@ class NumericValuesViewController: UIViewController {
 	@IBOutlet weak var token2LocalisedLabel: UILabel!
 	
 	let TokenXTZ = Token.xtz()
-	let Token1 = Token(icon: nil, name: "Token 1", symbol: "TK1", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), tokenContractAddress: "", nfts: nil)
-	let Token2 = Token(icon: nil, name: "Token 2", symbol: "TK2", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), tokenContractAddress: "", nfts: nil)
+	let Token1 = Token(name: "Token 1", symbol: "TK1", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURI: nil, tokenContractAddress: "", nfts: nil)
+	let Token2 = Token(name: "Token 2", symbol: "TK2", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), thumbnailURI: nil, tokenContractAddress: "", nfts: nil)
 	
 	override func viewDidLoad() {
         super.viewDidLoad()

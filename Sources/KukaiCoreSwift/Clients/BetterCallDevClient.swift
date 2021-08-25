@@ -308,8 +308,9 @@ public class BetterCallDevClient {
 						tokenMetadata = metadataArray
 						groupedData = self?.groupTokens(tokenBalances: tokenBalances, tokenMetadata: tokenMetadata)
 						
-						self?.fetchNftURLs(forNFTs: groupedData?.nftGroups ?? []) { updatedNFTs in
-							groupedData?.nftGroups = updatedNFTs
+						self?.fetchImageUrls(forTokens: groupedData?.tokens ?? [], andNFTs: groupedData?.nftGroups ?? []) { updatedData in
+							groupedData?.tokens = updatedData.tokens
+							groupedData?.nftGroups = updatedData.nfts
 							dispatchGroup.leave()
 						}
 					})
@@ -392,16 +393,24 @@ public class BetterCallDevClient {
 			
 			
 			// If not NFT, create `Token` instance
-			var imageURL: URL? = nil
 			var faVersion: FaVersion? = nil
 			
 			// Find corresponding Metadata object
 			if let currentMetadata = tokenMetadata[bcdToken.contract] {
-				imageURL = avatarURL(forToken: bcdToken.contract)
 				faVersion = currentMetadata.faVersion
 			}
 			
-			let token = Token(icon: imageURL, name: bcdToken.name ?? "", symbol: bcdToken.symbol ?? "", tokenType: .fungible, faVersion: faVersion, balance: bcdToken.amount(), tokenContractAddress: bcdToken.contract, nfts: nil)
+			let token = Token(
+				name: bcdToken.name ?? "",
+				symbol: bcdToken.symbol ?? "",
+				tokenType: .fungible,
+				faVersion: faVersion,
+				balance: bcdToken.amount(),
+				thumbnailURI: URL(string: bcdToken.thumbnail_uri ?? ""),
+				tokenContractAddress: bcdToken.contract,
+				nfts: nil
+			)
+			
 			tokens.append(token)
 		}
 		
@@ -411,7 +420,18 @@ public class BetterCallDevClient {
 			if let meta = tokenMetadata[nftContract] {
 				
 				let staticNFTData = OfflineConstants.dappDisplayName(forContractAddress: meta.contract, onChain: config.tezosChainName)
-				nftGroups.append(Token(icon: staticNFTData.thumbnail, name: staticNFTData.name, symbol: meta.symbol ?? "", tokenType: .nonfungible, faVersion: meta.faVersion, balance: TokenAmount.zero(), tokenContractAddress: meta.contract, nfts: tempNFT[nftContract]))
+				let nftToken = Token(
+					name: staticNFTData.name,
+					symbol: meta.symbol ?? "",
+					tokenType: .nonfungible,
+					faVersion: meta.faVersion,
+					balance: TokenAmount.zero(),
+					thumbnailURI: URL(string: meta.thumbnail_uri ?? ""),
+					tokenContractAddress: meta.contract,
+					nfts: tempNFT[nftContract]
+				)
+				nftToken.thumbnailURL = staticNFTData.thumbnail
+				nftGroups.append(nftToken)
 			}
 		}
 		
@@ -419,31 +439,46 @@ public class BetterCallDevClient {
 	}
 	
 	// NFT display and thumbnail URLS need to be processed, and extremely likely converted into URLs pointing to a cache server
-	private func fetchNftURLs(forNFTs nfts: [Token], completion: @escaping (([Token]) -> Void)) {
+	private func fetchImageUrls(forTokens tokens: [Token], andNFTs nfts: [Token], completion: @escaping (((tokens: [Token], nfts: [Token])) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		let updatedTokens: [Token] = nfts
+		let updatedTokens: [Token] = tokens
+		let updatedNFts: [Token] = nfts
 		
-		for (outerIndex, nftParent) in updatedTokens.enumerated() {
+		dispatchGroup.enter()
+		for (index, token) in updatedTokens.enumerated() {
+			dispatchGroup.enter()
+			
+			imageURL(fromIpfsUri: token.thumbnailURI) { [weak self] thumbnailURL in
+				updatedTokens[index].thumbnailURL = (thumbnailURL == nil) ? self?.avatarURL(forToken: token.tokenContractAddress ?? "") : thumbnailURL
+				dispatchGroup.leave()
+			}
+		}
+		
+		dispatchGroup.enter()
+		for (outerIndex, nftParent) in updatedNFts.enumerated() {
 			for (innerIndex, nftChild) in (nftParent.nfts ?? []).enumerated() {
 				dispatchGroup.enter()
 				dispatchGroup.enter()
 				
 				imageURL(fromIpfsUri: nftChild.displayURI) { displayURL in
-					updatedTokens[outerIndex].nfts?[innerIndex].displayURL = displayURL
+					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = displayURL
 					dispatchGroup.leave()
 				}
 				
 				imageURL(fromIpfsUri: nftChild.thumbnailURI) { thumbnailURL in
-					updatedTokens[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
+					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
 					dispatchGroup.leave()
 				}
 			}
 		}
 		
+		dispatchGroup.leave()
+		dispatchGroup.leave()
+		
 		// When all requests finished, return on main thread
 		dispatchGroup.notify(queue: .main) {
-			completion(updatedTokens)
+			completion((tokens: updatedTokens, nfts: updatedNFts))
 		}
 	}
 	

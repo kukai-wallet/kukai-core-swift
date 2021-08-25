@@ -32,7 +32,7 @@ class NonFungibleTokensTableViewController: UITableViewController {
 		let token = ClientsAndData.shared.account?.nfts[indexPath.row]
 		
 		if let ftCell = cell as? FungibleTokenCell {
-			ftCell.iconView?.setKuakiImage(withURL: token?.icon, downSampleStandardImage: (width: 30, height: 30))
+			ftCell.iconView?.setKuakiImage(withURL: token?.thumbnailURL, downSampleStandardImage: (width: 30, height: 30))
 			ftCell.label.text = token?.name
 		}
 		
