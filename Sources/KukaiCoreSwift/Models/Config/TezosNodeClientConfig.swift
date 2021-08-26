@@ -138,7 +138,7 @@ public struct TezosNodeClientConfig {
 			
 			case .testnet:
 				primaryNodeURL = TezosNodeClientConfig.defaultTestnetURLs.primaryNodeURL
-				parseNodeURL = TezosNodeClientConfig.defaultMainnetURLs.parseNodeURL
+				parseNodeURL = TezosNodeClientConfig.defaultTestnetURLs.parseNodeURL
 				forgingType = .local
 				tezosChainName = .granadanet
 				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL

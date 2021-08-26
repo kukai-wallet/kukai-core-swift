@@ -17,7 +17,8 @@ let package = Package(
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
 		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
 		.package(name: "TorusSwiftDirectSDK", url: "https://github.com/simonmcl/torus-direct-swift-sdk", .branch("master")),
-		.package(url: "https://github.com/SVGKit/SVGKit", .branch("3.x"))
+		.package(url: "https://github.com/SVGKit/SVGKit", .branch("3.x")),
+		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0")
 	],
 	targets: [
 		.target(
@@ -29,7 +30,8 @@ let package = Package(
 				"Kingfisher",
 				"SVGKit",
 				"WalletCore",
-				"TorusSwiftDirectSDK"
+				"TorusSwiftDirectSDK",
+				"SignalRClient"
 			],
 			resources: [
 				.copy("Services/External")

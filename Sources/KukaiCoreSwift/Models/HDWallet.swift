@@ -50,9 +50,6 @@ public class HDWallet: Wallet {
 	/// The Bip44 derivationPath used to create the wallet
 	public var derivationPath: String
 	
-	/// The raw seed data from TrustWallet. Needed to recreate wallet object using `Codable`
-	private var seed: Data
-	
 	/// The passphrase used to create the wallet. Needed to recreate wallet object using `Codable`
 	private var passphrase: String?
 	
@@ -104,7 +101,6 @@ public class HDWallet: Wallet {
 		self.mnemonic = trustWallet.mnemonic
 		self.derivationPath = derivationPath
 		
-		self.seed = trustWallet.seed
 		self.passphrase = passphrase
 		self.internalTrustWallet = trustWallet
 	}
@@ -114,7 +110,6 @@ public class HDWallet: Wallet {
 		// WalletCore will already clean up private and public key
 		mnemonic = String(repeating: "0", count: mnemonic.count)
 		derivationPath = String(repeating: "0", count: derivationPath.count)
-		seed = Data(repeating: 0, count: seed.count)
 		passphrase = String(repeating: "0", count: passphrase?.count ?? 0)
 	}
 	
@@ -144,12 +139,10 @@ public class HDWallet: Wallet {
 		sortIndex = try container.decode(Int.self, forKey: .sortIndex)
 		mnemonic = try container.decode(String.self, forKey: .mnemonic)
 		derivationPath = try container.decode(String.self, forKey: .derivationPath)
-		seed = try container.decode(Data.self, forKey: .seed)
 		passphrase = try container.decodeIfPresent(String.self, forKey: .passphrase)
 		
-		
 		// Rebuild trust wallet object and extract private and public key
-		let trustWallet = WalletCore.HDWallet(data: seed, passphrase: passphrase ?? "")
+		let trustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase ?? "")
 		let key = trustWallet.getKey(coin: .tezos, derivationPath: derivationPath)
 		
 		privateKey = key
@@ -165,7 +158,6 @@ public class HDWallet: Wallet {
 		try container.encode(sortIndex, forKey: .sortIndex)
 		try container.encode(mnemonic, forKey: .mnemonic)
 		try container.encode(derivationPath, forKey: .derivationPath)
-		try container.encode(seed, forKey: .seed)
 		try container.encodeIfPresent(passphrase, forKey: .passphrase)
 	}
 	

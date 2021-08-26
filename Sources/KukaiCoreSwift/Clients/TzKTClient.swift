@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SignalRClient
 import os.log
 
 
@@ -33,6 +34,7 @@ public class TzKTClient {
 	private var transactionHistory: [TimeInterval: [TzKTTransaction]] = [:]
 	private var tempTransactions: [TzKTTransaction] = []
 	private var dispatchGroupTransactions = DispatchGroup()
+	private var signalrConnection: HubConnection? = nil
 	
 	
 	
@@ -89,20 +91,49 @@ public class TzKTClient {
 	- parameter ofHash: The operation hash to query.
 	- parameter completion: A completion colsure called when the API returns a valid operation response, or an error indicating a problem with the service.
 	*/
-	public func waitForInjection(ofHash hash: String, completion: @escaping ((Bool, Error?, ErrorResponse?) -> Void)) {
-		continueSearching = true
-		recurriselyCheckForOperation(byHash: hash) { (operations, serviceError, operationError) in
-			if operations?.count ?? 0 > 0 {
-				completion(true, nil, nil)
+	public func waitForInjection(ofHash hash: String, fromAddress address: String, completion: @escaping ((Bool, Error?, ErrorResponse?) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/events")
+		
+		if config.loggingConfig.logNetworkSuccesses {
+			signalrConnection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .debug).build()
+		} else {
+			signalrConnection = HubConnectionBuilder(url: url).build()
+		}
+		
+		
+		// Register for SignalR operation events
+		signalrConnection?.on(method: "operations", callback: { [weak self] argumentExtractor in
+			do {
+				let obj = try argumentExtractor.getArgument(type: OperationSubscriptionResponse.self)
+				os_log("Incoming object parsed: %@", log: .tzkt, type: .debug, "\(obj)")
 				
-			} else if let sError = serviceError {
-				completion(false, sError, nil)
+				for op in obj.data ?? [] {
+					if op.hash == hash {
+						self?.signalrConnection?.stop()
+						completion(true, nil, nil)
+						return
+					}
+				}
 				
-			} else if let customError = operationError {
-				completion(false, nil, customError)
-				
+			} catch (let error) {
+				os_log("Failed to parse incoming operation: %@", log: .tzkt, type: .error, "\(error)")
+				self?.signalrConnection?.stop()
+				completion(false, error, ErrorResponse.unknownParseError(error: error))
+			}
+		})
+		signalrConnection?.start()
+		
+		
+		// Request to be subscribed to events belonging to the given account
+		let operationSubscription = OperationSubscription(address: address, types: "transaction,origination,delegation")
+		signalrConnection?.invoke(method: "SubscribeToOperations", operationSubscription) { [weak self] error in
+			if let error = error {
+				os_log("Subscribe to operations failed: %@", log: .tzkt, type: .error, "\(error)")
+				self?.signalrConnection?.stop()
+				completion(false, error, ErrorResponse.unknownError())
 			} else {
-				completion(false, nil, ErrorResponse.unknownError())
+				os_log("Subscribe to operations succeeded, waiting for objects", log: .tzkt, type: .debug)
 			}
 		}
 	}
@@ -327,90 +358,6 @@ public class TzKTClient {
 			} else {
 				self.transactionHistory[transToAdd.truncatedTimeInterval]?.append(transToAdd)
 			}
-		}
-	}
-	
-	
-	
-	
-	
-	// MARK: - Helpers
-	
-	/**
-	Private helper function to wrap up the recurrsive check used to poll TzKT for operation injection status
-	*/
-	private func recurriselyCheckForOperation(byHash hash: String, completion: @escaping (([TzKTOperation]?, Error?, ErrorResponse?) -> Void)) {
-		workItem = DispatchWorkItem(block: { [weak self] in
-			os_log(.debug, log: .kukaiCoreSwift, "Searching for block for operation hash: %@", hash)
-			
-			self?.getOperation(byHash: hash, completion: { (operations, error) in
-				
-				guard let operations = operations else {
-					os_log(.debug, log: .kukaiCoreSwift, "An unexpected error occurred, cancelling search")
-					DispatchQueue.main.async { completion(nil, error, error == nil ? ErrorResponse.unknownError() : nil) }
-					return
-				}
-				
-				if error?.code == -999 {
-					// Error from cancelled network request, from calling `cancelWait()`, ignore
-					return
-					
-				} else if let err = error {
-					os_log(.debug, log: .kukaiCoreSwift, "An unexpected error occurred, cancelling search")
-					DispatchQueue.main.async { completion(nil, err, nil) }
-					return
-					
-				} else if operations.count > 0 {
-					
-					// If operations contain no errors, return operations as a success state
-					guard operations.map({ $0.containsError() }).filter({ $0 == true }).count > 0 else {
-						os_log(.debug, log: .kukaiCoreSwift, "Block contained success status")
-						DispatchQueue.main.async { completion(operations, nil, nil) }
-						return
-					}
-					
-					// Check if we get back the error we are looking for, and return if so
-					if let meaningfulError = ErrorHandlingService.extractMeaningfulErrors(fromTzKTOperations: operations), meaningfulError.errorType != .unknownError {
-						os_log(.debug, log: .kukaiCoreSwift, "Block contained meaingful error: %@", String(describing: meaningfulError))
-						DispatchQueue.main.async { completion(nil, nil, meaningfulError) }
-						return
-					}
-					
-					// If we only get back generic errors, try to see if Better-call.dev can give more details
-					self?.betterCallDevClient.getMoreDetailedError(byHash: hash) { (betterCallDevError, serviceError) in
-						guard serviceError == nil else {
-							os_log(.debug, log: .kukaiCoreSwift, "Failed to reach Better call dev, returning generic error")
-							DispatchQueue.main.async { completion(nil, nil, ErrorResponse.unknownError()) }
-							return
-						}
-						
-						// If it has a more detailed error, return that, if not return generic
-						if let withString = betterCallDevError?.with {
-							let moreDetailedError = ErrorHandlingService.parse(string: withString)
-							os_log(.debug, log: .kukaiCoreSwift, "BetterCallDev returned a more detailed error: %@", "\(moreDetailedError)")
-							DispatchQueue.main.async { completion(nil, nil, moreDetailedError) }
-							return
-							
-						} else {
-							os_log(.debug, log: .kukaiCoreSwift, "BetterCallDev didn't return a more detailed error, returning generic")
-							DispatchQueue.main.async { completion(nil, nil, ErrorResponse.unknownError()) }
-							return
-						}
-					}
-					
-				} else {
-					
-					// TZKT returned no errors and no operations. Likely the operation hasn't hit yet, search again in X seconds
-					if self?.continueSearching == true {
-						os_log(.debug, log: .kukaiCoreSwift, "None found, trying again in %@ seconds", "\(self?.searchFrequency ?? 0)")
-						self?.recurriselyCheckForOperation(byHash: hash, completion: completion)
-					}
-				}
-			})
-		})
-		
-		if let item = workItem, continueSearching {
-			DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + searchFrequency, execute: item)
 		}
 	}
 }
