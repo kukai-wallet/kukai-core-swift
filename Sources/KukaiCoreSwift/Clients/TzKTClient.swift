@@ -27,15 +27,13 @@ public class TzKTClient {
 	private var currentWalletAddress: String = ""
 	private var supportedTokens: [Token] = []
 	
-	private var dataTask: URLSessionDataTask?
-	private var workItem: DispatchWorkItem?
-	private var searchFrequency: Double = 20 // seconds
-	private var continueSearching = false
 	private var transactionHistory: [TimeInterval: [TzKTTransaction]] = [:]
 	private var tempTransactions: [TzKTTransaction] = []
 	private var dispatchGroupTransactions = DispatchGroup()
-	private var signalrConnection: HubConnection? = nil
 	
+	private var signalrConnection: HubConnection? = nil
+	private var addressToWatch: String = ""
+	private var injectionNotificationCallback: ((Bool, Error?, ErrorResponse?) -> Void)? = nil
 	
 	
 	
@@ -52,11 +50,6 @@ public class TzKTClient {
 		self.networkService = networkService
 		self.config = config
 		self.betterCallDevClient = betterCallDevClient
-		
-		// Reduce searchFrequency for XCTTest
-		if Thread.current.isRunningXCTest {
-			searchFrequency = 2
-		}
 	}
 	
 	
@@ -92,6 +85,9 @@ public class TzKTClient {
 	- parameter completion: A completion colsure called when the API returns a valid operation response, or an error indicating a problem with the service.
 	*/
 	public func waitForInjection(ofHash hash: String, fromAddress address: String, completion: @escaping ((Bool, Error?, ErrorResponse?) -> Void)) {
+		addressToWatch = address
+		injectionNotificationCallback = completion
+		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/events")
 		
@@ -122,30 +118,16 @@ public class TzKTClient {
 				completion(false, error, ErrorResponse.unknownParseError(error: error))
 			}
 		})
+		signalrConnection?.delegate = self
 		signalrConnection?.start()
-		
-		
-		// Request to be subscribed to events belonging to the given account
-		let operationSubscription = OperationSubscription(address: address, types: "transaction,origination,delegation")
-		signalrConnection?.invoke(method: "SubscribeToOperations", operationSubscription) { [weak self] error in
-			if let error = error {
-				os_log("Subscribe to operations failed: %@", log: .tzkt, type: .error, "\(error)")
-				self?.signalrConnection?.stop()
-				completion(false, error, ErrorResponse.unknownError())
-			} else {
-				os_log("Subscribe to operations succeeded, waiting for objects", log: .tzkt, type: .debug)
-			}
-		}
 	}
 	
 	/**
 	Cancel the polling operation from `waitForInjection`
 	*/
 	public func cancelWait() {
-		// Cancelling the dataTask has some strange results on iOS 12 when mocking. Cancelling the work item instead seems to work more reliably
-		os_log(.debug, log: .kukaiCoreSwift, "Cancelling recurrsive search for Block")
-		workItem?.cancel()
-		continueSearching = false
+		os_log(.debug, log: .kukaiCoreSwift, "Cancelling waitForInjection")
+		signalrConnection?.stop()
 	}
 	
 	
@@ -358,6 +340,33 @@ public class TzKTClient {
 			} else {
 				self.transactionHistory[transToAdd.truncatedTimeInterval]?.append(transToAdd)
 			}
+		}
+	}
+}
+
+extension TzKTClient: HubConnectionDelegate {
+	
+	public func connectionDidOpen(hubConnection: HubConnection) {
+		
+		// Request to be subscribed to events belonging to the given account
+		let operationSubscription = OperationSubscription(address: addressToWatch, types: "transaction,origination,delegation")
+		signalrConnection?.invoke(method: "SubscribeToOperations", operationSubscription) { [weak self] error in
+			if let error = error {
+				os_log("Subscribe to operations failed: %@", log: .tzkt, type: .error, "\(error)")
+				self?.signalrConnection?.stop()
+			} else {
+				os_log("Subscribe to operations succeeded, waiting for objects", log: .tzkt, type: .debug)
+			}
+		}
+	}
+	
+	public func connectionDidClose(error: Error?) {
+		
+	}
+	
+	public func connectionDidFailToOpen(error: Error) {
+		if let completion = injectionNotificationCallback {
+			completion(false, error, ErrorResponse.unknownError())
 		}
 	}
 }
