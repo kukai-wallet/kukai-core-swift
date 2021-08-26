@@ -116,14 +116,20 @@ class BetterCallDevClientTests: XCTestCase {
 	}
 	
 	func testAccountInfo() {
+		let delete1 = DiskService.delete(fileName: BetterCallDevClient.Constants.accountHashFilename)
+		let delete2 = DiskService.delete(fileName: BetterCallDevClient.Constants.parsedAccountFilename)
+		let delete3 = DiskService.delete(fileName: BetterCallDevClient.Constants.tokenMetadataFilename)
+		XCTAssert(delete1 && delete2 && delete3)
+		
+		
 		let expectation = XCTestExpectation(description: "bcd-testAccountInfo")
 		MockConstants.shared.betterCallDevClient.fetchAccountInfo(forAddress: MockConstants.defaultHdWallet.address, completion: { result in
 			switch result {
 				case .success(let account):
 					XCTAssert(account.walletAddress == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", account.walletAddress)
 					XCTAssert(account.tokens.count == 7, "\(account.tokens.count)")
-					XCTAssert(account.tokens.first?.name == "Token 1", account.tokens.first?.name ?? "-")
-					XCTAssert(account.tokens.first?.symbol == "T1", account.tokens.first?.symbol ?? "-")
+					XCTAssert(account.tokens.first?.name == "Token 4", account.tokens.first?.name ?? "-")
+					XCTAssert(account.tokens.first?.symbol == "T4", account.tokens.first?.symbol ?? "-")
 					XCTAssert(account.nfts.count == 1, "\(account.nfts.count)")
 					XCTAssert(account.nfts.first?.nfts?.count == 2, "\(account.nfts.first?.nfts?.count ?? 0)")
 					XCTAssert(account.nfts.first?.nfts?.first?.name == "matrix 6", account.nfts.first?.nfts?.first?.name ?? "-")
@@ -137,8 +143,8 @@ class BetterCallDevClientTests: XCTestCase {
 			let cachedAccount = MockConstants.shared.betterCallDevClient.cachedAccountInfo()
 			XCTAssert(cachedAccount?.walletAddress == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", cachedAccount?.walletAddress ?? "-")
 			XCTAssert(cachedAccount?.tokens.count == 7, "\(cachedAccount?.tokens.count ?? 0)")
-			XCTAssert(cachedAccount?.tokens.first?.name == "Token 1", cachedAccount?.tokens.first?.name ?? "-")
-			XCTAssert(cachedAccount?.tokens.first?.symbol == "T1", cachedAccount?.tokens.first?.symbol ?? "-")
+			XCTAssert(cachedAccount?.tokens.first?.name == "Token 4", cachedAccount?.tokens.first?.name ?? "-")
+			XCTAssert(cachedAccount?.tokens.first?.symbol == "T4", cachedAccount?.tokens.first?.symbol ?? "-")
 			XCTAssert(cachedAccount?.nfts.count == 1, "\(cachedAccount?.nfts.count ?? 0)")
 			XCTAssert(cachedAccount?.nfts.first?.nfts?.count == 2, "\(cachedAccount?.nfts.first?.nfts?.count ?? 0)")
 			XCTAssert(cachedAccount?.nfts.first?.nfts?.first?.name == "matrix 6", cachedAccount?.nfts.first?.nfts?.first?.name ?? "-")
@@ -150,7 +156,7 @@ class BetterCallDevClientTests: XCTestCase {
 	}
 	
 	func testImageURL() {
-		let testURL = MockConstants.shared.betterCallDevClient.imageURL(forToken: MockConstants.token3Decimals.tokenContractAddress ?? "")
+		let testURL = MockConstants.shared.betterCallDevClient.avatarURL(forToken: MockConstants.token3Decimals.tokenContractAddress ?? "")
 		XCTAssert(testURL?.absoluteString == "https://services.tzkt.io/v1/avatars/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", testURL?.absoluteString ?? "-")
 	}
 }

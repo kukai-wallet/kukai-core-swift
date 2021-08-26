@@ -773,6 +773,11 @@ public class BetterCallDevClient {
 			return
 		}
 		
+		if String(uri.absoluteString.prefix(10)) == "data:image" {
+			completion(uri)
+			return
+		}
+		
 		guard let cloudflareURL = ipfsURIToCloudflareURL(uri: uri) else {
 			completion(nil)
 			return

@@ -46,8 +46,8 @@ public struct MockConstants {
 		
 		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
 		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
-		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 10)
-		bcdTokenBalanceURL.appendQueryItem(name: "sort_by", value: "balance")
+		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 50)
+		bcdTokenBalanceURL.appendQueryItem(name: "hide_empty", value: "true")
 		
 		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
 		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
@@ -83,7 +83,7 @@ public struct MockConstants {
 			
 			// BCD URLs
 			bcdURL.appendingPathComponent("v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "bcd_account"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/count"): (MockConstants.jsonStub(fromFilename: "bcd_token-count"), MockConstants.http200),
+			MockConstants.bcdURL(withPath: "v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/count", queryParams: ["hide_empty": "true"], andConfig: config): (MockConstants.jsonStub(fromFilename: "bcd_token-count"), MockConstants.http200),
 			bcdTokenBalanceURL: (MockConstants.jsonStub(fromFilename: "bcd_token-balances"), MockConstants.http200),
 			bcdURL.appendingPathComponent("v1/contract/granadanet/KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
 			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
@@ -106,15 +106,14 @@ public struct MockConstants {
 			bcdURL.appendingPathComponent("v1/opg/ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
 			bcdURL.appendingPathComponent("v1/opg/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
 			
-			
-			
-			// https://api.better-call.dev/v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances?offset=0&size=10&sort_by=balance
-			
 			// TzKT URLs
 			tzktURL.appendingPathComponent("v1/operations/ooT5uBirxWi9GXRqf6eGCEjoPhQid3U8yvsbP9JQHBXifVsinY8"): (MockConstants.jsonStub(fromFilename: "tzkt_operation"), MockConstants.http200),
 			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
 			tzktHistoryMainURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main"), MockConstants.http200),
 			tzktHistoryNativeReceiveURL: (MockConstants.jsonStub(fromFilename: "tzkt_transaction-native-receive"), MockConstants.http200),
+			
+			// Kukai backend
+			URL(string: "https://backend.kukai.network/file/info?src=https://cloudflare-ipfs.com/ipfs/QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN")!: (MockConstants.jsonStub(fromFilename: "kukai_backend-ipfs-data"), MockConstants.http200),
 			
 			// Misc
 			URL(string: "https://api.tezos.help/twitter-lookup/")!: (MockConstants.jsonStub(fromFilename: "twitter_lookup"), MockConstants.http200),
@@ -132,11 +131,18 @@ public struct MockConstants {
 		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient)
 	}
 	
-	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {
-		var bcdURL = config.betterCallDevURL.appendingPathComponent("v1/tokens/granadanet/metadata")
-		bcdURL.appendQueryItem(name: "contract", value: contract)
+	public static func bcdURL(withPath: String, queryParams: [String: String], andConfig config: TezosNodeClientConfig) -> URL {
+		var bcdURL = config.betterCallDevURL.appendingPathComponent(withPath)
+		
+		for key in queryParams.keys {
+			bcdURL.appendQueryItem(name: key, value: queryParams[key] ?? "")
+		}
 		
 		return bcdURL
+	}
+	
+	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {
+		return MockConstants.bcdURL(withPath: "v1/tokens/granadanet/metadata", queryParams: ["contract": contract], andConfig: config)
 	}
 	
 	
@@ -219,8 +225,8 @@ public struct MockConstants {
 	// MARK: - Tokens
 	
 	public static let tokenXTZ = Token.xtz()
-	public static let token3Decimals = Token(icon: nil, name: "Token 3 decimals", symbol: "TK3", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), tokenContractAddress: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", nfts: nil)
-	public static let token10Decimals = Token(icon: nil, name: "Token 10 decimals", symbol: "TK10", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", nfts: nil)
+	public static let token3Decimals = Token(name: "Token 3 decimals", symbol: "TK3", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), thumbnailURI: nil, tokenContractAddress: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", nfts: nil)
+	public static let token10Decimals = Token(name: "Token 10 decimals", symbol: "TK10", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURI: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", nfts: nil)
 	
 	public static let xtz_1 = XTZAmount(fromNormalisedAmount: 1)
 	public static let token3Decimals_1 = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 3)

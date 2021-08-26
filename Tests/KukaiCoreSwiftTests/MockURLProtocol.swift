@@ -16,7 +16,6 @@ class MockURLProtocol: URLProtocol {
 	private let parseURL = MockConstants.shared.config.parseNodeURL!.appendingPathComponent("chains/main/blocks/BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK/helpers/parse/operations")
 	
 	
-	
 	/// Dictionary maps URLs to tuples of data, and response
 	static var mockURLs = [URL?: (data: Data?, response: HTTPURLResponse?)]()
 	static var errorURLs = [URL?: (data: Data?, response: HTTPURLResponse?)]()
