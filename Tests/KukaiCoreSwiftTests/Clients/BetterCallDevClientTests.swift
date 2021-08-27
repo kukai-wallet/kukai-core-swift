@@ -152,7 +152,7 @@ class BetterCallDevClientTests: XCTestCase {
 			
 			expectation.fulfill()
 		})
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 	
 	func testImageURL() {
