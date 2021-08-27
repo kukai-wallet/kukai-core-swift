@@ -22,7 +22,7 @@ class TezosNodeClientConfigTests: XCTestCase {
 	func testDefaults() {
 		let config1 = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
 		XCTAssert(config1.primaryNodeURL.absoluteString == "https://api.tez.ie/rpc/granadanet", config1.primaryNodeURL.absoluteString)
-		XCTAssert(config1.parseNodeURL?.absoluteString == "https://tezos-prod.cryptonomic-infra.tech:443/", config1.parseNodeURL?.absoluteString ?? "")
+		XCTAssert(config1.parseNodeURL?.absoluteString == "https://api.tez.ie/rpc/granadanet", config1.parseNodeURL?.absoluteString ?? "")
 		XCTAssert(config1.betterCallDevURL.absoluteString == "https://api.better-call.dev/", config1.betterCallDevURL.absoluteString)
 		XCTAssert(config1.tzktURL.absoluteString == "https://api.granadanet.tzkt.io/", config1.tzktURL.absoluteString)
 		XCTAssert(config1.forgingType == .local, "\(config1.forgingType)")
