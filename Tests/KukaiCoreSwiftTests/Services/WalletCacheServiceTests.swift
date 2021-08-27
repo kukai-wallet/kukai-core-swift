@@ -44,6 +44,16 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(wallets?.first?.address == MockConstants.defaultLinearWallet.address, wallets?.first?.address ?? "-")
 		XCTAssert(wallets?.last?.address == MockConstants.defaultHdWallet.address, wallets?.first?.address ?? "-")
 		
+		// Check that the underlying keys were reconstructed correctly
+		let linear = (wallets?.first as? LinearWallet)
+		let hd = (wallets?.last as? HDWallet)
+		
+		XCTAssert(linear?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, linear?.privateKey.bytes.toHexString() ?? "-")
+		XCTAssert(linear?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, linear?.publicKey.bytes.toHexString() ?? "-")
+		XCTAssert(hd?.privateKey.data.toHexString() == MockConstants.hdWallet.privateKey, hd?.privateKey.data.toHexString() ?? "-")
+		XCTAssert(hd?.publicKey.data.toHexString() == MockConstants.hdWallet.publicKey, hd?.publicKey.data.toHexString() ?? "-")
+		
+		
 		// Check they are deleted
 		XCTAssert(walletCacheService.deleteCacheAndKeys())
 		
