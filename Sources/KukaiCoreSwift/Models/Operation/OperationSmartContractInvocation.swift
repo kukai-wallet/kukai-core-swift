@@ -9,6 +9,10 @@
 import Foundation
 import os.log
 
+public enum OperationSmartContractInvocationError: Error {
+	case invalidMichelsonValue
+}
+
 /// `Operation` subclass for calling an entrypoint of a smart contract on the Tezos network
 public class OperationSmartContractInvocation: Operation {
 	
@@ -73,12 +77,14 @@ public class OperationSmartContractInvocation: Operation {
 		
 		let parametersContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .parameters)
 		let entrypoint = try parametersContainer.decode(String.self, forKey: .entrypoint)
-		let value = try parametersContainer.decodeIfPresent(MichelsonPair.self, forKey: .value)
+		
+		// Try to parse Michelson
+		guard let michelsonValue = AbstractMichelson.decodeUnknownMichelson(container: parametersContainer, forKey: .value) else {
+			throw OperationSmartContractInvocationError.invalidMichelsonValue
+		}
 		
 		var tempDictionary: [String: Encodable] = [CodingKeys.entrypoint.rawValue: entrypoint]
-		if let val = value {
-			tempDictionary[CodingKeys.value.rawValue] = val
-		}
+		tempDictionary[CodingKeys.value.rawValue] = michelsonValue
 		parameters = tempDictionary
 		
 		
