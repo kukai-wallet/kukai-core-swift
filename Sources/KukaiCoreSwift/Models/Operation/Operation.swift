@@ -59,13 +59,14 @@ public class Operation: Codable {
 		operationKind = OperationKind(rawValue: try container.decode(String.self, forKey: .operationKind)) ?? OperationKind.unknown
 		
 		if operationKind != .activate_account {
-			source = try container.decode(String.self, forKey: .source)
-			counter = try container.decode(String.self, forKey: .counter)
+			source = try container.decodeIfPresent(String.self, forKey: .source)
+			counter = try container.decodeIfPresent(String.self, forKey: .counter)
 			
-			let storageInt = Int(try container.decode(String.self, forKey: .storageLimit))
-			let gasInt = Int(try container.decode(String.self, forKey: .gasLimit))
-			let feeString = try container.decode(String.self, forKey: .fee)
-			operationFees = OperationFees(transactionFee: XTZAmount(fromRpcAmount: feeString) ?? XTZAmount.zero(), gasLimit: gasInt ?? 0, storageLimit: storageInt ?? 0)
+			if let storageInt = Int(try container.decodeIfPresent(String.self, forKey: .storageLimit) ?? ""),
+			   let gasInt = Int(try container.decodeIfPresent(String.self, forKey: .gasLimit) ?? ""),
+			   let feeString = try container.decodeIfPresent(String.self, forKey: .fee) {
+				operationFees = OperationFees(transactionFee: XTZAmount(fromRpcAmount: feeString) ?? XTZAmount.zero(), gasLimit: gasInt ?? 0, storageLimit: storageInt ?? 0)
+			}
 			
 		} else {
 			source = nil
