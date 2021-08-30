@@ -115,6 +115,9 @@ public class OperationSmartContractInvocation: Operation {
 		
 		if let pair = parameters[CodingKeys.value.rawValue] as? MichelsonPair {
 			try parametersContainer.encode(pair, forKey: .value)
+			
+		} else if let value = parameters[CodingKeys.value.rawValue] as? MichelsonValue {
+			try parametersContainer.encode(value, forKey: .value)
 		}
 		
 		try super.encode(to: encoder)
@@ -132,5 +135,6 @@ public class OperationSmartContractInvocation: Operation {
 			&& destination == op.destination
 			&& parameters[CodingKeys.entrypoint.rawValue] as? String == op.parameters[CodingKeys.entrypoint.rawValue] as? String
 			&& parameters[CodingKeys.value.rawValue] as? MichelsonPair == op.parameters[CodingKeys.value.rawValue] as? MichelsonPair
+			&& parameters[CodingKeys.value.rawValue] as? MichelsonValue == op.parameters[CodingKeys.value.rawValue] as? MichelsonValue
 	}
 }
