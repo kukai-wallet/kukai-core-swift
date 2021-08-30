@@ -24,7 +24,7 @@ public class Operation: Codable {
 	public let operationKind: OperationKind
 	
 	/// The source address for the operation
-	public let source: String?
+	public var source: String?
 	
 	/// A string representing a numeric counter. Must be unique and 1 higher than the previous counter. Current counter obtained from the metadata query in `TezosNodeClient`
 	public var counter: String? = "0"
