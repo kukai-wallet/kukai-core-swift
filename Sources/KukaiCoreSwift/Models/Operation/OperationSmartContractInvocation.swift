@@ -79,12 +79,22 @@ public class OperationSmartContractInvocation: Operation {
 		let entrypoint = try parametersContainer.decode(String.self, forKey: .entrypoint)
 		
 		// Try to parse Michelson
-		guard let michelsonValue = AbstractMichelson.decodeUnknownMichelson(container: parametersContainer, forKey: .value) else {
+		var michelsonValue: AbstractMichelson? = nil
+		if let value = try? parametersContainer.decodeIfPresent(MichelsonPair.self, forKey: .value) {
+			michelsonValue = value
+			
+		} else if let value = try? parametersContainer.decodeIfPresent(MichelsonValue.self, forKey: .value) {
+			michelsonValue = value
+			
+		} else {
 			throw OperationSmartContractInvocationError.invalidMichelsonValue
 		}
 		
+		
 		var tempDictionary: [String: Encodable] = [CodingKeys.entrypoint.rawValue: entrypoint]
-		tempDictionary[CodingKeys.value.rawValue] = michelsonValue
+		if let val = michelsonValue {
+			tempDictionary[CodingKeys.value.rawValue] = val
+		}
 		parameters = tempDictionary
 		
 		

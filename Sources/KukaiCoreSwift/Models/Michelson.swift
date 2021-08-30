@@ -47,19 +47,6 @@ public class AbstractMichelson: Codable, Equatable, CustomStringConvertible {
 	public static func == (lhs: AbstractMichelson, rhs: AbstractMichelson) -> Bool {
 		return true
 	}
-	
-	public static func decodeUnknownMichelson<T: RawRepresentable>(container: KeyedDecodingContainer<T>, forKey key: T) -> AbstractMichelson? where T.RawValue == String {
-		var michelsonValue: AbstractMichelson? = nil
-		
-		if let value = try? container.decodeIfPresent(MichelsonPair.self, forKey: key) {
-			michelsonValue = value
-			
-		} else if let value = try? container.decodeIfPresent(MichelsonValue.self, forKey: key) {
-			michelsonValue = value
-		}
-		
-		return michelsonValue
-	}
 }
 
 
