@@ -30,7 +30,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp[0].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(tokenOp[0].counter == "0")
 		XCTAssert(tokenOp[0].operationKind == .transaction)
-		XCTAssert(tokenOp[0] is OperationSmartContractInvocation)
+		XCTAssert(tokenOp[0] is OperationTransaction)
 	}
 	
 	func testDelegate() {
@@ -56,7 +56,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op.counter == "0")
 		XCTAssert(op.operationKind == .transaction)
-		XCTAssert(op is OperationSmartContractInvocation)
+		XCTAssert(op is OperationTransaction)
 	}
 	
 	func testPayload() {
@@ -75,14 +75,14 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op[0].counter == "0")
 		XCTAssert(op[0].operationKind == .transaction)
-		XCTAssert(op[0] is OperationSmartContractInvocation)
+		XCTAssert(op[0] is OperationTransaction)
 		
-		if let smartOp = op[0] as? OperationSmartContractInvocation {
+		if let smartOp = op[0] as? OperationTransaction {
 			XCTAssert(smartOp.amount == "1500000", smartOp.amount)
 			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
 			
-			let entrypoint = smartOp.parameters["entrypoint"] as? String
-			let value = smartOp.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp.parameters?["entrypoint"] as? String
+			let value = smartOp.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let amount = value?.argIndexAsValue(1)?.value
 			
@@ -108,16 +108,16 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(op[0].operationKind == .transaction)
 		XCTAssert(op[1].operationKind == .transaction)
 		XCTAssert(op[2].operationKind == .transaction)
-		XCTAssert(op[0] is OperationSmartContractInvocation)
-		XCTAssert(op[1] is OperationSmartContractInvocation)
-		XCTAssert(op[2] is OperationSmartContractInvocation)
+		XCTAssert(op[0] is OperationTransaction)
+		XCTAssert(op[1] is OperationTransaction)
+		XCTAssert(op[2] is OperationTransaction)
 		
-		if let smartOp1 = op[0] as? OperationSmartContractInvocation {
+		if let smartOp1 = op[0] as? OperationTransaction {
 			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
 			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
 			
-			let entrypoint = smartOp1.parameters["entrypoint"] as? String
-			let value = smartOp1.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
+			let value = smartOp1.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let amount = value?.argIndexAsValue(1)?.value
 			
@@ -131,12 +131,12 @@ class OperationFactoryTests: XCTestCase {
 		
 		
 		
-		if let smartOp2 = op[1] as? OperationSmartContractInvocation {
+		if let smartOp2 = op[1] as? OperationTransaction {
 			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
 			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
 			
-			let entrypoint = smartOp2.parameters["entrypoint"] as? String
-			let value = smartOp2.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
+			let value = smartOp2.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let amount = value?.argIndexAsValue(1)?.value
 			
@@ -150,12 +150,12 @@ class OperationFactoryTests: XCTestCase {
 		
 		
 		
-		if let smartOp3 = op[2] as? OperationSmartContractInvocation {
+		if let smartOp3 = op[2] as? OperationTransaction {
 			XCTAssert(smartOp3.amount == "0", smartOp3.amount)
 			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
 			
-			let entrypoint = smartOp3.parameters["entrypoint"] as? String
-			let value = smartOp3.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp3.parameters?["entrypoint"] as? String
+			let value = smartOp3.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let amount = value?.argIndexAsValue(1)?.value
 			let minAmount = value?.argIndexAsValue(2)?.value
@@ -183,16 +183,16 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(op[0].operationKind == .transaction)
 		XCTAssert(op[1].operationKind == .transaction)
 		XCTAssert(op[2].operationKind == .transaction)
-		XCTAssert(op[0] is OperationSmartContractInvocation)
-		XCTAssert(op[1] is OperationSmartContractInvocation)
-		XCTAssert(op[2] is OperationSmartContractInvocation)
+		XCTAssert(op[0] is OperationTransaction)
+		XCTAssert(op[1] is OperationTransaction)
+		XCTAssert(op[2] is OperationTransaction)
 		
-		if let smartOp1 = op[0] as? OperationSmartContractInvocation {
+		if let smartOp1 = op[0] as? OperationTransaction {
 			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
 			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
 			
-			let entrypoint = smartOp1.parameters["entrypoint"] as? String
-			let value = smartOp1.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
+			let value = smartOp1.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let amount = value?.argIndexAsValue(1)?.value
 			
@@ -206,12 +206,12 @@ class OperationFactoryTests: XCTestCase {
 		
 		
 		
-		if let smartOp2 = op[1] as? OperationSmartContractInvocation {
+		if let smartOp2 = op[1] as? OperationTransaction {
 			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
 			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
 			
-			let entrypoint = smartOp2.parameters["entrypoint"] as? String
-			let value = smartOp2.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
+			let value = smartOp2.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let amount = value?.argIndexAsValue(1)?.value
 			
@@ -225,12 +225,12 @@ class OperationFactoryTests: XCTestCase {
 		
 		
 		
-		if let smartOp3 = op[2] as? OperationSmartContractInvocation {
+		if let smartOp3 = op[2] as? OperationTransaction {
 			XCTAssert(smartOp3.amount == "1000000", smartOp3.amount)
 			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
 			
-			let entrypoint = smartOp3.parameters["entrypoint"] as? String
-			let value = smartOp3.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp3.parameters?["entrypoint"] as? String
+			let value = smartOp3.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let xtzAmount = value?.argIndexAsValue(1)?.value
 			let minLqtAmount = value?.argIndexAsValue(2)?.value
@@ -252,14 +252,14 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op[0].counter == "0")
 		XCTAssert(op[0].operationKind == .transaction)
-		XCTAssert(op[0] is OperationSmartContractInvocation)
+		XCTAssert(op[0] is OperationTransaction)
 		
-		if let smartOp = op[0] as? OperationSmartContractInvocation {
+		if let smartOp = op[0] as? OperationTransaction {
 			XCTAssert(smartOp.amount == "0", smartOp.amount)
 			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
 			
-			let entrypoint = smartOp.parameters["entrypoint"] as? String
-			let value = smartOp.parameters["value"] as? MichelsonPair
+			let entrypoint = smartOp.parameters?["entrypoint"] as? String
+			let value = smartOp.parameters?["value"] as? MichelsonPair
 			let address = value?.argIndexAsValue(0)?.value
 			let lqtBurnAmount = value?.argIndexAsValue(1)?.value
 			let xtzAmount = value?.argIndexAsValue(2)?.value

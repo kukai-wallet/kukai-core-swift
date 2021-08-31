@@ -75,7 +75,7 @@ class OperationModelTests: XCTestCase {
 	}
 	
 	func testSmartContractInvocation() {
-		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.transfer.rawValue
+		let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
 		
 		let tokenAmountMichelson = MichelsonFactory.createInt(TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 0))
 		let destinationMicheslon = MichelsonFactory.createString(MockConstants.defaultLinearWallet.address)
@@ -83,8 +83,8 @@ class OperationModelTests: XCTestCase {
 		let sourceMichelson = MichelsonFactory.createString(MockConstants.defaultHdWallet.address)
 		let michelson = MichelsonPair(args: [sourceMichelson, innerPair])
 		
-		let op = OperationSmartContractInvocation(source: MockConstants.defaultHdWallet.address, destinationContract: MockConstants.token3Decimals.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)
-		let op2 = OperationSmartContractInvocation(source: MockConstants.defaultLinearWallet.address, destinationContract: MockConstants.token10Decimals.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)
+		let op = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultHdWallet.address, destination: MockConstants.token3Decimals.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)
+		let op2 = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultLinearWallet.address, destination: MockConstants.token10Decimals.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)
 		
 		XCTAssert(op.amount == "0", op.amount)
 		XCTAssert(op.destination == MockConstants.token3Decimals.tokenContractAddress, op.destination)
@@ -94,7 +94,7 @@ class OperationModelTests: XCTestCase {
 		let writeResult = DiskService.write(encodable: op, toFileName: "OperationSmartContractInvocation.txt")
 		XCTAssert(writeResult)
 		
-		let readResult = DiskService.read(type: OperationSmartContractInvocation.self, fromFileName: "OperationSmartContractInvocation.txt")
+		let readResult = DiskService.read(type: OperationTransaction.self, fromFileName: "OperationSmartContractInvocation.txt")
 		XCTAssertNotNil(readResult)
 		XCTAssert(readResult?.isEqual(op) ?? false)
 		

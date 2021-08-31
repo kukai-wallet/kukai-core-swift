@@ -65,7 +65,7 @@ public class Operation: Codable {
 			if let storageInt = Int(try container.decodeIfPresent(String.self, forKey: .storageLimit) ?? ""),
 			   let gasInt = Int(try container.decodeIfPresent(String.self, forKey: .gasLimit) ?? ""),
 			   let feeString = try container.decodeIfPresent(String.self, forKey: .fee) {
-				operationFees = OperationFees(transactionFee: XTZAmount(fromRpcAmount: feeString) ?? XTZAmount.zero(), gasLimit: gasInt ?? 0, storageLimit: storageInt ?? 0)
+				operationFees = OperationFees(transactionFee: XTZAmount(fromRpcAmount: feeString) ?? XTZAmount.zero(), gasLimit: gasInt, storageLimit: storageInt)
 			}
 			
 		} else {
