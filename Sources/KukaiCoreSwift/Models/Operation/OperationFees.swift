@@ -78,6 +78,9 @@ public struct OperationFees: Equatable {
 			
 			case .origination:
 				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001477), gasLimit: 10000, storageLimit: 257)
+				
+			default:
+				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001410), gasLimit: 10500, storageLimit: 257)
 		}
 	}
 	
