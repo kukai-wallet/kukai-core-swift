@@ -13,6 +13,11 @@ public struct BetterCallDevTokenBalances: Codable {
 	public var balances: [BetterCallDevTokenBalance]
 	public let total: Int
 	
+	public init(balances: [BetterCallDevTokenBalance], total: Int) {
+		self.balances = balances
+		self.total = total
+	}
+	
 	/// Retrieve a specific balance object based on a contract address
 	func balance(forAddress address: String) -> BetterCallDevTokenBalance? {
 		for balance in balances {
@@ -41,6 +46,19 @@ public struct BetterCallDevTokenBalance: Codable {
 	private let balance: TokenAmount
 	private let decimals: Int?
 	
+	public init(token_id: Int, contract: String, name: String?, description: String?, symbol: String?, artifact_uri: String?, display_uri: String?, thumbnail_uri: String?, is_boolean_amount: Bool?, balance: TokenAmount, decimals: Int?) {
+		self.token_id = token_id
+		self.contract = contract
+		self.name = name
+		self.description = description
+		self.symbol = symbol
+		self.artifact_uri = artifact_uri
+		self.display_uri = display_uri
+		self.thumbnail_uri = thumbnail_uri
+		self.is_boolean_amount = is_boolean_amount
+		self.balance = balance
+		self.decimals = decimals
+	}
 	
 	/// Make shift attempt to determine if the balance belongs to an NFT or not, until a better solution can be found
 	public func isNFT() -> Bool {

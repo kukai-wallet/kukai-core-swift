@@ -53,34 +53,6 @@ class TzKTClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
-	// TODO: Moved this functionality to rely on websockets and a new third party library.
-	// No properties exposed to allow mocking, waiting on reply before trying to replicate the entire thing in a mock class and pass it in
-	/*
-	func testWaitForOperation() {
-		let expectation = XCTestExpectation(description: "tzkt-testWaitForOperation")
-		MockConstants.shared.tzktClient.waitForInjection(ofHash: "ooT5uBirxWi9GXRqf6eGCEjoPhQid3U8yvsbP9JQHBXifVsinY8", fromAddress: MockConstants.defaultHdWallet.address) { success, serviceError, errorResponse in
-			XCTAssert(success)
-			XCTAssertNil(serviceError)
-			XCTAssertNil(errorResponse)
-			
-			expectation.fulfill()
-		}
-		wait(for: [expectation], timeout: 5)
-	}
-	
-	func testWaitForOperationError() {
-		let expectation = XCTestExpectation(description: "tzkt-testWaitForOperationError")
-		MockConstants.shared.tzktClient.waitForInjection(ofHash: "oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf", fromAddress: MockConstants.defaultHdWallet.address) { success, serviceError, errorResponse in
-			XCTAssertFalse(success)
-			XCTAssertNil(serviceError)
-			XCTAssertNotNil(errorResponse)
-			
-			expectation.fulfill()
-		}
-		wait(for: [expectation], timeout: 5)
-	}
-	*/
-	
 	func testTransactionHistory() {
 		let expectation = XCTestExpectation(description: "tzkt-testTransactionHistory")
 		MockConstants.shared.tzktClient.refreshTransactionHistory(forAddress: MockConstants.defaultHdWallet.address, andSupportedTokens: [MockConstants.token3Decimals, MockConstants.token10Decimals]) {
