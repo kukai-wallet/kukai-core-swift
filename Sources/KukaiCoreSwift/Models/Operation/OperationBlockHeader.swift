@@ -22,6 +22,21 @@ public struct OperationBlockHeader: Codable, Equatable {
 	public let seedNonceHash: String?
 	public let signature: String
 	
+	public init(level: Int, proto: Int, predecessor: String, timestamp: Date, validationPass: Int, operationsHash: String, fitness: [String], context: String, priority: Int, proofOfWorkNonce: String, seedNonceHash: String?, signature: String) {
+		self.level = level
+		self.proto = proto
+		self.predecessor = predecessor
+		self.timestamp = timestamp
+		self.validationPass = validationPass
+		self.operationsHash = operationsHash
+		self.fitness = fitness
+		self.context = context
+		self.priority = priority
+		self.proofOfWorkNonce = proofOfWorkNonce
+		self.seedNonceHash = seedNonceHash
+		self.signature = signature
+	}
+	
 	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		level = try values.decode(Int.self, forKey: .level)

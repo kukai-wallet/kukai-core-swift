@@ -59,7 +59,7 @@ public struct OperationFees: Equatable {
 	
 	/**
 	Get a default fees for each type of `Operation`. No guarentee these will succeed.
-	- parameter operationKing: enum to denote the type of `Operation`
+	- parameter operationKind: enum to denote the type of `Operation`
 	- returns: a `OperationFees` object with all the values set.
 	*/
 	public static func defaultFees(operationKind: OperationKind) -> OperationFees {
