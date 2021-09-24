@@ -64,6 +64,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
+		LedgerService.shared.testNative()
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// Liquidity baking
 		// Granadanet dex contract: 	KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5
 		// Granadanet lq token:			KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo
