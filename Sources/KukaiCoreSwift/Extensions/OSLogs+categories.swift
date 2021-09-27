@@ -20,4 +20,5 @@ extension OSLog {
 	static let tzkt = OSLog(subsystem: subsystem, category: "TzKT")
 	static let taquitoService = OSLog(subsystem: subsystem, category: "TaquitoService")
 	static let torus = OSLog(subsystem: subsystem, category: "Torus")
+	static let ledger = OSLog(subsystem: subsystem, category: "Ledger")
 }

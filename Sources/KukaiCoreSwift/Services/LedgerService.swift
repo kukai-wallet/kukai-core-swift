@@ -8,18 +8,28 @@
 import Foundation
 import JavaScriptCore
 import CoreBluetooth
-import WalletCore
-import Sodium
 import os.log
 
+
+// Default message before data written:  0e80000000
+
+// Error message:
+//		0e67000000
+//		0e01000000
+
+// Receive APDU error codes:
+// 		Needs to be unlocked	009000
+
+
+public protocol LedgerServiceDelegate: AnyObject {
+	func bluetoothIsDisabled()
+	func deviceListUpdated(devices: [String: (name: String, peripheral: CBPeripheral)])
+	func connectedStatus(success: Bool)
+	func connectedWalletAddress(address: String)
+	func requestReturnedError(error: String)
+}
+
 public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
-	
-	private var centralManager: CBCentralManager!
-	private var connectedDevice: CBPeripheral!
-	private var writeCharacteristic: CBCharacteristic?
-	private var notifyCharacteristic: CBCharacteristic?
-	
-	private var deviceList: [String: String] = [:]
 	
 	struct LedgerNanoXConstant {
 		static let serviceUUID = CBUUID(string: "13d63400-2c97-0004-0000-4c6564676572")
@@ -27,15 +37,20 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		static let writeUUID = CBUUID(string: "13d63400-2c97-0004-0002-4c6564676572")
 	}
 	
-	
 	private let jsContext: JSContext
-	private var intermediataryJSvalue: JSValue!
+	private var centralManager: CBCentralManager?
+	private var connectedDevice: CBPeripheral?
+	private var writeCharacteristic: CBCharacteristic?
+	private var notifyCharacteristic: CBCharacteristic?
 	
-	
+	private var deviceList: [String: (name: String, peripheral: CBPeripheral)] = [:]
+	private var isFetchingAddress = false
+	private var isSigningOperation = false
 	
 	
 	/// Public shared instace to avoid having multiple copies of the underlying `JSContext` created
 	public static let shared = LedgerService()
+	public weak var delegate: LedgerServiceDelegate?
 	
 	
 	private override init() {
@@ -44,16 +59,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			os_log("JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 		}
 		
-		if let jsSourcePath = Bundle.module.url(forResource: "ledger_transport", withExtension: "js", subdirectory: "External") {
-			do {
-				let jsSourceContents = try String(contentsOf: jsSourcePath)
-				self.jsContext.evaluateScript(jsSourceContents)
-				
-			} catch (let error) {
-				os_log("Error parsing Ledger javascript file: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
-			}
-		}
 		
+		// Grab the custom ledger tezos app js and load it in
 		if let jsSourcePath = Bundle.module.url(forResource: "ledger_app_tezos", withExtension: "js", subdirectory: "External") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
@@ -64,81 +71,39 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			}
 		}
 		
-		if let jsSourcePath = Bundle.module.url(forResource: "ledger_device_apdu", withExtension: "js", subdirectory: "External") {
-			do {
-				let jsSourceContents = try String(contentsOf: jsSourcePath)
-				self.jsContext.evaluateScript(jsSourceContents)
-				
-			} catch (let error) {
-				os_log("Error parsing Ledger javascript file: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
-			}
-		}
-	}
-	
-	public func test() {
+		super.init()
 		
-		/*
-		guard let outer = jsContext.objectForKeyedSubscript("ledger_transport"),
-			  let inner = outer.objectForKeyedSubscript("Transport"),
-			  let result = inner.call(withArguments: [xtz, xPool, tPool]) else {
-			return nil
-		}
-		*/
-		
-		/*
-		jsContext.evaluateScript("""
-			var transport = ledgerjs.Transport.create();
-		""")
-		*/
-		
-		
-		/*
-		let result = jsContext.evaluateScript("""
-			Object.keys("ledger_transport")
-		""")
-		
-		print("result: \(result?.toString())")
-		*/
-		
-		
+		// Print the avaialble high level keys to console as a test
 		let transportKeys = jsContext.evaluateScript("""
-			Object.keys(ledger_transport)
-		""")
-		
-		let appKeys = jsContext.evaluateScript("""
 			Object.keys(ledger_app_tezos)
 		""")
-		let apduKeys = jsContext.evaluateScript("""
-			Object.keys(ledger_device_apdu)
-		""")
-		
 		
 		print("\n\n\n")
-		print("transportKeys: \(transportKeys?.toString())")
-		print("appKeys: \(appKeys?.toString())")
-		print("apduKeys: \(apduKeys?.toString())")
+		print("ledger_app_tezos - Keys: \(transportKeys?.toString() ?? "")")
 		print("\n\n\n")
 		
 		
-		
-		
-		
-		
+		// Register a native function, to be passed into the js functions, that will write chunks of data to the device
 		let nativeWriteHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			print("inside write block with: \(result)")
-			if result == "inside constructor" { return }
-				
+			os_log("Inside nativeWriteHandler", log: .ledger, type: .debug)
 			
-			let components = result.components(separatedBy: " ")
+			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(result)\", 156)").toString() else {
+				self?.delegate?.requestReturnedError(error: "Unbale to format request")
+				return
+			}
+			
+			let components = sendAPDU.components(separatedBy: " ")
 			for component in components {
 				if component != "" {
+					
 					let data = Data(hexString: component) ?? Data()
-					print("sending chunk: \(data) \n\n\n")
 					
 					if let char = self?.writeCharacteristic {
-						self?.connectedDevice.writeValue(data, for: char, type: .withResponse)
+						os_log("writing payload", log: .ledger, type: .debug)
+						self?.connectedDevice?.writeValue(data, for: char, type: .withResponse)
+						
 					} else {
-						print("unable to get writeCharacteristic")
+						os_log("unable to get writeCharacteristic", log: .ledger, type: .error)
 					}
 				}
 			}
@@ -147,67 +112,34 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		jsContext.setObject(nativeWriteHandlerBlock, forKeyedSubscript: "nativeWriteData" as (NSCopying & NSObjectProtocol))
 		
 		
-		
-		
-		
-		let nativeInstrunctionHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			print("Inside instruction hander: \(result)")
-			if result == "inside constructor" { return }
-			
-			let instrunction = "ledger_device_apdu.sendAPDU(nativeWriteData, \"\(result)\", 153)"
-			print("instrunction: \(instrunction)")
-			
-			self?.intermediataryJSvalue = self?.jsContext.evaluateScript("""
-				ledger_device_apdu.sendAPDU(nativeWriteData, \"\(result)\", 153)
-			""")
-		}
-		let nativeInstrunctionHandlerBlock = unsafeBitCast(nativeInstrunctionHandler, to: AnyObject.self)
-		jsContext.setObject(nativeInstrunctionHandlerBlock, forKeyedSubscript: "nativeInstructionHandler" as (NSCopying & NSObjectProtocol))
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		do {
-			
-			// Wrap up the internal call to the forger and pass the promises back to the swift handler blocks
-			let _ = jsContext.evaluateScript("""
-				
-				var nativeTransport = new ledger_transport.NativeTransport(nativeInstructionHandler)
-				var tezosApp = new ledger_app_tezos.tezos(nativeTransport)
-				
-				tezosApp.getAddress("44'/1729'/0'/0'")
-				
-				
-				//ledger_device_apdu.sendAPDU(nativeInstructionHandler, "8002000011048000002c800006c18000000080000000", 153)
-				""")
-			
-		} catch (let error) {
-			os_log("JavascriptContext forge error: %@", log: .taquitoService, type: .error, "\(error)")
-			return
+		// Setup a JS ledger tezos app, bound to the nativeWriteHandler
+		let _ = jsContext.evaluateScript("""
+			var nativeTransport = new ledger_app_tezos.NativeTransport(nativeWriteData)
+			var tezosApp = new ledger_app_tezos.Tezos(nativeTransport)
+		""")
+	}
+	
+	public func listenForDevices() {
+		centralManager = CBCentralManager(delegate: self, queue: nil)
+	}
+	
+	public func stopListening() {
+		self.centralManager?.stopScan()
+	}
+	
+	public func connectToDevice(peripheral: CBPeripheral) {
+		self.centralManager?.connect(peripheral, options: ["requestMTU": 156])
+	}
+	
+	public func disconnectFRomDevice() {
+		if let device = self.connectedDevice {
+			self.centralManager?.cancelPeripheralConnection(device)
 		}
 	}
 	
-	
-	
-	
-	
-	
-	public func testNative() {
-		centralManager = CBCentralManager(delegate: self, queue: nil)
+	public func getAddress(forDerivationPath derivationPath: String = "44'/1729'/0'/0'") {
+		self.isFetchingAddress = true
+		let _ = jsContext.evaluateScript("tezosApp.getAddress(\"\(derivationPath)\")")
 	}
 	
 	
@@ -217,148 +149,121 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	// MARK: - Bluetooth
 	
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-		print("Central state update")
+		os_log("centralManagerDidUpdateState", log: .ledger, type: .debug)
+		
 		if central.state != .poweredOn {
-			print("Central is not powered on")
+			os_log("Bluetooth is turned off", log: .ledger, type: .debug)
+			self.delegate?.bluetoothIsDisabled()
 			
 		} else {
-			centralManager.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+			os_log("Bluetooth is turned on. Scanning ...", log: .ledger, type: .debug)
+			centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
 		}
 	}
 	
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 		if deviceList[peripheral.identifier.uuidString] == nil {
-			deviceList[peripheral.identifier.uuidString] = peripheral.name
+			os_log("Found a new ledger device. Name: %@, UUID: %@", log: .ledger, type: .debug, peripheral.name ?? "-", peripheral.identifier.uuidString)
 			
-			print("Found: '\(peripheral.name ?? "")', with id: \(peripheral.identifier.uuidString)")
-			self.connectedDevice = peripheral
-			
-			self.centralManager.stopScan()
-			self.centralManager.connect(self.connectedDevice, options: ["requestMTU": 156])
+			deviceList[peripheral.identifier.uuidString] = (name: peripheral.name ?? "", peripheral: peripheral)
+			self.delegate?.deviceListUpdated(devices: deviceList)
 		}
 	}
 	
 	public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-		if peripheral == self.connectedDevice {
-			print("Connected to Ledger: \(peripheral.name ?? "")")
-			
-			peripheral.delegate = self
-			peripheral.discoverServices([LedgerNanoXConstant.serviceUUID])
-		}
+		os_log("Connected to %@, %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString)
+		
+		self.connectedDevice = peripheral
+		self.connectedDevice?.delegate = self
+		self.connectedDevice?.discoverServices([LedgerNanoXConstant.serviceUUID])
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-		if let services = peripheral.services {
-			
-			for service in services {
-				print("\nFound a service: \(service.uuid.uuidString)")
-				
-				
-				if service.uuid == LedgerNanoXConstant.serviceUUID {
-					print("Found leder service: \(service)")
-					
-					peripheral.discoverCharacteristics(nil, for: service)
-					
-					return
-				}
+		guard let services = peripheral.services else {
+			os_log("Unable to locate services for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
+			self.delegate?.connectedStatus(success: false)
+			return
+		}
+		
+		for service in services {
+			if service.uuid == LedgerNanoXConstant.serviceUUID {
+				peripheral.discoverCharacteristics(nil, for: service)
+				return
 			}
 		}
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-		print("\ndidDiscoverCharacteristicsFor: \(service)")
-		
-		if let err = error {
-			print("Error: \(err)")
+		guard let characteristics = service.characteristics else {
+			os_log("Unable to locate characteristics for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
+			self.delegate?.connectedStatus(success: false)
+			return
 		}
 		
-		if let characteristics = service.characteristics {
-			for characteristic in characteristics {
-				print("characteristic: \(characteristic.uuid.uuidString), properties: \(characteristic.properties), value: \(String(describing: characteristic.value))")
+		for characteristic in characteristics {
+			if characteristic.uuid == LedgerNanoXConstant.writeUUID {
+				os_log("Located write characteristic", log: .ledger, type: .debug)
+				writeCharacteristic = characteristic
 				
-				if characteristic.uuid == LedgerNanoXConstant.writeUUID {
-					writeCharacteristic = characteristic
-					
-					print("\n found write characteristic \n")
-					
-				} else if characteristic.uuid == LedgerNanoXConstant.notifyUUID {
-					notifyCharacteristic = characteristic
-					
-					print("\n found notify characteristic \n")
-				}
+			} else if characteristic.uuid == LedgerNanoXConstant.notifyUUID {
+				os_log("Located notify characteristic", log: .ledger, type: .debug)
+				notifyCharacteristic = characteristic
+			}
+			
+			if let _ = writeCharacteristic, let notify = notifyCharacteristic {
+				os_log("Registering for notifications on notify characteristic", log: .ledger, type: .debug)
+				peripheral.setNotifyValue(true, for: notify)
 				
-				
-				if let write = writeCharacteristic, let notify = notifyCharacteristic {
-					print("testing a write")
-					
-					peripheral.setNotifyValue(true, for: write)
-					peripheral.setNotifyValue(true, for: notify)
-					
-					test()
-				}
+				self.delegate?.connectedStatus(success: true)
 			}
 		}
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-		print("\n\n\n didWriteValueFor: char: \( characteristic.uuid == LedgerNanoXConstant.writeUUID ? "WriteChar" : "UnknownChar" )")
-		print("didWriteValueFor: error: \( error )")
-	}
-	
-	public func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-		print("\n\n\n didUpdateNotificationStateFor:")
+		if error == nil {
+			os_log("Successfully wrote to write characteristic", log: .ledger, type: .debug)
+		} else {
+			os_log("Error during write: %@", log: .ledger, type: .debug, "\(String(describing: error))")
+		}
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-		print("\n\n\n didUpdateValueFor:")
+		guard characteristic.uuid == LedgerNanoXConstant.notifyUUID else {
+			return
+		}
 		
-		if characteristic.uuid == LedgerNanoXConstant.notifyUUID {
-			print("is notification UUID")
+		os_log("Receiveing value from notify characteristic", log: .ledger, type: .debug)
+		
+		let hexString = characteristic.value?.toHexString() ?? "-"
+		let receivedResult = jsContext.evaluateScript("""
+			var result = ledger_app_tezos.receiveAPDU(\"\(hexString)\")
 			
-			let raw = characteristic.value
-			let hexString = characteristic.value?.toHexString() ?? "-"
-			let base64String = characteristic.value?.base64EncodedString() ?? "-"
+			if (result.error === "null") {
+				result.data
+			} else {
+				"Error: " + result.error
+			}
+		""")
+		
+		guard let resultString = receivedResult?.toString() else {
+			self.delegate?.requestReturnedError(error: "Unknown")
+			return
+		}
+		
+		guard String(resultString.prefix(5)) != "Error" else {
+			self.delegate?.requestReturnedError(error: resultString)
+			return
+		}
+		
+		
+		if isFetchingAddress {
+			let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(resultString)\")")
+			let obj = resultHex?.toObject() as? [String: String] ?? [:]
 			
-			print("Value raw: \( raw )")
-			print("Value hex: \( hexString )")
-			print("\n\n\n")
+			self.delegate?.connectedWalletAddress(address: obj["address"] ?? "-")
 			
+		} else if isSigningOperation {
 			
-			
-			let resultHex = jsContext.evaluateScript("""
-					ledger_app_tezos.convertNativeAddress(\"\(hexString)\")
-				""")
-			
-			let obj = resultHex?.toObject() as? [String: String]
-			
-			
-			print("Tezos address - ledger lib: \(obj)")
-			
-			
-			
-			
-		} else {
-			print("is not notification UUID")
 		}
 	}
 }
-
-
-
-
-
-// Javascript write function passed into SendAPDU function
-/*
-write = async (buffer: Buffer, txid?: string | null | undefined) => {
-	log("ble-frame", "=> " + buffer.toString("hex"));
-
-	try {
-	  await this.writeCharacteristic.writeWithResponse(
-		buffer.toString("base64"),
-		txid
-	  );
-	} catch (e: any) {
-	  throw new DisconnectedDeviceDuringOperation(e.message);
-	}
-  };
-*/
