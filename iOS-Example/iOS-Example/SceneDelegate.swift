@@ -8,7 +8,6 @@
 import UIKit
 import KukaiCoreSwift
 import TorusSwiftDirectSDK
-import CoreBluetooth
 import Sodium
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -68,29 +67,98 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	
 	
+	
 	func experiment() {
 		LedgerService.shared.delegate = self
-		LedgerService.shared.listenForDevices()
+		LedgerService.shared.setupBluetoothConnection { success in
+			print("LedgerService setup: \(success)")
+			
+			//LedgerService.shared.listenForDevices()
+			LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+		}
 	}
 }
 
 extension SceneDelegate: LedgerServiceDelegate {
 	
-	func bluetoothIsDisabled() {
-		print("Error connected to ledger, Bluetooth is disabled")
-	}
-	
-	func deviceListUpdated(devices: [String : (name: String, peripheral: CBPeripheral)]) {
+	func deviceListUpdated(devices: [String: String]) {
 		print("Devices found: \(devices)")
-		
-		if let firstKey = devices.keys.first, let firstDevice = devices[firstKey] {
-			LedgerService.shared.connectTo(peripheral: firstDevice.peripheral)
-		} else {
-			print("Unable to access first device")
-		}
 	}
 	
-	func connectedStatus(success: Bool) {
+	func deviceConnectedStatus(success: Bool) {
+		print("Connected successfully")
+		
+		LedgerService.shared.getAddress(verify: false) { address, publicKey, error in
+			print("address: \(address), publicKey: \(publicKey), error: \(error)")
+			
+			let xtz = Token(name: "Tez", symbol: "XTZ", tokenType: .xtz, faVersion: .none, balance: XTZAmount.zero(), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
+			let ledgerWallet = LedgerWallet(address: address ?? "", publicKey: publicKey ?? "", derivationPath: HDWallet.defaultDerivationPath, curve: .ed25519, ledgerUUID: "457558A6-939D-F045-876D-E7C754981212")
+			
+			
+			let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.0001), of: xtz, from: ledgerWallet.address, to: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+			
+			ClientsAndData.shared.tezosNodeClient.getOperationMetadata(forWallet: ledgerWallet) { metadataResult in
+				guard let metadata = try? metadataResult.get() else {
+					print("Failed to get metadata: \( String(describing: try? metadataResult.getError()) )")
+					return
+				}
+				
+				let payload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: ledgerWallet)
+				
+				TaquitoService.shared.forge(operationPayload: payload) { [weak self] forgeResult in
+					switch forgeResult {
+						case .success(let forgedString):
+							print("forged string: \n\n\(forgedString) \n")
+							
+							self?.forgedOperation = forgedString
+							self?.operationPayload = payload
+							self?.operationMetadata = metadata
+							
+							LedgerService.shared.sign(hex: "03" + forgedString) { signature, error in
+								print("Signature: \(signature), error: \(error)")
+								
+								guard let sig = signature else {
+									return
+								}
+								
+								let binarySignature = Sodium.shared.utils.hex2bin(sig) ?? []
+								
+								ClientsAndData.shared.tezosNodeClient.operationService.preapplyAndInject(
+									forgedOperation: forgedString,
+									signature: binarySignature,
+									signatureCurve: ledgerWallet.curve,
+									operationPayload: payload,
+									operationMetadata: metadata) { result in
+									
+										print("\n\n\nPreapply / inject result: \(result)")
+								}
+							}
+							
+						case .failure(let forgeError):
+							print("forged error: \n\n\(forgeError) \n")
+					}
+				}
+			}
+		}
+		
+		
+	}
+	
+	func partialMessageSuccessReceived() {
+		print("Partial success message")
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	func deviceConnectedStatus(success: Bool) {
 		print("connected, requesting address")
 		
 		//LedgerService.shared.getAddress()
@@ -137,7 +205,7 @@ extension SceneDelegate: LedgerServiceDelegate {
 		
 		
 		
-		
+		*/
 		
 		
 		
@@ -191,9 +259,10 @@ extension SceneDelegate: LedgerServiceDelegate {
 		
 		
 		LedgerService.shared.sign(hex: watermarkedOperationHex)
-		*/
+		
 	}
-	
+	*/
+/*
 	func connectedWalletAddress(address: String, publicKey: String) {
 		print("Wallet address: \(address)")
 		print("Wallet public key: \(publicKey)")
@@ -216,6 +285,7 @@ extension SceneDelegate: LedgerServiceDelegate {
 	func requestReturnedError(error: String) {
 		print("Ledger service returned Error: \(error)")
 	}
+	*/
 }
 
 

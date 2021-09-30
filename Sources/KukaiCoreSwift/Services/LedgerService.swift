@@ -13,12 +13,9 @@ import os.log
 
 
 public protocol LedgerServiceDelegate: AnyObject {
-	func bluetoothIsDisabled()
 	func deviceListUpdated(devices: [String: String])
-	func connectedStatus(success: Bool)
-	func connectedWalletAddress(address: String, publicKey: String)
-	func signature(signature: String)
-	func requestReturnedError(error: String)
+	func deviceConnectedStatus(success: Bool)
+	func partialMessageSuccessReceived()
 }
 
 public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
@@ -84,6 +81,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private var notifyCharacteristic: CBCharacteristic?
 	
 	private var setupCallback: ((Bool) -> Void)? = nil
+	private var addressCallback: ((String?, String?, ErrorResponse?) -> Void)? = nil
+	private var signCallback: ((String?, ErrorResponse?) -> Void)? = nil
 	
 	private var deviceList: [String: String] = [:]
 	private var requestedUUID: String? = nil
@@ -116,22 +115,13 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		super.init()
 		
-		// Print the avaialble high level keys to console as a test
-		let transportKeys = jsContext.evaluateScript("""
-			Object.keys(ledger_app_tezos)
-		""")
-		
-		print("\n\n\n")
-		print("ledger_app_tezos - Keys: \(transportKeys?.toString() ?? "")")
-		print("\n\n\n")
-		
 		
 		// Register a native function, to be passed into the js functions, that will write chunks of data to the device
 		let nativeWriteHandler: @convention(block) (String) -> Void = { [weak self] (result) in
 			os_log("Inside nativeWriteHandler", log: .ledger, type: .debug)
 			
-			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(result)\", 243)").toString() else {
-				self?.delegate?.requestReturnedError(error: "Unbale to format request")
+			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(result)\", 156)").toString() else {
+				//self?.delegate?.requestReturnedError(error: "Unbale to format request")
 				return
 			}
 			
@@ -182,10 +172,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	public func connectTo(uuid: String) {
 		self.requestedUUID = uuid
-		
-		if centralManager == nil {
-			centralManager = CBCentralManager(delegate: self, queue: nil)
-		}
+		self.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
 	}
 	
 	public func disconnectFromDevice() {
@@ -194,7 +181,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
-	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) {
+	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool, completion: @escaping ((String?, String?, Error?) -> Void)) {
+		self.addressCallback = completion
 		self.isFetchingAddress = true
 		self.isSigningOperation = false
 		
@@ -210,9 +198,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		let _ = jsContext.evaluateScript("tezosApp.getAddress(\"\(derivationPath)\", {verify: \(verify), curve: \(selectedCurve)})")
 	}
 	
-	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath) {
+	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, completion: @escaping ((String?, ErrorResponse?) -> Void)) {
+		self.signCallback = completion
 		self.isSigningOperation = true
 		self.isFetchingAddress = false
+		
 		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\")")
 	}
 	
@@ -225,15 +215,12 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
 		os_log("centralManagerDidUpdateState", log: .ledger, type: .debug)
 		
-		if central.state != .poweredOn {
-			os_log("Bluetooth is turned off", log: .ledger, type: .debug)
-			self.delegate?.bluetoothIsDisabled()
-			
-		} else if let callback = self.setupCallback {
-			os_log("Bluetooth is turned on", log: .ledger, type: .debug)
-			callback(true)
-			self.setupCallback = nil
+		guard let callback = self.setupCallback else {
+			return
 		}
+		
+		callback(central.state == .poweredOn)
+		self.setupCallback = nil
 	}
 	
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -241,6 +228,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		// If we have been requested to connect to a speicific UUID, only listen for that one and connect immediately if found
 		if let requested = self.requestedUUID, peripheral.identifier.uuidString == requested {
 			os_log("Found requested ledger UUID, connecting ...", log: .ledger, type: .debug)
+			
+			self.connectedDevice = peripheral
 			self.centralManager?.connect(peripheral, options: ["requestMTU": 156])
 			self.centralManager?.stopScan()
 		
@@ -265,14 +254,15 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		os_log("Failed to connect to %@, %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString)
-		self.delegate?.connectedStatus(success: false)
+		self.connectedDevice = nil
+		self.delegate?.deviceConnectedStatus(success: false)
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
 		guard let services = peripheral.services else {
 			os_log("Unable to locate services for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
 			self.connectedDevice = nil
-			self.delegate?.connectedStatus(success: false)
+			self.delegate?.deviceConnectedStatus(success: false)
 			return
 		}
 		
@@ -288,7 +278,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		guard let characteristics = service.characteristics else {
 			os_log("Unable to locate characteristics for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
 			self.connectedDevice = nil
-			self.delegate?.connectedStatus(success: false)
+			self.delegate?.deviceConnectedStatus(success: false)
 			return
 		}
 		
@@ -306,7 +296,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				os_log("Registering for notifications on notify characteristic", log: .ledger, type: .debug)
 				peripheral.setNotifyValue(true, for: notify)
 				
-				self.delegate?.connectedStatus(success: true)
+				self.delegate?.deviceConnectedStatus(success: true)
 			}
 		}
 	}
@@ -316,6 +306,12 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			os_log("Successfully wrote to write characteristic", log: .ledger, type: .debug)
 		} else {
 			os_log("Error during write: %@", log: .ledger, type: .debug, "\(String(describing: error))")
+			
+			if self.isFetchingAddress, let callback = self.addressCallback {
+				callback(nil, nil, ErrorResponse.lederError(code: "UNKNOWN", type: "\(error)"))
+			} else if let callback = self.signCallback {
+				callback(nil, ErrorResponse.lederError(code: "UNKNOWN", type: "\(error)"))
+			}
 		}
 	}
 	
@@ -326,6 +322,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		os_log("Receiveing value from notify characteristic", log: .ledger, type: .debug)
 		
+		
+		// Extract the payload, convert it to an APDU so the result can be extracted
 		let hexString = characteristic.value?.toHexString() ?? "-"
 		let receivedResult = jsContext.evaluateScript("""
 			var result = ledger_app_tezos.receiveAPDU(\"\(hexString)\")
@@ -337,47 +335,76 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			}
 		""")
 		
-		guard let resultString = receivedResult?.toString() else {
+		
+		// Check for issues
+		guard let resultString = receivedResult?.toString(), String(resultString.prefix(5)) != "Error" else {
 			isFetchingAddress = false
 			isSigningOperation = false
-			self.delegate?.requestReturnedError(error: "Unknown")
+			returnLedgerErrorToCallback(code: "UNKNOWN", type: "unknown")
 			return
 		}
 		
-		guard String(resultString.prefix(5)) != "Error" else {
-			isFetchingAddress = false
-			isSigningOperation = false
-			self.delegate?.requestReturnedError(error: resultString)
+		
+		// Some operations require mutiple data packets, and the user to approve/verify something on the actual device
+		// When this happens, the ldeger will return a success/ok message to denote the data was received successfully
+		// but its not ready to return the response at the minute.
+		// We can use this oppertunity to let users know, in the app, that they need to check their ledger device
+		if resultString == LedgerService.successCode {
+			os_log("Received Success/Ok APDU", log: .ledger, type: .debug)
+			self.delegate?.partialMessageSuccessReceived()
+			
+		} else if resultString.count == 4 {
+			var type = LedgerService.tezosErrorCodes[resultString]
+			
+			if type == nil {
+				type = LedgerService.generalErrorCodes[resultString]
+			}
+			
+			returnLedgerErrorToCallback(code: resultString, type: type ?? "unknown")
 			return
 		}
 		
-		print("received APDU: \(resultString)")
-		// TODO: check here for    resultString == "9000"
-		// if so ledger reported the first part has been succesful, it awaiting the rest of the operation. Which may involve the user approving the operation on the ledger
-		// Will be useful for calling code to know about this to present a "Please approve the operation on ledger" message
 		
-		
+		// Else, try to parse the response into an address/public key or a signature
 		if isFetchingAddress {
 			let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(resultString)\")")
 			let obj = resultHex?.toObject() as? [String: String] ?? [:]
 			
 			isFetchingAddress = false
-			self.delegate?.connectedWalletAddress(address: obj["address"] ?? "-", publicKey: obj["publicKey"] ?? "-")
+			if let callback = addressCallback, let address = obj["address"], let publicKey = obj["publicKey"] {
+				callback(address, publicKey, nil)
+				
+			} else {
+				returnLedgerErrorToCallback(code: "UNKNOWN", type: "APDU - \(resultString)")
+			}
 			
 		} else if isSigningOperation {
 			let resultHex = jsContext.evaluateScript("""
 				ledger_app_tezos.convertAPDUtoSignature(\"\(resultString)\").signature
 			""")
 			
-			print("\nreceived something: \(resultHex?.toString())")
-			
 			
 			if resultHex?.toString() != "" && resultHex?.toString() != "undefined" {
-				print("\nreceived signature: \(resultHex?.toString())")
-				
 				self.isSigningOperation = false
-				self.delegate?.signature(signature: resultHex?.toString() ?? "")
+				
+				if let callback = signCallback, let signature = resultHex?.toString() {
+					callback(signature, nil)
+					
+				} else {
+					returnLedgerErrorToCallback(code: "UNKNOWN", type: "APDU - \(resultString)")
+				}
 			}
+		}
+	}
+	
+	private func returnLedgerErrorToCallback(code: String, type: String) {
+		os_log("Error parsing data: %@, %@", log: .ledger, type: .error, code, type)
+		
+		if isFetchingAddress, let callback = addressCallback {
+			callback(nil, nil, ErrorResponse.lederError(code: code, type: type))
+			
+		} else if let callback = signCallback {
+			callback(nil, ErrorResponse.lederError(code: code, type: type))
 		}
 	}
 }
