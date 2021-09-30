@@ -16,6 +16,7 @@ public enum WalletType: String, Codable {
 	case linear
 	case hd
 	case torus
+	case ledger
 }
 
 /// Helper enum used to choose the number of words for a mnemonic

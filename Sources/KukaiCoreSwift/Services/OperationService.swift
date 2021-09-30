@@ -131,16 +131,21 @@ public class OperationService {
 			return
 		}
 		
+		preapplyAndInject(forgedOperation: forgedHash, signature: signature, signatureCurve: wallet.privateKeyCurve(), operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
+	}
+	
+	// TODO: comment
+	public func preapplyAndInject(forgedOperation: String, signature: [UInt8], signatureCurve: EllipticalCurve, operationPayload: OperationPayload, operationMetadata: OperationMetadata, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		
 		// Add the signature and protocol to the payload
 		var signedPayload = operationPayload
-		signedPayload.addSignature(signature, signingCurve: wallet.privateKeyCurve())
+		signedPayload.addSignature(signature, signingCurve: signatureCurve)
 		signedPayload.addProtcol(fromMetadata: operationMetadata)
 		
 		
 		// Perform the preapply to check for errors, otherwise attempt to inject the operation onto the blockchain
 		self.preapply(operationMetadata: operationMetadata, operationPayload: signedPayload) { [weak self] (preapplyResult) in
-			self?.inject(signedBytes: forgedHash+signature.toHexString(), handlePreapplyResult: preapplyResult) { (injectResult) in
+			self?.inject(signedBytes: forgedOperation+signature.toHexString(), handlePreapplyResult: preapplyResult) { (injectResult) in
 				completion(injectResult)
 			}
 		}

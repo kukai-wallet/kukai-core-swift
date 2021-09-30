@@ -35,7 +35,7 @@ public class HDWallet: Wallet {
 	/// The public TZ1 address of the wallet
 	public var address: String
 	
-	/// USed by `WalletCacheService` to control the order wallets are returned
+	/// Used by `WalletCacheService` to control the order wallets are returned
 	public var sortIndex: Int
 	
 	/// An WalletCore object representing the PrivateKey used to generate the wallet

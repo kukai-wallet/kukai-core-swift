@@ -117,6 +117,11 @@ public class WalletCacheService {
 						if let walletObj = wallet as? TorusWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
+					
+					case .ledger:
+						if let walletObj = wallet as? LedgerWallet {
+							walletData = try JSONEncoder().encode(walletObj)
+						}
 				}
 				
 				let jsonObj = try JSONSerialization.jsonObject(with: walletData, options: .allowFragments)
@@ -184,6 +189,10 @@ public class WalletCacheService {
 					
 					case .torus:
 						let wallet = try JSONDecoder().decode(TorusWallet.self, from: jsonObjAsData)
+						wallets.append(wallet)
+						
+					case .ledger:
+						let wallet = try JSONDecoder().decode(LedgerWallet.self, from: jsonObjAsData)
 						wallets.append(wallet)
 				}
 			}
