@@ -17,7 +17,7 @@ public struct OperationPayload: Codable, Equatable {
 	public let branch: String
 	
 	/// An array of `Operation`'s to be sent together in 1 request.
-	public let contents: [Operation]
+	public var contents: [Operation]
 	
 	/// Base58 signature
 	var signature: String?

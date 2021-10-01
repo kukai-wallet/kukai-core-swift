@@ -134,7 +134,62 @@ public class OperationService {
 		preapplyAndInject(forgedOperation: forgedHash, signature: signature, signatureCurve: wallet.privateKeyCurve(), operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
 	}
 	
-	// TODO: comment
+	/**
+	Ledger operations need to be signed through a complicated process that can't live inside this class. So rather than having `forgeSignPreapplyAndinject()`, we have `ledgerOperationPrepWithLocalForge()` and `preapplyAndInject()`.
+	This function also handles some logic, as there are issues running certain operations together in a batched scenario
+	- parameter metadata: The blockchain metadata required to build an injectable payload
+	- parameter operations: Array of operations requested to be sent.
+	- parameter wallet: The wallet to sign the operation
+	- parameter completion: callback containing an array of payloads, as they may need to be signed and sent indivdually
+	*/
+	public func ledgerOperationPrepWithLocalForge(metadata: OperationMetadata, operations: [Operation], wallet: Wallet, completion: @escaping ((Result<(payload: [OperationPayload], forgedOp: [String], watermarkedOp: [String]), ErrorResponse>) -> Void)) {
+		
+		var payloadArray: [OperationPayload] = []
+		var forgeArray: [String] = []
+		var watermarkedArray: [String] = []
+		
+		let payload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: wallet)
+		
+		// Ledger can't process a payload containing a REVEAL operation with a TRANSACTION operation
+		// To help out, we split the operations up into seperate payloads, to let the caller know that 2 transactions need to be done
+		if payload.contents.first?.operationKind == .reveal && payload.contents.count > 1 {
+			for content in payload.contents {
+				var tempPayload = payload
+				tempPayload.contents = [content]
+				payloadArray.append(tempPayload)
+			}
+			
+		} else {
+			payloadArray = [payload]
+		}
+		
+		for payload in payloadArray {
+			TaquitoService.shared.forge(operationPayload: payload) { forgeResult in
+				guard let forge = try? forgeResult.get() else {
+					completion(Result.failure( (try? forgeResult.getError()) ?? ErrorResponse.unknownError() ))
+					return
+				}
+				
+				forgeArray.append(forge)
+				watermarkedArray.append("03" + forge)
+				
+				
+				if watermarkedArray.count == payloadArray.count {
+					completion(Result.success((payload: payloadArray, forgedOp: forgeArray, watermarkedOp: watermarkedArray)))
+				}
+			}
+		}
+	}
+	
+	/**
+	Preapply and Inject wrapped up as one function, for situations like Ledger Wallets, where signing is a complately different process, and must be done elsewhere
+	- parameter forgedOperation: The forged operation hex without a watermark.
+	- parameter signature: Binary representation of the signed operation forge.
+	- parameter signatureCurve: The curve used to sign the forge.
+	- parameter operationPayload: The payload to be sent.
+	- parameter operationMetadata: The metadata required to send the payload.
+	- parameter completion: callback with a forged hash or an error.
+	*/
 	public func preapplyAndInject(forgedOperation: String, signature: [UInt8], signatureCurve: EllipticalCurve, operationPayload: OperationPayload, operationMetadata: OperationMetadata, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		
 		// Add the signature and protocol to the payload
