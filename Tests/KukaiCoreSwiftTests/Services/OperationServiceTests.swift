@@ -77,7 +77,7 @@ class OperationServiceTests: XCTestCase {
 	}
 	
 	func testLedgerPrepWithReveal() {
-		let expectation = XCTestExpectation(description: "operation service ledger no reveal")
+		let expectation = XCTestExpectation(description: "operation service ledger reveal")
 		operationService.ledgerOperationPrepWithLocalForge(metadata: MockConstants.operationMetadataNoManager, operations: MockConstants.sendOperations, wallet: MockConstants.defaultHdWallet) { ledgerResult in
 			switch ledgerResult {
 				case .success(let objects):
