@@ -69,16 +69,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	
 	func experiment() {
+		
+		/*
 		LedgerService.shared.delegate = self
 		LedgerService.shared.setupBluetoothConnection { success in
 			print("LedgerService setup: \(success)")
 			
 			//LedgerService.shared.listenForDevices()
-			LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+			//LedgerService.shared.connectTo(uuid: "")
 		}
+		*/
 	}
 }
 
+
+
+
+
+
+
+/*
 extension SceneDelegate: LedgerServiceDelegate {
 	
 	func deviceListUpdated(devices: [String: String]) {
@@ -155,145 +165,8 @@ extension SceneDelegate: LedgerServiceDelegate {
 		print("Partial success message")
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	func deviceConnectedStatus(success: Bool) {
-		print("connected, requesting address")
-		
-		//LedgerService.shared.getAddress()
-		
-		
-		let xtz = Token(name: "Tez", symbol: "XTZ", tokenType: .xtz, faVersion: .none, balance: XTZAmount.zero(), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
-		let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.0001), of: xtz, from: "tz1UVhYgmkJZEygEVERbtiyQsbSLeHg7c4wT", to: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
-		let ledgerWallet = LedgerWallet(withAddress: "tz1UVhYgmkJZEygEVERbtiyQsbSLeHg7c4wT", publicKey: "530020d417505404e848de6a3b0e80008ec9ae69c41ead9cef8a8ef454776fa0") // TODO: remove first 2 characters
-		
-		ClientsAndData.shared.tezosNodeClient.getOperationMetadata(forWallet: ledgerWallet) { metadataResult in
-			guard let metadata = try? metadataResult.get() else {
-				print("Failed to get metadata: \( String(describing: try? metadataResult.getError()) )")
-				return
-			}
-			
-			let payload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: ledgerWallet)
-			
-			
-			
-			TaquitoService.shared.forge(operationPayload: payload) { [weak self] forgeResult in
-				switch forgeResult {
-					case .success(let forgedString):
-						print("forged string: \n\n\(forgedString) \n")
-						
-						/*
-						let bytes = Sodium.shared.utils.hex2bin(forgedString) ?? []
-						let watermarkedOperation =  [ 3 ] + bytes
-						let ledgerHash = Sodium.shared.genericHash.hash(message: watermarkedOperation, outputLength: 32)
-						LedgerService.shared.sign(hex: ledgerHash?.toHexString() ?? "")
-						*/
-						
-						self?.forgedOperation = forgedString
-						self?.operationPayload = payload
-						self?.operationMetadata = metadata
-						
-						LedgerService.shared.sign(hex: "03" + forgedString)
-						
-					case .failure(let forgeError):
-						print("forged error: \n\n\(forgeError) \n")
-				}
-			}
-		}
-		
-		
-		
-		
-		*/
-		
-		
-		
-		
-		
-		// new testnet:   c3b95544510bbec1191323bad8b482121a8ecc4f6932103f3ae7f0eee9dd69a06c006125d29569b56ca0acaefc6fa8c9ef29ba08826b820bf6fd2584528102640000ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00
-		// new mainnet:   4705a2d9f6ad39fef8c1a6475bc244b072622ed4588342a3f4571bb7726555176c006125d29569b56ca0acaefc6fa8c9ef29ba08826b820bbbf4ed0c84528102640000ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00
-		
-		
-		
-		/*
-		let stringOps = "{\"contents\":[{\"amount\":\"100\",\"destination\":\"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\",\"source\":\"tz1UVhYgmkJZEygEVERbtiyQsbSLeHg7c4wT\",\"storage_limit\":\"257\",\"gas_limit\":\"10500\",\"fee\":\"1410\",\"kind\":\"transaction\",\"counter\":\"622326\"}],\"branch\":\"BLFWf6DbFoq9HaaHnm8BQabRNaxJyEBc5BnXZue5vVXo1tosnQj\"}"
-		
-		
-		let hexStringOps = "7b22636f6e74656e7473223a5b7b22616d6f756e74223a22313030222c2264657374696e6174696f6e223a22747a3162516e5542367776373741416e76766b58357258777a4b486973365278566e7946222c22736f75726365223a22747a3155566859676d6b4a5a4579674556455262746979517362534c6548673763347754222c2273746f726167655f6c696d6974223a22323537222c226761735f6c696d6974223a223130353030222c22666565223a2231343130222c226b696e64223a227472616e73616374696f6e222c22636f756e746572223a22363232333236227d5d2c226272616e6368223a22424c465766364462466f7139486161486e6d3842516162524e61784a7945426335426e585a7565357656586f31746f736e516a227d"
-		
-		
-		
-		// let forgedOps = "f2a6cf19c90e3d3f9adcba0f185c5d93481b7081d33f1504f008b5ca7e5d40d16c006125d29569b56ca0acaefc6fa8c9ef29ba08826b820bf6fd2584528102640000ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00"
-		
-		let forgedOps = "e0ac9e16f0005865f71bcf039d10ec2bb8d604210c9139968949f64ea5c9d1320500aed011841ffbb0bcc3b51c80f2b6c333a1be3df00000000000000040ab22e46e7872aa13e366e455bb4f5dbede856ab0864e1da7e122554579ee71f876cd995a324193bbe09ac2d5c53f69f93778f8d608f1fea885f9b53e0abdb6e4"
-		
-		let bytes = Sodium.shared.utils.hex2bin(forgedOps) ?? []
-		let watermarkedOperation =  [ 3 ] + bytes
-		let watermarkedOperationHex = watermarkedOperation.toHexString()
-		
-		let ledgerHash = Sodium.shared.genericHash.hash(message: watermarkedOperation, outputLength: 32)
-		
-		print("\n\n\n")
-		print("ledgerHash: \(ledgerHash)")
-		print("ledgerHash - hex: \(ledgerHash?.toHexString())")
-		print("ledgerHash - base58: \(ledgerHash?.base58EncodedString)")
-		print("ledgerHash - base64: \(ledgerHash?.toBase64())")
-		print("ledgerHash - utf8: \( String(data: Data(bytes: ledgerHash ?? [], count: ledgerHash?.count ?? 0), encoding: .utf8) )")
-		print("Passing to Ledger: \(watermarkedOperationHex)")
-		print("\n\n\n")
-		
-		
-		
-		/*
-		// Need to experiment
-		
-		if (op.length <= 2290) {
-			watermarkedOperation.toHexString()
-		} else {
-			let ledgerHash = Sodium.shared.genericHash.hash(message: watermarkedOperation, outputLength: 32)
-		}
-		*/
-		
-		
-		
-		
-		LedgerService.shared.sign(hex: watermarkedOperationHex)
-		
-	}
-	*/
-/*
-	func connectedWalletAddress(address: String, publicKey: String) {
-		print("Wallet address: \(address)")
-		print("Wallet public key: \(publicKey)")
-	}
-	
-	func signature(signature: String) {
-		print("SceneDelegate Signature: \(signature)")
-		
-		
-		guard let f = forgedOperation, let p = operationPayload, let m = operationMetadata, let binarySignature = Sodium.shared.utils.hex2bin(signature) else {
-			print("missing data: \(forgedOperation), \(operationPayload), \(operationMetadata)")
-			return
-		}
-		
-		ClientsAndData.shared.tezosNodeClient.operationService.preapplyAndInject(forgedOperation: f, signature: binarySignature, signatureCurve: .ed25519, operationPayload: p, operationMetadata: m) { result in
-			print("\n\n\nPreapply / inject result: \(result)")
-		}
-	}
-	
-	func requestReturnedError(error: String) {
-		print("Ledger service returned Error: \(error)")
-	}
-	*/
 }
+*/
 
 
 

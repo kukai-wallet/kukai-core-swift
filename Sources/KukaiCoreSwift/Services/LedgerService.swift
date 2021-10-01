@@ -38,21 +38,20 @@ public protocol LedgerServiceDelegate: AnyObject {
 
 
 /**
-A service class to wrap up all the complicated interactions with CoreBluetooth and the modified version of ledgerjs.
+A service class to wrap up all the complicated interactions with CoreBluetooth and the modified version of ledgerjs, needed to communicate with a Ledger Nano X.
 
 Ledger only provide a ReactNative module for third parties to integrate with. The architecture of the module also makes it very difficult to
 integrate with native mobile (if it can be packaged up) as it relies heavily on long observable chains passing through many classes and functions.
-To overcome this, I copied the base logic from multiple classes into a single file and split the functions up into more of a utility style class, where
-each function returns a result and must be passed into another function. This allowed the creation of a swift class to sit in the middle of these
+To overcome this, I copied the base logic from multiple ledgerjs classes into a single typescript file and split the functions up into more of a utility style class, where
+each function returns a result, that must be passed into another function. This allowed the creation of a swift class to sit in the middle of these
 functions and decide what to do with the responses.
 
-The modified typescript can be found in this repo: https://github.com/simonmcl/ledgerjs , under this branch + file:
-https://github.com/simonmcl/ledgerjs/blob/native-mobile/packages/hw-app-tezos/src/NativeMobileTezos.ts .
+The modified typescript can be found in this file (under a fork of the main repo) https://github.com/simonmcl/ledgerjs/blob/native-mobile/packages/hw-app-tezos/src/NativeMobileTezos.ts .
 The containing package also includes a webpack file, which will package up the typescript and its dependencies into mobile friendly JS file, which
 needs to be included in the swift project. Usage of the JS can be seen below.
 
 **NOTE:** this modified typescript is Tezos only as I was unable to find a way to simply subclass their `Transport` class, to produce a re-usable
-NativeMobile transport. The changes required modifiying the app and other class logic which became impossible to refactor back into the project.
+NativeMobile transport. The changes required modifiying the app and other class logic which became impossible to refactor back into the project, without rewriting everything.
 */
 public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
 	
@@ -284,7 +283,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Sign an operation payload with the underlying secret key, returning the signature
-	- parameter hex: An operation converted to JSON, forged and watermarked, converted to a hex string. (Note: there are some issues with the ledger app signing batch transactions. May simply return no result at all)
+	- parameter hex: An operation converted to JSON, forged and watermarked, converted to a hex string. (Note: there are some issues with the ledger app signing batch transactions. May simply return no result at all. Can't run REVEAL and TRANSACTION together for example)
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
 	- parameter completion: A completion block called with either a hex signature, or an error indicating an issue
 	*/
