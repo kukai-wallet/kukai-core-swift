@@ -91,10 +91,17 @@ extension SceneDelegate: LedgerServiceDelegate {
 		LedgerService.shared.getAddress(verify: false) { address, publicKey, error in
 			print("address: \(address), publicKey: \(publicKey), error: \(error)")
 			
+			if let _ = error {
+				print("Received error, can't proceed")
+				return
+			}
+			
+			guard let ledgerWallet = LedgerWallet(address: address ?? "", publicKey: publicKey ?? "", derivationPath: HDWallet.defaultDerivationPath, curve: .ed25519, ledgerUUID: "457558A6-939D-F045-876D-E7C754981212") else {
+				print("unable to create wallet")
+				return
+			}
+			
 			let xtz = Token(name: "Tez", symbol: "XTZ", tokenType: .xtz, faVersion: .none, balance: XTZAmount.zero(), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
-			let ledgerWallet = LedgerWallet(address: address ?? "", publicKey: publicKey ?? "", derivationPath: HDWallet.defaultDerivationPath, curve: .ed25519, ledgerUUID: "457558A6-939D-F045-876D-E7C754981212")
-			
-			
 			let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.0001), of: xtz, from: ledgerWallet.address, to: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
 			
 			ClientsAndData.shared.tezosNodeClient.getOperationMetadata(forWallet: ledgerWallet) { metadataResult in

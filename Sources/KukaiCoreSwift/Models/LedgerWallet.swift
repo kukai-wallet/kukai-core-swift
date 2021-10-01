@@ -26,7 +26,11 @@ public class LedgerWallet: Wallet {
 	public var ledgerUUID: String
 	
 	
-	public init(address: String, publicKey: String, derivationPath: String, curve: EllipticalCurve, ledgerUUID: String) {
+	public init?(address: String, publicKey: String, derivationPath: String, curve: EllipticalCurve, ledgerUUID: String) {
+		if publicKey.count < 4 {
+			return nil
+		}
+		
 		self.sortIndex = 0
 		self.address = address
 		self.publicKey = String(publicKey[2..<publicKey.count]) // remove first 2 characters
@@ -37,7 +41,7 @@ public class LedgerWallet: Wallet {
 	
 	public func sign(_ hex: String) -> [UInt8]? {
 		os_log("Must use LedgerService to sign, can't be done in sync code", log: .kukaiCoreSwift, type: .error)
-		return []
+		return nil
 	}
 	
 	public func privateKeyCurve() -> EllipticalCurve {

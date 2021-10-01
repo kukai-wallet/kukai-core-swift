@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  LedgerService.swift
 //  
 //
 //  Created by Simon Mcloughlin on 17/09/2021.
@@ -12,67 +12,115 @@ import os.log
 
 
 
+/**
+The main functions in LedgerService return results via completion blocks. But some pieces of data are supplemental, or need to be delivered in a different manner.
+This protocol allows a class to receive data on connection status, new devices discovered etc.
+*/
 public protocol LedgerServiceDelegate: AnyObject {
+	
+	/**
+	Called when a new device is discovered. Parameter will contain all unqiue devices found so far
+	*/
 	func deviceListUpdated(devices: [String: String])
+	
+	/**
+	Called when a ledger is connected too, or when a connection attempt fails
+	*/
 	func deviceConnectedStatus(success: Bool)
+	
+	/**
+	Some actions require the user to interact with the Ledger. When the appropriate status code is returned, this function will be called,
+	allowing apps to present dialogs informing the user to complete the action.
+	*/
 	func partialMessageSuccessReceived()
 }
 
+
+
+/**
+A service class to wrap up all the complicated interactions with CoreBluetooth and the modified version of ledgerjs.
+
+Ledger only provide a ReactNative module for third parties to integrate with. The architecture of the module also makes it very difficult to
+integrate with native mobile (if it can be packaged up) as it relies heavily on long observable chains passing through many classes and functions.
+To overcome this, I copied the base logic from multiple classes into a single file and split the functions up into more of a utility style class, where
+each function returns a result and must be passed into another function. This allowed the creation of a swift class to sit in the middle of these
+functions and decide what to do with the responses.
+
+The modified typescript can be found in this repo: https://github.com/simonmcl/ledgerjs , under this branch + file:
+https://github.com/simonmcl/ledgerjs/blob/native-mobile/packages/hw-app-tezos/src/NativeMobileTezos.ts .
+The containing package also includes a webpack file, which will package up the typescript and its dependencies into mobile friendly JS file, which
+needs to be included in the swift project. Usage of the JS can be seen below.
+
+**NOTE:** this modified typescript is Tezos only as I was unable to find a way to simply subclass their `Transport` class, to produce a re-usable
+NativeMobile transport. The changes required modifiying the app and other class logic which became impossible to refactor back into the project.
+*/
 public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
 	
+	/// Ledger UUID constants
 	struct LedgerNanoXConstant {
 		static let serviceUUID = CBUUID(string: "13d63400-2c97-0004-0000-4c6564676572")
 		static let notifyUUID = CBUUID(string: "13d63400-2c97-0004-0001-4c6564676572")
 		static let writeUUID = CBUUID(string: "13d63400-2c97-0004-0002-4c6564676572")
 	}
 	
+	/// Instead of returning data, sometimes ledger returns a code to indicate that so far the message have been received successfully
 	public static let successCode = "9000"
-	public static let generalErrorCodes = [
-		"63c0": "PIN_REMAINING_ATTEMPTS",
-		"6700": "INCORRECT_LENGTH",
-		"6800": "MISSING_CRITICAL_PARAMETER",
-		"6981": "COMMAND_INCOMPATIBLE_FILE_STRUCTURE",
-		"6982": "SECURITY_STATUS_NOT_SATISFIED",
-		"6985": "CONDITIONS_OF_USE_NOT_SATISFIED",
-		"6a80": "INCORRECT_DATA",
-		"6a84": "NOT_ENOUGH_MEMORY_SPACE",
-		"6a88": "REFERENCED_DATA_NOT_FOUND",
-		"6a89": "FILE_ALREADY_EXISTS",
-		"6b00": "INCORRECT_P1_P2",
-		"6d00": "INS_NOT_SUPPORTED",
-		"6e00": "CLA_NOT_SUPPORTED",
-		"6f00": "TECHNICAL_PROBLEM",
-		"9240": "MEMORY_PROBLEM",
-		"9400": "NO_EF_SELECTED",
-		"9402": "INVALID_OFFSET",
-		"9404": "FILE_NOT_FOUND",
-		"9408": "INCONSISTENT_FILE",
-		"9484": "ALGORITHM_NOT_SUPPORTED",
-		"9485": "INVALID_KCV",
-		"9802": "CODE_NOT_INITIALIZED",
-		"9804": "ACCESS_CONDITION_NOT_FULFILLED",
-		"9808": "CONTRADICTION_SECRET_CODE_STATUS",
-		"9810": "CONTRADICTION_INVALIDATION",
-		"9840": "CODE_BLOCKED",
-		"9850": "MAX_VALUE_REACHED",
-		"6300": "GP_AUTH_FAILED",
-		"6f42": "LICENSING",
-		"6faa": "HALTED",
-	]
-	public static let tezosErrorCodes = [
-		"6B00": "EXC_WRONG_PARAM",
-		"6C00": "EXC_WRONG_LENGTH",
-		"6D00": "EXC_INVALID_INS",
-		"917E": "EXC_WRONG_LENGTH_FOR_INS",
-		"6985": "EXC_REJECT",
-		"9405": "EXC_PARSE_ERROR",
-		"6A88": "EXC_REFERENCED_DATA_NOT_FOUND",
-		"6A80": "EXC_WRONG_VALUES",
-		"6982": "EXC_SECURITY",
-		"6983": "EXC_HID_REQUIRED",
-		"6E00": "EXC_CLASS",
-		"9200": "EXC_MEMORY_ERROR"
-	]
+	
+	/// General Ledger error codes, pulled from the source, and some additional ones added for native swift issues
+	public enum GeneralErrorCodes: String, Error, Codable {
+		case PIN_REMAINING_ATTEMPTS = "63c0"
+		case INCORRECT_LENGTH = "6700"
+		case MISSING_CRITICAL_PARAMETER = "6800"
+		case COMMAND_INCOMPATIBLE_FILE_STRUCTURE = "6981"
+		case SECURITY_STATUS_NOT_SATISFIED = "6982"
+		case CONDITIONS_OF_USE_NOT_SATISFIED = "6985"
+		case INCORRECT_DATA = "6a80"
+		case NOT_ENOUGH_MEMORY_SPACE = "6a84"
+		case REFERENCED_DATA_NOT_FOUND = "6a88"
+		case FILE_ALREADY_EXISTS = "6a89"
+		case INCORRECT_P1_P2 = "6b00"
+		case INS_NOT_SUPPORTED = "6d00"
+		case CLA_NOT_SUPPORTED = "6e00"
+		case TECHNICAL_PROBLEM = "6f00"
+		case MEMORY_PROBLEM = "9240"
+		case NO_EF_SELECTED = "9400"
+		case INVALID_OFFSET = "9402"
+		case FILE_NOT_FOUND = "9404"
+		case INCONSISTENT_FILE = "9408"
+		case ALGORITHM_NOT_SUPPORTED = "9484"
+		case INVALID_KCV = "9485"
+		case CODE_NOT_INITIALIZED = "9802"
+		case ACCESS_CONDITION_NOT_FULFILLED = "9804"
+		case CONTRADICTION_SECRET_CODE_STATUS = "9808"
+		case CONTRADICTION_INVALIDATION = "9810"
+		case CODE_BLOCKED = "9840"
+		case MAX_VALUE_REACHED = "9850"
+		case GP_AUTH_FAILED = "6300"
+		case LICENSING = "6f42"
+		case HALTED = "6faa"
+		
+		case DEVICE_LOCKED = "00900000"
+		case UNKNOWN = "99999999"
+		case NO_ADDRESS_CALLBACK = "99999998"
+		case NO_SIGN_CALLBACK = "99999997"
+		case NO_WRITE_CHARACTERISTIC = "99999996"
+	}
+	
+	/// Dedicated error codes pulled from the Ledger tezos app
+	public enum TezosAppErrorCodes: String, Error, Codable {
+		case EXC_WRONG_PARAM = "6B00"
+		case EXC_WRONG_LENGTH = "6C00"
+		case EXC_INVALID_INS = "6D00"
+		case EXC_WRONG_LENGTH_FOR_INS = "917E"
+		case EXC_REJECT = "6985"
+		case EXC_PARSE_ERROR = "9405"
+		case EXC_REFERENCED_DATA_NOT_FOUND = "6A88"
+		case EXC_WRONG_VALUES = "6A80"
+		case EXC_SECURITY = "6982"
+		case EXC_HID_REQUIRED = "6983"
+		case EXC_CLASS = "6E00"
+		case EXC_MEMORY_ERROR = "9200"
+	}
 	
 	private let jsContext: JSContext
 	private var centralManager: CBCentralManager?
@@ -92,8 +140,15 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/// Public shared instace to avoid having multiple copies of the underlying `JSContext` created
 	public static let shared = LedgerService()
+	
+	/// Delegate to receive status callbacks
 	public weak var delegate: LedgerServiceDelegate?
 	
+	
+	
+	
+	
+	// MARK: - Init
 	
 	private override init() {
 		jsContext = JSContext()
@@ -121,7 +176,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			os_log("Inside nativeWriteHandler", log: .ledger, type: .debug)
 			
 			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(result)\", 156)").toString() else {
-				//self?.delegate?.requestReturnedError(error: "Unbale to format request")
+				self?.delegate?.deviceConnectedStatus(success: false)
 				return
 			}
 			
@@ -137,6 +192,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 						
 					} else {
 						os_log("unable to get writeCharacteristic", log: .ledger, type: .error)
+						self?.returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.NO_WRITE_CHARACTERISTIC.rawValue)
 					}
 				}
 			}
@@ -152,6 +208,15 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		""")
 	}
 	
+	
+	
+	
+	
+	// MARK: - Public functions
+	
+	/**
+	Setup the bluetooth manager, ready to scan or connect to devices
+	*/
 	public func setupBluetoothConnection(completion: @escaping ((Bool) -> Void)) {
 		if centralManager != nil {
 			completion(centralManager?.state == .poweredOn)
@@ -162,25 +227,44 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		centralManager = CBCentralManager(delegate: self, queue: nil)
 	}
 	
+	/**
+	Start listening for ledger devices, reporting back to the delegate function if found
+	*/
 	public func listenForDevices() {
 		self.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
 	}
 	
+	/**
+	Stop listen for and reporting new ledger devices found
+	*/
 	public func stopListening() {
 		self.centralManager?.stopScan()
 	}
 	
+	/**
+	Connect to a ledger device by a given UUID
+	*/
 	public func connectTo(uuid: String) {
 		self.requestedUUID = uuid
 		self.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
 	}
 	
+	/**
+	Disconnect from the current Ledger device
+	*/
 	public func disconnectFromDevice() {
 		if let device = self.connectedDevice {
 			self.centralManager?.cancelPeripheralConnection(device)
 		}
 	}
 	
+	/**
+	Get a TZ address and public key from the current connected Ledger device
+	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
+	- parameter curve: Optional. The `EllipticalCurve` to use to extract the address
+	- parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
+	- parameter completion: A completion block called with either address and publicKey, or an error indicating an issue
+	*/
 	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool, completion: @escaping ((String?, String?, Error?) -> Void)) {
 		self.addressCallback = completion
 		self.isFetchingAddress = true
@@ -198,6 +282,12 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		let _ = jsContext.evaluateScript("tezosApp.getAddress(\"\(derivationPath)\", {verify: \(verify), curve: \(selectedCurve)})")
 	}
 	
+	/**
+	Sign an operation payload with the underlying secret key, returning the signature
+	- parameter hex: An operation converted to JSON, forged and watermarked, converted to a hex string. (Note: there are some issues with the ledger app signing batch transactions. May simply return no result at all)
+	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
+	- parameter completion: A completion block called with either a hex signature, or an error indicating an issue
+	*/
 	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, completion: @escaping ((String?, ErrorResponse?) -> Void)) {
 		self.signCallback = completion
 		self.isSigningOperation = true
@@ -302,16 +392,16 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-		if error == nil {
-			os_log("Successfully wrote to write characteristic", log: .ledger, type: .debug)
-		} else {
+		if let err = error {
 			os_log("Error during write: %@", log: .ledger, type: .debug, "\(String(describing: error))")
-			
 			if self.isFetchingAddress, let callback = self.addressCallback {
-				callback(nil, nil, ErrorResponse.lederError(code: "UNKNOWN", type: "\(error)"))
+				callback(nil, nil, ErrorResponse.lederError(code: GeneralErrorCodes.UNKNOWN.rawValue, type: err))
+				
 			} else if let callback = self.signCallback {
-				callback(nil, ErrorResponse.lederError(code: "UNKNOWN", type: "\(error)"))
+				callback(nil, ErrorResponse.lederError(code: GeneralErrorCodes.UNKNOWN.rawValue, type: err))
 			}
+		} else {
+			os_log("Successfully wrote to write characteristic", log: .ledger, type: .debug)
 		}
 	}
 	
@@ -340,7 +430,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		guard let resultString = receivedResult?.toString(), String(resultString.prefix(5)) != "Error" else {
 			isFetchingAddress = false
 			isSigningOperation = false
-			returnLedgerErrorToCallback(code: "UNKNOWN", type: "unknown")
+			returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			return
 		}
 		
@@ -352,53 +442,96 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		if resultString == LedgerService.successCode {
 			os_log("Received Success/Ok APDU", log: .ledger, type: .debug)
 			self.delegate?.partialMessageSuccessReceived()
+			return
 			
 		} else if resultString.count == 4 {
-			var type = LedgerService.tezosErrorCodes[resultString]
-			
-			if type == nil {
-				type = LedgerService.generalErrorCodes[resultString]
-			}
-			
-			returnLedgerErrorToCallback(code: resultString, type: type ?? "unknown")
+			returnLedgerErrorToCallback(resultCode: resultString)
 			return
 		}
 		
 		
+		os_log("Received non partial success response: %@", log: .ledger, type: .debug, resultString)
+		
+		
 		// Else, try to parse the response into an address/public key or a signature
 		if isFetchingAddress {
-			let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(resultString)\")")
-			let obj = resultHex?.toObject() as? [String: String] ?? [:]
-			
 			isFetchingAddress = false
-			if let callback = addressCallback, let address = obj["address"], let publicKey = obj["publicKey"] {
-				callback(address, publicKey, nil)
-				
-			} else {
-				returnLedgerErrorToCallback(code: "UNKNOWN", type: "APDU - \(resultString)")
+			
+			guard let dict = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(resultString)\")").toObject() as? [String: String] else {
+				os_log("Didn't receive address object", log: .ledger, type: .error)
+				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
+				return
 			}
 			
-		} else if isSigningOperation {
-			let resultHex = jsContext.evaluateScript("""
-				ledger_app_tezos.convertAPDUtoSignature(\"\(resultString)\").signature
-			""")
-			
-			
-			if resultHex?.toString() != "" && resultHex?.toString() != "undefined" {
-				self.isSigningOperation = false
-				
-				if let callback = signCallback, let signature = resultHex?.toString() {
-					callback(signature, nil)
+			guard let address = dict["address"], let publicKey = dict["publicKey"] else {
+				if let err = dict["error"] {
+					os_log("Internal script error: %@", log: .ledger, type: .error, err)
+					returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
 					
 				} else {
-					returnLedgerErrorToCallback(code: "UNKNOWN", type: "APDU - \(resultString)")
+					os_log("Unknown error", log: .ledger, type: .error)
+					returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
 				}
+				return
+			}
+			
+			guard let callback = addressCallback else {
+				os_log("No address callback", log: .ledger, type: .error)
+				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.NO_ADDRESS_CALLBACK.rawValue)
+				return
+			}
+			
+			callback(address, publicKey, nil)
+			
+		} else if isSigningOperation {
+			self.isSigningOperation = false
+			
+			guard let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoSignature(\"\(resultString)\").signature").toString() else {
+				os_log("Didn't receive signature", log: .ledger, type: .error)
+				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
+				return
+			}
+			
+			if resultHex != "" && resultHex != "undefined" {
+				if let callback = signCallback {
+					callback(resultHex, nil)
+					
+				} else {
+					os_log("No sign callback", log: .ledger, type: .error)
+					returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.NO_SIGN_CALLBACK.rawValue)
+				}
+				
+			} else {
+				os_log("Unknown error. APDU: %@", log: .ledger, type: .error, resultHex)
+				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			}
 		}
 	}
 	
-	private func returnLedgerErrorToCallback(code: String, type: String) {
-		os_log("Error parsing data: %@, %@", log: .ledger, type: .error, code, type)
+	
+	
+	
+	
+	// MARK: - Private helpers
+	
+	/**
+	A helper to take an error code , returned from an APDU, and fire it back into whichever completion callback is being tracked
+	*/
+	private func returnLedgerErrorToCallback(resultCode: String) {
+		os_log("Error parsing data. Result code: %@", log: .ledger, type: .error, resultCode)
+		
+		var code = GeneralErrorCodes.UNKNOWN.rawValue
+		var type: Error = GeneralErrorCodes.UNKNOWN
+		
+		if let tezosCode = TezosAppErrorCodes(rawValue: resultCode) {
+			code = tezosCode.rawValue
+			type = tezosCode
+			
+		} else if let generalCode = GeneralErrorCodes(rawValue: resultCode) {
+			code = generalCode.rawValue
+			type = generalCode
+		}
+		
 		
 		if isFetchingAddress, let callback = addressCallback {
 			callback(nil, nil, ErrorResponse.lederError(code: code, type: type))

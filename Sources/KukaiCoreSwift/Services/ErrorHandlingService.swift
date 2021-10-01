@@ -71,9 +71,6 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	/// A meaningful string containing error information (e.g. in some cases a full string version of a swift error, as opposed to `Error.localizedDescription` which usually contains nothing useful)
 	public var errorString: String?
 	
-	/// A code used by Ledger devices to denote issues
-	public var ledgerErrorCode: String?
-	
 	/// An enum to help differeniate high level error catgeories, to quickly and easily display generic error messages to users
 	public var errorType: ErrorResponseType
 	
@@ -97,14 +94,13 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	/**
 	Create an instance of `ErrorResponse` with the ability to set every property
 	*/
-	public init(requestURL: URL?, requestJSON: String?, responseJSON: String?, httpStatusCode: Int?, errorObject: Error?, errorString: String?, ledgerErrorCode: String?, errorType: ErrorResponseType) {
+	public init(requestURL: URL?, requestJSON: String?, responseJSON: String?, httpStatusCode: Int?, errorObject: Error?, errorString: String?, errorType: ErrorResponseType) {
 		self.requestURL = requestURL
 		self.requestJSON = requestJSON
 		self.responseJSON = responseJSON
 		self.httpStatusCode = httpStatusCode
 		self.errorObject = errorObject
 		self.errorString = errorString
-		self.ledgerErrorCode = ledgerErrorCode
 		self.errorType = errorType
 	}
 	
@@ -115,7 +111,7 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	- returns `ErrorResponse`
 	*/
 	public static func error(string: String, errorType: ErrorResponseType) -> ErrorResponse {
-		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: string, ledgerErrorCode: nil, errorType: errorType)
+		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: string, errorType: errorType)
 	}
 	
 	/**
@@ -124,7 +120,7 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	- returns `ErrorResponse`
 	*/
 	public static func internalApplicationError(error: Error) -> ErrorResponse {
-		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: error, errorString: errorToString(error), ledgerErrorCode: nil, errorType: .internalApplicationError)
+		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: error, errorString: errorToString(error), errorType: .internalApplicationError)
 	}
 	
 	/**
@@ -133,7 +129,7 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	- returns `ErrorResponse`
 	*/
 	public static func unknownParseError(error: Error) -> ErrorResponse {
-		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: errorToString(error), ledgerErrorCode: nil, errorType: .unknownParseError)
+		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: errorToString(error), errorType: .unknownParseError)
 	}
 	
 	/**
@@ -142,7 +138,7 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	- returns `ErrorResponse`
 	*/
 	public static func unknownError() -> ErrorResponse {
-		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: nil, ledgerErrorCode: nil, errorType: .unknownError)
+		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: nil, errorType: .unknownError)
 	}
 	
 	/**
@@ -151,8 +147,8 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	- parameter type: the matching string type
 	- returns `ErrorResponse`
 	*/
-	public static func lederError(code: String, type: String) -> ErrorResponse {
-		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: nil, errorString: type, ledgerErrorCode: code, errorType: .lederError)
+	public static func lederError(code: String, type: Error) -> ErrorResponse {
+		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: type, errorString: code, errorType: .lederError)
 	}
 	
 	/**
