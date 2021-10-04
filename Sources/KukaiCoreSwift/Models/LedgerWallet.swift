@@ -55,7 +55,11 @@ public class LedgerWallet: Wallet {
 		
 		self.sortIndex = 0
 		self.address = address
-		self.publicKey = String(publicKey[2..<publicKey.count]) // remove first 2 characters
+		
+		let startIndex = publicKey.index(publicKey.startIndex, offsetBy: 2)
+		let endIndex = publicKey.endIndex
+		self.publicKey = String(publicKey[startIndex..<endIndex]) // remove first 2 characters
+		
 		self.derivationPath = derivationPath
 		self.curve = curve
 		self.ledgerUUID = ledgerUUID

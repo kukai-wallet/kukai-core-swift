@@ -14,6 +14,26 @@ import Sodium
 import WalletCore
 import os.log
 
+
+// Temp as no public constructor
+public class TDSDKFactoryTemp: TDSDKFactoryProtocol {
+	public func createFetchNodeDetails(network: EthereumNetwork) -> FetchNodeDetails {
+		let net = network == .MAINNET ? "0x638646503746d5456209e33a2ff5e3226d698bea" : "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
+		return FetchNodeDetails(proxyAddress: net, network: network)
+	}
+	
+	public func createTorusUtils(nodePubKeys: Array<TorusNodePub> = [], loglevel: OSLogType) -> AbstractTorusUtils {
+		return TorusUtils(nodePubKeys: nodePubKeys, loglevel: loglevel)
+	}
+}
+
+
+
+
+
+
+
+
 /**
 TorusAuthService is a wrapper around the SDK provided by: https://tor.us/ to allow the creation of `TorusWallet`'s.
 This allows users to create a wallet from their social media accounts without having to use a seed phrase / mnemonic.
@@ -57,10 +77,10 @@ public class TorusAuthService {
 	private let ethereumNetworkType: EthereumNetwork
 	
 	/// Torus verifier settings used on Testnet
-	private let testnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
+	private let testnetVerifiers: [TorusAuthProvider: SubVerifierDetails]
 	
 	/// Torus verifier settings used on mainnet
-	private let mainnetVerifiers: [TorusAuthProvider: (verifierName: String, verifier: SubVerifierDetails)]
+	private let mainnetVerifiers: [TorusAuthProvider: SubVerifierDetails]
 	
 	/// The Ethereum contract address to use on testnet
 	private let testnetProxyAddress = "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
@@ -78,7 +98,7 @@ public class TorusAuthService {
 	private let fetchNodeDetails: FetchNodeDetails
 	
 	/// Stored copy of the Torus NodeDetails object. The fetching of this is forced onto the main thread, blocking the UI. Need to push it onto a background thread and store it for other code to access
-	private var nodeDetails: NodeDetails? = nil
+	private var nodeDetails: AllNodeDetails? = nil
 	
 	
 	
@@ -110,45 +130,45 @@ public class TorusAuthService {
 		
 		
 		testnetVerifiers = [
-			.apple: (verifierName: "torus-auth0-apple-lrc", verifier: SubVerifierDetails(
+			.apple: SubVerifierDetails(
 				loginType: .web,
 				loginProvider: .apple,
 				clientId: "m1Q0gvDfOyZsJCZ3cucSQEe9XMvl9d9L",
 				verifierName: "torus-auth0-apple-lrc",
 				redirectURL: nativeRedirectURL,
 				jwtParams: ["domain": "torus-test.auth0.com"]
-			)),
-			.twitter: (verifierName: "torus-auth0-twitter-lrc", verifier: SubVerifierDetails(
+			),
+			.twitter: SubVerifierDetails(
 				loginType: .web,
 				loginProvider: .twitter,
 				clientId: "A7H8kkcmyFRlusJQ9dZiqBLraG2yWIsO",
 				verifierName: "torus-auth0-twitter-lrc",
 				redirectURL: nativeRedirectURL,
 				jwtParams: ["domain": "torus-test.auth0.com"]
-			)),
-			.google: (verifierName: "google-lrc", SubVerifierDetails(
+			),
+			.google: SubVerifierDetails(
 				loginType: .web,
 				loginProvider: .google,
 				clientId: "221898609709-obfn3p63741l5333093430j3qeiinaa8.apps.googleusercontent.com",
 				verifierName: "google-lrc",
 				redirectURL: googleRedirectURL,
 				browserRedirectURL: browserRedirectURL
-			)),
-			.reddit: (verifierName: "reddit-shubs", SubVerifierDetails(
+			),
+			.reddit: SubVerifierDetails(
 				loginType: .web,
 				loginProvider: .reddit,
 				clientId: "rXIp6g2y3h1wqg",
 				verifierName: "reddit-shubs",
 				redirectURL: nativeRedirectURL
-			)),
-			.facebook: (verifierName: "facebook-shubs", SubVerifierDetails(
+			),
+			.facebook: SubVerifierDetails(
 				loginType: .web,
 				loginProvider: .facebook,
 				clientId: "659561074900150",
 				verifierName: "facebook-shubs",
 				redirectURL: nativeRedirectURL,
 				browserRedirectURL: browserRedirectURL
-			))
+			)
 		]
 		
 		// Doesn't exist yet
@@ -166,7 +186,7 @@ public class TorusAuthService {
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: TorusSwiftDirectSDK? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
-		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+		guard let verifier = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
@@ -175,7 +195,7 @@ public class TorusAuthService {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 		} else {
-			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierTuple.verifierName, subVerifierDetails: [verifierTuple.verifier], network: self.ethereumNetworkType, loglevel: .none)
+			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifier.subVerifierId, subVerifierDetails: [verifier], factory: TDSDKFactoryTemp(), network: self.ethereumNetworkType, loglevel: .debug)
 		}
 		
 		torus.triggerLogin(controller: displayOver).done { data in
@@ -232,6 +252,11 @@ public class TorusAuthService {
 			completion(Result.success(wallet))
 			
 		}.catch { error in
+			
+			print("\n\n\n")
+			print("Inside catch error")
+			print("\n\n\n")
+			
 			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
 			return
@@ -245,12 +270,14 @@ public class TorusAuthService {
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
-		guard let verifierTuple = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+		guard let verifier = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
 		
-		self.getNodeDetailsOnBackgroundThread { [weak self] in
+		self.fetchNodeDetails.getAllNodeDetails().done { [weak self] allNodeDetails in
+			self?.nodeDetails = allNodeDetails
+			
 			guard let nd = self?.nodeDetails else {
 				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
 				return
@@ -260,20 +287,24 @@ public class TorusAuthService {
 				self?.twitterLookup(username: socialUsername) { [weak self] twitterResult in
 					switch twitterResult {
 						case .success(let twitterUserId):
-							self?.getPublicAddress(nodeDetails: nd, verifierName: verifierTuple.verifierName, socialUserId: "twitter|\(twitterUserId)", completion: completion)
+							self?.getPublicAddress(nodeDetails: nd, verifierName: verifier.subVerifierId, socialUserId: "twitter|\(twitterUserId)", completion: completion)
 							
 						case .failure(let twitterError):
 							completion(Result.failure(twitterError))
 					}
 				}
 			} else {
-				self?.getPublicAddress(nodeDetails: nd, verifierName: verifierTuple.verifierName, socialUserId: socialUsername, completion: completion)
+				self?.getPublicAddress(nodeDetails: nd, verifierName: verifier.subVerifierId, socialUserId: socialUsername, completion: completion)
 			}
+		}.catch { error in
+			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			return
 		}
 	}
 	
 	/// Private wrapper to avoid duplication in the previous function
-	private func getPublicAddress(nodeDetails: NodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	private func getPublicAddress(nodeDetails: AllNodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
 		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { [weak self] data in
 			guard let pubX = data["pub_key_X"],
 				  let pubY = data["pub_key_Y"],
@@ -319,17 +350,6 @@ public class TorusAuthService {
 			os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
 			return
-		}
-	}
-	
-	/// Torus SDK runs this logic on the main thread by default, blocking the UI thread freezing animations. Need to push it onto a background thread.
-	private func getNodeDetailsOnBackgroundThread(completion: @escaping (() -> Void)) {
-		DispatchQueue.global(qos: .background).async { [weak self] in
-			self?.nodeDetails = self?.fetchNodeDetails.getNodeDetails()
-			
-			DispatchQueue.main.async {
-				completion()
-			}
 		}
 	}
 	
