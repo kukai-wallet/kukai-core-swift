@@ -258,6 +258,13 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	}
 	
 	/**
+	Get the UUID of the connected device
+	*/
+	public func getConnectedDeviceUUID() -> String? {
+		return self.connectedDevice?.identifier.uuidString
+	}
+	
+	/**
 	Get a TZ address and public key from the current connected Ledger device
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
 	- parameter curve: Optional. The `EllipticalCurve` to use to extract the address
