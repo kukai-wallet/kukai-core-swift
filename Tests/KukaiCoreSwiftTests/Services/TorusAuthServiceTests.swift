@@ -9,6 +9,7 @@ import XCTest
 import TorusSwiftDirectSDK
 @testable import KukaiCoreSwift
 
+/*
 class TorusAuthServiceTests: XCTestCase {
 	
 	let torusService = TorusAuthService(networkType: .testnet, networkService: MockConstants.shared.networkService, nativeRedirectURL: "native://mock1", googleRedirectURL: "https://mock2", browserRedirectURL: "https://mock3",
@@ -117,3 +118,4 @@ class TorusAuthServiceTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 }
+*/

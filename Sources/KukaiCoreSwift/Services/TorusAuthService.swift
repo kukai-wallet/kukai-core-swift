@@ -15,24 +15,6 @@ import WalletCore
 import os.log
 
 
-// Temp as no public constructor
-public class TDSDKFactoryTemp: TDSDKFactoryProtocol {
-	public func createFetchNodeDetails(network: EthereumNetwork) -> FetchNodeDetails {
-		let net = network == .MAINNET ? "0x638646503746d5456209e33a2ff5e3226d698bea" : "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
-		return FetchNodeDetails(proxyAddress: net, network: network)
-	}
-	
-	public func createTorusUtils(nodePubKeys: Array<TorusNodePub> = [], loglevel: OSLogType) -> AbstractTorusUtils {
-		return TorusUtils(nodePubKeys: nodePubKeys, loglevel: loglevel)
-	}
-}
-
-
-
-
-
-
-
 
 /**
 TorusAuthService is a wrapper around the SDK provided by: https://tor.us/ to allow the creation of `TorusWallet`'s.
@@ -43,6 +25,19 @@ based on their social profile. This allows you to send XTZ or tokens to your fri
 public class TorusAuthService {
 	
 	// MARK: - Types
+	
+	// Temp as no public constructor on object from SDK
+	private class TempTDSDKFactory: TDSDKFactoryProtocol {
+		
+		public func createFetchNodeDetails(network: EthereumNetwork) -> FetchNodeDetails {
+			let net = network == .MAINNET ? "0x638646503746d5456209e33a2ff5e3226d698bea" : "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
+			return FetchNodeDetails(proxyAddress: net, network: network)
+		}
+		
+		public func createTorusUtils(nodePubKeys: Array<TorusNodePub> = [], loglevel: OSLogType) -> AbstractTorusUtils {
+			return TorusUtils(nodePubKeys: nodePubKeys, loglevel: loglevel)
+		}
+	}
 	
 	/// List of providers currently supported and available on the Tezos network
 	public enum TorusAuthProvider: String {
@@ -195,7 +190,7 @@ public class TorusAuthService {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 		} else {
-			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifier.subVerifierId, subVerifierDetails: [verifier], factory: TDSDKFactoryTemp(), network: self.ethereumNetworkType, loglevel: .debug)
+			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifier.subVerifierId, subVerifierDetails: [verifier], factory: TempTDSDKFactory(), network: self.ethereumNetworkType, loglevel: .debug)
 		}
 		
 		torus.triggerLogin(controller: displayOver).done { data in

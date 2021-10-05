@@ -12,7 +12,7 @@ import PromiseKit
 import FetchNodeDetails
 import BestLogger
 
-
+/*
 public class MockTorusSwiftDirectSDK: TorusSwiftDirectSDK {
 	
 	override open func triggerLogin(controller: UIViewController? = nil, browserType: URLOpenerTypes = .sfsafari, modalPresentationStyle: UIModalPresentationStyle = .fullScreen) -> Promise<[String : Any]> {
@@ -90,3 +90,4 @@ class MockTorusUtils: TorusUtils {
 		return tempPromise
 	}
 }
+*/
