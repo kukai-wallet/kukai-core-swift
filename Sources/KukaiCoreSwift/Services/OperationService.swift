@@ -31,6 +31,7 @@ public class OperationService {
 		public let forgedOp: String
 		public let watermarkedOp: String
 		public let blake2bHash: String
+		public let metadata: OperationMetadata
 		public let canLedgerParse: Bool
 	}
 	
@@ -174,7 +175,7 @@ public class OperationService {
 			let blakeHash = Sodium.shared.genericHash.hash(message: watermarkedBytes, outputLength: 32)
 			let blakeHashString = blakeHash?.toHexString() ?? ""
 			
-			let ledgerPrepObj = LedgerPayloadPrepResponse(payload: payload, forgedOp: forge, watermarkedOp: watermarkedOp, blake2bHash: blakeHashString, canLedgerParse: canParse)
+			let ledgerPrepObj = LedgerPayloadPrepResponse(payload: payload, forgedOp: forge, watermarkedOp: watermarkedOp, blake2bHash: blakeHashString, metadata: metadata, canLedgerParse: canParse)
 			completion(Result.success(ledgerPrepObj))
 		}
 	}
