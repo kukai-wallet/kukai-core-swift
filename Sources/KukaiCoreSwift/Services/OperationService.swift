@@ -27,11 +27,11 @@ public class OperationService {
 	
 	/// Used to return a bunch of formatted data, to make interacting with ledger sign operation easier
 	public struct LedgerPayloadPrepResponse {
-		let payload: OperationPayload
-		let forgedOp: String
-		let watermarkedOp: String
-		let blake2bHash: String
-		let canLedgerParse: Bool
+		public let payload: OperationPayload
+		public let forgedOp: String
+		public let watermarkedOp: String
+		public let blake2bHash: String
+		public let canLedgerParse: Bool
 	}
 	
 	
