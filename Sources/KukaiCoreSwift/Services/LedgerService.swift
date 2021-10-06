@@ -152,7 +152,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private override init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { context, exception in
-			os_log("JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			os_log("Ledger JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 		}
 		
 		
@@ -300,7 +300,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		self.isSigningOperation = true
 		self.isFetchingAddress = false
 		
-		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\", \(parse)")
+		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\", \(parse))")
 	}
 	
 	

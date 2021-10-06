@@ -18,7 +18,7 @@ public class ClientsAndData {
 	var tezosNodeClient: TezosNodeClient
 	var bcdClient: BetterCallDevClient
 	var tzktClient: TzKTClient
-	var torusAuthService: TorusAuthService
+	//var torusAuthService: TorusAuthService
 	
 	
 	// Data
@@ -30,13 +30,13 @@ public class ClientsAndData {
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
-		torusAuthService = TorusAuthService(
+		/*torusAuthService = TorusAuthService(
 			networkType: clientConfig.networkType,
 			networkService: tezosNodeClient.networkService,
 			nativeRedirectURL: "tdsdk://tdsdk/oauthCallback",
 			googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
 			browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
-		)
+		)*/
 	}
 	
 	public func updateNetwork(network: TezosNodeClientConfig.NetworkType) {
@@ -44,12 +44,12 @@ public class ClientsAndData {
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
-		torusAuthService = TorusAuthService(
+		/*torusAuthService = TorusAuthService(
 			networkType: clientConfig.networkType,
 			networkService: tezosNodeClient.networkService,
 			nativeRedirectURL: "tdsdk://tdsdk/oauthCallback",
 			googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
 			browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
-		)
+		)*/
 	}
 }

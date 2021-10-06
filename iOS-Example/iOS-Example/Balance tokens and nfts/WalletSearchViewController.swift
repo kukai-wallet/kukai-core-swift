@@ -51,7 +51,7 @@ class WalletSearchViewController: UIViewController {
 		}
 		
 		startActivity()
-		ClientsAndData.shared.torusAuthService.getAddress(from: .twitter, for: twitterUsername) { [weak self] torusResult in
+		/*ClientsAndData.shared.torusAuthService.getAddress(from: .twitter, for: twitterUsername) { [weak self] torusResult in
 			
 			switch torusResult {
 				
@@ -77,7 +77,7 @@ class WalletSearchViewController: UIViewController {
 					self?.present(alert, animated: true, completion: nil)
 					self?.stopActivity()
 			}
-		}
+		}*/
 	}
 	
 	func startActivity() {

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import TorusSwiftDirectSDK
+//import TorusSwiftDirectSDK
 @testable import KukaiCoreSwift
 
 /*

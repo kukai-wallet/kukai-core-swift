@@ -71,7 +71,7 @@ public class LiquidityBakingCalculationService {
 	private init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { context, exception in
-			os_log("JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			os_log("LiquidityBaking calculation JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 		}
 		
 		if let jsSourcePath = Bundle.module.url(forResource: "liquidity-baking-calcualtions", withExtension: "js", subdirectory: "External") {

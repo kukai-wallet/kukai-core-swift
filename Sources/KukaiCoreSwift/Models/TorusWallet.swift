@@ -19,7 +19,7 @@ This wallet is a subclass of `LinearWallet` created by using the Torus network t
 This class is equivalent to a LinearWallet producing a TZ2 address via secp256k1, without the use of a mnemonic, and instead including the social profile of the user.
 */
 public class TorusWallet: LinearWallet {
-	
+	/*
 	// MARK: - Properties
 	
 	/// The type of service used to generate the provide key
@@ -97,4 +97,5 @@ public class TorusWallet: LinearWallet {
 		
 		try super.encode(to: encoder)
 	}
+	*/
 }

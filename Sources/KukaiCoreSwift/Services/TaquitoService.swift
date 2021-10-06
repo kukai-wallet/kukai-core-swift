@@ -46,7 +46,7 @@ public class TaquitoService {
 	private init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { [weak self] context, exception in
-			os_log("JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			os_log("Taquito JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 			
 			if self?.isForging == true, let lastForge = self?.lastForgeCompletionHandler {
 				self?.isForging = false

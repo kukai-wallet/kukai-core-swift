@@ -7,7 +7,6 @@
 
 import UIKit
 import KukaiCoreSwift
-import TorusSwiftDirectSDK
 import Sodium
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -61,7 +60,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			return
 		}
 		
-		TorusSwiftDirectSDK.handle(url: url)
+		//TorusSwiftDirectSDK.handle(url: url)
 	}
 	
 	
@@ -70,15 +69,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
-		/*
 		LedgerService.shared.delegate = self
 		LedgerService.shared.setupBluetoothConnection { success in
 			print("LedgerService setup: \(success)")
 			
 			//LedgerService.shared.listenForDevices()
-			//LedgerService.shared.connectTo(uuid: "")
+			LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
 		}
-		*/
 	}
 }
 
@@ -88,7 +85,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 
-/*
 extension SceneDelegate: LedgerServiceDelegate {
 	
 	func deviceListUpdated(devices: [String: String]) {
@@ -114,60 +110,73 @@ extension SceneDelegate: LedgerServiceDelegate {
 			let xtz = Token(name: "Tez", symbol: "XTZ", tokenType: .xtz, faVersion: .none, balance: XTZAmount.zero(), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
 			let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.0001), of: xtz, from: ledgerWallet.address, to: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
 			
-			ClientsAndData.shared.tezosNodeClient.getOperationMetadata(forWallet: ledgerWallet) { metadataResult in
-				guard let metadata = try? metadataResult.get() else {
-					print("Failed to get metadata: \( String(describing: try? metadataResult.getError()) )")
+			ClientsAndData.shared.tezosNodeClient.estimate(operations: operations, withWallet: ledgerWallet) { [weak self] estiamteResult in
+				guard let estimatedOps = try? estiamteResult.get() else {
+					print("Couldn't estimate transaction: \( (try? estiamteResult.getError()) ?? ErrorResponse.unknownError() )")
 					return
 				}
 				
-				let payload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: ledgerWallet)
 				
-				TaquitoService.shared.forge(operationPayload: payload) { [weak self] forgeResult in
-					switch forgeResult {
-						case .success(let forgedString):
-							print("forged string: \n\n\(forgedString) \n")
+				ClientsAndData.shared.tezosNodeClient.getOperationMetadata(forWallet: ledgerWallet) { metadataResult in
+					guard let metadata = try? metadataResult.get() else {
+						print("Couldn't fetch metadata \( (try? metadataResult.getError()) ?? ErrorResponse.unknownError() )")
+						return
+					}
+					
+					
+					ClientsAndData.shared.tezosNodeClient.operationService.ledgerOperationPrepWithLocalForge(metadata: metadata, operations: estimatedOps, wallet: ledgerWallet) { ledgerPrepResult in
+						guard let ledgerPrep = try? ledgerPrepResult.get() else {
+							print("Couldn't get ledger prep data \( (try? metadataResult.getError()) ?? ErrorResponse.unknownError() )")
+							return
+						}
+						
 							
-							self?.forgedOperation = forgedString
-							self?.operationPayload = payload
-							self?.operationMetadata = metadata
-							
-							LedgerService.shared.sign(hex: "03" + forgedString) { signature, error in
-								print("Signature: \(signature), error: \(error)")
-								
-								guard let sig = signature else {
-									return
-								}
-								
-								let binarySignature = Sodium.shared.utils.hex2bin(sig) ?? []
-								
-								ClientsAndData.shared.tezosNodeClient.operationService.preapplyAndInject(
-									forgedOperation: forgedString,
-									signature: binarySignature,
-									signatureCurve: ledgerWallet.curve,
-									operationPayload: payload,
-									operationMetadata: metadata) { result in
-									
-										print("\n\n\nPreapply / inject result: \(result)")
-								}
+						if ledgerPrep.canLedgerParse {
+							LedgerService.shared.sign(hex: ledgerPrep.watermarkedOp, parse: true) { [weak self] signature, error in
+								self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
 							}
 							
-						case .failure(let forgeError):
-							print("forged error: \n\n\(forgeError) \n")
+						} else {
+							LedgerService.shared.sign(hex: ledgerPrep.blake2bHash, parse: false) { [weak self] signature, error in
+								self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
+							}
+						}
 					}
 				}
 			}
 		}
-		
-		
 	}
 	
 	func partialMessageSuccessReceived() {
 		print("Partial success message")
 	}
 	
+	func handle(ledgerPrep: OperationService.LedgerPayloadPrepResponse, signature: String?, andError error: ErrorResponse?) {
+		guard let sig = signature else {
+			print("Error from ledger: \( error ?? ErrorResponse.unknownError() )")
+			return
+		}
+		
+		guard let binarySignature = Sodium.shared.utils.hex2bin(sig) else {
+			print("Unable to inject, as can't find prep data")
+			return
+		}
+		
+		ClientsAndData.shared.tezosNodeClient.operationService.preapplyAndInject(forgedOperation: ledgerPrep.forgedOp,
+																					signature: binarySignature,
+																					signatureCurve: .ed25519,
+																					operationPayload: ledgerPrep.payload,
+																					operationMetadata: ledgerPrep.metadata) { [weak self] injectionResult in
+			
+			guard let opHash = try? injectionResult.get() else {
+				print("Preapply / Injection error: \( (try? injectionResult.getError()) ?? ErrorResponse.unknownError() )")
+				return
+			}
+			
+			print("Success Operation injected, hash: \(opHash)")
+		}
+	}
 }
-*/
-
 
 
 
