@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Sodium
 import os.log
 
 /// Several classes need to use pieces of the   forge-sign-parse-preapply-inject   flow. This class abstracts those functions away so that it can be shared throughout the library.
@@ -22,6 +23,15 @@ public class OperationService {
 		case preapplyContainedError(errors: [OperationResponseInternalResultError]?)
 		case unableToSetupInject
 		case noRemoteParseURLFound
+	}
+	
+	/// Used to return a bunch of formatted data, to make interacting with ledger sign operation easier
+	public struct LedgerPayloadPrepResponse {
+		let payload: OperationPayload
+		let forgedOp: String
+		let watermarkedOp: String
+		let blake2bHash: String
+		let canLedgerParse: Bool
 	}
 	
 	
@@ -136,48 +146,36 @@ public class OperationService {
 	
 	/**
 	Ledger operations need to be signed through a complicated process that can't live inside this class. So rather than having `forgeSignPreapplyAndinject()`, we have `ledgerOperationPrepWithLocalForge()` and `preapplyAndInject()`.
-	This function also handles some logic, as there are issues running certain operations together in a batched scenario
+	This function also handles some logic custom to ledger devices, and retruns an object detailing all the necessary bits of information
 	- parameter metadata: The blockchain metadata required to build an injectable payload
 	- parameter operations: Array of operations requested to be sent.
 	- parameter wallet: The wallet to sign the operation
-	- parameter completion: callback containing an array of payloads, as they may need to be signed and sent indivdually
+	- parameter completion: callback containing a `LedgerPayloadPrepResponse` containing all the formatted data, and detecting the likelihood of a Ledger parse succeeding
 	*/
-	public func ledgerOperationPrepWithLocalForge(metadata: OperationMetadata, operations: [Operation], wallet: Wallet, completion: @escaping ((Result<(payload: [OperationPayload], forgedOp: [String], watermarkedOp: [String]), ErrorResponse>) -> Void)) {
-		
-		var payloadArray: [OperationPayload] = []
-		var forgeArray: [String] = []
-		var watermarkedArray: [String] = []
-		
+	public func ledgerOperationPrepWithLocalForge(metadata: OperationMetadata, operations: [Operation], wallet: Wallet, completion: @escaping ((Result<LedgerPayloadPrepResponse, ErrorResponse>) -> Void)) {
 		let payload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: wallet)
+		var canParse = false
 		
-		// Ledger can't process a payload containing a REVEAL operation with a TRANSACTION operation
-		// To help out, we split the operations up into seperate payloads, to let the caller know that 2 transactions need to be done
-		if payload.contents.first?.operationKind == .reveal && payload.contents.count > 1 {
-			for content in payload.contents {
-				var tempPayload = payload
-				tempPayload.contents = [content]
-				payloadArray.append(tempPayload)
-			}
-			
-		} else {
-			payloadArray = [payload]
+		// Ledger can only parse operations under certain conditions. These conditions are not documented well.
+		// It seems to be able to parse the payload if it contains 1 operation, of the below types. Combining types (like Reveal + Transation) causes a parse error
+		// If the payload structure passes the conditions we are aware of, allow parsing to take place. If not, sign blake2b hash instead
+		if payload.contents.count == 1, let first = payload.contents.first, (first is OperationReveal || first is OperationDelegation || first is OperationTransaction) {
+			canParse = true
 		}
 		
-		for payload in payloadArray {
-			TaquitoService.shared.forge(operationPayload: payload) { forgeResult in
-				guard let forge = try? forgeResult.get() else {
-					completion(Result.failure( (try? forgeResult.getError()) ?? ErrorResponse.unknownError() ))
-					return
-				}
-				
-				forgeArray.append(forge)
-				watermarkedArray.append("03" + forge)
-				
-				
-				if watermarkedArray.count == payloadArray.count {
-					completion(Result.success((payload: payloadArray, forgedOp: forgeArray, watermarkedOp: watermarkedArray)))
-				}
+		TaquitoService.shared.forge(operationPayload: payload) { forgeResult in
+			guard let forge = try? forgeResult.get() else {
+				completion(Result.failure( (try? forgeResult.getError()) ?? ErrorResponse.unknownError() ))
+				return
 			}
+			
+			let watermarkedOp = "03" + forge
+			let watermarkedBytes = Sodium.shared.utils.hex2bin(watermarkedOp) ?? []
+			let blakeHash = Sodium.shared.genericHash.hash(message: watermarkedBytes, outputLength: 32)
+			let blakeHashString = blakeHash?.toHexString() ?? ""
+			
+			let ledgerPrepObj = LedgerPayloadPrepResponse(payload: payload, forgedOp: forge, watermarkedOp: watermarkedOp, blake2bHash: blakeHashString, canLedgerParse: canParse)
+			completion(Result.success(ledgerPrepObj))
 		}
 	}
 	

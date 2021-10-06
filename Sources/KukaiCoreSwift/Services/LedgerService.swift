@@ -292,14 +292,15 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	Sign an operation payload with the underlying secret key, returning the signature
 	- parameter hex: An operation converted to JSON, forged and watermarked, converted to a hex string. (Note: there are some issues with the ledger app signing batch transactions. May simply return no result at all. Can't run REVEAL and TRANSACTION together for example)
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
+	- parameter parse: Ledger can parse non-hashed (blake2b) hex data and display operation data to user (e.g. transfer 1 XTZ to TZ1abc, for fee: 0.001). There are many limitations around what can be parsed. Frequnetly it will require passing in false
 	- parameter completion: A completion block called with either a hex signature, or an error indicating an issue
 	*/
-	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, completion: @escaping ((String?, ErrorResponse?) -> Void)) {
+	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, parse: Bool, completion: @escaping ((String?, ErrorResponse?) -> Void)) {
 		self.signCallback = completion
 		self.isSigningOperation = true
 		self.isFetchingAddress = false
 		
-		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\")")
+		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\", \(parse)")
 	}
 	
 	

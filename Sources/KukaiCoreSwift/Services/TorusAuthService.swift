@@ -26,19 +26,6 @@ public class TorusAuthService {
 	
 	// MARK: - Types
 	
-	// Temp as no public constructor on object from SDK
-	private class TempTDSDKFactory: TDSDKFactoryProtocol {
-		
-		public func createFetchNodeDetails(network: EthereumNetwork) -> FetchNodeDetails {
-			let net = network == .MAINNET ? "0x638646503746d5456209e33a2ff5e3226d698bea" : "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
-			return FetchNodeDetails(proxyAddress: net, network: network)
-		}
-		
-		public func createTorusUtils(nodePubKeys: Array<TorusNodePub> = [], loglevel: OSLogType) -> AbstractTorusUtils {
-			return TorusUtils(nodePubKeys: nodePubKeys, loglevel: loglevel)
-		}
-	}
-	
 	/// List of providers currently supported and available on the Tezos network
 	public enum TorusAuthProvider: String {
 		case apple
@@ -190,7 +177,7 @@ public class TorusAuthService {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 		} else {
-			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifier.subVerifierId, subVerifierDetails: [verifier], factory: TempTDSDKFactory(), network: self.ethereumNetworkType, loglevel: .debug)
+			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifier.subVerifierId, subVerifierDetails: [verifier], factory: TDSDKFactory(), network: self.ethereumNetworkType, loglevel: .debug)
 		}
 		
 		torus.triggerLogin(controller: displayOver).done { data in
