@@ -5,7 +5,6 @@
 //  Created by Simon Mcloughlin on 08/07/2021.
 //
 
-/*
 import Foundation
 import UIKit
 import TorusSwiftDirectSDK
@@ -380,4 +379,3 @@ public class TorusAuthService {
 		return invertedPks.contains(pk);
 	}
 }
-*/

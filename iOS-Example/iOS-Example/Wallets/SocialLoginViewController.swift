@@ -28,7 +28,6 @@ class SocialLoginViewController: UIViewController {
 		activityView.stopAnimating()
 	}
 	
-	/*
 	@IBAction func appleTapped(_ sender: Any) {
 		showActivity()
 		ClientsAndData.shared.torusAuthService.createWallet(from: .apple, displayOver: self) { [weak self] result in
@@ -81,5 +80,4 @@ class SocialLoginViewController: UIViewController {
 		
 		self.hideActiviy()
 	}
-	*/
 }

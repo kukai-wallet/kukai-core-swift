@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - develop
+      - feature/xcode13
   pull_request:
     branches:
       - main

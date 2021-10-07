@@ -46,7 +46,7 @@ class WalletSearchViewController: UIViewController {
 	}
 	
 	@IBAction func twitterSearchTapped(_ sender: Any) {
-		/*guard let twitterUsername = twitterTextfield.text else {
+		guard let twitterUsername = twitterTextfield.text else {
 			return
 		}
 		
@@ -77,7 +77,7 @@ class WalletSearchViewController: UIViewController {
 					self?.present(alert, animated: true, completion: nil)
 					self?.stopActivity()
 			}
-		}*/
+		}
 	}
 	
 	func startActivity() {
