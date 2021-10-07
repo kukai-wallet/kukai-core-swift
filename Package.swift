@@ -13,9 +13,10 @@ let package = Package(
 		.package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
 		
 		// TODO: problem with the offical swift-sodium (https://github.com/jedisct1/swift-sodium), using someone elses fork with a bug fix until merged into main repo or SPM bug fixed
-		.package(name: "Sodium", url: "https://github.com/junelife/swift-sodium.git", .branch("spm")),
+		//.package(name: "Sodium", url: "https://github.com/junelife/swift-sodium.git", .branch("spm")),
+		.package(name: "Sodium", url: "https://github.com/jedisct1/swift-sodium", from: "0.9.1"),
 		
-		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
+		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
 		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
 		
 		//.package(name: "TorusSwiftDirectSDK", url: "https://github.com/torusresearch/torus-direct-swift-sdk", from: "1.1.1"),
@@ -28,7 +29,7 @@ let package = Package(
 		.target(
 			name: "KukaiCoreSwift",
 			dependencies: [
-				//.product(name: "Clibsodium", package: "Sodium"),
+				.product(name: "Clibsodium", package: "Sodium"),
 				"Sodium",
 				"BigInt",
 				"Kingfisher",

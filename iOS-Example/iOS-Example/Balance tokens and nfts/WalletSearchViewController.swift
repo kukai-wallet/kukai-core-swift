@@ -46,12 +46,12 @@ class WalletSearchViewController: UIViewController {
 	}
 	
 	@IBAction func twitterSearchTapped(_ sender: Any) {
-		guard let twitterUsername = twitterTextfield.text else {
+		/*guard let twitterUsername = twitterTextfield.text else {
 			return
 		}
 		
 		startActivity()
-		/*ClientsAndData.shared.torusAuthService.getAddress(from: .twitter, for: twitterUsername) { [weak self] torusResult in
+		ClientsAndData.shared.torusAuthService.getAddress(from: .twitter, for: twitterUsername) { [weak self] torusResult in
 			
 			switch torusResult {
 				

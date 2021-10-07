@@ -56,11 +56,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-		guard let url = URLContexts.first?.url else {
+		/*guard let url = URLContexts.first?.url else {
 			return
 		}
 		
-		//TorusSwiftDirectSDK.handle(url: url)
+		TorusSwiftDirectSDK.handle(url: url)*/
 	}
 	
 	
@@ -69,13 +69,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
+		/*
 		LedgerService.shared.delegate = self
 		LedgerService.shared.setupBluetoothConnection { success in
 			print("LedgerService setup: \(success)")
 			
 			//LedgerService.shared.listenForDevices()
-			LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+			LedgerService.shared.connectTo(uuid: "")
 		}
+		*/
 	}
 }
 
@@ -84,7 +86,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 
-
+/*
 extension SceneDelegate: LedgerServiceDelegate {
 	
 	func deviceListUpdated(devices: [String: String]) {
@@ -102,7 +104,7 @@ extension SceneDelegate: LedgerServiceDelegate {
 				return
 			}
 			
-			guard let ledgerWallet = LedgerWallet(address: address ?? "", publicKey: publicKey ?? "", derivationPath: HDWallet.defaultDerivationPath, curve: .ed25519, ledgerUUID: "457558A6-939D-F045-876D-E7C754981212") else {
+			guard let ledgerWallet = LedgerWallet(address: address ?? "", publicKey: publicKey ?? "", derivationPath: HDWallet.defaultDerivationPath, curve: .ed25519, ledgerUUID: "") else {
 				print("unable to create wallet")
 				return
 			}
@@ -177,7 +179,7 @@ extension SceneDelegate: LedgerServiceDelegate {
 		}
 	}
 }
-
+*/
 
 
 
