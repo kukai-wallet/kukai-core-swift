@@ -18,7 +18,7 @@ public class ClientsAndData {
 	var tezosNodeClient: TezosNodeClient
 	var bcdClient: BetterCallDevClient
 	var tzktClient: TzKTClient
-	//var torusAuthService: TorusAuthService
+	var torusAuthService: TorusAuthService
 	
 	
 	// Data

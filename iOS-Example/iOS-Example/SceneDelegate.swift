@@ -6,17 +6,15 @@
 //
 
 import UIKit
+import TorusSwiftDirectSDK
 import KukaiCoreSwift
 import Sodium
+import Combine
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	var window: UIWindow?
-	
-	var operationPayload: OperationPayload? = nil
-	var operationMetadata: OperationMetadata? = nil
-	var forgedOperation: String? = nil
-
+	var cancellable: AnyCancellable?
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		// Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -69,19 +67,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
-		/*
-		LedgerService.shared.delegate = self
-		LedgerService.shared.setupBluetoothConnection { success in
+		LedgerService.shared.setupBluetoothConnection { [weak self] success in
 			print("LedgerService setup: \(success)")
 			
 			//LedgerService.shared.listenForDevices()
-			LedgerService.shared.connectTo(uuid: "")
+			LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+			
+			self?.cancellable = LedgerService.shared.$deviceConnected
+				.dropFirst()
+				.sink { connected in
+					print("Connected: \(connected)")
+					
+					let str = "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e"
+					
+					LedgerService.shared.sign(hex: str, parse: false) { signature, error in
+						//self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
+					}
+			}
 		}
-		*/
 	}
 }
-
-
 
 
 
@@ -96,6 +101,16 @@ extension SceneDelegate: LedgerServiceDelegate {
 	func deviceConnectedStatus(success: Bool) {
 		print("Connected successfully")
 		
+		let str = "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e"
+		
+		LedgerService.shared.sign(hex: str, parse: false) { signature, error in
+			//self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
+		}
+		
+		
+		
+		
+		/*
 		LedgerService.shared.getAddress(verify: false) { address, publicKey, error in
 			print("address: \(address), publicKey: \(publicKey), error: \(error)")
 			
@@ -111,6 +126,7 @@ extension SceneDelegate: LedgerServiceDelegate {
 			
 			let xtz = Token(name: "Tez", symbol: "XTZ", tokenType: .xtz, faVersion: .none, balance: XTZAmount.zero(), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
 			let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.0001), of: xtz, from: ledgerWallet.address, to: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+			
 			
 			ClientsAndData.shared.tezosNodeClient.estimate(operations: operations, withWallet: ledgerWallet) { [weak self] estiamteResult in
 				guard let estimatedOps = try? estiamteResult.get() else {
@@ -131,7 +147,6 @@ extension SceneDelegate: LedgerServiceDelegate {
 							print("Couldn't get ledger prep data \( (try? metadataResult.getError()) ?? ErrorResponse.unknownError() )")
 							return
 						}
-						
 							
 						if ledgerPrep.canLedgerParse {
 							LedgerService.shared.sign(hex: ledgerPrep.watermarkedOp, parse: true) { [weak self] signature, error in
@@ -147,6 +162,7 @@ extension SceneDelegate: LedgerServiceDelegate {
 				}
 			}
 		}
+		*/
 	}
 	
 	func partialMessageSuccessReceived() {
@@ -180,8 +196,6 @@ extension SceneDelegate: LedgerServiceDelegate {
 	}
 }
 */
-
-
 
 
 

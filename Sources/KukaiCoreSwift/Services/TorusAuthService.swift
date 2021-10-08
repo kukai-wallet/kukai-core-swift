@@ -234,11 +234,6 @@ public class TorusAuthService {
 			completion(Result.success(wallet))
 			
 		}.catch { error in
-			
-			print("\n\n\n")
-			print("Inside catch error")
-			print("\n\n\n")
-			
 			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
 			return
@@ -350,9 +345,6 @@ public class TorusAuthService {
 		
 		let data = "{\"username\": \"\(sanitizedUsername)\"}".data(using: .utf8)
 		networkSerice.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
-			
-			print("result: \(result)")
-			
 			switch result {
 				case .success(let dict):
 					if let id = dict["id"] {

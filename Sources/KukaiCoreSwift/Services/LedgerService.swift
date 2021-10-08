@@ -8,32 +8,8 @@
 import Foundation
 import JavaScriptCore
 import CoreBluetooth
+import Combine
 import os.log
-
-
-
-/**
-The main functions in LedgerService return results via completion blocks. But some pieces of data are supplemental, or need to be delivered in a different manner.
-This protocol allows a class to receive data on connection status, new devices discovered etc.
-*/
-public protocol LedgerServiceDelegate: AnyObject {
-	
-	/**
-	Called when a new device is discovered. Parameter will contain all unqiue devices found so far
-	*/
-	func deviceListUpdated(devices: [String: String])
-	
-	/**
-	Called when a ledger is connected too, or when a connection attempt fails
-	*/
-	func deviceConnectedStatus(success: Bool)
-	
-	/**
-	Some actions require the user to interact with the Ledger. When the appropriate status code is returned, this function will be called,
-	allowing apps to present dialogs informing the user to complete the action.
-	*/
-	func partialMessageSuccessReceived()
-}
 
 
 
@@ -131,17 +107,43 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private var addressCallback: ((String?, String?, ErrorResponse?) -> Void)? = nil
 	private var signCallback: ((String?, ErrorResponse?) -> Void)? = nil
 	
-	private var deviceList: [String: String] = [:]
 	private var requestedUUID: String? = nil
 	private var isFetchingAddress = false
 	private var isSigningOperation = false
+	
+	@Published public var deviceList: [String: String] = [:]
+	@Published public var deviceConnected: Bool = false
+	
+	
+	
+	
+	
+	
+	private var messagesToSend: [String] = []
+	@Published var receivedAPDU_statusCode: String = ""
+	@Published var receivedAPDU_payload: String = ""
+	
+	
+	private var writeToLedgerSubject = PassthroughSubject<String, Never>()
+	
+	
+	
+	private var statusCodeCancellable: AnyCancellable?
+	private var payloadCancellable: AnyCancellable?
+	
+	
+	private var sendCancellable: AnyCancellable?
+	private var sendCancellable2: AnyCancellable?
+	private var counter = 0
+	private var statusCodeCencellable: AnyCancellable?
+	private var payloadCencellable: AnyCancellable?
+	private var jobsCencellable: AnyCancellable?
+	
 	
 	
 	/// Public shared instace to avoid having multiple copies of the underlying `JSContext` created
 	public static let shared = LedgerService()
 	
-	/// Delegate to receive status callbacks
-	public weak var delegate: LedgerServiceDelegate?
 	
 	
 	
@@ -174,14 +176,19 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		let nativeWriteHandler: @convention(block) (String) -> Void = { [weak self] (result) in
 			os_log("Inside nativeWriteHandler", log: .ledger, type: .debug)
 			
+			self?.counter += 1
+			
 			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(result)\", 156)").toString() else {
-				self?.delegate?.deviceConnectedStatus(success: false)
+				self?.deviceConnected = false
 				return
 			}
 			
+			/*
 			let components = sendAPDU.components(separatedBy: " ")
 			for component in components {
 				if component != "" {
+					
+					self?.messagesToSend.append(component)
 					
 					let data = Data(hexString: component) ?? Data()
 					
@@ -195,6 +202,22 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 					}
 				}
 			}
+			*/
+			
+			self?.writeToLedgerSubject.send(sendAPDU)
+			
+			if self?.counter == 2 {
+				self?.writeToLedgerSubject.send(completion: .finished)
+			}
+			
+			/*
+			self?.sendCancellable = self?.writeToLedgerSubject.count().sink { [weak self] count in
+				print("Count: \(count)")
+				
+				if count == 2 {
+					self?.writeToLedgerSubject.send(completion: .finished)
+				}
+			}*/
 		}
 		let nativeWriteHandlerBlock = unsafeBitCast(nativeWriteHandler, to: AnyObject.self)
 		jsContext.setObject(nativeWriteHandlerBlock, forKeyedSubscript: "nativeWriteData" as (NSCopying & NSObjectProtocol))
@@ -205,6 +228,97 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			var nativeTransport = new ledger_app_tezos.NativeTransport(nativeWriteData)
 			var tezosApp = new ledger_app_tezos.Tezos(nativeTransport)
 		""")
+		
+		
+		self.sendCancellable2 = self.writeToLedgerSubject
+			.collect()
+			.sink { [weak self] apdus in
+				
+				print("inside collect.sink")
+				
+				guard let writeChar = self?.writeCharacteristic else {
+					print("Couldn't find write")
+					return
+					
+				}
+				
+				
+				
+				
+				
+				var futures: [Deferred<Future<String?, ErrorResponse>>] = []
+				for apdu in apdus {
+					guard let future = self?.sendAPDU(apdu: apdu, writeCharacteristic: writeChar) else {
+						print("Could create apdu")
+						return
+					}
+					
+					futures.append(future)
+				}
+				
+				
+				
+				guard let concatenatedPublishers = futures.serialize() else {
+					print("Unable to serialize")
+					return
+				}
+				
+				
+				
+				self?.jobsCencellable = concatenatedPublishers.sink { failure in
+					print("Received error: \(failure)")
+					
+				} receiveValue: { values in
+					print("Received value: \(values)")
+				}
+
+			}
+	}
+	
+	
+	
+	func sendAPDU(apdu: String, writeCharacteristic: CBCharacteristic) -> Deferred<Future<String?, ErrorResponse>> {
+		return Deferred {
+			Future<String?, ErrorResponse> { [weak self] promise in
+				
+				print("inside sendAPDU 1")
+				
+				// String is split by spaces, write each componenet seperately to the bluetooth queue
+				let components = apdu.components(separatedBy: " ")
+				for component in components {
+					if component != "" {
+						let data = Data(hexString: component) ?? Data()
+						
+						os_log("writing payload", log: .ledger, type: .debug)
+						self?.connectedDevice?.writeValue(data, for: writeCharacteristic, type: .withResponse)
+					}
+				}
+				
+				
+				// Listen for responses
+				self?.statusCodeCencellable = self?.$receivedAPDU_statusCode.dropFirst().sink { statusCode in
+					if statusCode == LedgerService.successCode {
+						print("inside sendAPDU 2 - \(statusCode)")
+						promise(.success(nil))
+						
+					} else if statusCode.count == 4 {
+						print("inside sendAPDU 3 - \(statusCode)")
+						promise(.failure(ErrorResponse.unknownError()))
+						
+					} else {
+						print("inside sendAPDU 4 - \(statusCode)")
+						promise(.success(statusCode))
+					}
+				}
+				
+				/*
+				self?.payloadCencellable = self?.$receivedAPDU_payload.dropFirst().sink { payload in
+					print("inside sendAPDU 4 - \(payload)")
+					promise(.success(payload))
+				}
+				*/
+			}
+		}
 	}
 	
 	
@@ -334,8 +448,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		} else if self.requestedUUID == nil, deviceList[peripheral.identifier.uuidString] == nil {
 			os_log("Found a new ledger device. Name: %@, UUID: %@", log: .ledger, type: .debug, peripheral.name ?? "-", peripheral.identifier.uuidString)
 			
-			deviceList[peripheral.identifier.uuidString] = peripheral.name ?? ""
-			self.delegate?.deviceListUpdated(devices: deviceList)
+			self.deviceList[peripheral.identifier.uuidString] = peripheral.name ?? ""
 		}
 	}
 	
@@ -352,14 +465,14 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		os_log("Failed to connect to %@, %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString)
 		self.connectedDevice = nil
-		self.delegate?.deviceConnectedStatus(success: false)
+		self.deviceConnected = false
 	}
 	
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
 		guard let services = peripheral.services else {
 			os_log("Unable to locate services for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
 			self.connectedDevice = nil
-			self.delegate?.deviceConnectedStatus(success: false)
+			self.deviceConnected = false
 			return
 		}
 		
@@ -375,7 +488,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		guard let characteristics = service.characteristics else {
 			os_log("Unable to locate characteristics for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
 			self.connectedDevice = nil
-			self.delegate?.deviceConnectedStatus(success: false)
+			self.deviceConnected = false
 			return
 		}
 		
@@ -393,7 +506,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				os_log("Registering for notifications on notify characteristic", log: .ledger, type: .debug)
 				peripheral.setNotifyValue(true, for: notify)
 				
-				self.delegate?.deviceConnectedStatus(success: true)
+				self.deviceConnected = true
 			}
 		}
 	}
@@ -442,6 +555,32 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 		
 		
+		// NOTES:
+		// - fire something after 5 seconds to say "if nothing on screen, ledger fucked"?
+		// - Only need response code, for each time `nativeWriteHandler` is called, not for each APDU
+		
+		
+		
+		/*if resultString == LedgerService.successCode {
+			os_log("Received APDU Success/Ok", log: .ledger, type: .debug)
+			//self.delegate?.partialMessageSuccessReceived()
+			return
+			
+		} else*/ /*if resultString.count == 4 {*/
+			os_log("Received APDU Status code", log: .ledger, type: .debug)
+			receivedAPDU_statusCode = resultString
+			return
+			
+		/*} else {
+			os_log("Received APDU Payload", log: .ledger, type: .debug)
+			receivedAPDU_payload = resultString
+			return
+		}*/
+		
+		
+		
+		
+		/*
 		// Some operations require mutiple data packets, and the user to approve/verify something on the actual device
 		// When this happens, the ldeger will return a success/ok message to denote the data was received successfully
 		// but its not ready to return the response at the minute.
@@ -513,6 +652,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			}
 		}
+		*/
 	}
 	
 	
