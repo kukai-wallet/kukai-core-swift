@@ -67,6 +67,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
+		/*
 		LedgerService.shared.setupBluetoothConnection { [weak self] success in
 			print("LedgerService setup: \(success)")
 			
@@ -85,6 +86,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					}
 			}
 		}
+		*/
+		
+		
+		
+		cancellable = LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+			.flatMap({ _ in
+				return LedgerService.shared.getAddress(verify: false)
+			})
+			.sink(receiveCompletion: { completion in
+				if case .failure(let errorResponse) = completion {
+					print("Error: \(errorResponse)")
+				}
+				
+			}, receiveValue: { addressObject in
+				print("addressObject: \(addressObject)")
+			})
+			
+		
+		
+		
+		/*
+		DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+			print("\n\n\n inside second call")
+			
+			
+			self.cancellable = LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+				.flatMap { _ -> Future<String?, Never> in
+					let str = "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e"
+					
+					return LedgerService.shared.sign(hex: str, parse: false)
+				}
+				.sink { signature in
+					print("Signature: \(signature)")
+				}
+		}
+		*/
 	}
 }
 

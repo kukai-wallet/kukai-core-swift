@@ -80,7 +80,7 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 			if let requestURL = requestURL {
 				return "ErrorResponse - Network: Type: \(errorType), StatusCode: \(httpStatusCode ?? -1), \nURL: \(requestURL), \nRequest: \(requestJSON ?? ""), \nResponse: \(responseJSON ?? ""), \nErrorObject: \(ErrorResponse.errorToString(errorObject))"
 			} else {
-				return "ErrorResponse - Application: Type: \(errorType), ErrorString: \(errorString ?? "")"
+				return "ErrorResponse - Application: Type: \(errorType), Error: \(String(describing: errorObject)), ErrorString: \(errorString ?? "")"
 			}
 		}
 	}

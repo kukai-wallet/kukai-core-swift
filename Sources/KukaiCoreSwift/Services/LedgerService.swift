@@ -74,7 +74,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		case LICENSING = "6f42"
 		case HALTED = "6faa"
 		
-		case DEVICE_LOCKED = "00900000"
+		case DEVICE_LOCKED = "009000"
 		case UNKNOWN = "99999999"
 		case NO_ADDRESS_CALLBACK = "99999998"
 		case NO_SIGN_CALLBACK = "99999997"
@@ -97,47 +97,42 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		case EXC_MEMORY_ERROR = "9200"
 	}
 	
+	private enum RequestType {
+		case address
+		case signing
+		case none
+	}
+	
 	private let jsContext: JSContext
 	private var centralManager: CBCentralManager?
 	private var connectedDevice: CBPeripheral?
 	private var writeCharacteristic: CBCharacteristic?
 	private var notifyCharacteristic: CBCharacteristic?
 	
-	private var setupCallback: ((Bool) -> Void)? = nil
-	private var addressCallback: ((String?, String?, ErrorResponse?) -> Void)? = nil
-	private var signCallback: ((String?, ErrorResponse?) -> Void)? = nil
-	
 	private var requestedUUID: String? = nil
-	private var isFetchingAddress = false
-	private var isSigningOperation = false
+	private var requestType: RequestType = .none
+	
+	
+	
 	
 	@Published public var deviceList: [String: String] = [:]
 	@Published public var deviceConnected: Bool = false
+	@Published public var partialSuccessMessageReceived: Bool = false
 	
+	@Published private var bluetoothSetup: Bool = false
+	//@Published private var addressAndPublicKey: (address: String?, publicKey: String?) = (address: nil, publicKey: nil)
+	//@Published private var signature: String? = nil
+	private var addressPublisher = PassthroughSubject<(address: String, publicKey: String), ErrorResponse>()
+	private var signaturePublisher = PassthroughSubject<String, ErrorResponse>()
 	
-	
-	
-	
-	
-	private var messagesToSend: [String] = []
-	@Published var receivedAPDU_statusCode: String = ""
-	@Published var receivedAPDU_payload: String = ""
+	@Published private var receivedAPDU_statusCode: String = ""
+	@Published private var receivedAPDU_payload: String = ""
 	
 	
 	private var writeToLedgerSubject = PassthroughSubject<String, Never>()
 	
-	
-	
-	private var statusCodeCancellable: AnyCancellable?
-	private var payloadCancellable: AnyCancellable?
-	
-	
-	private var sendCancellable: AnyCancellable?
-	private var sendCancellable2: AnyCancellable?
+	private var bag = Set<AnyCancellable>()
 	private var counter = 0
-	private var statusCodeCencellable: AnyCancellable?
-	private var payloadCencellable: AnyCancellable?
-	private var jobsCencellable: AnyCancellable?
 	
 	
 	
@@ -173,51 +168,29 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		
 		// Register a native function, to be passed into the js functions, that will write chunks of data to the device
-		let nativeWriteHandler: @convention(block) (String) -> Void = { [weak self] (result) in
+		let nativeWriteHandler: @convention(block) (String, Int) -> Void = { [weak self] (apdu, expectedNumberOfAPDUs) in
 			os_log("Inside nativeWriteHandler", log: .ledger, type: .debug)
 			
+			// Keep track of the number of times its called for each request
 			self?.counter += 1
 			
-			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(result)\", 156)").toString() else {
+			
+			// Convert the supplied data into an APDU. Returns a single string per ADPU, but broken up into chunks, seperated by spaces for each maximum sized data packet
+			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(apdu)\", 156)").toString() else {
 				self?.deviceConnected = false
 				return
 			}
 			
-			/*
-			let components = sendAPDU.components(separatedBy: " ")
-			for component in components {
-				if component != "" {
-					
-					self?.messagesToSend.append(component)
-					
-					let data = Data(hexString: component) ?? Data()
-					
-					if let char = self?.writeCharacteristic {
-						os_log("writing payload", log: .ledger, type: .debug)
-						self?.connectedDevice?.writeValue(data, for: char, type: .withResponse)
-						
-					} else {
-						os_log("unable to get writeCharacteristic", log: .ledger, type: .error)
-						self?.returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.NO_WRITE_CHARACTERISTIC.rawValue)
-					}
-				}
-			}
-			*/
 			
+			// Add the APDU chunked string to be added to the write subject
 			self?.writeToLedgerSubject.send(sendAPDU)
 			
-			if self?.counter == 2 {
-				self?.writeToLedgerSubject.send(completion: .finished)
-			}
 			
-			/*
-			self?.sendCancellable = self?.writeToLedgerSubject.count().sink { [weak self] count in
-				print("Count: \(count)")
-				
-				if count == 2 {
-					self?.writeToLedgerSubject.send(completion: .finished)
-				}
-			}*/
+			// When all messages recieved, call completion to trigger the messages one by one
+			if self?.counter == expectedNumberOfAPDUs {
+				self?.writeToLedgerSubject.send(completion: .finished)
+				self?.counter = 0
+			}
 		}
 		let nativeWriteHandlerBlock = unsafeBitCast(nativeWriteHandler, to: AnyObject.self)
 		jsContext.setObject(nativeWriteHandlerBlock, forKeyedSubscript: "nativeWriteData" as (NSCopying & NSObjectProtocol))
@@ -228,60 +201,84 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			var nativeTransport = new ledger_app_tezos.NativeTransport(nativeWriteData)
 			var tezosApp = new ledger_app_tezos.Tezos(nativeTransport)
 		""")
-		
-		
-		self.sendCancellable2 = self.writeToLedgerSubject
-			.collect()
-			.sink { [weak self] apdus in
-				
-				print("inside collect.sink")
-				
-				guard let writeChar = self?.writeCharacteristic else {
-					print("Couldn't find write")
-					return
-					
-				}
-				
-				
-				
-				
-				
-				var futures: [Deferred<Future<String?, ErrorResponse>>] = []
-				for apdu in apdus {
-					guard let future = self?.sendAPDU(apdu: apdu, writeCharacteristic: writeChar) else {
-						print("Could create apdu")
-						return
-					}
-					
-					futures.append(future)
-				}
-				
-				
-				
-				guard let concatenatedPublishers = futures.serialize() else {
-					print("Unable to serialize")
-					return
-				}
-				
-				
-				
-				self?.jobsCencellable = concatenatedPublishers.sink { failure in
-					print("Received error: \(failure)")
-					
-				} receiveValue: { values in
-					print("Received value: \(values)")
-				}
-
-			}
 	}
 	
+	/**
+	 Setup the listeners to the `writeToLedgerSubject` that will ultimately return results to the developers code
+	 */
+	private func setupWriteSubject() {
+		self.writeToLedgerSubject = PassthroughSubject<String, Never>()
+		
+		// Tell write subject to wait for completion message
+		self.writeToLedgerSubject
+			.collect()
+			.sink { [weak self] apdus in
+				guard let self = self, let writeChar = self.writeCharacteristic else {
+					os_log("setupWriteSubject - couldn't find self/write", log: .ledger, type: .error)
+					return
+					
+				}
+				
+				// go through APDU chunked strings and convert into Deferred Futures, that don't execute any code until subscribed too
+				var futures: [Deferred<Future<String?, ErrorResponse>>] = []
+				for apdu in apdus {
+					futures.append(self.sendAPDU(apdu: apdu, writeCharacteristic: writeChar))
+				}
+				
+				// Convert array of deferred futures into a single concatenated publisher.
+				// When subscribed too, it will wait for one piblisher to finish, before assigning subscriber to next.
+				// This allows us to run the code for + send each APDU and wait a response from the device, before moving to the next APDU.
+				// This allows us to catch errors when they first occur, and return immeidately, instead of firing error for each APDU packet, causing UI issues
+				guard let concatenatedPublishers = futures.concatenatePublishers() else {
+					os_log("setupWriteSubject - unable to create concatenatedPublishers", log: .ledger, type: .error)
+					return
+				}
+				
+				
+				// Get the result of the concatenated publisher, whether it be successful payload, or error
+				concatenatedPublishers.last().sink { completionResponse in
+					switch completionResponse {
+						case .failure(let errorResponse):
+							os_log("setupWriteSubject - received error: %@", log: .ledger, type: .debug, "\(errorResponse)")
+							self.returnErrorResponseToPublisher(errorResponse: errorResponse)
+							
+						case .finished:
+							os_log("setupWriteSubject - received finished", log: .ledger, type: .debug)
+					}
+					
+					self.bag.removeAll()
+					
+				} receiveValue: { value in
+					os_log("setupWriteSubject - received value: %@", log: .ledger, type: .debug, "\( String(describing: value) )")
+					
+					switch self.requestType {
+						case .address:
+							self.convertAPDUToAddress(payload: value)
+							
+						case .signing:
+							self.convertAPDUToSignature(payload: value)
+						
+						case .none:
+							os_log("Received a value, but no request type set", log: .ledger, type: .error)
+					}
+				}
+				.store(in: &self.bag)
+
+			}
+			.store(in: &bag)
+	}
 	
-	
-	func sendAPDU(apdu: String, writeCharacteristic: CBCharacteristic) -> Deferred<Future<String?, ErrorResponse>> {
+	/**
+	 Create a Deferred Future to send a single APDU and respond with a success / failure based on the result of the notify cahracteristic
+	 */
+	private func sendAPDU(apdu: String, writeCharacteristic: CBCharacteristic) -> Deferred<Future<String?, ErrorResponse>> {
 		return Deferred {
 			Future<String?, ErrorResponse> { [weak self] promise in
-				
-				print("inside sendAPDU 1")
+				guard let self = self else {
+					os_log("sendAPDU - couldn't find self", log: .ledger, type: .error)
+					promise(.failure(ErrorResponse.unknownError()))
+					return
+				}
 				
 				// String is split by spaces, write each componenet seperately to the bluetooth queue
 				let components = apdu.components(separatedBy: " ")
@@ -289,34 +286,32 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 					if component != "" {
 						let data = Data(hexString: component) ?? Data()
 						
-						os_log("writing payload", log: .ledger, type: .debug)
-						self?.connectedDevice?.writeValue(data, for: writeCharacteristic, type: .withResponse)
+						os_log("sendAPDU - writing payload", log: .ledger, type: .debug)
+						self.connectedDevice?.writeValue(data, for: writeCharacteristic, type: .withResponse)
 					}
 				}
 				
 				
 				// Listen for responses
-				self?.statusCodeCencellable = self?.$receivedAPDU_statusCode.dropFirst().sink { statusCode in
+				self.$receivedAPDU_statusCode.dropFirst().sink { statusCode in
 					if statusCode == LedgerService.successCode {
-						print("inside sendAPDU 2 - \(statusCode)")
+						os_log("sendAPDU - received success statusCode", log: .ledger, type: .debug)
 						promise(.success(nil))
 						
-					} else if statusCode.count == 4 {
-						print("inside sendAPDU 3 - \(statusCode)")
-						promise(.failure(ErrorResponse.unknownError()))
-						
 					} else {
-						print("inside sendAPDU 4 - \(statusCode)")
-						promise(.success(statusCode))
+						os_log("sendAPDU - received error statusCode: %@", log: .ledger, type: .error, statusCode)
+						promise(.failure( self.errorResponseFrom(statusCode: statusCode) ))
+						
 					}
 				}
+				.store(in: &self.bag)
 				
-				/*
-				self?.payloadCencellable = self?.$receivedAPDU_payload.dropFirst().sink { payload in
-					print("inside sendAPDU 4 - \(payload)")
+				
+				self.$receivedAPDU_payload.dropFirst().sink { payload in
+					os_log("sendAPDU - received payload: %@", log: .ledger, type: .debug, payload)
 					promise(.success(payload))
 				}
-				*/
+				.store(in: &self.bag)
 			}
 		}
 	}
@@ -330,21 +325,22 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	/**
 	Setup the bluetooth manager, ready to scan or connect to devices
 	*/
-	public func setupBluetoothConnection(completion: @escaping ((Bool) -> Void)) {
+	public func setupBluetoothConnection() -> Future<Bool, Never> {
 		if centralManager != nil {
-			completion(centralManager?.state == .poweredOn)
-			return
+			return Just(true).asFuture()
 		}
 		
-		self.setupCallback = completion
 		centralManager = CBCentralManager(delegate: self, queue: nil)
+		return $bluetoothSetup.dropFirst().asFuture()
 	}
 	
 	/**
 	Start listening for ledger devices, reporting back to the delegate function if found
 	*/
-	public func listenForDevices() {
+	public func listenForDevices() -> AnyPublisher<[String: String], Never> {
 		self.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+		
+		return $deviceList.eraseToAnyPublisher()
 	}
 	
 	/**
@@ -357,18 +353,47 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	/**
 	Connect to a ledger device by a given UUID
 	*/
-	public func connectTo(uuid: String) {
-		self.requestedUUID = uuid
-		self.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+	public func connectTo(uuid: String) -> Future<Bool, Never> {
+		return Future<Bool, Never> { [weak self] promise in
+			guard let self = self else {
+				print("connectTo: \(false)")
+				promise(.success(false))
+				return
+			}
+			
+			if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid {
+				print("connectTo: \(true)")
+				promise(.success(true))
+				return
+			}
+			
+			self.setupBluetoothConnection().sink { value in
+				if !value {
+					print("connectTo: \(value)")
+					promise(.success(value))
+				}
+				
+				self.requestedUUID = uuid
+				self.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+			}.store(in: &self.bag)
+			
+			
+			self.$deviceConnected.dropFirst().sink { value in
+				print("connectTo: \(value)")
+				promise(.success(value))
+			}.store(in: &self.bag)
+		}
 	}
 	
 	/**
 	Disconnect from the current Ledger device
 	*/
-	public func disconnectFromDevice() {
+	public func disconnectFromDevice() -> AnyPublisher<Bool, Never> {
 		if let device = self.connectedDevice {
 			self.centralManager?.cancelPeripheralConnection(device)
 		}
+		
+		return $deviceConnected.dropFirst().eraseToAnyPublisher()
 	}
 	
 	/**
@@ -385,10 +410,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
 	- parameter completion: A completion block called with either address and publicKey, or an error indicating an issue
 	*/
-	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool, completion: @escaping ((String?, String?, Error?) -> Void)) {
-		self.addressCallback = completion
-		self.isFetchingAddress = true
-		self.isSigningOperation = false
+	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> {
+		self.setupWriteSubject()
+		self.requestType = .address
 		
 		var selectedCurve = 0
 		switch curve {
@@ -400,6 +424,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 		
 		let _ = jsContext.evaluateScript("tezosApp.getAddress(\"\(derivationPath)\", {verify: \(verify), curve: \(selectedCurve)})")
+		
+		return addressPublisher.dropFirst().eraseToAnyPublisher()
 	}
 	
 	/**
@@ -409,12 +435,13 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter parse: Ledger can parse non-hashed (blake2b) hex data and display operation data to user (e.g. transfer 1 XTZ to TZ1abc, for fee: 0.001). There are many limitations around what can be parsed. Frequnetly it will require passing in false
 	- parameter completion: A completion block called with either a hex signature, or an error indicating an issue
 	*/
-	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, parse: Bool, completion: @escaping ((String?, ErrorResponse?) -> Void)) {
-		self.signCallback = completion
-		self.isSigningOperation = true
-		self.isFetchingAddress = false
+	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, parse: Bool) -> AnyPublisher<String, ErrorResponse>  {
+		self.setupWriteSubject()
+		self.requestType = .signing
 		
 		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\", \(parse))")
+		
+		return signaturePublisher.dropFirst().eraseToAnyPublisher()
 	}
 	
 	
@@ -425,13 +452,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
 		os_log("centralManagerDidUpdateState", log: .ledger, type: .debug)
-		
-		guard let callback = self.setupCallback else {
-			return
-		}
-		
-		callback(central.state == .poweredOn)
-		self.setupCallback = nil
+		self.bluetoothSetup = (central.state == .poweredOn)
 	}
 	
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -513,13 +534,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
 		if let err = error {
-			os_log("Error during write: %@", log: .ledger, type: .debug, "\(String(describing: error))")
-			if self.isFetchingAddress, let callback = self.addressCallback {
-				callback(nil, nil, ErrorResponse.lederError(code: GeneralErrorCodes.UNKNOWN.rawValue, type: err))
-				
-			} else if let callback = self.signCallback {
-				callback(nil, ErrorResponse.lederError(code: GeneralErrorCodes.UNKNOWN.rawValue, type: err))
-			}
+			os_log("Error during write: %@", log: .ledger, type: .debug, "\( err )")
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			
 		} else {
 			os_log("Successfully wrote to write characteristic", log: .ledger, type: .debug)
 		}
@@ -548,111 +565,26 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		// Check for issues
 		guard let resultString = receivedResult?.toString(), String(resultString.prefix(5)) != "Error" else {
-			isFetchingAddress = false
-			isSigningOperation = false
-			returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			return
 		}
 		
 		
-		// NOTES:
-		// - fire something after 5 seconds to say "if nothing on screen, ledger fucked"?
-		// - Only need response code, for each time `nativeWriteHandler` is called, not for each APDU
-		
-		
-		
-		/*if resultString == LedgerService.successCode {
-			os_log("Received APDU Success/Ok", log: .ledger, type: .debug)
-			//self.delegate?.partialMessageSuccessReceived()
-			return
-			
-		} else*/ /*if resultString.count == 4 {*/
+		if resultString.count >= 4 && resultString.count <= 6 {
 			os_log("Received APDU Status code", log: .ledger, type: .debug)
 			receivedAPDU_statusCode = resultString
+			
+			if resultString == LedgerService.successCode {
+				partialSuccessMessageReceived = true
+			}
+			
 			return
 			
-		/*} else {
+		} else {
 			os_log("Received APDU Payload", log: .ledger, type: .debug)
 			receivedAPDU_payload = resultString
 			return
-		}*/
-		
-		
-		
-		
-		/*
-		// Some operations require mutiple data packets, and the user to approve/verify something on the actual device
-		// When this happens, the ldeger will return a success/ok message to denote the data was received successfully
-		// but its not ready to return the response at the minute.
-		// We can use this oppertunity to let users know, in the app, that they need to check their ledger device
-		if resultString == LedgerService.successCode {
-			os_log("Received Success/Ok APDU", log: .ledger, type: .debug)
-			self.delegate?.partialMessageSuccessReceived()
-			return
-			
-		} else if resultString.count == 4 {
-			returnLedgerErrorToCallback(resultCode: resultString)
-			return
 		}
-		
-		
-		os_log("Received non partial success response: %@", log: .ledger, type: .debug, resultString)
-		
-		
-		// Else, try to parse the response into an address/public key or a signature
-		if isFetchingAddress {
-			isFetchingAddress = false
-			
-			guard let dict = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(resultString)\")").toObject() as? [String: String] else {
-				os_log("Didn't receive address object", log: .ledger, type: .error)
-				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
-				return
-			}
-			
-			guard let address = dict["address"], let publicKey = dict["publicKey"] else {
-				if let err = dict["error"] {
-					os_log("Internal script error: %@", log: .ledger, type: .error, err)
-					returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
-					
-				} else {
-					os_log("Unknown error", log: .ledger, type: .error)
-					returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
-				}
-				return
-			}
-			
-			guard let callback = addressCallback else {
-				os_log("No address callback", log: .ledger, type: .error)
-				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.NO_ADDRESS_CALLBACK.rawValue)
-				return
-			}
-			
-			callback(address, publicKey, nil)
-			
-		} else if isSigningOperation {
-			self.isSigningOperation = false
-			
-			guard let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoSignature(\"\(resultString)\").signature").toString() else {
-				os_log("Didn't receive signature", log: .ledger, type: .error)
-				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
-				return
-			}
-			
-			if resultHex != "" && resultHex != "undefined" {
-				if let callback = signCallback {
-					callback(resultHex, nil)
-					
-				} else {
-					os_log("No sign callback", log: .ledger, type: .error)
-					returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.NO_SIGN_CALLBACK.rawValue)
-				}
-				
-			} else {
-				os_log("Unknown error. APDU: %@", log: .ledger, type: .error, resultHex)
-				returnLedgerErrorToCallback(resultCode: GeneralErrorCodes.UNKNOWN.rawValue)
-			}
-		}
-		*/
 	}
 	
 	
@@ -661,30 +593,90 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	// MARK: - Private helpers
 	
-	/**
-	A helper to take an error code , returned from an APDU, and fire it back into whichever completion callback is being tracked
-	*/
-	private func returnLedgerErrorToCallback(resultCode: String) {
-		os_log("Error parsing data. Result code: %@", log: .ledger, type: .error, resultCode)
+	private func convertAPDUToAddress(payload: String?) {
+		guard let payload = payload else {
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			return
+		}
+		
+		guard let dict = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(payload)\")").toObject() as? [String: String] else {
+			os_log("Didn't receive address object", log: .ledger, type: .error)
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			return
+		}
+		
+		guard let address = dict["address"], let publicKey = dict["publicKey"] else {
+			if let err = dict["error"] {
+				os_log("Internal script error: %@", log: .ledger, type: .error, err)
+				returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+				
+			} else {
+				os_log("Unknown error", log: .ledger, type: .error)
+				returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			}
+			return
+		}
+		
+		self.addressPublisher.send((address: address, publicKey: publicKey))
+	}
+	
+	private func convertAPDUToSignature(payload: String?) {
+		guard let payload = payload else {
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			return
+		}
+		
+		guard let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoSignature(\"\(payload)\").signature").toString() else {
+			os_log("Didn't receive signature", log: .ledger, type: .error)
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+			return
+		}
+		
+		if resultHex != "" && resultHex != "undefined" {
+			self.signaturePublisher.send(resultHex)
+			
+		} else {
+			os_log("Unknown error. APDU: %@", log: .ledger, type: .error, resultHex)
+			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
+		}
+	}
+	
+	private func errorResponseFrom(statusCode: String) -> ErrorResponse {
+		os_log("Error parsing data. statusCode: %@", log: .ledger, type: .error, statusCode)
 		
 		var code = GeneralErrorCodes.UNKNOWN.rawValue
 		var type: Error = GeneralErrorCodes.UNKNOWN
 		
-		if let tezosCode = TezosAppErrorCodes(rawValue: resultCode) {
+		if let tezosCode = TezosAppErrorCodes(rawValue: statusCode) {
 			code = tezosCode.rawValue
 			type = tezosCode
 			
-		} else if let generalCode = GeneralErrorCodes(rawValue: resultCode) {
+		} else if let generalCode = GeneralErrorCodes(rawValue: statusCode) {
 			code = generalCode.rawValue
 			type = generalCode
 		}
 		
-		
-		if isFetchingAddress, let callback = addressCallback {
-			callback(nil, nil, ErrorResponse.lederError(code: code, type: type))
+		return ErrorResponse.lederError(code: code, type: type)
+	}
+	
+	/**
+	A helper to take an error code , returned from an APDU, and fire it back into whichever completion callback is being tracked
+	*/
+	private func returnErrorToPublisher(statusCode: String) {
+		let errorResponse = errorResponseFrom(statusCode: statusCode)
+		returnErrorResponseToPublisher(errorResponse: errorResponse)
+	}
+	
+	private func returnErrorResponseToPublisher(errorResponse: ErrorResponse) {
+		switch requestType {
+			case .address:
+				self.addressPublisher.send(completion: .failure(errorResponse))
 			
-		} else if let callback = signCallback {
-			callback(nil, ErrorResponse.lederError(code: code, type: type))
+			case .signing:
+				self.signaturePublisher.send(completion: .failure(errorResponse))
+			
+			case .none:
+				os_log("Requesting error for unknown requestType: %@", log: .ledger, type: .error, "\(errorResponse)")
 		}
 	}
 }
