@@ -124,10 +124,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
-	/**
-	 Be notified when the ledger device returns a success message, part way through the process.
-	 This can be useful to indicate to users that the request has succeed, but s waiting on input on the Ledger device to continue
-	*/
+	/// Be notified when the ledger device returns a success message, part way through the process.
+	/// This can be useful to indicate to users that the request has succeed, but s waiting on input on the Ledger device to continue
 	@Published public var partialSuccessMessageReceived: Bool = false
 	
 	@Published private var bluetoothSetup: Bool = false
@@ -228,7 +226,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	}
 	
 	/**
-	Start listening for ledger devices, reporting back to the delegate function if found
+	Start listening for ledger devices
+	 - returns: Publisher with a dictionary of `[UUID: deviceName]` or an `ErrorResponse`
 	*/
 	public func listenForDevices() -> AnyPublisher<[String: String], ErrorResponse> {
 		self.deviceListPublisher = PassthroughSubject<[String: String], ErrorResponse>()
@@ -247,7 +246,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	}
 	
 	/**
-	Stop listen for and reporting new ledger devices found
+	Stop listening for and reporting new ledger devices found
 	*/
 	public func stopListening() {
 		self.centralManager?.stopScan()
@@ -256,6 +255,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Connect to a ledger device by a given UUID
+	 - returns: Publisher which will indicate true / false, or return an `ErrorResponse` if it can't connect to bluetooth
 	*/
 	public func connectTo(uuid: String) -> AnyPublisher<Bool, ErrorResponse> {
 		if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid {
@@ -278,6 +278,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Disconnect from the current Ledger device
+	 - returns: A Publisher with a boolean, or `ErrorResponse` if soemthing goes wrong
 	*/
 	public func disconnectFromDevice() -> AnyPublisher<Bool, ErrorResponse> {
 		if let device = self.connectedDevice {
@@ -289,6 +290,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Get the UUID of the connected device
+	 - returns: a string if it can be found
 	*/
 	public func getConnectedDeviceUUID() -> String? {
 		return self.connectedDevice?.identifier.uuidString
@@ -299,7 +301,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
 	- parameter curve: Optional. The `EllipticalCurve` to use to extract the address
 	- parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
-	- parameter completion: A completion block called with either address and publicKey, or an error indicating an issue
+	- returns: A publisher which will return a tuple containing the address and publicKey, or an `ErrorResponse`
 	*/
 	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> {
 		self.setupWriteSubject()
@@ -325,7 +327,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter hex: An operation converted to JSON, forged and watermarked, converted to a hex string. (Note: there are some issues with the ledger app signing batch transactions. May simply return no result at all. Can't run REVEAL and TRANSACTION together for example)
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
 	- parameter parse: Ledger can parse non-hashed (blake2b) hex data and display operation data to user (e.g. transfer 1 XTZ to TZ1abc, for fee: 0.001). There are many limitations around what can be parsed. Frequnetly it will require passing in false
-	- parameter completion: A completion block called with either a hex signature, or an error indicating an issue
+	- returns: A Publisher which will return a string containing the hex signature, or an `ErrorResponse`
 	*/
 	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, parse: Bool) -> AnyPublisher<String, ErrorResponse>  {
 		self.setupWriteSubject()
@@ -343,11 +345,13 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	// MARK: - Bluetooth
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
 		os_log("centralManagerDidUpdateState", log: .ledger, type: .debug)
 		self.bluetoothSetup = (central.state == .poweredOn)
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 		
 		// If we have been requested to connect to a speicific UUID, only listen for that one and connect immediately if found
@@ -366,6 +370,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
 		os_log("Connected to %@, %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString)
 		
@@ -376,12 +381,14 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		self.connectedDevice?.discoverServices([LedgerNanoXConstant.serviceUUID])
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		os_log("Failed to connect to %@, %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString)
 		self.connectedDevice = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
 		guard let services = peripheral.services else {
 			os_log("Unable to locate services for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
@@ -398,6 +405,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 		guard let characteristics = service.characteristics else {
 			os_log("Unable to locate characteristics for: %@, %@. Error: %@", log: .ledger, type: .debug, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
@@ -425,6 +433,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
 		if let err = error {
 			os_log("Error during write: %@", log: .ledger, type: .debug, "\( err )")
@@ -435,6 +444,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 		guard characteristic.uuid == LedgerNanoXConstant.notifyUUID else {
 			return
@@ -548,7 +558,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			.store(in: &bag)
 	}
 	
-	/// Create a Deferred Future to send a single APDU and respond with a success / failure based on the result of the notify cahracteristic
+	/// Create a Deferred Future to send a single APDU and respond with a success / failure based on the result of the notify characteristic
 	private func sendAPDU(apdu: String, writeCharacteristic: CBCharacteristic) -> Deferred<Future<String?, ErrorResponse>> {
 		return Deferred {
 			Future<String?, ErrorResponse> { [weak self] promise in
@@ -594,6 +604,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	/// Take in a payload string from an APDU, and call the necessary JS function to convert it to an address / publicKey. Also will fire to the necessary publisher
 	private func convertAPDUToAddress(payload: String?) {
 		guard let payload = payload else {
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
@@ -622,6 +633,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		self.addressPublisher.send(completion: .finished)
 	}
 	
+	/// Take in a payload string from an APDU, and call the necessary JS function to convert it to a signature. Also will fire to the necessary publisher
 	private func convertAPDUToSignature(payload: String?) {
 		guard let payload = payload else {
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
@@ -644,6 +656,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	/// Create and error response from a statusCode
 	private func errorResponseFrom(statusCode: String) -> ErrorResponse {
 		os_log("Error parsing data. statusCode: %@", log: .ledger, type: .error, statusCode)
 		
@@ -662,14 +675,13 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		return ErrorResponse.lederError(code: code, type: type)
 	}
 	
-	/**
-	A helper to take an error code , returned from an APDU, and fire it back into whichever completion callback is being tracked
-	*/
+	/// A helper to take an error code , returned from an APDU, and fire it back into whichever publisher is currently being listened too
 	private func returnErrorToPublisher(statusCode: String) {
 		let errorResponse = errorResponseFrom(statusCode: statusCode)
 		returnErrorResponseToPublisher(errorResponse: errorResponse)
 	}
 	
+	/// Send the error into the appropriate publisher
 	private func returnErrorResponseToPublisher(errorResponse: ErrorResponse) {
 		switch requestType {
 			case .address:

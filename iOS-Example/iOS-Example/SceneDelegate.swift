@@ -79,7 +79,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		
 		
 		/*
-		LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+		LedgerService.shared.connectTo(uuid: "")
 			.flatMap({ success -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> in
 				if success {
 					return LedgerService.shared.getAddress(verify: false)
@@ -103,7 +103,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		
 		
 		/*
-		LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+		LedgerService.shared.connectTo(uuid: "")
 			.flatMap { _ -> AnyPublisher<String, ErrorResponse> in
 				return LedgerService.shared.sign(hex: "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e", parse: false)
 			}
