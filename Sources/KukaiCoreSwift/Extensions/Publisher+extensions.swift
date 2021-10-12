@@ -9,9 +9,6 @@ import Combine
 
 public extension Publisher {
 	
-	/**
-	 Convert a publisher into a Future
-	 */
 	func asFuture() -> Future<Output, Never> {
 		var subscriptions = Set<AnyCancellable>()
 		
@@ -26,10 +23,26 @@ public extension Publisher {
 		}
 	}
 	
-	/**
-	 Convert a publisher into a Deferred Future. Useful for mapping @Published vars into a Future, so the results of funcitons can be dasiy chained together
-	 */
 	func asDeferredFuture() -> Deferred<Future<Output, Never>> {
 		return Deferred { self.asFuture() }
+	}
+	
+	func convertToResult() -> AnyPublisher<Result<Output, Failure>, Never> {
+		self.map(Result.success)
+			.catch { Just(.failure($0)) }
+			.eraseToAnyPublisher()
+	}
+}
+
+public extension AnyPublisher {
+	
+	static func just(_ output: Output) -> Self {
+		Just(output)
+			.setFailureType(to: Failure.self)
+			.eraseToAnyPublisher()
+	}
+	
+	static func fail(with error: Failure) -> Self {
+		Fail(error: error).eraseToAnyPublisher()
 	}
 }

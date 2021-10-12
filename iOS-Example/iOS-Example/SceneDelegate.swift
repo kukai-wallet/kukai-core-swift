@@ -14,7 +14,7 @@ import Combine
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	var window: UIWindow?
-	var cancellable: AnyCancellable?
+	var bag = Set<AnyCancellable>()
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		// Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -68,171 +68,59 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func experiment() {
 		
 		/*
-		LedgerService.shared.setupBluetoothConnection { [weak self] success in
-			print("LedgerService setup: \(success)")
+		LedgerService.shared.listenForDevices().sink { completion in
+			print("Completion: \(completion)")
 			
-			//LedgerService.shared.listenForDevices()
-			LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
-			
-			self?.cancellable = LedgerService.shared.$deviceConnected
-				.dropFirst()
-				.sink { connected in
-					print("Connected: \(connected)")
-					
-					let str = "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e"
-					
-					LedgerService.shared.sign(hex: str, parse: false) { signature, error in
-						//self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
-					}
-			}
-		}
+		} receiveValue: { devices in
+			print("Devices: \(devices)")
+		}.store(in: &bag)
 		*/
 		
 		
 		
-		cancellable = LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: false)
-			})
-			.sink(receiveCompletion: { completion in
-				if case .failure(let errorResponse) = completion {
-					print("Error: \(errorResponse)")
-				}
-				
-			}, receiveValue: { addressObject in
-				print("addressObject: \(addressObject)")
-			})
-			
-		
-		
-		
 		/*
-		DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-			print("\n\n\n inside second call")
-			
-			
-			self.cancellable = LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
-				.flatMap { _ -> Future<String?, Never> in
-					let str = "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e"
-					
-					return LedgerService.shared.sign(hex: str, parse: false)
+		LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+			.flatMap({ success -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> in
+				if success {
+					return LedgerService.shared.getAddress(verify: false)
+				} else {
+					return AnyPublisher.fail(with: ErrorResponse.unknownError())
 				}
-				.sink { signature in
-					print("Signature: \(signature)")
-				}
-		}
-		*/
-	}
-}
-
-
-
-
-/*
-extension SceneDelegate: LedgerServiceDelegate {
-	
-	func deviceListUpdated(devices: [String: String]) {
-		print("Devices found: \(devices)")
-	}
-	
-	func deviceConnectedStatus(success: Bool) {
-		print("Connected successfully")
-		
-		let str = "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e"
-		
-		LedgerService.shared.sign(hex: str, parse: false) { signature, error in
-			//self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
-		}
-		
-		
-		
-		
-		/*
-		LedgerService.shared.getAddress(verify: false) { address, publicKey, error in
-			print("address: \(address), publicKey: \(publicKey), error: \(error)")
-			
-			if let _ = error {
-				print("Received error, can't proceed")
-				return
-			}
-			
-			guard let ledgerWallet = LedgerWallet(address: address ?? "", publicKey: publicKey ?? "", derivationPath: HDWallet.defaultDerivationPath, curve: .ed25519, ledgerUUID: "") else {
-				print("unable to create wallet")
-				return
-			}
-			
-			let xtz = Token(name: "Tez", symbol: "XTZ", tokenType: .xtz, faVersion: .none, balance: XTZAmount.zero(), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
-			let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.0001), of: xtz, from: ledgerWallet.address, to: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
-			
-			
-			ClientsAndData.shared.tezosNodeClient.estimate(operations: operations, withWallet: ledgerWallet) { [weak self] estiamteResult in
-				guard let estimatedOps = try? estiamteResult.get() else {
-					print("Couldn't estimate transaction: \( (try? estiamteResult.getError()) ?? ErrorResponse.unknownError() )")
+			})
+			.convertToResult()
+			.sink(receiveValue: { addressResult in
+				guard let addObj = try? addressResult.get() else {
+					let error = (try? addressResult.getError()) ?? ErrorResponse.unknownError()
+					print("Error: \(error)")
 					return
 				}
 				
-				
-				ClientsAndData.shared.tezosNodeClient.getOperationMetadata(forWallet: ledgerWallet) { metadataResult in
-					guard let metadata = try? metadataResult.get() else {
-						print("Couldn't fetch metadata \( (try? metadataResult.getError()) ?? ErrorResponse.unknownError() )")
-						return
-					}
-					
-					
-					ClientsAndData.shared.tezosNodeClient.operationService.ledgerOperationPrepWithLocalForge(metadata: metadata, operations: estimatedOps, wallet: ledgerWallet) { ledgerPrepResult in
-						guard let ledgerPrep = try? ledgerPrepResult.get() else {
-							print("Couldn't get ledger prep data \( (try? metadataResult.getError()) ?? ErrorResponse.unknownError() )")
-							return
-						}
-							
-						if ledgerPrep.canLedgerParse {
-							LedgerService.shared.sign(hex: ledgerPrep.watermarkedOp, parse: true) { [weak self] signature, error in
-								self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
-							}
-							
-						} else {
-							LedgerService.shared.sign(hex: ledgerPrep.blake2bHash, parse: false) { [weak self] signature, error in
-								self?.handle(ledgerPrep: ledgerPrep, signature: signature, andError: error)
-							}
-						}
-					}
-				}
+				print("addressObject: \(addObj)")
+			})
+			.store(in: &bag)
+		*/
+		
+		
+		
+		/*
+		LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
+			.flatMap { _ -> AnyPublisher<String, ErrorResponse> in
+				return LedgerService.shared.sign(hex: "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e", parse: false)
 			}
-		}
+			.convertToResult()
+			.sink(receiveValue: { signatureResult in
+				guard let sig = try? signatureResult.get() else {
+					let error = (try? signatureResult.getError()) ?? ErrorResponse.unknownError()
+					print("Error: \(error)")
+					return
+				}
+				
+				print("signature: \(sig)")
+			})
+			.store(in: &bag)
 		*/
 	}
-	
-	func partialMessageSuccessReceived() {
-		print("Partial success message")
-	}
-	
-	func handle(ledgerPrep: OperationService.LedgerPayloadPrepResponse, signature: String?, andError error: ErrorResponse?) {
-		guard let sig = signature else {
-			print("Error from ledger: \( error ?? ErrorResponse.unknownError() )")
-			return
-		}
-		
-		guard let binarySignature = Sodium.shared.utils.hex2bin(sig) else {
-			print("Unable to inject, as can't find prep data")
-			return
-		}
-		
-		ClientsAndData.shared.tezosNodeClient.operationService.preapplyAndInject(forgedOperation: ledgerPrep.forgedOp,
-																					signature: binarySignature,
-																					signatureCurve: .ed25519,
-																					operationPayload: ledgerPrep.payload,
-																					operationMetadata: ledgerPrep.metadata) { [weak self] injectionResult in
-			
-			guard let opHash = try? injectionResult.get() else {
-				print("Preapply / Injection error: \( (try? injectionResult.getError()) ?? ErrorResponse.unknownError() )")
-				return
-			}
-			
-			print("Success Operation injected, hash: \(opHash)")
-		}
-	}
 }
-*/
 
 
 
