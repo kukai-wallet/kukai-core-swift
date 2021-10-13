@@ -33,7 +33,7 @@ public struct TezosNodeClientConfig {
 	public struct defaultMainnetURLs {
 		
 		/// The default mainnet URL to use for `primaryNodeURL`, For more information on the free service, see: https://tezos.giganode.io/
-		public static let primaryNodeURL = URL(string: "https://mainnet-tezos.giganode.io/")!
+		public static let primaryNodeURL = URL(string: "https://mainnet.smartpy.io/")!
 		
 		/// The default mainnet URL to use for `parseNodeURL`, For more information on the free service, see: https://nautilus.cloud/
 		public static let parseNodeURL = URL(string: "https://tezos-prod.cryptonomic-infra.tech:443/")!
