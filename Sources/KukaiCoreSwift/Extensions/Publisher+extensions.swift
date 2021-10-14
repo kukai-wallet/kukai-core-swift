@@ -52,7 +52,7 @@ public extension Publisher {
 	/**
 	 Custom sink implementation breaking each piece into a seperate dedicated callback, avoiding the need to call a switch or unwrap an error
 	 */
-	func sink(onComplete: @escaping (() -> Void), onError: @escaping ((Failure) -> Void), onSuccess: @escaping ((Output) -> Void)) -> AnyCancellable {
+	func sink(onError: @escaping ((Failure) -> Void), onSuccess: @escaping ((Output) -> Void), onComplete: (() -> Void)? = nil) -> AnyCancellable {
 		return self.sink { completion in
 			
 			switch completion {
@@ -60,7 +60,9 @@ public extension Publisher {
 					onError(error)
 				
 				case .finished:
-					onComplete()
+					if let onComp = onComplete {
+						onComp()
+					}
 			}
 			
 		} receiveValue: { output in
@@ -99,7 +101,7 @@ public extension AnyPublisher {
 	/**
 	 Custom sink implementation breaking each piece into a seperate dedicated callback, avoiding the need to call a switch or unwrap an error
 	 */
-	func sink(onComplete: @escaping (() -> Void), onError: @escaping ((Failure) -> Void), onSuccess: @escaping ((Output) -> Void)) -> AnyCancellable {
+	func sink(onError: @escaping ((Failure) -> Void), onSuccess: @escaping ((Output) -> Void), onComplete: (() -> Void)? = nil) -> AnyCancellable {
 		return self.sink { completion in
 			
 			switch completion {
@@ -107,7 +109,9 @@ public extension AnyPublisher {
 					onError(error)
 				
 				case .finished:
-					onComplete()
+					if let onComp = onComplete {
+						onComp()
+					}
 			}
 			
 		} receiveValue: { output in
