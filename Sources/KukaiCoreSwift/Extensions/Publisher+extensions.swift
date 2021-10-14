@@ -48,6 +48,25 @@ public extension Publisher {
 	func onReceiveOutput(_ callback: @escaping ((Self.Output) -> Void)) -> Publishers.HandleEvents<Self> {
 		return self.handleEvents(receiveSubscription: nil, receiveOutput: callback, receiveCompletion: nil, receiveCancel: nil, receiveRequest: nil)
 	}
+	
+	/**
+	 Custom sink implementation breaking each piece into a seperate dedicated callback, avoiding the need to call a switch or unwrap an error
+	 */
+	func sink(onComplete: @escaping (() -> Void), onError: @escaping ((Failure) -> Void), onSuccess: @escaping ((Output) -> Void)) -> AnyCancellable {
+		return self.sink { completion in
+			
+			switch completion {
+				case .failure(let error):
+					onError(error)
+				
+				case .finished:
+					onComplete()
+			}
+			
+		} receiveValue: { output in
+			onSuccess(output)
+		}
+	}
 }
 
 
@@ -75,5 +94,24 @@ public extension AnyPublisher {
 	 */
 	func onReceiveOutput(_ callback: @escaping ((Self.Output) -> Void)) -> Publishers.HandleEvents<Self> {
 		return self.handleEvents(receiveSubscription: nil, receiveOutput: callback, receiveCompletion: nil, receiveCancel: nil, receiveRequest: nil)
+	}
+	
+	/**
+	 Custom sink implementation breaking each piece into a seperate dedicated callback, avoiding the need to call a switch or unwrap an error
+	 */
+	func sink(onComplete: @escaping (() -> Void), onError: @escaping ((Failure) -> Void), onSuccess: @escaping ((Output) -> Void)) -> AnyCancellable {
+		return self.sink { completion in
+			
+			switch completion {
+				case .failure(let error):
+					onError(error)
+				
+				case .finished:
+					onComplete()
+			}
+			
+		} receiveValue: { output in
+			onSuccess(output)
+		}
 	}
 }

@@ -107,15 +107,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			.flatMap { _ -> AnyPublisher<String, ErrorResponse> in
 				return LedgerService.shared.sign(hex: "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e", parse: false)
 			}
-			.convertToResult()
-			.sink(receiveValue: { signatureResult in
-				guard let sig = try? signatureResult.get() else {
-					let error = (try? signatureResult.getError()) ?? ErrorResponse.unknownError()
-					print("Error: \(error)")
-					return
-				}
+			.sink(onComplete: {
+				print("Complete")
 				
-				print("signature: \(sig)")
+			}, onError: { error in
+				print("Error: \(error)")
+				
+			}, onSuccess: { signature in
+				print("Signature: \(signature)")
 			})
 			.store(in: &bag)
 		*/
