@@ -285,12 +285,10 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	Disconnect from the current Ledger device
 	 - returns: A Publisher with a boolean, or `ErrorResponse` if soemthing goes wrong
 	*/
-	public func disconnectFromDevice() -> AnyPublisher<Bool, ErrorResponse> {
+	public func disconnectFromDevice() {
 		if let device = self.connectedDevice {
 			self.centralManager?.cancelPeripheralConnection(device)
 		}
-		
-		return deviceConnectedPublisher.eraseToAnyPublisher()
 	}
 	
 	/**
@@ -325,7 +323,6 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		// return the addressPublisher, but listen for the returning of values and use this as an oppertunity to clean up the lingering cancellables, as it only returns one at a time
 		return addressPublisher.onReceiveOutput({ _ in
-			self.addressPublisher.send(completion: .finished)
 			self.bag_apdu.removeAll()
 			self.bag_writer.removeAll()
 		}).eraseToAnyPublisher()
@@ -347,7 +344,6 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		// return the addressPublisher, but listen for the returning of values and use this as an oppertunity to clean up the lingering cancellables, as it only returns one at a time
 		return signaturePublisher.onReceiveOutput({ _ in
-			self.signaturePublisher.send(completion: .finished)
 			self.bag_apdu.removeAll()
 			self.bag_writer.removeAll()
 		}).eraseToAnyPublisher()
