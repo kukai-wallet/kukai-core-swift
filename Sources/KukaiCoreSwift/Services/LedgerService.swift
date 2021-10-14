@@ -195,7 +195,6 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			
 			// When all messages recieved, call completion to trigger the messages one by one
 			if self?.counter == expectedNumberOfAPDUs {
-				print("expectedNumberOfAPDUs reached")
 				self?.writeToLedgerSubject.send(completion: .finished)
 				self?.counter = 0
 			}
@@ -279,17 +278,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			}
 			.store(in: &self.bag_connection)
 		
-		return self.deviceConnectedPublisher.handleEvents(receiveSubscription: { _ in
-			print("deviceConnectedPublisher - receiveSubscription")
-		}, receiveOutput: { _ in
-			print("deviceConnectedPublisher - receiveOutput")
-		}, receiveCompletion: { _ in
-			print("deviceConnectedPublisher - receiveCompletion")
-		}, receiveCancel: {
-			print("deviceConnectedPublisher - receiveCancel")
-		}, receiveRequest: { _ in
-			print("deviceConnectedPublisher - receiveRequest")
-		}).eraseToAnyPublisher()
+		return self.deviceConnectedPublisher.eraseToAnyPublisher()
 	}
 	
 	/**
@@ -334,19 +323,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		let _ = jsContext.evaluateScript("tezosApp.getAddress(\"\(derivationPath)\", {verify: \(verify), curve: \(selectedCurve)})")
 		
-		return addressPublisher.handleEvents(receiveSubscription: { _ in
-			print("addressPublisher - receiveSubscription")
-		}, receiveOutput: { _ in
-			print("addressPublisher - receiveOutput")
+		// return the addressPublisher, but listen for the returning of values and use this as an oppertunity to clean up the lingering cancellables, as it only returns one at a time
+		return addressPublisher.onReceiveOutput({ _ in
 			self.addressPublisher.send(completion: .finished)
 			self.bag_apdu.removeAll()
 			self.bag_writer.removeAll()
-		}, receiveCompletion: { _ in
-			print("addressPublisher - receiveCompletion")
-		}, receiveCancel: {
-			print("addressPublisher - receiveCancel")
-		}, receiveRequest: { _ in
-			print("addressPublisher - receiveRequest")
 		}).eraseToAnyPublisher()
 	}
 	
@@ -364,7 +345,12 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\", \(parse))")
 		
-		return signaturePublisher.eraseToAnyPublisher()
+		// return the addressPublisher, but listen for the returning of values and use this as an oppertunity to clean up the lingering cancellables, as it only returns one at a time
+		return signaturePublisher.onReceiveOutput({ _ in
+			self.signaturePublisher.send(completion: .finished)
+			self.bag_apdu.removeAll()
+			self.bag_writer.removeAll()
+		}).eraseToAnyPublisher()
 	}
 	
 	
@@ -528,9 +514,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private func setupWriteSubject() {
 		self.writeToLedgerSubject = PassthroughSubject<String, Never>()
 		self.addressPublisher = PassthroughSubject<(address: String, publicKey: String), ErrorResponse>()
-		/*self.signaturePublisher = PassthroughSubject<(address: String, publicKey: String), ErrorResponse>()
-		self.receivedAPDU_statusCode = PassthroughSubject<String, Never>()
-		self.receivedAPDU_payload = PassthroughSubject<String, Never>()*/
+		self.signaturePublisher = PassthroughSubject<String, ErrorResponse>()
 		
 		// Tell write subject to wait for completion message
 		self.writeToLedgerSubject
@@ -542,9 +526,6 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 					
 				}
 				
-				print("\n\n\n")
-				print("apdus: \(apdus)")
-				
 				
 				// go through APDU chunked strings and convert into Deferred Futures, that don't execute any code until subscribed too
 				var futures: [Deferred<Future<String?, ErrorResponse>>] = []
@@ -552,8 +533,6 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 					futures.append(self.sendAPDU(apdu: apdu, writeCharacteristic: writeChar))
 				}
 				
-				print("futures: \(futures)")
-				print("\n\n\n")
 				
 				// Convert array of deferred futures into a single concatenated publisher.
 				// When subscribed too, it will wait for one piblisher to finish, before assigning subscriber to next.
@@ -632,18 +611,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				.store(in: &self.bag_apdu)
 				
 				
-				self.receivedAPDU_payload.handleEvents(receiveSubscription: { _ in
-						print("receivedAPDU_payload - receiveSubscription")
-					}, receiveOutput: { _ in
-						print("receivedAPDU_payload - receiveOutput")
-					}, receiveCompletion: { _ in
-						print("receivedAPDU_payload - receiveCompletion")
-					}, receiveCancel: {
-						print("receivedAPDU_payload - receiveCancel")
-					}, receiveRequest: { _ in
-						print("receivedAPDU_payload - receiveRequest")
-					})
-					.sink { payload in
+				self.receivedAPDU_payload.sink { payload in
 					os_log("sendAPDU - received payload: %@", log: .ledger, type: .debug, payload)
 					promise(.success(payload))
 				}
@@ -654,22 +622,16 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/// Take in a payload string from an APDU, and call the necessary JS function to convert it to an address / publicKey. Also will fire to the necessary publisher
 	private func convertAPDUToAddress(payload: String?) {
-		print("convertAPDUToAddress 1")
-		
 		guard let payload = payload else {
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			return
 		}
-		
-		print("convertAPDUToAddress 2")
 		
 		guard let dict = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(payload)\")").toObject() as? [String: String] else {
 			os_log("Didn't receive address object", log: .ledger, type: .error)
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			return
 		}
-		
-		print("convertAPDUToAddress 3")
 		
 		guard let address = dict["address"], let publicKey = dict["publicKey"] else {
 			if let err = dict["error"] {
@@ -683,11 +645,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			return
 		}
 		
-		print("convertAPDUToAddress 4")
-		
 		self.addressPublisher.send((address: address, publicKey: publicKey))
-		
-		print("convertAPDUToAddress 5")
 	}
 	
 	/// Take in a payload string from an APDU, and call the necessary JS function to convert it to a signature. Also will fire to the necessary publisher

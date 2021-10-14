@@ -121,69 +121,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		*/
 		
 		
-		/*
-		LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: false)
-			})
-			.convertToResult()
-			.flatMap { [weak self] result1 -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> in
-				guard let addressObj = try? result1.get() else {
-					let error = (try? result1.getError()) ?? ErrorResponse.unknownError()
-					
-					print("Got first error: \(error)")
-					
-					return .fail(with: error)
-				}
-				
-				//self?.hideActivity()
-				//self?.addressHeadingLabel.text = "Address:"
-				//self?.addressLabel.text = addressObj.address
-				
-				print("Got first address: \(addressObj.address)")
-				
-				return LedgerService.shared.getAddress(verify: false)
-			}
-			.convertToResult()
-			.sink { [weak self] result2 in
-				guard let addressObj2 = try? result2.get() else {
-					let error = (try? result2.getError()) ?? ErrorResponse.unknownError()
-					
-					print("Got second error: \(error)")
-					
-					//self?.alert(errorWithMessage: "Error from ledger: \( error )")
-					//let _ = LedgerService.shared.disconnectFromDevice()
-					//self?.navigationController?.popViewController(animated: true)
-					return
-				}
-				
-				print("Got second address: \(addressObj2.address)")
-				
-				//self?.createWallet(address: addressObj2.address, publicKey: addressObj2.publicKey)
-			}
-			.store(in: &bag)
-		 */
-		
-		LedgerService.shared.connectTo(uuid: "457558A6-939D-F045-876D-E7C754981212")
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: false)
-			})
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: false)
-			})
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: false)
-			})
-		
-		
 		
 		/*
-			.convertToResult()
-			.sink(receiveValue: { addressObj in
-				print("addressObj: \(addressObj)")
+		LedgerService.shared.connectTo(uuid: "")
+			.flatMap({ _ in
+				return LedgerService.shared.getAddress(verify: false)
 			})
-		*/
-		
+			.flatMap({ _ in
+				return LedgerService.shared.getAddress(verify: true)
+			})
 			.sink(receiveCompletion: { completion in
 				print("completion: \(completion)")
 				
@@ -192,6 +138,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				
 			})
 			.store(in: &bag)
+		*/
 	}
 }
 
