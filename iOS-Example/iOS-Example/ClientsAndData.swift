@@ -18,6 +18,7 @@ public class ClientsAndData {
 	var tezosNodeClient: TezosNodeClient
 	var bcdClient: BetterCallDevClient
 	var tzktClient: TzKTClient
+	var tezosDomainsClient: TezosDomainsClient
 	var torusAuthService: TorusAuthService
 	
 	
@@ -30,6 +31,7 @@ public class ClientsAndData {
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
+		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		torusAuthService = TorusAuthService(
 			networkType: clientConfig.networkType,
 			networkService: tezosNodeClient.networkService,
@@ -44,6 +46,7 @@ public class ClientsAndData {
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
+		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		torusAuthService = TorusAuthService(
 			networkType: clientConfig.networkType,
 			networkService: tezosNodeClient.networkService,

@@ -68,71 +68,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func experiment() {
 		
 		/*
-		LedgerService.shared.listenForDevices().sink { completion in
-			print("Completion: \(completion)")
-			
-		} receiveValue: { devices in
-			print("Devices: \(devices)")
-		}.store(in: &bag)
-		*/
-		
-		
-		
-		/*
-		LedgerService.shared.connectTo(uuid: "")
-			.flatMap({ success -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> in
-				if success {
-					return LedgerService.shared.getAddress(verify: false)
-				} else {
-					return AnyPublisher.fail(with: ErrorResponse.unknownError())
-				}
-			})
-			.convertToResult()
-			.sink(receiveValue: { addressResult in
-				guard let addObj = try? addressResult.get() else {
-					let error = (try? addressResult.getError()) ?? ErrorResponse.unknownError()
-					print("Error: \(error)")
-					return
-				}
-				
-				print("addressObject: \(addObj)")
-			})
-			.store(in: &bag)
-		*/
-		
-		
-		/*
-		LedgerService.shared.connectTo(uuid: "")
-			.flatMap { _ -> AnyPublisher<String, ErrorResponse> in
-				return LedgerService.shared.sign(hex: "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e", parse: false)
-			}
-			.sink(onError: { error in
+		ClientsAndData.shared.tezosDomainsClient.getDomainFor(address: "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov")
+			.sink { error in
 				print("Error: \(error)")
 				
-			}, onSuccess: { signature in
-				print("Signature: \(signature)")
-			})
+			} onSuccess: { response in
+				print("Response - domain: \(response.data?.domain() ?? "-")")
+			}
 			.store(in: &bag)
-		*/
-		
-		
-		/*
-		LedgerService.shared.connectTo(uuid: "")
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: false)
-			})
-			.flatMap({ _ in
-				return LedgerService.shared.getAddress(verify: true)
-			})
-			.sink(receiveCompletion: { completion in
-				print("completion: \(completion)")
+
+		ClientsAndData.shared.tezosDomainsClient.getAddressFor(domain: "crane-cost.gra")
+			.sink { error in
+				print("Error: \(error)")
 				
-			}, receiveValue: { [weak self] addressObj in
-				print("addressObj: \(addressObj)")
-				
-			})
+			} onSuccess: { response in
+				print("Response - address: \(response.data?.domain.address ?? "-")")
+			}
 			.store(in: &bag)
-		*/
+		 */
 	}
 }
 
@@ -1073,4 +1026,76 @@ print("4.4: \(usdtz.formatNormalisedRepresentation(locale: Locale(identifier: "e
 print("4.5: \(usdtz.formatNormalisedRepresentation(locale: Locale(identifier: "ru_MD")) ?? "error")")
 print("4.6: \(usdtz.toRpcDecimal() ?? -1)")
 print("4.7: \(usdtz.toNormalisedDecimal() ?? -1)")
+*/
+
+
+
+
+
+
+/*
+LedgerService.shared.listenForDevices().sink { completion in
+	print("Completion: \(completion)")
+	
+} receiveValue: { devices in
+	print("Devices: \(devices)")
+}.store(in: &bag)
+*/
+
+
+
+/*
+LedgerService.shared.connectTo(uuid: "")
+	.flatMap({ success -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> in
+		if success {
+			return LedgerService.shared.getAddress(verify: false)
+		} else {
+			return AnyPublisher.fail(with: ErrorResponse.unknownError())
+		}
+	})
+	.convertToResult()
+	.sink(receiveValue: { addressResult in
+		guard let addObj = try? addressResult.get() else {
+			let error = (try? addressResult.getError()) ?? ErrorResponse.unknownError()
+			print("Error: \(error)")
+			return
+		}
+		
+		print("addressObject: \(addObj)")
+	})
+	.store(in: &bag)
+*/
+
+
+/*
+LedgerService.shared.connectTo(uuid: "")
+	.flatMap { _ -> AnyPublisher<String, ErrorResponse> in
+		return LedgerService.shared.sign(hex: "62fdbc13ff81a3c0ad2cddd581ca6af17813207a76676be04cf336c60b9b906e", parse: false)
+	}
+	.sink(onError: { error in
+		print("Error: \(error)")
+		
+	}, onSuccess: { signature in
+		print("Signature: \(signature)")
+	})
+	.store(in: &bag)
+*/
+
+
+/*
+LedgerService.shared.connectTo(uuid: "")
+	.flatMap({ _ in
+		return LedgerService.shared.getAddress(verify: false)
+	})
+	.flatMap({ _ in
+		return LedgerService.shared.getAddress(verify: true)
+	})
+	.sink(receiveCompletion: { completion in
+		print("completion: \(completion)")
+		
+	}, receiveValue: { [weak self] addressObj in
+		print("addressObj: \(addressObj)")
+		
+	})
+	.store(in: &bag)
 */

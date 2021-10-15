@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import os.log
 
 /// Class responsible for sending all the networking requests, checking for http errors, RPC errors, Decoding the responses and optionally logging progress
@@ -63,14 +64,13 @@ public class NetworkService {
 	}
 	
 	/**
-	A generic network request function that takes a URL, optional payload and a `Decodable` response type. Function will execute teh request and attempt to parse the response.
+	A generic network request function that takes a URL, optional payload and a `Decodable` response type. Function will execute the request and attempt to parse the response.
 	Using the Logging config, will auto log (or not) urls, response outputs, or fails to the console
 	- parameter url: The full url, including query parameters to execute.
 	- parameter isPOST: Bool indicating if its a POST or GET request.
 	- parameter withBody: Optional Data to be passed as the body.
 	- parameter forReturnType: The Type to parse the response as.
 	- parameter completion: A completion block with a `Result<T, Error>` T being the supplied decoable type
-	- returns: Void
 	*/
 	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
 		
@@ -102,55 +102,48 @@ public class NetworkService {
 			// Log request success
 			NetworkService.logRequestSucceded(loggingConfig: self?.loggingConfig, isPost: isPOST, fullURL: url, payload: body, responseData: data)
 			
-			// Attempt to parse to the required type, and check for RPC errors, embedded in the returned object
-			var tempParsedResponse: T? = nil
-			var isAllowFragmentsError = false
-			
-			
 			// Because iOS 12 doesn't support allowFragments inside JSONDecoder, and because we have many object types expecting to use decode(fromDecoder)
 			// We first test can we decode the JSON the way we want to. If it fails because of a fragmetn error, we record the state and carry on. Other errors cause an early exit
 			do {
-				tempParsedResponse = try JSONDecoder().decode(T.self, from: d)
+				let parsedResponse = try JSONDecoder().decode(T.self, from: d)
 				
-			} catch (let error) {
-				if let underlyingError = error.underlyingError, underlyingError.code == 3840 { // fragment error code
-					isAllowFragmentsError = true
+				// Check for RPC errors, if none, return success
+				if let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode ) {
+					DispatchQueue.main.async { completion(Result.failure(rpcOperationError)) }
 					
 				} else {
-					DispatchQueue.main.async { completion(Result.failure( ErrorResponse.unknownParseError(error: error) )) }
-					return
+					DispatchQueue.main.async { completion(Result.success(parsedResponse)) }
 				}
-			}
-			
-			
-			// Check if we have a nil object and the reason is because of the fragment error
-			// The fragment should always be a string, in which case we can just use the standard `JSONSerialization` and cast
-			if tempParsedResponse == nil && isAllowFragmentsError {
-				do {
-					tempParsedResponse = try JSONSerialization.jsonObject(with: d, options: .allowFragments) as? T
-				} catch (let error) {
-					DispatchQueue.main.async { completion(Result.failure( ErrorResponse.unknownParseError(error: error) )) }
-					return
-				}
-			}
-			
-			
-			// Ensure we have a valid object
-			guard let parsedResponse = tempParsedResponse else {
-				DispatchQueue.main.async { completion(Result.failure( ErrorResponse.error(string: "", errorType: .unknownParseError) )) }
-				return
-			}
-			
-			
-			// Check for RPC errors, if none, return success
-			if let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode ) {
-				DispatchQueue.main.async { completion(Result.failure(rpcOperationError)) }
 				
-			} else {
-				DispatchQueue.main.async { completion(Result.success(parsedResponse)) }
+			} catch (let error) {
+				DispatchQueue.main.async { completion(Result.failure( ErrorResponse.unknownParseError(error: error) )) }
+				return
 			}
 		}.resume()
 		NetworkService.logRequestStart(loggingConfig: loggingConfig, fullURL: url)
+	}
+	
+	/**
+	A generic network request function that takes a URL, optional payload and a `Decodable` response type. Function will execute the request and attempt to parse the response, returning it as a combine publisher.
+	Using the Logging config, will auto log (or not) urls, response outputs, or fails to the console
+	- parameter url: The full url, including query parameters to execute.
+	- parameter isPOST: Bool indicating if its a POST or GET request.
+	- parameter withBody: Optional Data to be passed as the body.
+	- parameter forReturnType: The Type to parse the response as.
+	- returns: A publisher of the supplied return type, or error response
+	*/
+	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type) -> AnyPublisher<T, ErrorResponse> {
+		return Future<T, ErrorResponse> { [weak self] promise in
+			self?.request(url: url, isPOST: isPOST, withBody: body, forReturnType: forReturnType) { result in
+				guard let output = try? result.get() else {
+					let error = (try? result.getError()) ?? ErrorResponse.unknownError()
+					promise(.failure(error))
+					return
+				}
+				
+				promise(.success(output))
+			}
+		}.eraseToAnyPublisher()
 	}
 	
 	func checkForRPCOperationErrors(parsedResponse: Any, withRequestURL: URL?, requestPayload: Data?, responsePayload: Data?, httpStatusCode: Int?) -> ErrorResponse? {
