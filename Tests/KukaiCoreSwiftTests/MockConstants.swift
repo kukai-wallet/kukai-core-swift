@@ -23,6 +23,7 @@ public struct MockConstants {
 	public let tezosNodeClient: TezosNodeClient
 	public let betterCallDevClient: BetterCallDevClient
 	public let tzktClient: TzKTClient
+	public let tezosDomainsClient: TezosDomainsClient
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
@@ -115,6 +116,10 @@ public struct MockConstants {
 			// Kukai backend
 			URL(string: "https://backend.kukai.network/file/info?src=https://cloudflare-ipfs.com/ipfs/QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN")!: (MockConstants.jsonStub(fromFilename: "kukai_backend-ipfs-data"), MockConstants.http200),
 			
+			// Tezos domains
+			URL(string: "https://granadanet-api.tezos.domains/graphql/domain")!: (MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
+			URL(string: "https://granadanet-api.tezos.domains/graphql/address")!: (MockConstants.jsonStub(fromFilename: "tezos_domains-domain"), MockConstants.http200),
+			
 			// Misc
 			URL(string: "https://api.tezos.help/twitter-lookup/")!: (MockConstants.jsonStub(fromFilename: "twitter_lookup"), MockConstants.http200),
 		]
@@ -129,6 +134,7 @@ public struct MockConstants {
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
 		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
 		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient)
+		tezosDomainsClient = TezosDomainsClient(networkService: networkService, config: config)
 	}
 	
 	public static func bcdURL(withPath: String, queryParams: [String: String], andConfig config: TezosNodeClientConfig) -> URL {

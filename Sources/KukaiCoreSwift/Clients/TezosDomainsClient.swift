@@ -49,8 +49,14 @@ public class TezosDomainsClient {
 	public func getDomainFor(address: String) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, ErrorResponse> {
 		let queryDict = ["query":"query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
+		var url = self.config.tezosDomainsURL
 		
-		return self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self)
+		// Temp workaround to make stubbing easier, as only 2 GraphQL requests in package
+		if Thread.main.isRunningXCTest {
+			url.appendPathComponent("domain")
+		}
+		
+		return self.networkService.request(url: url, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self)
 	}
 	
 	/**
@@ -61,8 +67,14 @@ public class TezosDomainsClient {
 	public func getAddressFor(domain: String) -> AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, ErrorResponse> {
 		let queryDict = ["query":"query {domain(name: \"\(domain)\") { name, address }}"]
 		let data = try? JSONEncoder().encode(queryDict)
+		var url = self.config.tezosDomainsURL
 		
-		return self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressResponse>.self)
+		// Temp workaround to make stubbing easier, as only 2 GraphQL requests in package
+		if Thread.main.isRunningXCTest {
+			url.appendPathComponent("address")
+		}
+		
+		return self.networkService.request(url: url, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressResponse>.self)
 	}
 	
 	/**
