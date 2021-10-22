@@ -12,6 +12,13 @@ import Sodium
 import os.log
 
 /**
+ Error types that can be passed by failable inits
+ */
+public enum HDWalletError: Error {
+	case invalidWalletCoreWallet
+}
+
+/**
 A Tezos Wallet used for signing transactions before sending to the Tezos network. This object holds the public and private key used to create the contained Tezos address.
 You should **NOT** store a copy of this class in a singleton or gloabl variable of any kind. it should be created as needed and nil'd when not.
 In order to help developers achieve this, use the `WalletCacheService` to store/retreive an encrypted copy of the wallet on disk, and recreate the `Wallet`.
@@ -67,7 +74,9 @@ public class HDWallet: Wallet {
 	- Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
 	*/
 	public convenience init?(withMnemonic mnemonic: String, passphrase: String, derivationPath: String = HDWallet.defaultDerivationPath) {
-		let internalTrustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase)
+		guard let internalTrustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase) else {
+			return nil
+		}
 		
 		self.init(withInternalTrustWallet: internalTrustWallet, derivationPath: derivationPath, passphrase: passphrase)
 	}
@@ -79,7 +88,9 @@ public class HDWallet: Wallet {
 	- Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
 	*/
 	public convenience init?(withMnemonicLength length: MnemonicPhraseLength, passphrase: String, derivationPath: String = HDWallet.defaultDerivationPath) {
-		let internalTrustWallet = WalletCore.HDWallet(strength: Int32(length.rawValue), passphrase: passphrase)
+		guard let internalTrustWallet = WalletCore.HDWallet(strength: Int32(length.rawValue), passphrase: passphrase) else {
+			return nil
+		}
 		
 		self.init(withInternalTrustWallet: internalTrustWallet, derivationPath: derivationPath, passphrase: passphrase)
 	}
@@ -142,7 +153,10 @@ public class HDWallet: Wallet {
 		passphrase = try container.decodeIfPresent(String.self, forKey: .passphrase)
 		
 		// Rebuild trust wallet object and extract private and public key
-		let trustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase ?? "")
+		guard let trustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase ?? "") else {
+			throw HDWalletError.invalidWalletCoreWallet
+		}
+		
 		let key = trustWallet.getKey(coin: .tezos, derivationPath: derivationPath)
 		
 		privateKey = key

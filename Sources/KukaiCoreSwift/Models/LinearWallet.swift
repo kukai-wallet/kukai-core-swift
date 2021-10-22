@@ -70,7 +70,9 @@ public class LinearWallet: Wallet {
 	- Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	*/
 	public convenience init?(withMnemonic mnemonic: String, passphrase: String, ellipticalCurve: EllipticalCurve = .ed25519) {
-		let internalTrustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase)
+		guard let internalTrustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase) else {
+			return nil
+		}
 		
 		self.init(withInternalTrustWallet: internalTrustWallet, ellipticalCurve: ellipticalCurve)
 	}
@@ -82,7 +84,9 @@ public class LinearWallet: Wallet {
 	- Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	*/
 	public convenience init?(withMnemonicLength length: MnemonicPhraseLength, passphrase: String, ellipticalCurve: EllipticalCurve = .ed25519) {
-		let internalTrustWallet = WalletCore.HDWallet(strength: Int32(length.rawValue), passphrase: passphrase)
+		guard let internalTrustWallet = WalletCore.HDWallet(strength: Int32(length.rawValue), passphrase: passphrase) else {
+			return nil
+		}
 		
 		self.init(withInternalTrustWallet: internalTrustWallet, ellipticalCurve: ellipticalCurve)
 	}
