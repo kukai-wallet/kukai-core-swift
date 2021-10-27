@@ -14,8 +14,8 @@ public class BetterCallDevTokenMetadata: Codable {
 	public let contract: String
 	public let network: String
 	public let token_id: Int
-	public let symbol: String
-	public let name: String
+	public let symbol: String?
+	public let name: String?
 	public let decimals: Int
 	
 	public var faVersion: FaVersion?
