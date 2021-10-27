@@ -31,7 +31,7 @@ public class Token: Codable, CustomStringConvertible {
 	}
 	
 	/// The long name of a token. e.g. "Tezos".
-	public let name: String
+	public let name: String?
 	
 	/// The short name or the symbol of a token. e.g. "XTZ".
 	public let symbol: String?

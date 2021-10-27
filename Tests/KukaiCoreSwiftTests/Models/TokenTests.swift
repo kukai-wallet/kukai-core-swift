@@ -27,11 +27,11 @@ class TokenTests: XCTestCase {
 		let token2 = Token(name: "test2", symbol: "F", tokenType: .nonfungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURI: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", nfts: [nft])
 		
 		
-		XCTAssert(token.name == "test1", token.name)
+		XCTAssert(token.name == "test1", token.name ?? "")
 		XCTAssert(token.symbol == "T", token.symbol ?? "")
 		XCTAssert(token.tokenType == .fungible, token.tokenType.rawValue)
 		
-		XCTAssert(token2.name == "test2", token2.name)
+		XCTAssert(token2.name == "test2", token2.name ?? "")
 		XCTAssert(token2.symbol == "F", token2.symbol ?? "")
 		XCTAssert(token2.tokenType == .nonfungible, token2.tokenType.rawValue)
 	}
