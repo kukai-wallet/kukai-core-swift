@@ -34,10 +34,10 @@ public class Token: Codable, CustomStringConvertible {
 	public var icon: URL?
 	
 	/// The long name of a token. e.g. "Tezos".
-	public let name: String
+	public let name: String?
 	
 	/// The short name or the symbol of a token. e.g. "XTZ".
-	public let symbol: String
+	public let symbol: String?
 	
 	/// The type of this token. e.g. xtz, fungible, nonfungible
 	public let tokenType: TokenType
@@ -79,7 +79,7 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter tokenContractAddress: The KT1 address of the contract (nil if xtz).
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(icon: URL?, name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, tokenContractAddress: String?, nfts: [NFT]?) {
+	public init(icon: URL?, name: String?, symbol: String?, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, tokenContractAddress: String?, nfts: [NFT]?) {
 		self.icon = icon
 		self.name = name
 		self.symbol = symbol
