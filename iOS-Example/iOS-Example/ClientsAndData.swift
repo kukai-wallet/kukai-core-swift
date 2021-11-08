@@ -20,6 +20,7 @@ public class ClientsAndData {
 	var tzktClient: TzKTClient
 	var tezosDomainsClient: TezosDomainsClient
 	var torusAuthService: TorusAuthService
+	var tezToolsClient: TezToolsClient
 	
 	
 	// Data
@@ -39,6 +40,7 @@ public class ClientsAndData {
 			googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
 			browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
 		)
+		tezToolsClient = TezToolsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 	}
 	
 	public func updateNetwork(network: TezosNodeClientConfig.NetworkType) {
@@ -54,5 +56,6 @@ public class ClientsAndData {
 			googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
 			browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
 		)
+		tezToolsClient = TezToolsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 	}
 }

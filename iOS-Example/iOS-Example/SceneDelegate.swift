@@ -86,6 +86,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			}
 			.store(in: &bag)
 		 */
+		
+		
+		ClientsAndData.shared.tezToolsClient.fetchTokens { result in
+		}
 	}
 }
 
