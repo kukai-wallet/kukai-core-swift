@@ -25,8 +25,43 @@ public struct TezToolPair: Codable {
 	public let sides: [TezToolSide]
 }
 
+extension TezToolPair: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(address)
+		hasher.combine(dex.rawValue)
+	}
+}
+
+extension TezToolPair: Equatable {
+	
+	public static func == (lhs: TezToolPair, rhs: TezToolPair) -> Bool {
+		return lhs.address == rhs.address
+	}
+}
+
+
+
+
+
 public struct TezToolSide: Codable {
 	
 	public let symbol: String
 	public let pool: TokenAmount
+}
+
+extension TezToolSide: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(symbol)
+	}
+}
+
+extension TezToolSide: Equatable {
+	
+	public static func == (lhs: TezToolPair, rhs: TezToolPair) -> Bool {
+		return lhs.symbol == rhs.symbol
+	}
 }
