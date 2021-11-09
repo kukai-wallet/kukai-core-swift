@@ -23,6 +23,8 @@ public enum MichelsonConstant: String, CodingKey {
 	case elt = "Elt"
 	case `false` = "False"
 	case `true` = "True"
+	case right = "Right"
+	case left = "Left"
 }
 
 
@@ -130,7 +132,7 @@ public class MichelsonPair: AbstractMichelson {
 	/// Customized `description` to allow object to be logged to console, how it is returned from the RPC
 	public override var description: String {
 		get {
-			var json = "{\"prim\": \"Pair\", \"args\": ["
+			var json = "{\"prim\": \"\(prim)\", \"args\": ["
 			
 			for (index, arg) in args.enumerated() {
 				json.append("\(arg)")
@@ -151,8 +153,8 @@ public class MichelsonPair: AbstractMichelson {
 	// MARK: - Init
 	
 	/// Init accepting any combination of `MichelsonValue` or `MichelsonPair`
-	public init(args: [AbstractMichelson]) {
-		self.prim = MichelsonConstant.pair.rawValue
+	public init(prim: MichelsonConstant = .pair, args: [AbstractMichelson]) {
+		self.prim = prim.rawValue
 		self.args = args
 		
 		super.init()

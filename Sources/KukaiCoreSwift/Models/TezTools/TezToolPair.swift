@@ -9,7 +9,6 @@ import Foundation
 
 public enum TezToolDex: String, Codable {
 	case quipuswap = "Quipuswap"
-	case plenty = "Plenty"
 	case liquidityBaking = "Liquidity Baking"
 	case unknown
 	

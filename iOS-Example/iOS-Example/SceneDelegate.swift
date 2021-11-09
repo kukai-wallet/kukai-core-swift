@@ -87,9 +87,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			.store(in: &bag)
 		 */
 		
-		
-		ClientsAndData.shared.tezToolsClient.fetchTokens { result in
-		}
+		let wallet = LinearWallet(withMnemonicLength: .twelve, passphrase: "")
+		OperationFactory.swapXtzToToken(withdex: .quipuswap, xtzAmount: XTZAmount(fromNormalisedAmount: 1), minTokenAmount: TokenAmount(fromNormalisedAmount: 1.2, decimalPlaces: 4), dexContract: "abc123", wallet: wallet!, timeout: 60*20)
 	}
 }
 
