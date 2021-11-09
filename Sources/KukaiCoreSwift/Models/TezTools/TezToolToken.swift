@@ -28,3 +28,18 @@ public struct TezToolToken: Codable {
 	public let discordLink: String?
 	public let thumbnailUri: String?
 }
+
+extension TezToolToken: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(tokenAddress)
+	}
+}
+
+extension TezToolToken: Equatable {
+	
+	public static func == (lhs: TezToolToken, rhs: TezToolToken) -> Bool {
+		return lhs.tokenAddress == rhs.tokenAddress
+	}
+}

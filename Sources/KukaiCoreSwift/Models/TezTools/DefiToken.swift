@@ -22,3 +22,19 @@ public struct DefiToken: Codable {
 		price = TezToolPrice(symbol: token.symbol ?? "", tokenAddress: token.tokenAddress, decimals: token.decimals, address: token.address, ratio: 0, currentPrice: 0, buyPrice: XTZAmount.zero(), pairs: [])
 	}
 }
+
+extension DefiToken: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(token.tokenAddress)
+		hasher.combine(price.buyPrice)
+	}
+}
+
+extension DefiToken: Equatable {
+	
+	public static func == (lhs: DefiToken, rhs: DefiToken) -> Bool {
+		return lhs.token.tokenAddress == rhs.token.tokenAddress
+	}
+}

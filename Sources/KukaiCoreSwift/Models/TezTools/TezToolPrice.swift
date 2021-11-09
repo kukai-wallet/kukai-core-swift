@@ -24,3 +24,19 @@ public struct TezToolPrice: Codable {
 	public let buyPrice: XTZAmount
 	public let pairs: [TezToolPair]
 }
+
+extension TezToolPrice: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(tokenAddress)
+		hasher.combine(buyPrice)
+	}
+}
+
+extension TezToolPrice: Equatable {
+	
+	public static func == (lhs: TezToolPrice, rhs: TezToolPrice) -> Bool {
+		return lhs.tokenAddress == rhs.tokenAddress
+	}
+}

@@ -87,8 +87,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			.store(in: &bag)
 		 */
 		
-		let wallet = LinearWallet(withMnemonicLength: .twelve, passphrase: "")
-		OperationFactory.swapXtzToToken(withdex: .quipuswap, xtzAmount: XTZAmount(fromNormalisedAmount: 1), minTokenAmount: TokenAmount(fromNormalisedAmount: 1.2, decimalPlaces: 4), dexContract: "abc123", wallet: wallet!, timeout: 60*20)
+		//let wallet = LinearWallet(withMnemonicLength: .twelve, passphrase: "")
+		//OperationFactory.swapXtzToToken(withdex: .quipuswap, xtzAmount: XTZAmount(fromNormalisedAmount: 1), minTokenAmount: TokenAmount(fromNormalisedAmount: 1.2, decimalPlaces: 4), dexContract: "abc123", wallet: wallet!, timeout: 60*20)
 	}
 }
 
