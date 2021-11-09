@@ -9,8 +9,8 @@ import Foundation
 
 public struct DefiToken: Codable {
 	
-	let token: TezToolToken
-	let price: TezToolPrice
+	public let token: TezToolToken
+	public let price: TezToolPrice
 	
 	public init(withToken: TezToolToken, andPrice: TezToolPrice) {
 		token = withToken
