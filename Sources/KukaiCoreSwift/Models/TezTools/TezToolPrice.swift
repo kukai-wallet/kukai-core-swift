@@ -15,12 +15,12 @@ public struct TezToolPriceResponse: Codable {
 
 public struct TezToolPrice: Codable {
 	
-	let symbol: String
-	let tokenAddress: String
-	let decimals: Int
-	let address: String
-	let ratio: Decimal
-	let currentPrice: Decimal
-	let buyPrice: XTZAmount
-	let pairs: [TezToolPair]
+	public let symbol: String
+	public let tokenAddress: String
+	public let decimals: Int
+	public let address: String
+	public let ratio: Decimal
+	public let currentPrice: Decimal
+	public let buyPrice: XTZAmount
+	public let pairs: [TezToolPair]
 }

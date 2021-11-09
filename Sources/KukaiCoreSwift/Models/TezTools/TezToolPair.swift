@@ -19,14 +19,14 @@ public enum TezToolDex: String, Codable {
 
 public struct TezToolPair: Codable {
 	
-	let address: String
-	let dex: TezToolDex
-	let symbols: String
-	let sides: [TezToolSide]
+	public let address: String
+	public let dex: TezToolDex
+	public let symbols: String
+	public let sides: [TezToolSide]
 }
 
 public struct TezToolSide: Codable {
 	
-	let symbol: String
-	let pool: TokenAmount
+	public let symbol: String
+	public let pool: TokenAmount
 }

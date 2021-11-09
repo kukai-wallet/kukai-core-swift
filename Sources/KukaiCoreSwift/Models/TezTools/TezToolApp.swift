@@ -19,13 +19,13 @@ public enum TezToolServiceType: String, Codable {
 
 public struct TezToolApp: Codable {
 	
-	let name: TezToolServiceType
-	let type: String
-	let pools: [TezToolAppPool]
+	public let name: TezToolServiceType
+	public let type: String
+	public let pools: [TezToolAppPool]
 }
 
 public struct TezToolAppPool: Codable {
 	
-	let address: String
-	let tokenType: String
+	public let address: String
+	public let tokenType: String
 }

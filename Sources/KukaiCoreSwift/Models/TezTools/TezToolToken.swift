@@ -15,16 +15,16 @@ public struct TezToolTokenResponse: Codable {
 
 public struct TezToolToken: Codable {
 	
-	let symbol: String?
-	let tokenAddress: String
-	let name: String?
-	let tokenId: Int?
-	let address: String
-	var decimals: Int
-	let apps: [TezToolApp]
-	let websiteLink: String?
-	let telegramLink: String?
-	let twitterLink: String?
-	let discordLink: String?
-	let thumbnailUri: String?
+	public let symbol: String?
+	public let tokenAddress: String
+	public let name: String?
+	public let tokenId: Int?
+	public let address: String
+	public let decimals: Int
+	public let apps: [TezToolApp]
+	public let websiteLink: String?
+	public let telegramLink: String?
+	public let twitterLink: String?
+	public let discordLink: String?
+	public let thumbnailUri: String?
 }
