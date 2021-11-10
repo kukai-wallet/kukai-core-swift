@@ -27,19 +27,27 @@ public struct TezToolToken: Codable {
 	public let twitterLink: String?
 	public let discordLink: String?
 	public let thumbnailUri: String?
+	
+	public func uniqueTokenAddress() -> String {
+		if let id = tokenId {
+			return "\(tokenAddress):\(id)"
+		}
+		
+		return tokenAddress
+	}
 }
 
 extension TezToolToken: Hashable {
 	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
-		hasher.combine(tokenAddress)
+		hasher.combine(uniqueTokenAddress())
 	}
 }
 
 extension TezToolToken: Equatable {
 	
 	public static func == (lhs: TezToolToken, rhs: TezToolToken) -> Bool {
-		return lhs.tokenAddress == rhs.tokenAddress
+		return lhs.uniqueTokenAddress() == rhs.uniqueTokenAddress()
 	}
 }

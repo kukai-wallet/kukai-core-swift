@@ -42,7 +42,7 @@ public class TezToolsClient {
 				}
 				
 				for token in tezToolTokens {
-					if let priceObj = tezToolPrices.first(where: { price in return price.tokenAddress == token.tokenAddress }) {
+					if let priceObj = tezToolPrices.first(where: { price in return price.uniqueTokenAddress() == token.uniqueTokenAddress() }) {
 						self?.tokens.append(DefiToken(withToken: token, andPrice: priceObj))
 					} else {
 						print("Didn't find matching price")
