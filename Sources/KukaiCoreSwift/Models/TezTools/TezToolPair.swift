@@ -23,6 +23,16 @@ public struct TezToolPair: Codable {
 	public let dex: TezToolDex
 	public let symbols: String
 	public let sides: [TezToolSide]
+	
+	/// Sides contains an array of objects providing details of each token available in the swap
+	/// Apps will need to extract a list of the available tokens, easiest way to do that is to extract the side, that doesn't contain the base token (frequently XTZ)
+	public func nonBaseTokenSide() -> TezToolSide {
+		for side in sides {
+			if side.tokenType == nil {
+				return side
+			}
+		}
+	}
 }
 
 extension TezToolPair: Hashable {
@@ -49,6 +59,7 @@ public struct TezToolSide: Codable {
 	
 	public let symbol: String
 	public let pool: TokenAmount
+	public let tokenType: String?
 }
 
 extension TezToolSide: Hashable {
