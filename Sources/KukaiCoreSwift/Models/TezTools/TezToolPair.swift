@@ -38,6 +38,17 @@ public struct TezToolPair: Codable, Hashable, Equatable {
 		return nil
 	}
 	
+	/// Fetch the base token of the swap (usually XTZ)
+	public func baseTokenSide() -> TezToolSide? {
+		for side in sides {
+			if side.tokenType != nil {
+				return side
+			}
+		}
+		
+		return nil
+	}
+	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)
