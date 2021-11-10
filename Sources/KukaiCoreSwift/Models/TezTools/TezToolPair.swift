@@ -65,7 +65,7 @@ public struct TezToolPair: Codable, Hashable, Equatable {
 public struct TezToolSide: Codable, Hashable, Equatable {
 	
 	public let symbol: String
-	public let pool: TokenAmount
+	public let pool: Decimal
 	public let price: Decimal
 	public let tokenType: String?
 	
