@@ -41,6 +41,8 @@ public class TezToolsClient {
 					return
 				}
 				
+				self?.tokens = []
+				
 				for token in tezToolTokens {
 					if let priceObj = tezToolPrices.first(where: { price in return price.uniqueTokenAddress() == token.uniqueTokenAddress() }) {
 						self?.tokens.append(DefiToken(withToken: token, andPrice: priceObj))
