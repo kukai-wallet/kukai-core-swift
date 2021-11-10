@@ -112,7 +112,7 @@ public class Token: Codable, CustomStringConvertible {
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
 	public var description: String {
-		return "{Symbol: \(symbol ?? ""), Name: \(name), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
+		return "{Symbol: \(symbol ?? ""), Name: \(name ?? ""), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
 	}
 }
 
