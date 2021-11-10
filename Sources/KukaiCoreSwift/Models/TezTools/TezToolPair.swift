@@ -59,6 +59,7 @@ public struct TezToolSide: Codable {
 	
 	public let symbol: String
 	public let pool: TokenAmount
+	public let price: Decimal
 	public let tokenType: String?
 }
 
