@@ -16,6 +16,46 @@ import os.log
 
 
 
+// MARK: - Types
+
+/// List of providers currently supported and available on the Tezos network
+public enum TorusAuthProvider: String {
+	case apple
+	case twitter
+	case google
+	case reddit
+	case facebook
+}
+
+/// SDK requires information about the verifer that can't be stored inside the verifier, add a wrapper object to allow passing of all the data
+public struct SubverifierWrapper {
+	public let aggregateVerifierName: String?
+	public let subverifier: SubVerifierDetails
+	
+	var isAggregate: Bool {
+		get {
+			return aggregateVerifierName != nil
+		}
+	}
+	
+	public init(aggregateVerifierName: String?, subverifier: SubVerifierDetails) {
+		self.aggregateVerifierName = aggregateVerifierName
+		self.subverifier = subverifier
+	}
+}
+
+/// Custom TorusAuthService errors that cna be thrown
+public enum TorusAuthError: Error {
+	case missingVerifier
+	case invalidTorusResponse
+	case cryptoError
+	case invalidNodeDetails
+	case invalidTwitterURL
+	case noTwiiterUserIdFound
+}
+
+
+
 /**
 TorusAuthService is a wrapper around the SDK provided by: https://tor.us/ to allow the creation of `TorusWallet`'s.
 This allows users to create a wallet from their social media accounts without having to use a seed phrase / mnemonic.
@@ -23,28 +63,6 @@ TorusAuthService allows Tezos apps to leverage this service for a number of prov
 based on their social profile. This allows you to send XTZ or tokens to your friend based on their twitter username for example
 */
 public class TorusAuthService {
-	
-	// MARK: - Types
-	
-	/// List of providers currently supported and available on the Tezos network
-	public enum TorusAuthProvider: String {
-		case apple
-		case twitter
-		case google
-		case reddit
-		case facebook
-	}
-	
-	/// Custom TorusAuthService errors that cna be thrown
-	public enum TorusAuthError: Error {
-		case missingVerifier
-		case invalidTorusResponse
-		case cryptoError
-		case invalidNodeDetails
-		case invalidTwitterURL
-		case noTwiiterUserIdFound
-	}
-	
 	
 	
 	// MARK: - Private properties
@@ -59,10 +77,10 @@ public class TorusAuthService {
 	private let ethereumNetworkType: EthereumNetwork
 	
 	/// Torus verifier settings used on Testnet
-	private let testnetVerifiers: [TorusAuthProvider: SubVerifierDetails]
+	private let testnetVerifiers: [TorusAuthProvider: SubverifierWrapper]
 	
 	/// Torus verifier settings used on mainnet
-	private let mainnetVerifiers: [TorusAuthProvider: SubVerifierDetails]
+	private let mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper]
 	
 	/// The Ethereum contract address to use on testnet
 	private let testnetProxyAddress = "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
@@ -94,7 +112,7 @@ public class TorusAuthService {
 	- parameter googleRedirectURL: Google works differently and requires that you redirect to a google cloud app, which in turn will redirect to the native app. If using Google auth you must supply a valid URL or else it won't function
 	- parameter browserRedirectURL: Some services can't return to the native app directly, but instead must go to an intermediary webpage that in turn redirects. This page must be created by you and the URL passed in here
 	*/
-	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, nativeRedirectURL: String, googleRedirectURL: String, browserRedirectURL: String,
+	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper],
 				utils: TorusUtils = TorusUtils(), 			// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
 				fetchNodeDetails: FetchNodeDetails? = nil) 	// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
 	{
@@ -102,6 +120,8 @@ public class TorusAuthService {
 		self.networkSerice = networkService
 		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
 		self.torusUtils = utils
+		self.testnetVerifiers = testnetVerifiers
+		self.mainnetVerifiers = mainnetVerifiers
 		
 		// TODO: remove when Torus SDK fixed
 		if let fetch = fetchNodeDetails {
@@ -109,52 +129,6 @@ public class TorusAuthService {
 		} else {
 			self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
 		}
-		
-		
-		testnetVerifiers = [
-			.apple: SubVerifierDetails(
-				loginType: .web,
-				loginProvider: .apple,
-				clientId: "m1Q0gvDfOyZsJCZ3cucSQEe9XMvl9d9L",
-				verifierName: "torus-auth0-apple-lrc",
-				redirectURL: nativeRedirectURL,
-				jwtParams: ["domain": "torus-test.auth0.com"]
-			),
-			.twitter: SubVerifierDetails(
-				loginType: .web,
-				loginProvider: .twitter,
-				clientId: "A7H8kkcmyFRlusJQ9dZiqBLraG2yWIsO",
-				verifierName: "torus-auth0-twitter-lrc",
-				redirectURL: nativeRedirectURL,
-				jwtParams: ["domain": "torus-test.auth0.com"]
-			),
-			.google: SubVerifierDetails(
-				loginType: .web,
-				loginProvider: .google,
-				clientId: "221898609709-obfn3p63741l5333093430j3qeiinaa8.apps.googleusercontent.com",
-				verifierName: "google-lrc",
-				redirectURL: googleRedirectURL,
-				browserRedirectURL: browserRedirectURL
-			),
-			.reddit: SubVerifierDetails(
-				loginType: .web,
-				loginProvider: .reddit,
-				clientId: "rXIp6g2y3h1wqg",
-				verifierName: "reddit-shubs",
-				redirectURL: nativeRedirectURL
-			),
-			.facebook: SubVerifierDetails(
-				loginType: .web,
-				loginProvider: .facebook,
-				clientId: "659561074900150",
-				verifierName: "facebook-shubs",
-				redirectURL: nativeRedirectURL,
-				browserRedirectURL: browserRedirectURL
-			)
-		]
-		
-		// Doesn't exist yet
-		mainnetVerifiers = testnetVerifiers
 	}
 	
 	
@@ -168,7 +142,7 @@ public class TorusAuthService {
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: TorusSwiftDirectSDK? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
-		guard let verifier = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+		guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
@@ -176,8 +150,25 @@ public class TorusAuthService {
 		// TODO: remove when Torus SDK fixed
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
+			
+		} else if verifierWrapper.isAggregate {
+			torus = TorusSwiftDirectSDK(
+				aggregateVerifierType: .singleIdVerifier,
+				aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
+				subVerifierDetails: [verifierWrapper.subverifier],
+				factory: TDSDKFactory(),
+				network: self.ethereumNetworkType,
+				loglevel: .debug
+			)
 		} else {
-			torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifier.subVerifierId, subVerifierDetails: [verifier], factory: TDSDKFactory(), network: self.ethereumNetworkType, loglevel: .debug)
+			torus = TorusSwiftDirectSDK(
+				aggregateVerifierType: .singleLogin,
+				aggregateVerifierName: verifierWrapper.subverifier.subVerifierId,
+				subVerifierDetails: [verifierWrapper.subverifier],
+				factory: TDSDKFactory(),
+				network: self.ethereumNetworkType,
+				loglevel: .debug
+			)
 		}
 		
 		torus.triggerLogin(controller: displayOver).done { data in
@@ -190,7 +181,7 @@ public class TorusAuthService {
 			
 			// Each serach returns required data in a different format. Grab the private key and social profile info needed
 			switch authType {
-				case .apple:
+				case .apple, .google:
 					if let userInfoDict = data["userInfo"] as? [String: Any] {
 						username = userInfoDict["name"] as? String
 						userId = userInfoDict["email"] as? String
@@ -205,10 +196,6 @@ public class TorusAuthService {
 						profile = userInfoDict["picture"] as? String
 					}
 					pk = data["privateKey"] as? String
-					
-				case .google:
-					print("\n\n\n Unimplemented \nGoogle data: \(data) \n\n\n")
-					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 					
 				case .reddit:
 					if let userInfoDict = data["userInfo"] as? [String: Any] {
@@ -247,7 +234,7 @@ public class TorusAuthService {
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
-		guard let verifier = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+		guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
@@ -264,14 +251,14 @@ public class TorusAuthService {
 				self?.twitterLookup(username: socialUsername) { [weak self] twitterResult in
 					switch twitterResult {
 						case .success(let twitterUserId):
-							self?.getPublicAddress(nodeDetails: nd, verifierName: verifier.subVerifierId, socialUserId: "twitter|\(twitterUserId)", completion: completion)
+							self?.getPublicAddress(nodeDetails: nd, verifierName: verifierWrapper.subverifier.subVerifierId, socialUserId: "twitter|\(twitterUserId)", completion: completion)
 							
 						case .failure(let twitterError):
 							completion(Result.failure(twitterError))
 					}
 				}
 			} else {
-				self?.getPublicAddress(nodeDetails: nd, verifierName: verifier.subVerifierId, socialUserId: socialUsername, completion: completion)
+				self?.getPublicAddress(nodeDetails: nd, verifierName: verifierWrapper.subverifier.subVerifierId, socialUserId: socialUsername, completion: completion)
 			}
 		}.catch { error in
 			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
