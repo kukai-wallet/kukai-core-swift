@@ -8,6 +8,7 @@
 
 import Foundation
 import KukaiCoreSwift
+import TorusSwiftDirectSDK
 
 public class ClientsAndData {
 	
@@ -20,12 +21,12 @@ public class ClientsAndData {
 	var tzktClient: TzKTClient
 	var tezosDomainsClient: TezosDomainsClient
 	var torusAuthService: TorusAuthService
-	var tezToolsClient: TezToolsClient
 	
 	
 	// Data
 	var currentWalletAddress = ""
 	var account: Account? = nil
+	
 	
 	private init() {
 		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
@@ -33,14 +34,7 @@ public class ClientsAndData {
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		torusAuthService = TorusAuthService(
-			networkType: clientConfig.networkType,
-			networkService: tezosNodeClient.networkService,
-			nativeRedirectURL: "tdsdk://tdsdk/oauthCallback",
-			googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
-			browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
-		)
-		tezToolsClient = TezToolsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		torusAuthService = TorusAuthService(networkType: clientConfig.networkType, networkService: tezosNodeClient.networkService, testnetVerifiers: [:], mainnetVerifiers: [:])
 	}
 	
 	public func updateNetwork(network: TezosNodeClientConfig.NetworkType) {
@@ -49,13 +43,6 @@ public class ClientsAndData {
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		torusAuthService = TorusAuthService(
-			networkType: clientConfig.networkType,
-			networkService: tezosNodeClient.networkService,
-			nativeRedirectURL: "tdsdk://tdsdk/oauthCallback",
-			googleRedirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
-			browserRedirectURL: "https://scripts.toruswallet.io/redirect.html"
-		)
-		tezToolsClient = TezToolsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		torusAuthService = TorusAuthService(networkType: clientConfig.networkType, networkService: tezosNodeClient.networkService, testnetVerifiers: [:], mainnetVerifiers: [:])
 	}
 }

@@ -23,7 +23,7 @@ public class TorusWallet: LinearWallet {
 	// MARK: - Properties
 	
 	/// The type of service used to generate the provide key
-	public let authProvider: TorusAuthService.TorusAuthProvider
+	public let authProvider: TorusAuthProvider
 	
 	/// The raw social media username displayed on the users account. In the case of Twitter, it will not be prefix with an `@`
 	public let socialUsername: String?
@@ -46,7 +46,7 @@ public class TorusWallet: LinearWallet {
 	- parameter profilePicture: Optional, the users social profile display image
 	- parameter torusPrivateKey: The hex encoded private key from the Torus network
 	*/
-	public init?(authProvider: TorusAuthService.TorusAuthProvider, username: String?, userId: String?, profilePicture: String?, torusPrivateKey: String) {
+	public init?(authProvider: TorusAuthProvider, username: String?, userId: String?, profilePicture: String?, torusPrivateKey: String) {
 		guard let bytes = Sodium.shared.utils.hex2bin(torusPrivateKey) else {
 			os_log("Unable to convert hex to binary", log: .torus, type: .error)
 			return nil
@@ -79,7 +79,7 @@ public class TorusWallet: LinearWallet {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		
 		let authProviderString = try container.decode(String.self, forKey: .authProvider)
-		authProvider = TorusAuthService.TorusAuthProvider(rawValue: authProviderString) ?? .twitter
+		authProvider = TorusAuthProvider(rawValue: authProviderString) ?? .twitter
 		socialUsername = try container.decodeIfPresent(String.self, forKey: .socialUsername)
 		socialUserId = try container.decodeIfPresent(String.self, forKey: .socialUserId)
 		socialProfilePictureURL = try container.decodeIfPresent(URL.self, forKey: .socialProfilePictureURL)
