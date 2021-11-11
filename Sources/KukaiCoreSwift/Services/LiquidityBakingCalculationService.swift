@@ -74,7 +74,7 @@ public class LiquidityBakingCalculationService {
 			os_log("LiquidityBaking calculation JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 		}
 		
-		if let jsSourcePath = Bundle.module.url(forResource: "liquidity-baking-calcualtions", withExtension: "js", subdirectory: "External") {
+		if let jsSourcePath = Bundle.module.url(forResource: "liquidity-baking-calculations", withExtension: "js", subdirectory: "External") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
 				self.jsContext.evaluateScript(jsSourceContents)
@@ -97,11 +97,11 @@ public class LiquidityBakingCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `LiquidityBakingCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingSwapCalculationResult? {
-		guard let expected = xtzToTokenExpectedReturn(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool),
+	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingSwapCalculationResult? {
+		guard let expected = xtzToTokenExpectedReturn(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let minimum = xtzToTokenMinimumReturn(tokenAmount: expected, slippage: maxSlippage),
 			  let rate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let priceImpact = xtzToTokenPriceImpact(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool) else {
+			  let priceImpact = xtzToTokenPriceImpact(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
 		
@@ -118,11 +118,11 @@ public class LiquidityBakingCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `LiquidityBakingCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingSwapCalculationResult? {
-		guard let expected = tokenToXtzExpectedReturn(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
+	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingSwapCalculationResult? {
+		guard let expected = tokenToXtzExpectedReturn(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let minimum = tokenToXtzMinimumReturn(xtzAmount: expected, slippage: maxSlippage),
 			  let rate = tokenToXtzExchangeRateDisplay(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let priceImpact = tokenToXtzPriceImpact(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool) else {
+			  let priceImpact = tokenToXtzPriceImpact(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
 		
@@ -140,9 +140,9 @@ public class LiquidityBakingCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(tokenRequired: TokenAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double) -> LiquidityBakingAddCalculationResult? {
-		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage),
+	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingAddCalculationResult? {
+		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage, dex: dex),
 			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtz, xtzPool: xtzPool, tokenPool: tokenPool) else {
 			return nil
 		}
@@ -159,9 +159,9 @@ public class LiquidityBakingCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(xtzRequired: XTZAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double) -> LiquidityBakingAddCalculationResult? {
-		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool),
-			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage),
+	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingAddCalculationResult? {
+		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
+			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage, dex: dex),
 			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzRequired, xtzPool: xtzPool, tokenPool: tokenPool) else {
 			return nil
 		}
@@ -178,8 +178,8 @@ public class LiquidityBakingCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(xtz: XTZAmount, token: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double) -> LiquidityBakingRemoveCalculationResult? {
-		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool, slippage: maxSlippage),
+	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingRemoveCalculationResult? {
+		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool, slippage: maxSlippage, dex: dex),
 			  let tokenOut = removeLiquidityTokenReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, tokenPool: tokenPool, slippage: maxSlippage),
 			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzOut.expected, xtzPool: xtzPool, tokenPool: tokenPool) else {
 			return nil
@@ -188,6 +188,18 @@ public class LiquidityBakingCalculationService {
 		return LiquidityBakingRemoveCalculationResult(expectedXTZ: xtzOut.expected, minimumXTZ: xtzOut.minimum, expectedToken: tokenOut.expected, minimumToken: tokenOut.minimum, exchangeRate: exchangeRate)
 	}
 	
+	public static func settings(forDex dex: TezToolDex) -> (fee: Double, burn: Double, includeSubsidy: Bool) {
+		switch dex {
+			case .liquidityBaking:
+				return (fee: 0.1, burn: 0.1, includeSubsidy: true)
+				
+			case .quipuswap:
+				return (fee: 0.3, burn: 0, includeSubsidy: false)
+				
+			case .unknown:
+				return (fee: 0.3, burn: 0, includeSubsidy: false)
+		}
+	}
 	
 	
 	
@@ -200,14 +212,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `TokenAmount` containing the amount the user can expect in return for their XTZ
 	*/
-	public func xtzToTokenExpectedReturn(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> TokenAmount? {
+	public func xtzToTokenExpectedReturn(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> TokenAmount? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("xtzToTokenTokenOutput"),
-			  let result = inner.call(withArguments: [xtz, xPool, tPool]) else {
+			  let result = inner.call(withArguments: [xtz, xPool, tPool, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -246,14 +259,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `XTZAmount` containing the amount of XTZ required in order to recieve the amount of token.
 	*/
-	public func xtzToTokenRequiredXtzFor(tokenAmount: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> XTZAmount? {
+	public func xtzToTokenRequiredXtzFor(tokenAmount: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> XTZAmount? {
 		let tokenRequired = tokenAmount.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("xtzToTokenXtzInput"),
-			  let result = inner.call(withArguments: [tokenRequired, xtzPool, tokenPool, tokenAmount.decimalPlaces]) else {
+			  let result = inner.call(withArguments: [tokenRequired, xtzPool, tokenPool, tokenAmount.decimalPlaces, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -335,14 +349,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the slippage percentage, 0 - 100.
 	*/
-	public func xtzToTokenPriceImpact(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> Decimal? {
+	public func xtzToTokenPriceImpact(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("xtzToTokenPriceImpact"),
-			  let result = inner.call(withArguments: [xtz, xtzPool, tokenPool]) else {
+			  let result = inner.call(withArguments: [xtz, xtzPool, tokenPool, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -360,14 +375,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `XTZAmount` containing the amount the user can expect in return for their `Token`
 	*/
-	public func tokenToXtzExpectedReturn(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> XTZAmount? {
+	public func tokenToXtzExpectedReturn(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> XTZAmount? {
 		let token = tokenToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("tokenToXtzXtzOutput"),
-			  let result = inner.call(withArguments: [token, xtzPool, tokenPool]) else {
+			  let result = inner.call(withArguments: [token, xtzPool, tokenPool, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -406,14 +422,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `TokenAmount` containing the amount of `Token` required in order to recieve the amount of XTZ.
 	*/
-	public func tokenToXtzRequiredTokenFor(xtzAmount: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> TokenAmount? {
+	public func tokenToXtzRequiredTokenFor(xtzAmount: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> TokenAmount? {
 		let xtzRequired = xtzAmount.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("tokenToXtzTokenInput"),
-			  let result = inner.call(withArguments: [xtzRequired, xPool, tPool, tokenPool.decimalPlaces]) else {
+			  let result = inner.call(withArguments: [xtzRequired, xPool, tPool, tokenPool.decimalPlaces, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -495,14 +512,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the slippage percentage, 0 - 100.
 	*/
-	public func tokenToXtzPriceImpact(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> Decimal? {
+	public func tokenToXtzPriceImpact(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
 		let token = tokenToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("tokenToXtzPriceImpact"),
-			  let result = inner.call(withArguments: [token, xtzPool, tokenPool]) else {
+			  let result = inner.call(withArguments: [token, xtzPool, tokenPool, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -521,7 +539,7 @@ public class LiquidityBakingCalculationService {
 	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `TokenAmount` an amount of Liquidity token you will receive
 	*/
-	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount, slippage: Double) -> (expected: TokenAmount, minimum: TokenAmount)? {
+	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount, slippage: Double, dex: TezToolDex) -> (expected: TokenAmount, minimum: TokenAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
 			os_log("slippage value supplied to `addLiquidityReturn` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
 			return nil
@@ -530,10 +548,11 @@ public class LiquidityBakingCalculationService {
 		let xtzIn = xtzToDeposit.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let totalLqt = totalLiquidity.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("addLiquidityLiquidityCreated"),
-			  let result = inner.call(withArguments: [xtzIn, xPool, totalLqt]) else {
+			  let result = inner.call(withArguments: [xtzIn, xPool, totalLqt, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -555,14 +574,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The Token currently held in the dex contract
 	- returns: `TokenAmount` The amount of token required to send with the given amount of XTZ
 	*/
-	public func addLiquidityTokenRequired(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> TokenAmount? {
+	public func addLiquidityTokenRequired(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> TokenAmount? {
 		let xtzIn = xtzToDeposit.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("addLiquidityTokenIn"),
-			  let result = inner.call(withArguments: [xtzIn, xPool, tPool]) else {
+			  let result = inner.call(withArguments: [xtzIn, xPool, tPool, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -576,14 +596,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The Token currently held in the dex contract
 	- returns: `XTZAmount` The amount of XTZ required to send with the given amount of Token
 	*/
-	public func addLiquidityXtzRequired(tokenToDeposit: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> XTZAmount? {
+	public func addLiquidityXtzRequired(tokenToDeposit: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> XTZAmount? {
 		let tokenIn = tokenToDeposit.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("addLiquidityXtzIn"),
-			  let result = inner.call(withArguments: [tokenIn, xPool, tPool]) else {
+			  let result = inner.call(withArguments: [tokenIn, xPool, tPool, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -637,7 +658,7 @@ public class LiquidityBakingCalculationService {
 	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `XTZAmount` The amount of XTZ that would be returned
 	*/
-	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, slippage: Double) -> (expected: XTZAmount, minimum: XTZAmount)? {
+	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, slippage: Double, dex: TezToolDex) -> (expected: XTZAmount, minimum: XTZAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
 			os_log("slippage value supplied to `removeLiquidityXtzReceived` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
 			return nil
@@ -646,10 +667,11 @@ public class LiquidityBakingCalculationService {
 		let lqtBurned = liquidityBurned.rpcRepresentation
 		let tLqt = totalLiquidity.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("removeLiquidityXtzOut"),
-			  let result = inner.call(withArguments: [lqtBurned, tLqt, xPool]) else {
+			  let result = inner.call(withArguments: [lqtBurned, tLqt, xPool, settings.includeSubsidy]) else {
 			return nil
 		}
 		
