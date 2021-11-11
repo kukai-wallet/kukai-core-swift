@@ -100,7 +100,7 @@ public class LiquidityBakingCalculationService {
 	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingSwapCalculationResult? {
 		guard let expected = xtzToTokenExpectedReturn(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let minimum = xtzToTokenMinimumReturn(tokenAmount: expected, slippage: maxSlippage),
-			  let rate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool),
+			  let rate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let priceImpact = xtzToTokenPriceImpact(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
@@ -121,7 +121,7 @@ public class LiquidityBakingCalculationService {
 	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingSwapCalculationResult? {
 		guard let expected = tokenToXtzExpectedReturn(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let minimum = tokenToXtzMinimumReturn(xtzAmount: expected, slippage: maxSlippage),
-			  let rate = tokenToXtzExchangeRateDisplay(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool),
+			  let rate = tokenToXtzExchangeRateDisplay(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let priceImpact = tokenToXtzPriceImpact(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
@@ -143,7 +143,7 @@ public class LiquidityBakingCalculationService {
 	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingAddCalculationResult? {
 		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage, dex: dex),
-			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtz, xtzPool: xtzPool, tokenPool: tokenPool) else {
+			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtz, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
 		
@@ -162,7 +162,7 @@ public class LiquidityBakingCalculationService {
 	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingAddCalculationResult? {
 		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage, dex: dex),
-			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzRequired, xtzPool: xtzPool, tokenPool: tokenPool) else {
+			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzRequired, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
 		
@@ -181,7 +181,7 @@ public class LiquidityBakingCalculationService {
 	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> LiquidityBakingRemoveCalculationResult? {
 		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool, slippage: maxSlippage, dex: dex),
 			  let tokenOut = removeLiquidityTokenReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, tokenPool: tokenPool, slippage: maxSlippage),
-			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzOut.expected, xtzPool: xtzPool, tokenPool: tokenPool) else {
+			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzOut.expected, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
 			return nil
 		}
 		
@@ -285,14 +285,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 XTZ to the requested `Token`
 	*/
-	public func xtzToTokenExchangeRate(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> Decimal? {
+	public func xtzToTokenExchangeRate(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("xtzToTokenExchangeRate"),
-			  let result = inner.call(withArguments: [xtz, xtzPool, tokenPool]) else {
+			  let result = inner.call(withArguments: [xtz, xtzPool, tokenPool, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -307,14 +308,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 XTZ to the requested `Token`
 	*/
-	public func xtzToTokenExchangeRateDisplay(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> Decimal? {
+	public func xtzToTokenExchangeRateDisplay(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("xtzToTokenExchangeRateForDisplay"),
-			  let result = inner.call(withArguments: [xtz, xPool, tPool, tokenPool.decimalPlaces]) else {
+			  let result = inner.call(withArguments: [xtz, xPool, tPool, tokenPool.decimalPlaces, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -448,14 +450,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 of the given `Token` to XTZ
 	*/
-	public func tokenToXtzExchangeRate(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> Decimal? {
+	public func tokenToXtzExchangeRate(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
 		let token = tokenToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("tokenToXtzExchangeRate"),
-			  let result = inner.call(withArguments: [token, xtzPool, tokenPool]) else {
+			  let result = inner.call(withArguments: [token, xtzPool, tokenPool, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -470,14 +473,15 @@ public class LiquidityBakingCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the LiquidityBaking holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 of the given `Token` to XTZ
 	*/
-	public func tokenToXtzExchangeRateDisplay(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount) -> Decimal? {
+	public func tokenToXtzExchangeRateDisplay(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
 		let token = tokenToSell.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
+		let settings = LiquidityBakingCalculationService.settings(forDex: dex)
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("tokenToXtzExchangeRateForDisplay"),
-			  let result = inner.call(withArguments: [token, xPool, tPool, tokenPool.decimalPlaces]) else {
+			  let result = inner.call(withArguments: [token, xPool, tPool, tokenPool.decimalPlaces, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
