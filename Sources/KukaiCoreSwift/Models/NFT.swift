@@ -56,3 +56,9 @@ public struct NFT: Codable, Hashable {
 		thumbnailURI = URL(string: bcd.thumbnail_uri ?? "")
 	}
 }
+
+extension NFT: Identifiable {
+	public var id: String {
+		parentContract + String(tokenId)
+	}
+}

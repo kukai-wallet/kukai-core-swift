@@ -139,3 +139,12 @@ extension Token: Hashable {
 		hasher.combine(tokenContractAddress)
 	}
 }
+
+extension Token: Identifiable {
+
+	/// Conforming to `Identifiable` to enable working with ForEach and similiar looping functions
+	/// `tokenContractAddress` will return empty for `XTZ` so we'll just use `tokenType` because it represents XTZ for my use case
+	public var id: String {
+		tokenContractAddress ?? tokenType.rawValue
+	}
+}
