@@ -28,3 +28,9 @@ public struct Account: Codable, Hashable {
 	/// Can be set to false by BCD fetch all account info code. In this case it denotes that the inital queried data matched the previous inital data and no expensive update operations should be performed
 	public var changedSinceLastFetch: Bool = true
 }
+
+extension Account: Identifiable {
+	public var id: String {
+		walletAddress
+	}
+}

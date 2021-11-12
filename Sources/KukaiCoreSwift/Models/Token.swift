@@ -66,6 +66,9 @@ public class Token: Codable, CustomStringConvertible {
 	
 	/// The individual NFT's owned of this token type
 	public var nfts: [NFT]?
+
+	/// Each token type on a contract will have a unique token_id
+	public var token_id: Decimal?
 	
 	
 	
@@ -138,4 +141,20 @@ extension Token: Hashable {
 		hasher.combine(symbol)
 		hasher.combine(tokenContractAddress)
 	}
+}
+
+extension Token: Identifiable {
+
+	/// Conforming to `Identifiable` to enable working with ForEach and similiar looping functions
+    /// `tokenContractAddress` will return empty for `XTZ` so we'll need to  use `symbol` and `tokenType` for more information
+    public var id: String {
+        guard let tokenContractAddress = tokenContractAddress,
+              var token_id = token_id else {
+                  return "\(symbol)_\(tokenType.rawValue)"
+              }
+
+		let unsafeTokenIDPointer = UnsafePointer<Decimal>(&token_id)
+        
+        return "\(tokenContractAddress)_\(symbol)_\(NSDecimalString(unsafeTokenIDPointer, Locale.current))"
+    }
 }
