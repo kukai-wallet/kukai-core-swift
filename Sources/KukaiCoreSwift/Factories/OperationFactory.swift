@@ -39,12 +39,7 @@ public class OperationFactory {
 			
 			case .fungible:
 				let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
-				
-				let tokenAmountMichelson = MichelsonFactory.createInt(tokenAmount)
-				let destinationMicheslon = MichelsonFactory.createString(to)
-				let innerPair = MichelsonPair(args: [destinationMicheslon, tokenAmountMichelson])
-				let sourceMichelson = MichelsonFactory.createString(from)
-				let michelson = MichelsonPair(args: [sourceMichelson, innerPair])
+				let michelson = sendTokenMichelson(forFaVersion: token.faVersion ?? .fa1_2, tokenAmount: tokenAmount, tokenId: token.tokenId ?? 0, to: to, from: from)
 				
 				return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)]
 			
@@ -270,5 +265,27 @@ public class OperationFactory {
 		dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 		
 		return dateFormatter.string(from: Date().addingTimeInterval(nowPlusTimeInterval))
+	}
+	
+	public static func sendTokenMichelson(forFaVersion faVersion: FaVersion, tokenAmount: TokenAmount, tokenId: Decimal, to: String, from: String) -> AbstractMichelson {
+		switch faVersion {
+			case .fa1_2, .unknown:
+				let tokenAmountMichelson = MichelsonFactory.createInt(tokenAmount)
+				let destinationMicheslon = MichelsonFactory.createString(to)
+				let innerPair = MichelsonPair(args: [destinationMicheslon, tokenAmountMichelson])
+				let sourceMichelson = MichelsonFactory.createString(from)
+				return MichelsonPair(args: [sourceMichelson, innerPair])
+				
+			case .fa2:
+				let tokenAmountMichelson = MichelsonFactory.createInt(tokenAmount)
+				let idMichelson = MichelsonFactory.createInt(tokenId)
+				let destinationMicheslon = MichelsonFactory.createString(to)
+				let sourceMichelson = MichelsonFactory.createString(from)
+				
+				let amountId = MichelsonPair(args: [idMichelson, tokenAmountMichelson])
+				let destinationAmountId = MichelsonPair(args: [destinationMicheslon, amountId])
+				
+				return MichelsonPair(args: [sourceMichelson, destinationAmountId])
+		}
 	}
 }

@@ -407,6 +407,7 @@ public class BetterCallDevClient {
 				balance: bcdToken.amount(),
 				thumbnailURI: URL(string: bcdToken.thumbnail_uri ?? ""),
 				tokenContractAddress: bcdToken.contract,
+				tokenId: bcdToken.token_id,
 				nfts: nil
 			)
 			
@@ -427,6 +428,7 @@ public class BetterCallDevClient {
 					balance: TokenAmount.zero(),
 					thumbnailURI: URL(string: meta.thumbnail_uri ?? ""),
 					tokenContractAddress: meta.contract,
+					tokenId: meta.token_id,
 					nfts: tempNFT[nftContract]
 				)
 				nftToken.thumbnailURL = staticNFTData.thumbnail

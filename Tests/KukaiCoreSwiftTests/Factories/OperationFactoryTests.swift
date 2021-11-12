@@ -31,6 +31,29 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp[0].counter == "0")
 		XCTAssert(tokenOp[0].operationKind == .transaction)
 		XCTAssert(tokenOp[0] is OperationTransaction)
+		
+		if let asTransaction = (tokenOp[0] as? OperationTransaction), let parameters = asTransaction.parameters?["value"] {
+			let targetParameters = "{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"int\": \"1000\"}]}]}"
+			XCTAssert("\(parameters)" == targetParameters, "\(parameters)")
+		} else {
+			XCTFail("No parameters found")
+		}
+		
+		
+		
+		let tokenOp2 = OperationFactory.sendOperation(MockConstants.token10Decimals_1, of: MockConstants.token10Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		XCTAssert(tokenOp2.count == 1)
+		XCTAssert(tokenOp2[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(tokenOp2[0].counter == "0")
+		XCTAssert(tokenOp2[0].operationKind == .transaction)
+		XCTAssert(tokenOp2[0] is OperationTransaction)
+		
+		if let asTransaction2 = (tokenOp2[0] as? OperationTransaction), let parameters2 = asTransaction2.parameters?["value"] {
+			let targetParameters = "{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"0\"},{\"int\": \"10000000000\"}]}]}]}"
+			XCTAssert("\(parameters2)" == targetParameters, "\(parameters2)")
+		} else {
+			XCTFail("No parameters found")
+		}
 	}
 	
 	func testDelegate() {

@@ -92,6 +92,12 @@ public class MichelsonFactory {
 		return MichelsonValue(key: MichelsonConstant.int, value: value.rpcRepresentation)
 	}
 	
+	/// Helper to create a Michelson compliant object, containing an `Int` value. Passing in a `Decimal`, it will be converted to the appropriate RPC format
+	/// The returned object can be passed into a `MichelsonPair` object, in order to send as part of a smart contract call
+	public static func createInt(_ value: Decimal) -> MichelsonValue {
+		return MichelsonValue(key: MichelsonConstant.int, value: value.rounded(scale: 0, roundingMode: .down).description)
+	}
+	
 	/// Helper to create a Michelson compliant object, containing an `String` value.
 	/// The returned object can be passed into a `MichelsonPair` object, in order to send as part of a smart contract call
 	public static func createString(_ value: String) -> MichelsonValue {

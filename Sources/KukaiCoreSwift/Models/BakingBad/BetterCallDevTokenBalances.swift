@@ -33,7 +33,7 @@ public struct BetterCallDevTokenBalances: Codable {
 /// A model matching the internal array type that comes back from BetterCallDev's API: `v1/account/<network>/<address>/token_balances`
 public struct BetterCallDevTokenBalance: Codable {
 	
-	public let token_id: Int
+	public let token_id: Decimal
 	public let contract: String
 	public let name: String?
 	public let `description`: String?
@@ -46,7 +46,7 @@ public struct BetterCallDevTokenBalance: Codable {
 	private let balance: TokenAmount
 	private let decimals: Int?
 	
-	public init(token_id: Int, contract: String, name: String?, description: String?, symbol: String?, artifact_uri: String?, display_uri: String?, thumbnail_uri: String?, is_boolean_amount: Bool?, balance: TokenAmount, decimals: Int?) {
+	public init(token_id: Decimal, contract: String, name: String?, description: String?, symbol: String?, artifact_uri: String?, display_uri: String?, thumbnail_uri: String?, is_boolean_amount: Bool?, balance: TokenAmount, decimals: Int?) {
 		self.token_id = token_id
 		self.contract = contract
 		self.name = name

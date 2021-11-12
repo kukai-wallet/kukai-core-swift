@@ -34,7 +34,7 @@ public class Token: Codable, CustomStringConvertible {
 	public let name: String?
 	
 	/// The short name or the symbol of a token. e.g. "XTZ".
-	public let symbol: String?
+	public let symbol: String
 	
 	/// The type of this token. e.g. xtz, fungible, nonfungible
 	public let tokenType: TokenType
@@ -64,11 +64,11 @@ public class Token: Codable, CustomStringConvertible {
 	/// In the case of FA1.2 or higher, we need to know the KT1 address for the token so we can fetch balances and make trades. (should be empty for xtz).
 	public let tokenContractAddress: String?
 	
+	/// Each token type on a contract will have a unique token_id
+	public var tokenId: Decimal?
+	
 	/// The individual NFT's owned of this token type
 	public var nfts: [NFT]?
-
-	/// Each token type on a contract will have a unique token_id
-	public var token_id: Decimal?
 	
 	
 	
@@ -83,9 +83,10 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter decimalPlaces: The number of decimal places this token contains.
 	- parameter thumbnailURI: URI to network asset to use to display an icon for the token
 	- parameter tokenContractAddress: The KT1 address of the contract (nil if xtz).
+	- parameter tokenId: The token id if the token is an FA2 token, nil otherwise.
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURI: URL?, tokenContractAddress: String?, nfts: [NFT]?) {
+	public init(name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURI: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
@@ -93,7 +94,13 @@ public class Token: Codable, CustomStringConvertible {
 		self.balance = balance
 		self.thumbnailURI = thumbnailURI
 		self.tokenContractAddress = tokenContractAddress
+		self.tokenId = tokenId
 		self.nfts = nfts
+		
+		// TODO: make failable init
+		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
+			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name)
+		}
 	}
 	
 	/**
@@ -101,7 +108,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`
 	*/
 	public static func xtz() -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURI: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
 	}
 	
 	/**
@@ -110,12 +117,12 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`.
 	*/
 	public static func xtz(withAmount amount: TokenAmount) -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURI: nil, tokenContractAddress: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURI: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
 	}
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
 	public var description: String {
-		return "{Symbol: \(symbol ?? ""), Name: \(name), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
+		return "{Symbol: \(symbol), Name: \(name ?? ""), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
 	}
 }
 
@@ -127,6 +134,7 @@ extension Token: Equatable {
 			lhs.symbol == rhs.symbol &&
 			lhs.description == rhs.description &&
 			lhs.tokenContractAddress == rhs.tokenContractAddress &&
+			lhs.tokenId == rhs.tokenId &&
 			lhs.balance == rhs.balance &&
 			lhs.nfts == rhs.nfts
 	}
@@ -140,21 +148,36 @@ extension Token: Hashable {
 		hasher.combine(name)
 		hasher.combine(symbol)
 		hasher.combine(tokenContractAddress)
+		hasher.combine(tokenId)
 	}
 }
 
 extension Token: Identifiable {
 
 	/// Conforming to `Identifiable` to enable working with ForEach and similiar looping functions
-    /// `tokenContractAddress` will return empty for `XTZ` so we'll need to  use `symbol` and `tokenType` for more information
+    /// if faVersion present, use that to follow the standard of either tokenAddress or combination of tokenAddress + token id, fallback to using symbol if type is unknown
     public var id: String {
-        guard let tokenContractAddress = tokenContractAddress,
-              var token_id = token_id else {
-                  return "\(symbol)_\(tokenType.rawValue)"
-              }
-
-		let unsafeTokenIDPointer = UnsafePointer<Decimal>(&token_id)
-        
-        return "\(tokenContractAddress)_\(symbol)_\(NSDecimalString(unsafeTokenIDPointer, Locale.current))"
+		guard let faVersion = faVersion else {
+			if let tokenAddress = tokenContractAddress {
+				return tokenAddress
+			} else {
+				return symbol
+			}
+		}
+		
+		switch faVersion {
+			case .fa1_2:
+				return tokenContractAddress ?? symbol
+				
+			case .fa2:
+				return "\(tokenContractAddress ?? symbol):\(tokenId ?? 0)"
+				
+			case .unknown:
+				if let tokenAddress = tokenContractAddress {
+					return tokenAddress
+				} else {
+					return symbol
+				}
+		}
     }
 }

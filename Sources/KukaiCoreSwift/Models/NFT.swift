@@ -12,7 +12,7 @@ import Foundation
 public struct NFT: Codable, Hashable {
 	
 	/// Each NFT of a token has a unique ID
-	public let tokenId: Int
+	public let tokenId: Decimal
 	
 	/// The address of the FA2 contract that created this NFT
 	public let parentContract: String
@@ -59,6 +59,6 @@ public struct NFT: Codable, Hashable {
 
 extension NFT: Identifiable {
 	public var id: String {
-		parentContract + String(tokenId)
+		parentContract + tokenId.description
 	}
 }
