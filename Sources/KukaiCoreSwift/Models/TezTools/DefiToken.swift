@@ -19,7 +19,7 @@ public struct DefiToken: Codable {
 	
 	public init(withToken: TezToolToken) {
 		token = withToken
-		price = TezToolPrice(symbol: token.symbol ?? "", tokenAddress: token.tokenAddress, tokenId: withToken.tokenId, decimals: token.decimals, address: token.address, ratio: 0, currentPrice: 0, buyPrice: XTZAmount.zero(), pairs: [])
+		price = TezToolPrice(symbol: token.symbol ?? "", tokenAddress: token.tokenAddress, tokenId: withToken.tokenId, decimals: token.decimals, address: token.address, ratio: 0, currentPrice: 0, buyPrice: 0, pairs: [])
 	}
 }
 

@@ -22,7 +22,7 @@ public struct TezToolPrice: Codable {
 	public let address: String
 	public let ratio: Decimal
 	public let currentPrice: Decimal
-	public let buyPrice: XTZAmount
+	public let buyPrice: Decimal
 	public let pairs: [TezToolPair]
 	
 	public func uniqueTokenAddress() -> String {

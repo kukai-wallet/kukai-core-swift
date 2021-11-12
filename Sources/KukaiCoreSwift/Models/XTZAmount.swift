@@ -82,17 +82,8 @@ public class XTZAmount: TokenAmount {
 		} catch {
 			let container = try decoder.singleValueContainer()
 			
-			// TODO: add tests for coder
-			// Check if number contains a decimal palce, if so parse as "normalised value"
-			if let balanceString = try? container.decode(String.self), balanceString.contains("."), let decimal = Decimal(string: balanceString) {
-				super.init(fromNormalisedAmount: decimal, decimalPlaces: XTZAmount.xtzDecimalPlaces)
-				
-			} else if let balanceDecimal = try? container.decode(Decimal.self), balanceDecimal.description.contains(".") {
-				super.init(fromNormalisedAmount: balanceDecimal, decimalPlaces: XTZAmount.xtzDecimalPlaces)
-			}
-			
 			// Else, attempt to parse the "RPC value" and default decimal palces to zero
-			else if let balanceString = try? container.decode(String.self) {
+			if let balanceString = try? container.decode(String.self) {
 				super.init(bigInt: BigInt(balanceString) ?? 0, decimalPlaces: XTZAmount.xtzDecimalPlaces)
 				
 			} else if let balanceDecimal = try? container.decode(Decimal.self) {
