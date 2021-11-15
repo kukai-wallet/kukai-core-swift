@@ -47,7 +47,7 @@ public class TezosDomainsClient {
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
 	public func getDomainFor(address: String) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, ErrorResponse> {
-		let queryDict = ["query":"query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
+		let queryDict = ["query": "query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		var url = self.config.tezosDomainsURL
 		
@@ -65,7 +65,7 @@ public class TezosDomainsClient {
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
 	public func getAddressFor(domain: String) -> AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, ErrorResponse> {
-		let queryDict = ["query":"query {domain(name: \"\(domain)\") { name, address }}"]
+		let queryDict = ["query": "query {domain(name: \"\(domain)\") { name, address }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		var url = self.config.tezosDomainsURL
 		
