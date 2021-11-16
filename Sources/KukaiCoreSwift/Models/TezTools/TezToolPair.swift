@@ -50,6 +50,10 @@ public struct TezToolPair: Codable, Hashable, Equatable {
 		return nil
 	}
 	
+	public func liquiditySupply(decimals: Int) -> TokenAmount {
+		return TokenAmount(fromNormalisedAmount: lptSupply, decimalPlaces: decimals)
+	}
+	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)
