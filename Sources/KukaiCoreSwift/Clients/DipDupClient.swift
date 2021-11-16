@@ -43,7 +43,7 @@ public class DipDupClient {
 	/**
 	 */
 	public func getLiquidityFor(address: String, completion: @escaping ((Result<GraphQLResponse<DipDupPosition>, ErrorResponse>) -> Void)) {
-		let queryDict = ["query": "query {position(where: {traderId: {_eq: \"\(address)\" }}) { sharesQty, token { symbol, address, decimals}}}"]
+		let queryDict = ["query": "query {position(where: {traderId: {_eq: \"\(address)\" }}) { sharesQty, token { symbol, address, decimals}, exchange { name, tezPool, tokenPool, sharesTotal}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
 		self.networkService.request(url: DipDupClient.dexURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<DipDupPosition>.self) { result in

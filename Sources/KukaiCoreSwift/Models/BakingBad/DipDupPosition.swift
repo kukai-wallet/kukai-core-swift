@@ -39,4 +39,19 @@ public enum DipDupExchangeName: String, Codable {
 
 public struct DipDupExchange: Codable {
 	public let name: DipDupExchangeName
+	public let tezPool: String
+	public let tokenPool: String
+	public let sharesTotal: String
+	
+	public func xtzPool() -> XTZAmount {
+		return XTZAmount(fromNormalisedAmount: tezPool, decimalPlaces: 6) ?? XTZAmount.zero()
+	}
+	
+	public func tokenPool(decimals: Int) -> TokenAmount {
+		return TokenAmount(fromNormalisedAmount: tokenPool, decimalPlaces: decimals) ?? TokenAmount.zero()
+	}
+	
+	public func totalLiquidity(decimals: Int) -> TokenAmount {
+		return TokenAmount(fromNormalisedAmount: sharesTotal, decimalPlaces: decimals) ?? TokenAmount.zero()
+	}
 }
