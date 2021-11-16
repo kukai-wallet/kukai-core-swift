@@ -24,6 +24,7 @@ public struct TezToolPair: Codable, Hashable, Equatable {
 	public let address: String
 	public let dex: TezToolDex
 	public let symbols: String
+	public let lptSupply: Decimal
 	public let sides: [TezToolSide]
 	
 	/// Sides contains an array of objects providing details of each token available in the swap
