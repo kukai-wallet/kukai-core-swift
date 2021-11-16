@@ -54,6 +54,13 @@ public struct TezToolPair: Codable, Hashable, Equatable {
 		return TokenAmount(fromNormalisedAmount: lptSupply, decimalPlaces: decimals)
 	}
 	
+	public func arePoolsEmpty() -> Bool {
+		let base = baseTokenSide()
+		let nonBase = nonBaseTokenSide()
+		
+		return (base?.pool ?? 0) == 0 && (nonBase?.pool ?? 0) == 0
+	}
+	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)
