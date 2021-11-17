@@ -20,13 +20,13 @@ public struct DipDupPositionData: Codable, Hashable, Equatable {
 		var decimals = 6
 		
 		switch exchange.name {
-			case .quipuswap
+			case .quipuswap:
 				decimals = 6
 				
-			case .lb
+			case .lb:
 				decimals = 6
 				
-			case .unknown
+			case .unknown:
 				decimals = 6
 		}
 		
@@ -79,14 +79,14 @@ public struct DipDupExchange: Codable {
 	public func totalLiquidity() -> TokenAmount {
 		var decimals = 6
 		
-		switch exchange.name {
-			case .quipuswap
+		switch name {
+			case .quipuswap:
 				decimals = 6
 				
-			case .lb
+			case .lb:
 				decimals = 6
 				
-			case .unknown
+			case .unknown:
 				decimals = 6
 		}
 		
