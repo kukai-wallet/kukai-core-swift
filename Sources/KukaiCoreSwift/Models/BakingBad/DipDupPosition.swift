@@ -50,6 +50,7 @@ public enum DipDupExchangeName: String, Codable {
 
 public struct DipDupExchange: Codable {
 	public let name: DipDupExchangeName
+	public let address: String
 	public let tezPool: String
 	public let tokenPool: String
 	public let sharesTotal: String
