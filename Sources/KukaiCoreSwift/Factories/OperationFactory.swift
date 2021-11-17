@@ -422,7 +422,7 @@ public class OperationFactory {
 	}
 	
 	private static func removeLiquidity_quipu_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.tokenToXtz.rawValue
+		let entrypoint = OperationTransaction.StandardEntrypoint.use.rawValue
 		
 		let xtzMichelson = MichelsonFactory.createInt(minXTZ)
 		let tokenMichelson = MichelsonFactory.createInt(minToken)
