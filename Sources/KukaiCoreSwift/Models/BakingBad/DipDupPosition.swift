@@ -17,7 +17,20 @@ public struct DipDupPositionData: Codable, Hashable, Equatable {
 	public let exchange: DipDupExchange
 	
 	public func tokenAmount() -> TokenAmount {
-		return TokenAmount(fromRpcAmount: sharesQty, decimalPlaces: token.decimals) ?? TokenAmount.zero()
+		var decimals = 6
+		
+		switch exchange.name {
+			case .quipuswap
+				decimals = 6
+				
+			case .lb
+				decimals = 6
+				
+			case .unknown
+				decimals = 6
+		}
+		
+		return TokenAmount(fromRpcAmount: sharesQty, decimalPlaces: decimals) ?? TokenAmount.zero()
 	}
 	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
@@ -63,7 +76,20 @@ public struct DipDupExchange: Codable {
 		return TokenAmount(fromNormalisedAmount: tokenPool, decimalPlaces: decimals) ?? TokenAmount.zero()
 	}
 	
-	public func totalLiquidity(decimals: Int) -> TokenAmount {
-		return TokenAmount(fromNormalisedAmount: sharesTotal, decimalPlaces: decimals) ?? TokenAmount.zero()
+	public func totalLiquidity() -> TokenAmount {
+		var decimals = 6
+		
+		switch exchange.name {
+			case .quipuswap
+				decimals = 6
+				
+			case .lb
+				decimals = 6
+				
+			case .unknown
+				decimals = 6
+		}
+		
+		return TokenAmount(fromRpcAmount: sharesTotal, decimalPlaces: decimals) ?? TokenAmount.zero()
 	}
 }
