@@ -24,7 +24,7 @@ public struct DipDupPositionData: Codable, Hashable, Equatable {
 				decimals = 6
 				
 			case .lb:
-				decimals = 6
+				decimals = 0
 				
 			case .unknown:
 				decimals = 6
@@ -84,7 +84,7 @@ public struct DipDupExchange: Codable {
 				decimals = 6
 				
 			case .lb:
-				decimals = 6
+				decimals = 0
 				
 			case .unknown:
 				decimals = 6
