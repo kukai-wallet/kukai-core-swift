@@ -27,6 +27,7 @@ public class OperationTransaction: Operation {
 		case addLiquidity
 		case removeLiquidity
 		case use
+		case withdrawProfit
 	}
 	
 	enum CodingKeys: String, CodingKey {

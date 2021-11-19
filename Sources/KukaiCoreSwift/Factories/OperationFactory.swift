@@ -225,7 +225,7 @@ public class OperationFactory {
 	}
 	
 	/**
-	Create the operations necessary to remove liquidity from a dex contract. Use DexCalculationService to figure out the numbers required
+	Create the operations necessary to remove liquidity from a dex contract, also withdraw pending rewards if applicable. Use DexCalculationService to figure out the numbers required
 	- parameter withDex: Enum controling which dex to use to perform the operation
 	- parameter minXTZ: The minimum XTZ to accept in return for the burned amount of Liquidity
 	- parameter minToken: The minimum Token to accept in return for the burned amount of Liquidity
@@ -239,11 +239,35 @@ public class OperationFactory {
 		switch dexType {
 			case .quipuswap:
 				let swapData = removeLiquidity_quipu_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn)
-				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				var removeAndWithdrawOperations: [Operation] = [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				removeAndWithdrawOperations.append(contentsOf: withdrawRewards(withDex: dexType, dexContract: dexContract, wallet: wallet))
+				
+				return removeAndWithdrawOperations
 				
 			case .liquidityBaking:
 				let swapData = removeLiquidity_lb_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn, wallet: wallet, timeout: timeout)
 				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				
+			case .unknown:
+				return []
+		}
+	}
+	
+	/**
+	 Create the operations necessary to withdraw rewards from a dex contract. For example in quipuswap, XTZ provided as liquidity will earn baking rewards. This can been withdrawn at any time while leaving liquidity in palce
+	 - parameter withDex: Enum controling which dex to use to perform the operation
+	 - parameter dexContract: The address of the dex contract
+	 - parameter wallet: The wallet that will sign the operation
+	 - returns: An array of `Operation` subclasses.
+	 */
+	public static func withdrawRewards(withDex dexType: TezToolDex, dexContract: String, wallet: Wallet) -> [Operation] {
+		switch dexType {
+			case .quipuswap:
+				let swapData = withdrawRewards_quipu_michelsonEntrypoint(wallet: wallet)
+				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				
+			case .liquidityBaking:
+				return []
 				
 			case .unknown:
 				return []
@@ -435,5 +459,16 @@ public class OperationFactory {
 		let topPair = MichelsonPair(prim: .left, args: [middlePair])
 		
 		return (michelson: topPair, entrypoint: entrypoint)
+	}
+	
+	
+	
+	// MARK: - Withdraw
+	
+	private static func withdrawRewards_quipu_michelsonEntrypoint(wallet: Wallet) -> (michelson: AbstractMichelson, entrypoint: String)  {
+		let entrypoint = OperationTransaction.StandardEntrypoint.withdrawProfit.rawValue
+		let address = MichelsonFactory.createString(wallet.address)
+		
+		return (michelson: address, entrypoint: entrypoint)
 	}
 }
