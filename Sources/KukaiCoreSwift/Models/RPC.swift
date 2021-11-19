@@ -186,4 +186,9 @@ extension RPC where T == MichelsonPair {
 	public static func contractStorage(contractAddress: String) -> RPC<MichelsonPair> {
 		return RPC<MichelsonPair>(endpoint: "chains/main/blocks/head/context/contracts/\(contractAddress)/storage", payload: nil, responseType: MichelsonPair.self)
 	}
+	
+	/// Creates an RPC to fetch the contents of the given big map
+	public static func bigMap(id: String) -> RPC<MichelsonPair> {
+		return RPC<MichelsonPair>(endpoint: "chains/main/blocks/head/context/big_maps/\(id)", payload: nil, responseType: MichelsonPair.self)
+	}
 }
