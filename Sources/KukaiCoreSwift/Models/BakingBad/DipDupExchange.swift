@@ -54,7 +54,7 @@ public struct DipDupExchange: Codable, Hashable, Equatable {
 	}
 	
 	public func arePoolsEmpty() -> Bool {
-		return (xtzPoolAmount > .zero) && (tokenPoolAmount > .zero)
+		return (xtzPoolAmount() == XTZAmount.zero()) && (tokenPoolAmount() == TokenAmount.zero())
 	}
 	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
