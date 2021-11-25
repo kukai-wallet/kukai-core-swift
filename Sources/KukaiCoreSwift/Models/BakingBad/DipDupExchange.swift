@@ -53,6 +53,10 @@ public struct DipDupExchange: Codable, Hashable, Equatable {
 		return TokenAmount(fromRpcAmount: sharesTotal, decimalPlaces: liquidityTokenDecimalPlaces()) ?? TokenAmount.zero()
 	}
 	
+	public func arePoolsEmpty() -> Bool {
+		return (xtzPoolAmount > .zero) && (tokenPoolAmount > .zero)
+	}
+	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)

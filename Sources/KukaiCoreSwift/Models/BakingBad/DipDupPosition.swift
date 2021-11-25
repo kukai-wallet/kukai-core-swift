@@ -13,7 +13,6 @@ public struct DipDupPosition: Codable {
 
 public struct DipDupPositionData: Codable, Hashable, Equatable {
 	public let sharesQty: String
-	public let token: DipDupToken
 	public let exchange: DipDupExchange
 	
 	public func tokenAmount() -> TokenAmount {
@@ -23,11 +22,11 @@ public struct DipDupPositionData: Codable, Hashable, Equatable {
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(exchange.name)
-		hasher.combine(token.address)
+		hasher.combine(exchange.token.address)
 	}
 	
 	/// Conforming to `Equatable` to enable working with UITableViewDiffableDataSource
 	public static func == (lhs: DipDupPositionData, rhs: DipDupPositionData) -> Bool {
-		return lhs.exchange.name == rhs.exchange.name && lhs.token.address == rhs.token.address
+		return lhs.exchange.name == rhs.exchange.name && lhs.exchange.token.address == rhs.exchange.token.address
 	}
 }

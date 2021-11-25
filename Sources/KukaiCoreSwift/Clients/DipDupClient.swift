@@ -47,29 +47,34 @@ public class DipDupClient {
 	/**
 	 */
 	public func getExchangesAndTokens(limit: Int = DipDupClient.dexMaxQuerySize, offset: Int = 0, completion: @escaping ((Result<GraphQLResponse<DipDupExchangesAndTokensResponse>, ErrorResponse>) -> Void)) {
-		let queryDict = ["query": """
-			query {
-				token (limit: \(limit), offset: \(offset), order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }) {
-					symbol,
-					exchanges {
-						name,
-						tezPool,
-						tokenPool,
+		
+		var query = """
+		query {
+			token (limit: \(limit), offset: \(offset), order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }) {
+				symbol,
+				exchanges {
+					name,
+					tezPool,
+					tokenPool,
+					address,
+					sharesTotal,
+					midPrice,
+					token {
 						address,
-						sharesTotal,
-						midPrice
-						token {
-							address,
-							decimals,
-							symbol,
-							tokenId,
-							standard
-						}
+						decimals,
+						symbol,
+						tokenId,
+						standard
 					}
 				}
 			}
-		"""]
-		let data = try? JSONEncoder().encode(queryDict)
+		}
+		"""
+		
+		query = query.replacingOccurrences(of: "\n", with: "")
+		query = query.replacingOccurrences(of: "\t", with: "")
+		
+		let data = try? JSONEncoder().encode(["query": query])
 		
 		self.networkService.request(url: DipDupClient.dexURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<DipDupExchangesAndTokensResponse>.self) { result in
 			guard let res = try? result.get() else {
@@ -113,29 +118,33 @@ public class DipDupClient {
 	/**
 	 */
 	public func getLiquidityFor(address: String, completion: @escaping ((Result<GraphQLResponse<DipDupPosition>, ErrorResponse>) -> Void)) {
-		let queryDict = ["query": """
-			query {
-				position (where: {traderId: {_eq: \"\(address)\"}, sharesQty: {_gt: \"0\"} }) {
-					sharesQty,
+		var query = """
+		query {
+			position (where: {traderId: {_eq: \"\(address)\"}, sharesQty: {_gt: \"0\"} }) {
+				sharesQty,
+				exchange {
+					name,
+					tezPool,
+					tokenPool,
+					address,
+					sharesTotal,
+					midPrice,
 					token {
 						address,
 						decimals,
 						symbol,
 						tokenId,
 						standard
-					},
-					exchange {
-						name,
-						tezPool,
-						tokenPool,
-						address,
-						sharesTotal,
-						midPrice
 					}
 				}
 			}
-		"""]
-		let data = try? JSONEncoder().encode(queryDict)
+		}
+		"""
+		
+		query = query.replacingOccurrences(of: "\n", with: "")
+		query = query.replacingOccurrences(of: "\t", with: "")
+		
+		let data = try? JSONEncoder().encode(["query": query])
 		
 		self.networkService.request(url: DipDupClient.dexURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<DipDupPosition>.self) { result in
 			guard let res = try? result.get() else {
