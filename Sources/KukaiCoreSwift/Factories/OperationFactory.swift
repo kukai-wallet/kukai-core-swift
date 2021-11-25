@@ -83,14 +83,14 @@ public class OperationFactory {
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func swapXtzToToken(withdex dexType: TezToolDex, xtzAmount: XTZAmount, minTokenAmount: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func swapXtzToToken(withdex dexType: DipDupExchangeName, xtzAmount: XTZAmount, minTokenAmount: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		
 		switch dexType {
 			case .quipuswap:
 				let swapData = xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: minTokenAmount, wallet: wallet)
 				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
 				
-			case .liquidityBaking:
+			case .lb:
 				let swapData = xtzToToken_lb_michelsonEntrypoint(minTokenAmount: minTokenAmount, wallet: wallet, timeout: timeout)
 				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
 				
@@ -111,7 +111,7 @@ public class OperationFactory {
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func swapTokenToXTZ(withDex dexType: TezToolDex,
+	public static func swapTokenToXTZ(withDex dexType: DipDupExchangeName,
 									  tokenAmount: TokenAmount,
 									  minXTZAmount: XTZAmount,
 									  dexContract: String,
@@ -140,7 +140,7 @@ public class OperationFactory {
 				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
 				return operations
 				
-			case .liquidityBaking:
+			case .lb:
 				let swapData = tokenToXtz_lb_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet, timeout: timeout)
 				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
 				return operations
@@ -183,7 +183,7 @@ public class OperationFactory {
 	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func addLiquidity(withDex dexType: TezToolDex,
+	public static func addLiquidity(withDex dexType: DipDupExchangeName,
 									xtzToDeposit: XTZAmount,
 									tokensToDeposit: TokenAmount,
 									minLiquidtyMinted: TokenAmount,
@@ -214,7 +214,7 @@ public class OperationFactory {
 				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
 				return operations
 				
-			case .liquidityBaking:
+			case .lb:
 				let swapData = addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, minLiquidtyMinted: minLiquidtyMinted, wallet: wallet, timeout: timeout)
 				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
 				return operations
@@ -235,7 +235,7 @@ public class OperationFactory {
 	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func removeLiquidity(withDex dexType: TezToolDex, minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func removeLiquidity(withDex dexType: DipDupExchangeName, minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		switch dexType {
 			case .quipuswap:
 				let swapData = removeLiquidity_quipu_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn)
@@ -244,7 +244,7 @@ public class OperationFactory {
 				
 				return removeAndWithdrawOperations
 				
-			case .liquidityBaking:
+			case .lb:
 				let swapData = removeLiquidity_lb_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn, wallet: wallet, timeout: timeout)
 				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
 				
@@ -260,13 +260,13 @@ public class OperationFactory {
 	 - parameter wallet: The wallet that will sign the operation
 	 - returns: An array of `Operation` subclasses.
 	 */
-	public static func withdrawRewards(withDex dexType: TezToolDex, dexContract: String, wallet: Wallet) -> [Operation] {
+	public static func withdrawRewards(withDex dexType: DipDupExchangeName, dexContract: String, wallet: Wallet) -> [Operation] {
 		switch dexType {
 			case .quipuswap:
 				let swapData = withdrawRewards_quipu_michelsonEntrypoint(wallet: wallet)
 				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
 				
-			case .liquidityBaking:
+			case .lb:
 				return []
 				
 			case .unknown:

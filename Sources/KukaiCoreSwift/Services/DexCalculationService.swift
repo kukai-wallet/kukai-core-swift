@@ -97,7 +97,7 @@ public class DexCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `DexSwapCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> DexSwapCalculationResult? {
+	public func calculateXtzToToken(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: DipDupExchangeName) -> DexSwapCalculationResult? {
 		guard let expected = xtzToTokenExpectedReturn(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let minimum = xtzToTokenMinimumReturn(tokenAmount: expected, slippage: maxSlippage),
 			  let rate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
@@ -118,7 +118,7 @@ public class DexCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `DexSwapCalculationResult` containing the results of all the necessary calculations.
 	*/
-	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> DexSwapCalculationResult? {
+	public func calculateTokenToXTZ(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: DipDupExchangeName) -> DexSwapCalculationResult? {
 		guard let expected = tokenToXtzExpectedReturn(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let minimum = tokenToXtzMinimumReturn(xtzAmount: expected, slippage: maxSlippage),
 			  let rate = tokenToXtzExchangeRateDisplay(tokenToSell: tokenToSell, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
@@ -140,7 +140,7 @@ public class DexCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(tokenRequired: TokenAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> DexAddCalculationResult? {
+	public func calculateAddLiquidity(xtz: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: DipDupExchangeName) -> DexAddCalculationResult? {
 		guard let tokenRequired = addLiquidityTokenRequired(xtzToDeposit: xtz, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtz, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage, dex: dex),
 			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtz, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
@@ -159,7 +159,7 @@ public class DexCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(xtzRequired: XTZAmount, liquidity: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> DexAddCalculationResult? {
+	public func calculateAddLiquidity(token: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, totalLiquidity: TokenAmount, maxSlippage: Double, dex: DipDupExchangeName) -> DexAddCalculationResult? {
 		guard let xtzRequired = addLiquidityXtzRequired(tokenToDeposit: token, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex),
 			  let liquidityReturned = addLiquidityReturn(xtzToDeposit: xtzRequired, xtzPool: xtzPool, totalLiquidity: totalLiquidity, slippage: maxSlippage, dex: dex),
 			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzRequired, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
@@ -178,7 +178,7 @@ public class DexCalculationService {
 	- parameter maxSlippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `(xtz: XTZAmount, token: TokenAmount)` containing the results of all the necessary calculations.
 	*/
-	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: TezToolDex) -> DexRemoveCalculationResult? {
+	public func calculateRemoveLiquidity(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, maxSlippage: Double, dex: DipDupExchangeName) -> DexRemoveCalculationResult? {
 		guard let xtzOut = removeLiquidityXtzReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, xtzPool: xtzPool, slippage: maxSlippage, dex: dex),
 			  let tokenOut = removeLiquidityTokenReceived(liquidityBurned: liquidityBurned, totalLiquidity: totalLiquidity, tokenPool: tokenPool, slippage: maxSlippage),
 			  let exchangeRate = xtzToTokenExchangeRateDisplay(xtzToSell: xtzOut.expected, xtzPool: xtzPool, tokenPool: tokenPool, dex: dex) else {
@@ -188,9 +188,9 @@ public class DexCalculationService {
 		return DexRemoveCalculationResult(expectedXTZ: xtzOut.expected, minimumXTZ: xtzOut.minimum, expectedToken: tokenOut.expected, minimumToken: tokenOut.minimum, exchangeRate: exchangeRate)
 	}
 	
-	public static func settings(forDex dex: TezToolDex) -> (fee: Double, burn: Double, includeSubsidy: Bool) {
+	public static func settings(forDex dex: DipDupExchangeName) -> (fee: Double, burn: Double, includeSubsidy: Bool) {
 		switch dex {
-			case .liquidityBaking:
+			case .lb:
 				return (fee: 0.1, burn: 0.1, includeSubsidy: true)
 				
 			case .quipuswap:
@@ -212,7 +212,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `TokenAmount` containing the amount the user can expect in return for their XTZ
 	*/
-	public func xtzToTokenExpectedReturn(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> TokenAmount? {
+	public func xtzToTokenExpectedReturn(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> TokenAmount? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -259,7 +259,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `XTZAmount` containing the amount of XTZ required in order to recieve the amount of token.
 	*/
-	public func xtzToTokenRequiredXtzFor(tokenAmount: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> XTZAmount? {
+	public func xtzToTokenRequiredXtzFor(tokenAmount: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> XTZAmount? {
 		let tokenRequired = tokenAmount.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
@@ -285,7 +285,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 XTZ to the requested `Token`
 	*/
-	public func xtzToTokenExchangeRate(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
+	public func xtzToTokenExchangeRate(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> Decimal? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
@@ -308,7 +308,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 XTZ to the requested `Token`
 	*/
-	public func xtzToTokenExchangeRateDisplay(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
+	public func xtzToTokenExchangeRateDisplay(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> Decimal? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -351,7 +351,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the slippage percentage, 0 - 100.
 	*/
-	public func xtzToTokenPriceImpact(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
+	public func xtzToTokenPriceImpact(xtzToSell: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> Decimal? {
 		let xtz = xtzToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
@@ -377,7 +377,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `XTZAmount` containing the amount the user can expect in return for their `Token`
 	*/
-	public func tokenToXtzExpectedReturn(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> XTZAmount? {
+	public func tokenToXtzExpectedReturn(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> XTZAmount? {
 		let token = tokenToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
@@ -424,7 +424,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `TokenAmount` containing the amount of `Token` required in order to recieve the amount of XTZ.
 	*/
-	public func tokenToXtzRequiredTokenFor(xtzAmount: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> TokenAmount? {
+	public func tokenToXtzRequiredTokenFor(xtzAmount: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> TokenAmount? {
 		let xtzRequired = xtzAmount.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -450,7 +450,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 of the given `Token` to XTZ
 	*/
-	public func tokenToXtzExchangeRate(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
+	public func tokenToXtzExchangeRate(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> Decimal? {
 		let token = tokenToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
@@ -473,7 +473,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the exchange rate from 1 of the given `Token` to XTZ
 	*/
-	public func tokenToXtzExchangeRateDisplay(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
+	public func tokenToXtzExchangeRateDisplay(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> Decimal? {
 		let token = tokenToSell.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -516,7 +516,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The `TokenAmount` representing the current pool of the given `Token` that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.
 	- returns: `Decimal` containing the slippage percentage, 0 - 100.
 	*/
-	public func tokenToXtzPriceImpact(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> Decimal? {
+	public func tokenToXtzPriceImpact(tokenToSell: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> Decimal? {
 		let token = tokenToSell.rpcRepresentation
 		let xtzPool = xtzPool.rpcRepresentation
 		let tokenPool = tokenPool.rpcRepresentation
@@ -543,7 +543,7 @@ public class DexCalculationService {
 	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `TokenAmount` an amount of Liquidity token you will receive
 	*/
-	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount, slippage: Double, dex: TezToolDex) -> (expected: TokenAmount, minimum: TokenAmount)? {
+	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount, slippage: Double, dex: DipDupExchangeName) -> (expected: TokenAmount, minimum: TokenAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
 			os_log("slippage value supplied to `addLiquidityReturn` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
 			return nil
@@ -578,7 +578,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The Token currently held in the dex contract
 	- returns: `TokenAmount` The amount of token required to send with the given amount of XTZ
 	*/
-	public func addLiquidityTokenRequired(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> TokenAmount? {
+	public func addLiquidityTokenRequired(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> TokenAmount? {
 		let xtzIn = xtzToDeposit.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -600,7 +600,7 @@ public class DexCalculationService {
 	- parameter tokenPool: The Token currently held in the dex contract
 	- returns: `XTZAmount` The amount of XTZ required to send with the given amount of Token
 	*/
-	public func addLiquidityXtzRequired(tokenToDeposit: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: TezToolDex) -> XTZAmount? {
+	public func addLiquidityXtzRequired(tokenToDeposit: TokenAmount, xtzPool: XTZAmount, tokenPool: TokenAmount, dex: DipDupExchangeName) -> XTZAmount? {
 		let tokenIn = tokenToDeposit.rpcRepresentation
 		let xPool = xtzPool.rpcRepresentation
 		let tPool = tokenPool.rpcRepresentation
@@ -662,7 +662,7 @@ public class DexCalculationService {
 	- parameter slippage: Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept
 	- returns: `XTZAmount` The amount of XTZ that would be returned
 	*/
-	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, slippage: Double, dex: TezToolDex) -> (expected: XTZAmount, minimum: XTZAmount)? {
+	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, slippage: Double, dex: DipDupExchangeName) -> (expected: XTZAmount, minimum: XTZAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
 			os_log("slippage value supplied to `removeLiquidityXtzReceived` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
 			return nil
