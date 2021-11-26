@@ -56,6 +56,52 @@ public class TzKTClient {
 	
 	
 	
+	// MARK: - Storage
+	
+	/**
+	 Get the storage of a given contract and parse it to a supplied model type
+	 - parameter forContract: The KT1 contract address to query
+	 - parameter ofType: The Codable compliant model to parse the response as
+	 - parameter completion: A completion block called, returning a Swift Result type
+	 */
+	public func getStorage<T: Codable>(forContract contract: String, ofType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/contracts/\(contract)/storage")
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: T.self, completion: completion)
+	}
+	
+	/**
+	 Get the keys of a big map, by ID and parse it to a model
+	 - parameter forId: The numeric ID of the big map
+	 - parameter ofType: The Codable compliant model to parse the response as
+	 - parameter completion: A completion block called, returning a Swift Result type
+	 */
+	public func getBigMap<T: Codable>(forId id: String, ofType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/bigmaps/\(id)/keys")
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: T.self, completion: completion)
+	}
+	
+	/**
+	 Get the keys of a big map, but filtered to only one specific key. Parse the response as the supplied model
+	 - parameter forId: The numeric ID of the big map
+	 - parameter key: The key to filter by
+	 - parameter ofType: The Codable compliant model to parse the response as
+	 - parameter completion: A completion block called, returning a Swift Result type
+	 */
+	public func getBigMapKey<T: Codable>(forId id: String, key: String, ofType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/bigmaps/\(id)/keys")
+		url.appendQueryItem(name: "key", value: key)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: T.self, completion: completion)
+	}
+	
+	
+	
+	
 	// MARK: - Block checker
 	
 	/**

@@ -19,6 +19,6 @@ public struct GraphQLResponse<T: Codable>: Codable {
 	public let data: T?
 	
 	func containsErrors() -> Bool {
-		return errors == nil
+		return errors != nil
 	}
 }

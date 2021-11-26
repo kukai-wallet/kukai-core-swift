@@ -290,6 +290,15 @@ public class TezosNodeClient {
 	}
 	
 	/**
+	 Get the Michelson big map contents, from a given id
+	 - parameter id: The big map id.
+	 - parameter completion: A callback with a `Result` object, with either a `MichelsonPair` or an `Error`
+	*/
+	public func getBigMap(id: String, completion: @escaping ((Result<MichelsonPair, ErrorResponse>) -> Void)) {
+		self.networkService.send(rpc: RPC.bigMap(id: id), withBaseURL: config.primaryNodeURL, completion: completion)
+	}
+	
+	/**
 	Get the Liquidity Baking pool data for each tuple passed in.
 	- parameter forContracts: An array of tuples `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
 	- parameter completion: An empty callback to alert that the balances, if avialable, have bene fetched
