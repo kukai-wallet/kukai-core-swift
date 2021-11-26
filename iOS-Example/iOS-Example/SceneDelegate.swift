@@ -86,6 +86,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			}
 			.store(in: &bag)
 		 */
+		
+		
+		DAppHelperService.Quipuswap.getPendingRewards(fromExchange: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc", forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs", tzKTClient: ClientsAndData.shared.tzktClient) { res in
+			print("res: \(res)")
+		}
 	}
 }
 
