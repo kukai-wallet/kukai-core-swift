@@ -100,7 +100,13 @@ class MockURLProtocol: URLProtocol {
 				self.client?.urlProtocol(self, didLoad: d)
 			}
 		} else {
-			fatalError("URL not mocked: \(url.absoluteString)")
+			
+			if let body = request.httpBodyStreamData() {
+				fatalError("POST URL not mocked: \(url.absoluteString), \nwith request: \(String(data: body, encoding: .utf8) ?? "")")
+				
+			} else {
+				fatalError("URL not mocked: \(url.absoluteString)")
+			}
 		}
 	}
 	
@@ -137,7 +143,7 @@ class MockURLProtocol: URLProtocol {
 				self.client?.urlProtocol(self, didLoad: d)
 			}
 		} else {
-			fatalError("POST URL not mocked: \(mockPostUrlKey.url.absoluteString), \nwith request: \(String(data: mockPostUrlKey.requestData, encoding: .utf8) ?? "")")
+			handleGetURL(url: mockPostUrlKey.url)
 		}
 	}
 

@@ -20,7 +20,7 @@ class DAppHelperServiceTests: XCTestCase {
 				return
 			}
 			
-			XCTAssert(res.normalisedRepresentation == "0.001279", res.normalisedRepresentation)
+			XCTAssert(res > XTZAmount.zero(), res.normalisedRepresentation)
 			expectation.fulfill()
 		}
 		
@@ -39,8 +39,8 @@ class DAppHelperServiceTests: XCTestCase {
 				return
 			}
 			
-			XCTAssert(res.first?.rewards.normalisedRepresentation == "0.001279", res.first?.rewards.normalisedRepresentation ?? "-")
-			XCTAssert(res.last?.rewards.normalisedRepresentation == "0.001279", res.last?.rewards.normalisedRepresentation ?? "-")
+			XCTAssert(res.first?.rewards ?? .zero() > XTZAmount.zero(), res.first?.rewards.normalisedRepresentation ?? "-")
+			XCTAssert(res.last?.rewards ?? .zero() > XTZAmount.zero(), res.last?.rewards.normalisedRepresentation ?? "-")
 			expectation.fulfill()
 		}
 		
