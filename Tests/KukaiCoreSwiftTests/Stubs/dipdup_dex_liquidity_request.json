@@ -1,0 +1,1 @@
+{"query":"query {position (where: {traderId: {_eq: \"tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs\"}, sharesQty: {_gt: \"0\"} }) {sharesQty,exchange {name,tezPool,tokenPool,address,sharesTotal,midPrice,token {address,decimals,symbol,tokenId,standard}}}}"}

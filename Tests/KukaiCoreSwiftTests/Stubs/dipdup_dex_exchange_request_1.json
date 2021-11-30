@@ -1,0 +1,1 @@
+{"query":"query {token (limit: 100, offset: 0, order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }) {symbol,exchanges {name,tezPool,tokenPool,address,sharesTotal,midPrice,token {address,decimals,symbol,tokenId,standard}}}}"}

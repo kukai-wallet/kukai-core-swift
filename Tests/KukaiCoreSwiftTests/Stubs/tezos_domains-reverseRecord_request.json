@@ -1,0 +1,1 @@
+{"query":"query {domain(name: \"crane-cost.gra\") { name, address }}"}

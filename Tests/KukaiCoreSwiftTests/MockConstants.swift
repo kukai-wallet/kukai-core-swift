@@ -24,6 +24,8 @@ public struct MockConstants {
 	public let betterCallDevClient: BetterCallDevClient
 	public let tzktClient: TzKTClient
 	public let tezosDomainsClient: TezosDomainsClient
+	public let dipDupClient: DipDupClient
+	public let tezToolsClient: TezToolsClient
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
@@ -59,6 +61,12 @@ public struct MockConstants {
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "initiator.null", value: nil)
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "sort.desc", value: "level")
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "timestamp.gt", value: "2020-10-16T16:55:51Z")
+		
+		var tzktBigmapUserRewardsURL = tzktURL.appendingPathComponent("v1/bigmaps/1494/keys")
+		tzktBigmapUserRewardsURL.appendQueryItem(name: "key", value: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs")
+		
+		var tzktBigmapLedgerURL = tzktURL.appendingPathComponent("v1/bigmaps/1493/keys")
+		tzktBigmapLedgerURL.appendQueryItem(name: "key", value: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs")
 		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
@@ -112,16 +120,40 @@ public struct MockConstants {
 			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
 			tzktHistoryMainURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main"), MockConstants.http200),
 			tzktHistoryNativeReceiveURL: (MockConstants.jsonStub(fromFilename: "tzkt_transaction-native-receive"), MockConstants.http200),
+			tzktURL.appendingPathComponent("v1/contracts/KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc/storage"): (MockConstants.jsonStub(fromFilename: "tzkt_storage_quipu"), MockConstants.http200),
+			tzktBigmapUserRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_userrewards"), MockConstants.http200),
+			tzktBigmapLedgerURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_ledger"), MockConstants.http200),
 			
 			// Kukai backend
 			URL(string: "https://backend.kukai.network/file/info?src=https://cloudflare-ipfs.com/ipfs/QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN")!: (MockConstants.jsonStub(fromFilename: "kukai_backend-ipfs-data"), MockConstants.http200),
 			
-			// Tezos domains
-			URL(string: "https://granadanet-api.tezos.domains/graphql/domain")!: (MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
-			URL(string: "https://granadanet-api.tezos.domains/graphql/address")!: (MockConstants.jsonStub(fromFilename: "tezos_domains-domain"), MockConstants.http200),
+			// TezTools
+			URL(string: "https://api.teztools.io/v1/contracts")!: (MockConstants.jsonStub(fromFilename: "teztools_tokens"), MockConstants.http200),
+			URL(string: "https://api.teztools.io/v1/prices")!: (MockConstants.jsonStub(fromFilename: "teztools_prices"), MockConstants.http200),
 			
 			// Misc
 			URL(string: "https://api.tezos.help/twitter-lookup/")!: (MockConstants.jsonStub(fromFilename: "twitter_lookup"), MockConstants.http200),
+		]
+		
+		MockURLProtocol.mockPostURLs = [
+			
+			// Tezos domains
+			MockPostUrlKey(url: URL(string: "https://granadanet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-domain_request")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://granadanet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-domain"), MockConstants.http200),
+			
+			// DipDup
+			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_request_1")):
+				(MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_response_1"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_request_2")):
+				(MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_response_2"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_request_3")):
+				(MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_response_3"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_request_4")):
+				(MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_response_4"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_liquidity_request")):
+				(MockConstants.jsonStub(fromFilename: "dipdup_dex_liquidity_response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession
@@ -135,6 +167,8 @@ public struct MockConstants {
 		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
 		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: networkService, config: config)
+		dipDupClient = DipDupClient(networkService: networkService, config: config)
+		tezToolsClient = TezToolsClient(networkService: networkService, config: config)
 	}
 	
 	public static func bcdURL(withPath: String, queryParams: [String: String], andConfig config: TezosNodeClientConfig) -> URL {
