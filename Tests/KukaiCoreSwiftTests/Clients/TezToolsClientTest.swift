@@ -28,7 +28,7 @@ class TezToolsClientTests: XCTestCase {
 			XCTAssert(res.first?.price.address == "KT1W3VGRUjvS869r4ror8kdaxqJAZUbPyjMT", res.first?.price.address ?? "-")
 			XCTAssert(res.first?.price.symbol == "wXTZ", res.first?.price.symbol ?? "-")
 			XCTAssert(res.first?.price.pairs.first?.nonBaseTokenSide()?.symbol == "wXTZ", res.first?.price.pairs.first?.nonBaseTokenSide()?.symbol ?? "-")
-			XCTAssert(res.first?.price.pairs.first?.nonBaseTokenSide()?.price.description == "0.7733547040390498304", res.first?.price.pairs.first?.nonBaseTokenSide()?.price.description ?? "-")
+			XCTAssert(res.first?.price.pairs.first?.nonBaseTokenSide()?.price.rounded(scale: 5, roundingMode: .down).description == "0.77335", res.first?.price.pairs.first?.nonBaseTokenSide()?.price.description ?? "-")
 			
 			XCTAssert(res.last?.token.address == "KT1JitjBtBsjjQrMGyA57ScjHSP6JF5zE7eS", res.last?.token.address ?? "-")
 			XCTAssert(res.last?.token.symbol == "tzMeta", res.last?.token.symbol ?? "-")
@@ -36,7 +36,7 @@ class TezToolsClientTests: XCTestCase {
 			XCTAssert(res.last?.price.address == "KT1JitjBtBsjjQrMGyA57ScjHSP6JF5zE7eS", res.last?.price.address ?? "-")
 			XCTAssert(res.last?.price.symbol == "tzMeta", res.last?.price.symbol ?? "-")
 			XCTAssert(res.last?.price.pairs.first?.nonBaseTokenSide()?.symbol == "tzMeta", res.last?.price.pairs.first?.nonBaseTokenSide()?.symbol ?? "-")
-			XCTAssert(res.last?.price.pairs.first?.nonBaseTokenSide()?.price.description == "0.000000002422574581163280384", res.last?.price.pairs.first?.nonBaseTokenSide()?.price.description ?? "-")
+			XCTAssert(res.last?.price.pairs.first?.nonBaseTokenSide()?.price.rounded(scale: 10, roundingMode: .down).description == "0.0000000024", res.last?.price.pairs.first?.nonBaseTokenSide()?.price.description ?? "-")
 			
 			expectation.fulfill()
 		}
