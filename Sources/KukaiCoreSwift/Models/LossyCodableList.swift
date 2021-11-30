@@ -7,8 +7,7 @@
 
 import Foundation
 
-/// Pulled from: https://www.swiftbysundell.com/articles/ignoring-invalid-json-elements-codable/
-
+/// Pulled from: https://www.swiftbysundell.com/articles/ignoring-invalid-json-elements-codable/ , allows the use of codable, but simply ignoring any array element that can't be mapped, rather than crash for the whole thing
 @propertyWrapper
 struct LossyCodableList<Element> {
 	var elements: [Element]

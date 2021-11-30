@@ -7,8 +7,13 @@
 
 import Foundation
 
+/**
+ Class exposes functions to allow communication to the dedicated indexer platform DipDup ( https://dipdup.net/ ).
+ DipDup is composed on many small, dedicated indexers, powered by GraphQL. This class tries to exposes userflow functions, allowing users to accomplish tasks without having to worry about the underlying complexities
+ */
 public class DipDupClient {
 	
+	// TODO: 
 	// Currently no testnet instances, hardcoding internally for now. revisit when we have examples, and know how each service will be seperated
 	private static var dexURL = URL(string: "https://dex.dipdup.net/v1/graphql")!
 	
@@ -18,8 +23,10 @@ public class DipDupClient {
 	/// The config used for URL's and logging
 	private let config: TezosNodeClientConfig
 	
+	/// Max enteries to return per request
 	public static let dexMaxQuerySize = 100
 	
+	// Used for keeping track of recurrsive network calls progress
 	private var exchangeQuery_currentOffset = 0
 	private var exchangeQuery_tokens: [DipDupExchangesAndTokens] = []
 	
@@ -45,6 +52,10 @@ public class DipDupClient {
 	// MARK: - Public functions
 	
 	/**
+	 Get a list of all the tokens available and on what excahnges (including their prices and pool data)
+	 - parameter limit: Int, How many results to reuturn 100 Max)
+	 - parameter offset: Int, How many positions to move the cursor
+	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
 	 */
 	public func getExchangesAndTokens(limit: Int = DipDupClient.dexMaxQuerySize, offset: Int = 0, completion: @escaping ((Result<GraphQLResponse<DipDupExchangesAndTokensResponse>, ErrorResponse>) -> Void)) {
 		
@@ -91,6 +102,8 @@ public class DipDupClient {
 	}
 	
 	/**
+	 Recurrsively call `getExchangesAndTokens(...)` until we have found all the tokens
+	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
 	 */
 	public func getAllExchangesAndTokens(completion: @escaping ((Result<[DipDupExchangesAndTokens], ErrorResponse>) -> Void)) {
 		getExchangesAndTokens(limit: DipDupClient.dexMaxQuerySize, offset: exchangeQuery_currentOffset) { [weak self] result in
@@ -112,10 +125,10 @@ public class DipDupClient {
 	}
 	
 	
-	
-	
-	
 	/**
+	 Query a given addresses liquidity token balances
+	 - parameter address: The TZ address to query for
+	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
 	 */
 	public func getLiquidityFor(address: String, completion: @escaping ((Result<GraphQLResponse<DipDupPosition>, ErrorResponse>) -> Void)) {
 		var query = """

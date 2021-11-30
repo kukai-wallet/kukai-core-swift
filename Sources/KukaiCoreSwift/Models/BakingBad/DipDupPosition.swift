@@ -7,14 +7,22 @@
 
 import Foundation
 
+/// Wrapper object to match network response type
 public struct DipDupPosition: Codable {
 	public let position: [DipDupPositionData]
 }
 
+/// A position on DipDup corresponds to liquidity token ownership. Each of these objects represents an amount of Liquidity tokens in an exchange for the given address
 public struct DipDupPositionData: Codable, Hashable, Equatable {
+	
+	/// The liquidity token balance (rpc representation)
 	public let sharesQty: String
+	
+	/// The exchange the token belongs too
 	public let exchange: DipDupExchange
 	
+	
+	/// Convert the token data into a `TokenAmount`
 	public func tokenAmount() -> TokenAmount {
 		return TokenAmount(fromRpcAmount: sharesQty, decimalPlaces: exchange.liquidityTokenDecimalPlaces()) ?? TokenAmount.zero()
 	}

@@ -87,7 +87,7 @@ public class DAppHelperService {
 							let now = Date()
 							let rewardsTime = now > periodFinish ? periodFinish : now
 							
-							// Javascript timestamps are miliseconds, Swift are seconds, so require multiplying by 100
+							// Javascript timestamps are miliseconds, Swift are seconds, so require multiplying by 1000
 							var newReward = Decimal(abs((rewardsTime.timeIntervalSince1970 * 1000) - (lastUpdateTime.timeIntervalSince1970 * 1000)))
 							newReward = (newReward / 1000).rounded(scale: 0, roundingMode: .down)
 							newReward = newReward * storageRewardPerSec

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Enum to map to the supported dApp's / exhcnages from TezTools
 public enum TezToolServiceType: String, Codable {
 	case quipuswap = "QUIPUSWAP"
 	case liquidityBaking = "LB"
@@ -17,15 +18,25 @@ public enum TezToolServiceType: String, Codable {
 	}
 }
 
+/// Wrapper around the dApp information from TezTools
 public struct TezToolApp: Codable {
 	
+	/// Identifying the app
 	public let name: TezToolServiceType
+	
+	/// The type of dApp / purpose
 	public let type: String
+	
+	/// The available token pools
 	public let pools: [TezToolAppPool]
 }
 
+/// Data available for each token pool
 public struct TezToolAppPool: Codable {
 	
+	/// The Exchange contract address
 	public let address: String
+	
+	/// The type of token contained in the pool
 	public let tokenType: String
 }
