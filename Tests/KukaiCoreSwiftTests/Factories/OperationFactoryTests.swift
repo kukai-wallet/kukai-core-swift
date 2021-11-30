@@ -92,7 +92,7 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testXtzToToken() {
-		let op = OperationFactory.swapXtzToToken(withdex: .liquidityBaking, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.swapXtzToToken(withdex: .lb, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -119,7 +119,7 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testTokenToXTZ() {
-		let op = OperationFactory.swapTokenToXTZ(withDex: .liquidityBaking, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.swapTokenToXTZ(withDex: .lb, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 3)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -194,7 +194,7 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testAddLiquidity() {
-		let op = OperationFactory.addLiquidity(withDex: .liquidityBaking, xtzToDeposit: XTZAmount(fromNormalisedAmount: 1), tokensToDeposit: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidtyMinted: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.addLiquidity(withDex: .lb, xtzToDeposit: XTZAmount(fromNormalisedAmount: 1), tokensToDeposit: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidtyMinted: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 3)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -269,7 +269,7 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testRemoveLiquidity() {
-		let op = OperationFactory.removeLiquidity(withDex: .liquidityBaking, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.removeLiquidity(withDex: .lb, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)

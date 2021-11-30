@@ -41,7 +41,7 @@ class DexCalculationServiceTests: XCTestCase {
 				return
 			}
 			
-			let result = dexCalculationService.calculateXtzToToken(xtzToSell: XTZAmount(fromRpcAmount: xtzIn) ?? XTZAmount.zero(), xtzPool: XTZAmount(fromRpcAmount: xPool) ?? XTZAmount.zero(), tokenPool: TokenAmount(fromRpcAmount: tPool, decimalPlaces: 0) ?? TokenAmount.zero(), maxSlippage: 0, dex: .liquidityBaking)
+			let result = dexCalculationService.calculateXtzToToken(xtzToSell: XTZAmount(fromRpcAmount: xtzIn) ?? XTZAmount.zero(), xtzPool: XTZAmount(fromRpcAmount: xPool) ?? XTZAmount.zero(), tokenPool: TokenAmount(fromRpcAmount: tPool, decimalPlaces: 0) ?? TokenAmount.zero(), maxSlippage: 0, dex: .lb)
 			let impactAsPercentage = (Decimal(string: priceImpact)?.rounded(scale: 4, roundingMode: .bankers) ?? 0) * 100
 			
 			XCTAssert(result?.expected.rpcRepresentation == tokenOut, "\(result?.expected.rpcRepresentation ?? "") != \(tokenOut)")
@@ -67,7 +67,7 @@ class DexCalculationServiceTests: XCTestCase {
 				return
 			}
 			
-			let result = dexCalculationService.calculateTokenToXTZ(tokenToSell: TokenAmount(fromRpcAmount: tokenIn, decimalPlaces: 0) ?? TokenAmount.zero(), xtzPool: XTZAmount(fromRpcAmount: xPool) ?? XTZAmount.zero(), tokenPool: TokenAmount(fromRpcAmount: tPool, decimalPlaces: 0) ?? TokenAmount.zero(), maxSlippage: 0, dex: .liquidityBaking)
+			let result = dexCalculationService.calculateTokenToXTZ(tokenToSell: TokenAmount(fromRpcAmount: tokenIn, decimalPlaces: 0) ?? TokenAmount.zero(), xtzPool: XTZAmount(fromRpcAmount: xPool) ?? XTZAmount.zero(), tokenPool: TokenAmount(fromRpcAmount: tPool, decimalPlaces: 0) ?? TokenAmount.zero(), maxSlippage: 0, dex: .lb)
 			let impactAsPercentage = (Decimal(string: priceImpact)?.rounded(scale: 4, roundingMode: .bankers) ?? 0) * 100
 			
 			XCTAssert(result?.expected.rpcRepresentation == xtzOut, "\(result?.expected.rpcRepresentation ?? "") != \(xtzOut)")
@@ -83,19 +83,19 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		var xtzPool = XTZAmount(fromRpcAmount: 1000000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 250000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.xtzToTokenExpectedReturn(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.xtzToTokenExpectedReturn(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "248", result?.rpcRepresentation ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 5) ?? XTZAmount.zero()
 		xtzPool = XTZAmount(fromRpcAmount: 100000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 10, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenExpectedReturn(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenExpectedReturn(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "0", result?.rpcRepresentation ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 20000) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 100000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 10, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenExpectedReturn(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenExpectedReturn(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "0", result?.rpcRepresentation ?? "-")
 	}
 	
@@ -103,13 +103,13 @@ class DexCalculationServiceTests: XCTestCase {
 		var tokenIn = TokenAmount(fromRpcAmount: 2000000, decimalPlaces: 8) ?? TokenAmount.zeroBalance(decimalPlaces: 8)
 		var xtzPool = XTZAmount(fromRpcAmount: 38490742927) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 44366268, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.xtzToTokenRequiredXtzFor(tokenAmount: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.xtzToTokenRequiredXtzFor(tokenAmount: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "1820804468", result?.rpcRepresentation ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 23500000, decimalPlaces: 8) ?? TokenAmount.zeroBalance(decimalPlaces: 8)
 		xtzPool =  XTZAmount(fromRpcAmount: 3003926688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 667902216, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenRequiredXtzFor(tokenAmount: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenRequiredXtzFor(tokenAmount: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "109857694", result?.rpcRepresentation ?? "-")
 	}
 	
@@ -117,13 +117,13 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		var xtzPool = XTZAmount(fromRpcAmount: 34204881343) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 39306268, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.xtzToTokenExchangeRate(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.xtzToTokenExchangeRate(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.001146", result?.description ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		xtzPool = XTZAmount(fromRpcAmount: 3003226688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 668057425, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenExchangeRate(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenExchangeRate(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.221743", result?.description ?? "-")
 	}
 	
@@ -131,19 +131,19 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		var xtzPool = XTZAmount(fromRpcAmount: 34204881343) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 39306268, decimalPlaces: 8) ?? XTZAmount.zero()
-		var result = dexCalculationService.xtzToTokenExchangeRateDisplay(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.xtzToTokenExchangeRateDisplay(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.00001146", result?.description ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		xtzPool = XTZAmount(fromRpcAmount: 3003226688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 668057425, decimalPlaces: 6) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenExchangeRateDisplay(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenExchangeRateDisplay(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.221743", result?.description ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 100000) ?? XTZAmount.zero()
 		xtzPool = XTZAmount(fromRpcAmount: 2000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 100000, decimalPlaces: 0) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenExchangeRateDisplay(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenExchangeRateDisplay(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "21690", result?.description ?? "-")
 	}
 	
@@ -168,19 +168,19 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		var xtzPool = XTZAmount(fromRpcAmount: 29757960047) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 351953939, decimalPlaces: 8) ?? XTZAmount.zero()
-		var result = dexCalculationService.xtzToTokenPriceImpact(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.xtzToTokenPriceImpact(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.1", result?.description ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 20000) ?? XTZAmount.zero()
 		xtzPool = XTZAmount(fromRpcAmount: 100000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 10, decimalPlaces: 8) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenPriceImpact(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenPriceImpact(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0", result?.description ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 10000000) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 3003226688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 668057425, decimalPlaces: 6) ?? XTZAmount.zero()
-		result = dexCalculationService.xtzToTokenPriceImpact(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.xtzToTokenPriceImpact(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.43", result?.description ?? "-")
 	}
 	
@@ -214,7 +214,7 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		var xtzPool = XTZAmount(fromRpcAmount: 1000000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 250000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.calculateXtzToToken(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .liquidityBaking)
+		var result = dexCalculationService.calculateXtzToToken(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .lb)
 		
 		XCTAssert(result?.expected.rpcRepresentation == "248", result?.expected.rpcRepresentation ?? "-")
 		XCTAssert(result?.minimum.rpcRepresentation == "235", result?.minimum.rpcRepresentation ?? "-")
@@ -225,7 +225,7 @@ class DexCalculationServiceTests: XCTestCase {
 		xtzIn = XTZAmount(fromRpcAmount: 1754311) ?? XTZAmount.zero()
 		xtzPool = XTZAmount(fromRpcAmount: 1000000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 250000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.calculateXtzToToken(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .liquidityBaking)
+		result = dexCalculationService.calculateXtzToToken(xtzToSell: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .lb)
 		
 		XCTAssert(result?.expected.rpcRepresentation == "435", result?.expected.rpcRepresentation ?? "-")
 		XCTAssert(result?.minimum.rpcRepresentation == "413", result?.minimum.rpcRepresentation ?? "-")
@@ -241,19 +241,19 @@ class DexCalculationServiceTests: XCTestCase {
 		var tokenIn = TokenAmount(fromRpcAmount: 1000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.tokenToXtzExpectedReturn(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.tokenToXtzExpectedReturn(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "11233127", result?.rpcRepresentation ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 1000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool =  XTZAmount(fromRpcAmount: 37412394) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 42000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzExpectedReturn(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzExpectedReturn(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "926361", result?.rpcRepresentation ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 1000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool =  XTZAmount(fromRpcAmount: 94441241342423) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 97000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzExpectedReturn(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzExpectedReturn(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "961769566995", result?.rpcRepresentation ?? "-")
 	}
 	
@@ -261,13 +261,13 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzIn = XTZAmount(fromRpcAmount: 12000000) ?? XTZAmount.zero()
 		var xtzPool =  XTZAmount(fromRpcAmount: 38490742927) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 44366268, decimalPlaces: 8) ?? XTZAmount.zero()
-		var result = dexCalculationService.tokenToXtzRequiredTokenFor(xtzAmount: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.tokenToXtzRequiredTokenFor(xtzAmount: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "13849", result?.rpcRepresentation ?? "-")
 		
 		xtzIn = XTZAmount(fromRpcAmount: 1000000) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 3003926688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 667902216, decimalPlaces: 6) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzRequiredTokenFor(xtzAmount: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzRequiredTokenFor(xtzAmount: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.rpcRepresentation == "222454", result?.rpcRepresentation ?? "-")
 	}
 	
@@ -275,13 +275,13 @@ class DexCalculationServiceTests: XCTestCase {
 		var tokenIn = TokenAmount(fromRpcAmount: 100000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		var xtzPool = XTZAmount(fromRpcAmount: 38490742927) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 44366268, decimalPlaces: 8) ?? XTZAmount.zero()
-		var result = dexCalculationService.tokenToXtzExchangeRate(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.tokenToXtzExchangeRate(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "266.28743826", result?.description ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 34000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool = XTZAmount(fromRpcAmount: 3003926688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 667902216, decimalPlaces: 6) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzExchangeRate(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzExchangeRate(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "4.274900558823529", result?.description ?? "-")
 	}
 	
@@ -289,13 +289,13 @@ class DexCalculationServiceTests: XCTestCase {
 		var tokenIn = TokenAmount(fromRpcAmount: 100000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		var xtzPool = XTZAmount(fromRpcAmount: 38490742927) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 44366268, decimalPlaces: 8) ?? XTZAmount.zero()
-		var result = dexCalculationService.tokenToXtzExchangeRateDisplay(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.tokenToXtzExchangeRateDisplay(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "26628.743826", result?.description ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 34000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool = XTZAmount(fromRpcAmount: 3003926688) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 667902216, decimalPlaces: 6) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzExchangeRateDisplay(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzExchangeRateDisplay(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "4.274901", result?.description ?? "-")
 	}
 	
@@ -320,19 +320,19 @@ class DexCalculationServiceTests: XCTestCase {
 		var tokenIn = TokenAmount(fromRpcAmount: 100000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		var xtzPool = XTZAmount(fromRpcAmount: 3849181242) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 44365061, decimalPlaces: 8) ?? XTZAmount.zero()
-		var result = dexCalculationService.tokenToXtzPriceImpact(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		var result = dexCalculationService.tokenToXtzPriceImpact(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "69.3", result?.description ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 40000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool = XTZAmount(fromRpcAmount: 3849181242) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 44365061, decimalPlaces: 8) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzPriceImpact(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzPriceImpact(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "47.47", result?.description ?? "-")
 		
 		tokenIn = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool = XTZAmount(fromRpcAmount: 2869840667) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 699209512, decimalPlaces: 6) ?? XTZAmount.zero()
-		result = dexCalculationService.tokenToXtzPriceImpact(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .liquidityBaking)
+		result = dexCalculationService.tokenToXtzPriceImpact(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, dex: .lb)
 		XCTAssert(result?.description == "0.24", result?.description ?? "-")
 	}
 	
@@ -354,7 +354,7 @@ class DexCalculationServiceTests: XCTestCase {
 		var tokenIn = TokenAmount(fromRpcAmount: 1000, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 1000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.calculateTokenToXTZ(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .liquidityBaking)
+		var result = dexCalculationService.calculateTokenToXTZ(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .lb)
 		
 		XCTAssert(result?.expected.rpcRepresentation == "11233127", result?.expected.rpcRepresentation ?? "-")
 		XCTAssert(result?.minimum.rpcRepresentation == "10671470", result?.minimum.rpcRepresentation ?? "-")
@@ -365,7 +365,7 @@ class DexCalculationServiceTests: XCTestCase {
 		tokenIn = TokenAmount(fromRpcAmount: 1754311, decimalPlaces: 0) ?? TokenAmount.zeroBalance(decimalPlaces: 0)
 		xtzPool = XTZAmount(fromRpcAmount: 1000000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 250000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.calculateTokenToXTZ(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .liquidityBaking)
+		result = dexCalculationService.calculateTokenToXTZ(tokenToSell: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.05, dex: .lb)
 		
 		XCTAssert(result?.expected.rpcRepresentation == "876470140", result?.expected.rpcRepresentation ?? "-")
 		XCTAssert(result?.minimum.rpcRepresentation == "832646633", result?.minimum.rpcRepresentation ?? "-")
@@ -382,7 +382,7 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .liquidityBaking)
+		var result = dexCalculationService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.0012", result?.tokenRequired.normalisedRepresentation ?? "-")
 		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "1.2", result?.expectedLiquidity.normalisedRepresentation ?? "-")
@@ -393,7 +393,7 @@ class DexCalculationServiceTests: XCTestCase {
 		xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .liquidityBaking)
+		result = dexCalculationService.calculateAddLiquidity(xtz: xtzIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.093488", result?.tokenRequired.normalisedRepresentation ?? "-")
 		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "93.487111", result?.expectedLiquidity.normalisedRepresentation ?? "-")
@@ -406,7 +406,7 @@ class DexCalculationServiceTests: XCTestCase {
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .liquidityBaking)
+		var result = dexCalculationService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.225", result?.tokenRequired.normalisedRepresentation ?? "-")
 		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "10", result?.expectedLiquidity.normalisedRepresentation ?? "-")
@@ -417,7 +417,7 @@ class DexCalculationServiceTests: XCTestCase {
 		xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 1000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .liquidityBaking)
+		result = dexCalculationService.calculateAddLiquidity(token: tokenIn, xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLqt, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.tokenRequired.normalisedRepresentation == "47.32785", result?.tokenRequired.normalisedRepresentation ?? "-")
 		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "2103.46", result?.expectedLiquidity.normalisedRepresentation ?? "-")
@@ -430,7 +430,7 @@ class DexCalculationServiceTests: XCTestCase {
 		var totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		var xtzPool =  XTZAmount(fromRpcAmount: 20000000) ?? XTZAmount.zero()
 		var tokenPool = TokenAmount(fromRpcAmount: 100000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		var result = dexCalculationService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5, dex: .liquidityBaking)
+		var result = dexCalculationService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.expectedToken.normalisedRepresentation == "0.0005", result?.expectedToken.normalisedRepresentation ?? "-")
 		XCTAssert(result?.minimumToken.normalisedRepresentation == "0.00025", result?.minimumToken.normalisedRepresentation ?? "-")
@@ -442,7 +442,7 @@ class DexCalculationServiceTests: XCTestCase {
 		totalLqt = TokenAmount(fromRpcAmount: 1000000000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
 		xtzPool =  XTZAmount(fromRpcAmount: 2000000) ?? XTZAmount.zero()
 		tokenPool = TokenAmount(fromRpcAmount: 35000, decimalPlaces: USDtzDecimalPlaces) ?? XTZAmount.zero()
-		result = dexCalculationService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5, dex: .liquidityBaking)
+		result = dexCalculationService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.expectedToken.normalisedRepresentation == "0.000175", result?.expectedToken.normalisedRepresentation ?? "-")
 		XCTAssert(result?.minimumToken.normalisedRepresentation == "0.000087", result?.minimumToken.normalisedRepresentation ?? "-")
