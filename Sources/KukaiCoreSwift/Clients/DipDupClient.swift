@@ -61,9 +61,9 @@ public class DipDupClient {
 		
 		var query = """
 		query {
-			token (limit: \(limit), offset: \(offset), order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }) {
+			token(limit: \(limit), offset: \(offset), order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }, where: {exchanges: {name: {_in: ["lb", "quipuswap"]}}}) {
 				symbol,
-				exchanges {
+				exchanges(where: {name: {_in: ["lb", "quipuswap"]}}) {
 					name,
 					tezPool,
 					tokenPool,
@@ -133,7 +133,7 @@ public class DipDupClient {
 	public func getLiquidityFor(address: String, completion: @escaping ((Result<GraphQLResponse<DipDupPosition>, ErrorResponse>) -> Void)) {
 		var query = """
 		query {
-			position (where: {traderId: {_eq: \"\(address)\"}, sharesQty: {_gt: \"0\"} }) {
+			position(where: {traderId: {_eq: "\(address)"}, sharesQty: {_gt: "0"}, exchange: {name: {_in: ["lb", "quipuswap"]}}}) {
 				sharesQty,
 				exchange {
 					name,
