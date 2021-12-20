@@ -30,7 +30,7 @@ public class ClientsAndData {
 	
 	
 	private init() {
-		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .mainnet)
+		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)

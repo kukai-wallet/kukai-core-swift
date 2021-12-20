@@ -87,6 +87,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			}
 			.store(in: &bag)
 		 */
+		
+		
+		
+		let didBlockStart = RequestIfService.runBlock({ [weak self] in
+			
+			guard let bip39Wallet = LinearWallet(withMnemonic: "remember smile trip tumble era cube worry fuel bracket eight kitten inform", passphrase: "") else {
+				print("failed to create Bip39 wallet")
+				return
+			}
+			
+			guard let bip44Wallet = HDWallet(withMnemonic: "remember smile trip tumble era cube worry fuel bracket eight kitten inform", passphrase: "") else {
+				print("failed to create Bip44 wallet")
+				return
+			}
+			
+			let operations = OperationFactory.sendOperation(XTZAmount(fromNormalisedAmount: 0.1), of: Token.xtz(), from: bip39Wallet.address, to: bip44Wallet.address)
+			ClientsAndData.shared.tezosNodeClient.estimate(operations: operations, withWallet: bip39Wallet) { (result) in
+				switch result {
+					case .success(let ops):
+						print("ops: \(ops)")
+					
+					case .failure(let error):
+						print("error: \(error)")
+				}
+			}
+			
+			
+		}, ifIntervalHasPassed: RequestIfService.Interval.day, forKey: "")
+		
+		print("\n\n\n didBlockStart: \(didBlockStart) \n\n\n")
 	}
 }
 

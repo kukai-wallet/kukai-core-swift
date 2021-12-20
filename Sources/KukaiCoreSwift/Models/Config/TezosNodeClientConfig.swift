@@ -52,19 +52,19 @@ public struct TezosNodeClientConfig {
 	public struct defaultTestnetURLs {
 		
 		/// The default testnet URL to use for `primaryNodeURL`, For more information on this service, see: https://tezos.giganode.io/
-		public static let primaryNodeURL = URL(string: "https://api.tez.ie/rpc/granadanet")! // Doesn't seem to be available on Giganode atm
+		public static let primaryNodeURL = URL(string: "https://hangzhounet.api.tez.ie")! // Doesn't seem to be available on Giganode atm
 		
 		/// The default testnet URL to use for `parseNodeURL`
-		public static let parseNodeURL = URL(string: "https://api.tez.ie/rpc/granadanet")!
+		public static let parseNodeURL = URL(string: "https://hangzhounet.api.tez.ie")!
 		
 		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
-		public static let tzktURL = URL(string: "https://api.granadanet.tzkt.io/")!
+		public static let tzktURL = URL(string: "https://api.hangzhounet.tzkt.io/")!
 		
 		/// The default testnet URL to use for `betterCallDevURL`, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html
 		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
 		
 		/// The default testnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
-		public static let tezosDomainsURL = URL(string: "https://granadanet-api.tezos.domains/graphql")!
+		public static let tezosDomainsURL = URL(string: "https://hangzhounet-api.tezos.domains/graphql")!
 	}
 	
 	
@@ -152,7 +152,7 @@ public struct TezosNodeClientConfig {
 				primaryNodeURL = TezosNodeClientConfig.defaultTestnetURLs.primaryNodeURL
 				parseNodeURL = TezosNodeClientConfig.defaultTestnetURLs.parseNodeURL
 				forgingType = .local
-				tezosChainName = .granadanet
+				tezosChainName = .hangzhounet
 				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultTestnetURLs.betterCallDevURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL
