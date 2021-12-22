@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
 	name: "KukaiCoreSwift",
-	platforms: [.iOS(.v14)],
+	platforms: [.iOS("15.0")],
 	products: [
 		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
 	],
@@ -16,7 +16,8 @@ let package = Package(
 		.package(name: "WalletCore", url: "https://github.com/trustwallet/wallet-core", from: "2.6.34"),
 		.package(name: "TorusSwiftDirectSDK", url: "https://github.com/torusresearch/torus-direct-swift-sdk", from: "1.1.1"),
 		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.1"),
-		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0")
+		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
+		.package(name: "JWTDecode", url: "https://github.com/auth0/JWTDecode.swift.git", from: "2.6.3")
 	],
 	targets: [
 		.target(
@@ -29,7 +30,8 @@ let package = Package(
 				"SVGKit",
 				"WalletCore",
 				"TorusSwiftDirectSDK",
-				"SignalRClient"
+				"SignalRClient",
+				"JWTDecode"
 			],
 			resources: [
 				.copy("Services/External")

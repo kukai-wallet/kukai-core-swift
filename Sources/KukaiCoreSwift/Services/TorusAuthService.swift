@@ -12,6 +12,8 @@ import FetchNodeDetails
 import TorusUtils
 import Sodium
 import WalletCore
+import JWTDecode
+import AuthenticationServices
 import os.log
 
 
@@ -62,7 +64,7 @@ This allows users to create a wallet from their social media accounts without ha
 TorusAuthService allows Tezos apps to leverage this service for a number of providers, and also has the ability to query the network for someone else's wallet address,
 based on their social profile. This allows you to send XTZ or tokens to your friend based on their twitter username for example
 */
-public class TorusAuthService {
+public class TorusAuthService: NSObject {
 	
 	
 	// MARK: - Private properties
@@ -99,6 +101,13 @@ public class TorusAuthService {
 	
 	/// Stored copy of the Torus NodeDetails object. The fetching of this is forced onto the main thread, blocking the UI. Need to push it onto a background thread and store it for other code to access
 	private var nodeDetails: AllNodeDetails? = nil
+	
+	/// Apple sign in requires a seperate workflow to rest of torus, need to grab the completion and hold onto it for later
+	private var createWalletCompletion: ((Result<TorusWallet, ErrorResponse>) -> Void) = {_ in}
+	
+	private let appleIDProvider = ASAuthorizationAppleIDProvider()
+	private var request: ASAuthorizationAppleIDRequest? = nil
+	private var authorizationController: ASAuthorizationController? = nil
 	
 	
 	
@@ -171,6 +180,29 @@ public class TorusAuthService {
 			)
 		}
 		
+		
+		// If requesting a wallet from apple, call apple sign in code and skip rest of function
+		guard authType != .apple else {
+			createWalletCompletion = completion
+			
+			request = appleIDProvider.createRequest()
+			request?.requestedScopes = [.fullName, .email]
+			
+			guard let req = request else {
+				createWalletCompletion(Result.failure(ErrorResponse.unknownError()))
+				return
+			}
+			
+			authorizationController = ASAuthorizationController(authorizationRequests: [req])
+			authorizationController?.delegate = self
+			authorizationController?.presentationContextProvider = self
+			authorizationController?.performRequests()
+			
+			return
+		}
+		
+		
+		// If not apple call torus code
 		torus.triggerLogin(controller: displayOver).done { data in
 			os_log("Torus returned succesful data", log: .torus, type: .debug)
 			
@@ -356,5 +388,61 @@ public class TorusAuthService {
 		]
 		
 		return invertedPks.contains(pk);
+	}
+}
+
+extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+	
+	public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+		return UIApplication.shared.keyWindow ?? UIWindow()
+	}
+	
+	public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+		switch authorization.credential {
+			case let appleIDCredential as ASAuthorizationAppleIDCredential:
+				
+				guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[.apple] : mainnetVerifiers[.apple] else {
+					createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
+					return
+				}
+				
+				// Create an account in your system.
+				let userIdentifier = appleIDCredential.user
+				let displayName = appleIDCredential.fullName?.formatted()
+				
+				// Get and decode the signed JWT toekn
+				let token = String(data: appleIDCredential.identityToken!, encoding: .utf8)!
+				let JWT = try? JWTDecode.decode(jwt: token)
+				
+				// Add different claims here.
+				let claim = JWT?.claim(name: "sub")
+				guard let sub = claim?.string else {
+					createWalletCompletion(Result.failure(ErrorResponse.unknownError()))
+					return
+				}
+				
+				// initializeSDK
+				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .debug)
+				tdsdk.getTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token).done { [weak self] data in
+					
+					// TODO: remove after tests
+					print("\n\n\nData: \(data)\n\n\n")
+					
+					
+					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
+						os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
+						self?.createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+						return
+					}
+					
+					self?.createWalletCompletion(Result.success(wallet))
+					
+				}.catch{ [weak self] error in
+					self?.createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+				}
+				
+			default:
+				break
+		}
 	}
 }

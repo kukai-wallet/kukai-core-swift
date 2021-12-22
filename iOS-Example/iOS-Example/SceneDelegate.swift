@@ -89,7 +89,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		 */
 		
 		
-		
+		/*
 		let didBlockStart = RequestIfService.runBlock({ [weak self] in
 			
 			guard let bip39Wallet = LinearWallet(withMnemonic: "remember smile trip tumble era cube worry fuel bracket eight kitten inform", passphrase: "") else {
@@ -117,6 +117,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		}, ifIntervalHasPassed: RequestIfService.Interval.day, forKey: "")
 		
 		print("\n\n\n didBlockStart: \(didBlockStart) \n\n\n")
+		*/
 	}
 }
 

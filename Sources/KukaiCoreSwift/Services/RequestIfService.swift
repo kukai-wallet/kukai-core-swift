@@ -7,13 +7,16 @@
 
 import Foundation
 
+/*
 public struct RequestIfStorage<T: Codable> {
 	let lastRequestedDate: Date
 	let data: T
 }
+*/
 
 public class RequestIfService {
 	
+	/*
 	public struct Interval {
 		public static let minute: TimeInterval = 60
 		public static let halfhour: TimeInterval = 1800
@@ -45,4 +48,5 @@ public class RequestIfService {
 		
 		return true
 	}
+	*/
 }
