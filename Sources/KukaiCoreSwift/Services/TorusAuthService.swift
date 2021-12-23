@@ -397,39 +397,36 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 		return UIApplication.shared.keyWindow ?? UIWindow()
 	}
 	
+	public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+		guard let error = error as? ASAuthorizationError else {
+			return
+		}
+		
+		createWalletCompletion(Result.failure(ErrorResponse.error(string: "Request failed: \(error.code)", errorType: .unknownError)))
+	}
+	
 	public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 		switch authorization.credential {
 			case let appleIDCredential as ASAuthorizationAppleIDCredential:
 				
-				guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[.apple] : mainnetVerifiers[.apple] else {
+				guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[.apple] : mainnetVerifiers[.apple], let identityToken = appleIDCredential.identityToken else {
 					createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 					return
 				}
 				
-				// Create an account in your system.
 				let userIdentifier = appleIDCredential.user
 				let displayName = appleIDCredential.fullName?.formatted()
-				
-				// Get and decode the signed JWT toekn
-				let token = String(data: appleIDCredential.identityToken!, encoding: .utf8)!
+				let token = String(data: identityToken, encoding: .utf8)!
 				let JWT = try? JWTDecode.decode(jwt: token)
 				
-				// Add different claims here.
 				let claim = JWT?.claim(name: "sub")
 				guard let sub = claim?.string else {
 					createWalletCompletion(Result.failure(ErrorResponse.unknownError()))
 					return
 				}
 				
-				// initializeSDK
 				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .debug)
 				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
-				
-				//tdsdk.getTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token).done { [weak self] data in
-					
-					// TODO: remove after tests
-					print("\n\n\nData: \(data)\n\n\n")
-					
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
 						os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
