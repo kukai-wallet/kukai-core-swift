@@ -422,8 +422,10 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				}
 				
 				// initializeSDK
-				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [verifierWrapper.subverifier], network: ethereumNetworkType, loglevel: .debug)
-				tdsdk.getTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token).done { [weak self] data in
+				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .debug)
+				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
+				
+				//tdsdk.getTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token).done { [weak self] data in
 					
 					// TODO: remove after tests
 					print("\n\n\nData: \(data)\n\n\n")
