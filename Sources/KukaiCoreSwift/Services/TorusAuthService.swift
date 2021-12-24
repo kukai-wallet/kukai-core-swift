@@ -167,7 +167,7 @@ public class TorusAuthService: NSObject {
 				subVerifierDetails: [verifierWrapper.subverifier],
 				factory: TDSDKFactory(),
 				network: self.ethereumNetworkType,
-				loglevel: .debug
+				loglevel: .info
 			)
 		} else {
 			torus = TorusSwiftDirectSDK(
@@ -176,7 +176,7 @@ public class TorusAuthService: NSObject {
 				subVerifierDetails: [verifierWrapper.subverifier],
 				factory: TDSDKFactory(),
 				network: self.ethereumNetworkType,
-				loglevel: .debug
+				loglevel: .info
 			)
 		}
 		
@@ -425,7 +425,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 					return
 				}
 				
-				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .debug)
+				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .info)
 				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
