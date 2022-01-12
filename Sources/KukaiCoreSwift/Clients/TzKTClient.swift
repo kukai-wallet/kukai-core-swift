@@ -8,6 +8,7 @@
 
 import Foundation
 import SignalRClient
+import Combine
 import os.log
 
 
@@ -33,8 +34,8 @@ public class TzKTClient {
 	
 	private var signalrConnection: HubConnection? = nil
 	private var addressToWatch: String = ""
-	private var injectionNotificationCallback: ((Bool, Error?, ErrorResponse?) -> Void)? = nil
 	
+	@Published public var accountDidChange: Bool = false
 	
 	
 	
@@ -102,6 +103,7 @@ public class TzKTClient {
 	
 	
 	
+	
 	// MARK: - Block checker
 	
 	/**
@@ -125,14 +127,18 @@ public class TzKTClient {
 		}
 	}
 	
+	
+	
+	
+	
+	// MARK: - account monitoring
+	
 	/**
-	Poll the TzKT APi until a record of the given operation is found
-	- parameter ofHash: The operation hash to query.
-	- parameter completion: A completion colsure called when the API returns a valid operation response, or an error indicating a problem with the service.
-	*/
-	public func waitForInjection(ofHash hash: String, fromAddress address: String, completion: @escaping ((Bool, Error?, ErrorResponse?) -> Void)) {
+	 Open a websocket connection to request a notification for any changes to the given account. The @Published var `accountDidChange` will be notified if something occurs
+	 - parameter address: The Tz address of the account to monitor
+	 */
+	public func listenForAccountChanges(address: String) {
 		addressToWatch = address
-		injectionNotificationCallback = completion
 		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/events")
@@ -145,21 +151,17 @@ public class TzKTClient {
 		
 		
 		// Register for SignalR operation events
-		signalrConnection?.on(method: "operations", callback: { [weak self] argumentExtractor in
+		signalrConnection?.on(method: "accounts", callback: { [weak self] argumentExtractor in
 			do {
-				let obj = try argumentExtractor.getArgument(type: OperationSubscriptionResponse.self)
+				let obj = try argumentExtractor.getArgument(type: AccountSubscriptionResponse.self)
 				os_log("Incoming object parsed: %@", log: .tzkt, type: .debug, "\(obj)")
 				
-				for op in obj.data ?? [] {
-					if op.hash == hash {
-						self?.signalrConnection?.stop()
-						completion(true, nil, nil)
-						return
-					}
+				if obj.data != nil {
+					accountDidChange = true
 				}
 				
 			} catch (let error) {
-				os_log("Failed to parse incoming operation: %@", log: .tzkt, type: .error, "\(error)")
+				os_log("Failed to parse incoming websocket data: %@", log: .tzkt, type: .error, "\(error)")
 				self?.signalrConnection?.stop()
 				completion(false, error, ErrorResponse.unknownParseError(error: error))
 			}
@@ -169,10 +171,10 @@ public class TzKTClient {
 	}
 	
 	/**
-	Cancel the polling operation from `waitForInjection`
-	*/
-	public func cancelWait() {
-		os_log(.debug, log: .kukaiCoreSwift, "Cancelling waitForInjection")
+	 Close the websocket from `listenForAccountChanges`
+	 */
+	public func stopListeningFOrAccountChanges() {
+		os_log(.debug, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
 		signalrConnection?.stop()
 	}
 	
@@ -395,24 +397,22 @@ extension TzKTClient: HubConnectionDelegate {
 	public func connectionDidOpen(hubConnection: HubConnection) {
 		
 		// Request to be subscribed to events belonging to the given account
-		let operationSubscription = OperationSubscription(address: addressToWatch, types: "transaction,origination,delegation")
-		signalrConnection?.invoke(method: "SubscribeToOperations", operationSubscription) { [weak self] error in
+		let subscription = AccountSubscription(addresses: [addressToWatch])
+		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
 			if let error = error {
-				os_log("Subscribe to operations failed: %@", log: .tzkt, type: .error, "\(error)")
+				os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
 				self?.signalrConnection?.stop()
 			} else {
-				os_log("Subscribe to operations succeeded, waiting for objects", log: .tzkt, type: .debug)
+				os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .debug)
 			}
 		}
 	}
 	
 	public func connectionDidClose(error: Error?) {
-		
+		os_log("SignalR connection closed: \(error)", log: .tzkt, type: .debug)
 	}
 	
 	public func connectionDidFailToOpen(error: Error) {
-		if let completion = injectionNotificationCallback {
-			completion(false, error, ErrorResponse.unknownError())
-		}
+		os_log("Failed to open SignalR connection to listen for changes: \(error)", log: .tzkt, type: .error)
 	}
 }
