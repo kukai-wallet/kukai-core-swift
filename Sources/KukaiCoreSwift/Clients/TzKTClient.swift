@@ -9,6 +9,7 @@
 import Foundation
 import SignalRClient
 import Combine
+import Kingfisher
 import os.log
 
 
@@ -21,6 +22,9 @@ public class TzKTClient {
 		case parseError(String)
 	}
 	
+	public struct Constants {
+		public static let tokenBalanceQuerySize = 10000
+	}
 	
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
@@ -31,6 +35,7 @@ public class TzKTClient {
 	private var transactionHistory: [TimeInterval: [TzKTTransaction]] = [:]
 	private var tempTransactions: [TzKTTransaction] = []
 	private var dispatchGroupTransactions = DispatchGroup()
+	private let tokenBalanceQueue: DispatchQueue
 	
 	private var signalrConnection: HubConnection? = nil
 	private var addressToWatch: String = ""
@@ -51,6 +56,7 @@ public class TzKTClient {
 		self.networkService = networkService
 		self.config = config
 		self.betterCallDevClient = betterCallDevClient
+		self.tokenBalanceQueue = DispatchQueue(label: "TzKTClient.tokens", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 	}
 	
 	
@@ -131,7 +137,7 @@ public class TzKTClient {
 	
 	
 	
-	// MARK: - account monitoring
+	// MARK: - Account monitoring
 	
 	/**
 	 Open a websocket connection to request a notification for any changes to the given account. The @Published var `accountDidChange` will be notified if something occurs
@@ -157,13 +163,13 @@ public class TzKTClient {
 				os_log("Incoming object parsed: %@", log: .tzkt, type: .debug, "\(obj)")
 				
 				if obj.data != nil {
-					accountDidChange = true
+					self?.accountDidChange = true
 				}
 				
 			} catch (let error) {
 				os_log("Failed to parse incoming websocket data: %@", log: .tzkt, type: .error, "\(error)")
 				self?.signalrConnection?.stop()
-				completion(false, error, ErrorResponse.unknownParseError(error: error))
+				//completion(false, error, ErrorResponse.unknownParseError(error: error))
 			}
 		})
 		signalrConnection?.delegate = self
@@ -176,6 +182,360 @@ public class TzKTClient {
 	public func stopListeningFOrAccountChanges() {
 		os_log(.debug, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
 		signalrConnection?.stop()
+	}
+	
+	
+	
+	
+	
+	// MARK: - Balances
+	
+	public func getBalanceCount(forAddress: String, completion: @escaping (Result<Int, ErrorResponse>) -> Void) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/tokens/balances/count")
+		url.appendQueryItem(name: "account", value: forAddress)
+		url.appendQueryItem(name: "balance.gt", value: 0)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: Int.self) { (result) in
+			completion(result)
+		}
+	}
+	
+	public func getBalancePage(forAddress: String, offset: Int = 0, completion: @escaping ((Result<[TzKTBalance], ErrorResponse>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/tokens/balances")
+		url.appendQueryItem(name: "account", value: forAddress)
+		url.appendQueryItem(name: "balance.gt", value: 0)
+		url.appendQueryItem(name: "offset", value: offset * TzKTClient.Constants.tokenBalanceQuerySize)
+		url.appendQueryItem(name: "limit", value: TzKTClient.Constants.tokenBalanceQuerySize)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBalance].self) { (result) in
+			completion(result)
+		}
+	}
+	
+	public func getAccount(forAddress: String, completion: @escaping ((Result<TzKTAccount, ErrorResponse>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/accounts/\(forAddress)")
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: TzKTAccount.self) { (result) in
+			completion(result)
+		}
+	}
+	
+	public func getAllBalances(forAddress address: String, numberOfPages: Int, numberOfTokens: Int, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		
+		var xtzBalance = XTZAmount.zero()
+		var tokenBalances: [TzKTBalance] = []
+		var errorFound: ErrorResponse? = nil
+		var groupedData: (tokens: [Token], nftGroups: [Token]) = (tokens: [], nftGroups: [])
+		
+		
+		// Get XTZ balance from TzKT Account
+		dispatchGroup.enter()
+		self.getAccount(forAddress: address) { result in
+			switch result {
+				case .success(let account):
+					xtzBalance = account.xtzBalance
+					
+				case .failure(let error):
+					errorFound = error
+			}
+			dispatchGroup.leave()
+		}
+		
+		
+		// Cycle through the number of token balance requests needed to be performed (likely just 1)
+		for index in 0..<numberOfPages {
+			dispatchGroup.enter()
+			tokenBalanceQueue.async { [weak self] in
+				self?.getBalancePage(forAddress: address, offset: index, completion: { tokenResult in
+					switch tokenResult {
+						case .failure(let error):
+							errorFound = error
+							
+						case .success(let balances):
+							tokenBalances.append(contentsOf: balances)
+					}
+					
+					dispatchGroup.leave()
+				})
+			}
+		}
+		
+		// When all requests finished, return on main thread
+		dispatchGroup.notify(queue: .main) { [weak self] in
+			if let err = errorFound {
+				completion(Result.failure(err))
+				
+			} else {
+				groupedData = self?.groupBalances(tokenBalances) ?? (tokens: [], nftGroups: [])
+				
+				self?.fetchImageUrls(forTokens: groupedData.tokens, andNFTs: groupedData.nftGroups) { [weak self] updatedData in
+					groupedData.tokens = updatedData.tokens
+					groupedData.nftGroups = updatedData.nfts
+					
+					
+					self?.downloadTokenIconsAndNFTGroups(tokens: groupedData.tokens, nftGroups: groupedData.nftGroups, completion: { success in
+						let account = Account(walletAddress: address, xtzBalance: xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups)
+						
+						// Finished, call completion success
+						DispatchQueue.main.async { completion(Result.success(account)) }
+					})
+				}
+			}
+		}
+	}
+	
+	private func groupBalances(_ balances: [TzKTBalance]) -> (tokens: [Token], nftGroups: [Token]) {
+		var tokens: [Token] = []
+		var nftGroups: [Token] = []
+		var tempNFT: [String: [TzKTBalance]] = [:]
+		
+		for balance in balances {
+			
+			// If its an NFT, hold onto for later
+			if balance.isNFT() {
+				if tempNFT[balance.token.contract.address] == nil {
+					tempNFT[balance.token.contract.address] = [balance]
+				} else {
+					tempNFT[balance.token.contract.address]?.append(balance)
+				}
+				continue
+			}
+			
+			// Else create a Token object and put into array
+			let token = Token(
+				name: balance.token.metadata.name,
+				symbol: balance.token.metadata.symbol ?? "",
+				tokenType: .fungible,
+				faVersion: balance.token.standard,
+				balance: balance.tokenAmount,
+				thumbnailURI: URL(string: balance.token.metadata.thumbnailUri ?? ""),
+				tokenContractAddress: balance.token.contract.address,
+				tokenId: Decimal(string: balance.token.tokenId) ?? 0,
+				nfts: []
+			)
+			
+			tokens.append(token)
+		}
+		
+		// Take NFT's, create actual NFT objects and add them to `Token` instances
+		for nftArray in tempNFT.values {
+			guard let first = nftArray.first else {
+				continue
+			}
+			
+			var temp: [NFT] = []
+			for balance in nftArray {
+				temp.append(NFT(fromTzKTBalance: balance))
+			}
+			
+			let nftToken = Token(
+				name: first.token.contract.alias ?? first.token.contract.address,
+				symbol: first.token.metadata.symbol ?? "",
+				tokenType: .nonfungible,
+				faVersion: first.token.standard,
+				balance: TokenAmount.zero(),
+				thumbnailURI: URL(string: first.token.metadata.thumbnailUri ?? ""),
+				tokenContractAddress: first.token.contract.address,
+				tokenId: Decimal(string: first.token.tokenId) ?? 0,
+				nfts: temp
+			)
+			
+			let staticNFTData = OfflineConstants.dappDisplayName(forContractAddress: first.token.contract.address, onChain: config.tezosChainName)
+			nftToken.thumbnailURL = staticNFTData.thumbnail
+			
+			nftGroups.append(nftToken)
+		}
+		
+		return (tokens: tokens, nftGroups: nftGroups)
+	}
+	
+	// NFT display and thumbnail URLS need to be processed, and extremely likely converted into URLs pointing to a cache server
+	private func fetchImageUrls(forTokens tokens: [Token], andNFTs nfts: [Token], completion: @escaping (((tokens: [Token], nfts: [Token])) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		
+		let updatedTokens: [Token] = tokens
+		let updatedNFts: [Token] = nfts
+		
+		dispatchGroup.enter()
+		for (index, token) in updatedTokens.enumerated() {
+			dispatchGroup.enter()
+			
+			imageURL(fromIpfsUri: token.thumbnailURI) { [weak self] thumbnailURL in
+				updatedTokens[index].thumbnailURL = (thumbnailURL == nil) ? self?.avatarURL(forToken: token.tokenContractAddress ?? "") : thumbnailURL
+				dispatchGroup.leave()
+			}
+		}
+		
+		dispatchGroup.enter()
+		for (outerIndex, nftParent) in updatedNFts.enumerated() {
+			for (innerIndex, nftChild) in (nftParent.nfts ?? []).enumerated() {
+				dispatchGroup.enter()
+				dispatchGroup.enter()
+				
+				imageURL(fromIpfsUri: nftChild.displayURI) { displayURL in
+					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = displayURL
+					dispatchGroup.leave()
+				}
+				
+				imageURL(fromIpfsUri: nftChild.thumbnailURI) { thumbnailURL in
+					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
+					dispatchGroup.leave()
+				}
+			}
+		}
+		
+		dispatchGroup.leave()
+		dispatchGroup.leave()
+		
+		// When all requests finished, return on main thread
+		dispatchGroup.notify(queue: .main) {
+			completion((tokens: updatedTokens, nfts: updatedNFts))
+		}
+	}
+	
+	/**
+	 Convert the IPFS URI, into a cloudflare URL, pass this URL to the Kukai metadata cache service to extract info about the asset. If a non IPFS URI is passed in, it is simply returned
+	 If all goes well, a URL to the asset cached on Kukai's server will be returned
+	 - parameter fromIpfsUri: The IPFS URI to the given asset
+	 - parameter ofSize: Optional, the size string of the asset to query (e.g. "150x150")
+	 - parameter completion: Block returning a new URL if possible
+	 */
+	public func imageURL(fromIpfsUri uri: URL?, ofSize: String = "150x150", completion: @escaping ((URL?) -> Void)) {
+		guard let uri = uri else {
+			completion(nil)
+			return
+		}
+		
+		if String(uri.absoluteString.prefix(5)) == "https" {
+			completion(uri)
+			return
+		}
+		
+		if String(uri.absoluteString.prefix(10)) == "data:image" {
+			completion(uri)
+			return
+		}
+		
+		guard let cloudflareURL = ipfsURIToCloudflareURL(uri: uri) else {
+			completion(nil)
+			return
+		}
+		
+		ipfsKukaiMetadata(url: cloudflareURL) { result in
+			guard let metadata = try? result.get(),
+				  let filename = metadata.Filename,
+				  let ext = metadata.Extension,
+				  let fileURL = URL(string: "https://backend.kukai.network/file/\(filename)_\(ofSize).\(ext)") else {
+					  completion(nil)
+					  return
+				  }
+			
+			completion(fileURL)
+		}
+	}
+	
+	/**
+	 Cloudflare provides an IPFS gateway, take the IPFS URL and reformat to work with cloudflares URL structure
+	 */
+	private func ipfsURIToCloudflareURL(uri: URL) -> URL? {
+		if let strippedURI = uri.absoluteString.components(separatedBy: "ipfs://").last, let url = URL(string: "https://cloudflare-ipfs.com/ipfs/\(strippedURI)") {
+			return url
+		}
+		
+		return nil
+	}
+	
+	/**
+	 Get cached metadata file from Kukai's backend
+	 */
+	private func ipfsKukaiMetadata(url: URL, completion: @escaping ((Result<IpfsKukaiMetadata, ErrorResponse>) -> Void)) {
+		guard let destinationURL = URL(string: "https://backend.kukai.network/file/info?src=\(url.absoluteString)") else {
+			os_log("Invalid URL: %@", log: .bcd, type: .error, url.absoluteString)
+			completion(Result.failure(ErrorResponse.unknownError()))
+			return
+		}
+		
+		networkService.request(url: destinationURL, isPOST: false, withBody: nil, forReturnType: IpfsKukaiMetadata.self) { result in
+			switch result {
+				case .success(let metadata):
+					if metadata.Status == "ok" && metadata.Filename != nil && metadata.Extension != nil && metadata.Extension != "unknown" {
+						completion(Result.success(metadata))
+					} else {
+						os_log("kukai metadata backend returned a status that was not \"ok\"", log: .bcd, type: .error)
+						completion(Result.failure(ErrorResponse.unknownError()))
+					}
+					
+				case .failure(let error):
+					completion(Result.failure(error))
+			}
+		}
+	}
+	
+	/**
+	 In order to access the cached images, you need the URL it was downloaded from. This can either be found inside the `Token` objects returned as part of `Account` from the `fetchAccountInfo` func.
+	 Or, if you need to use it seperately, given the token address you can use this function
+	 - parameter forToken: The token address who's image you are looking for.
+	 */
+	public func avatarURL(forToken token: String) -> URL? {
+		guard let imageURL = URL(string: "https://services.tzkt.io/v1/avatars/\(token)") else {
+			return nil
+		}
+		
+		return imageURL
+	}
+	
+	/**
+	 Use `Kingfisher` to bulk download the token icons for all the tokens the user owns, allowing them to be called much easier.
+	 Developers can use https://github.com/onevcat/Kingfisher to display the images then throughout the app.
+	 E.g.  `imageView.kf.setImage(with: URL)`
+	 */
+	private func downloadTokenIconsAndNFTGroups(tokens: [Token], nftGroups: [Token], completion: @escaping ((Bool) -> Void)) {
+		var imageURLs: [URL] = []
+		
+		for token in tokens {
+			if let url = token.thumbnailURL {
+				imageURLs.append(url)
+			}
+		}
+		
+		for nftGroup in nftGroups {
+			if let url = nftGroup.thumbnailURL {
+				imageURLs.append(url)
+			}
+		}
+		
+		if imageURLs.count == 0 {
+			completion(true)
+			return
+		}
+		
+		// Don't donwload real images during unit tests. Investigate mocking kingfisher
+		if Thread.current.isRunningXCTest {
+			completion(true)
+			return
+		}
+		
+		
+		// Set expiration and pre-fetch
+		ImageCache.default.diskStorage.config.expiration = .days(7)
+		ImagePrefetcher(urls: imageURLs, options: nil, progressBlock: nil) { (skipped, failed, completed) in
+			os_log(.debug, log: .bcd, "Token icons downloaded")
+			
+			if !skipped.isEmpty {
+				os_log(.error, log: .bcd, "Some images skipped")
+			}
+			
+			if !failed.isEmpty {
+				os_log(.error, log: .bcd, "Some images failed")
+			}
+			
+			completion(true)
+			
+		}.start()
 	}
 	
 	
@@ -409,10 +769,10 @@ extension TzKTClient: HubConnectionDelegate {
 	}
 	
 	public func connectionDidClose(error: Error?) {
-		os_log("SignalR connection closed: \(error)", log: .tzkt, type: .debug)
+		os_log("SignalR connection closed: %@", log: .tzkt, type: .debug, String(describing: error))
 	}
 	
 	public func connectionDidFailToOpen(error: Error) {
-		os_log("Failed to open SignalR connection to listen for changes: \(error)", log: .tzkt, type: .error)
+		os_log("Failed to open SignalR connection to listen for changes: %@", log: .tzkt, type: .error, "\(error)")
 	}
 }

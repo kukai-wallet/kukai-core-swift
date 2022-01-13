@@ -55,6 +55,21 @@ public struct NFT: Codable, Hashable {
 		displayURI = URL(string: bcd.display_uri ?? "")
 		thumbnailURI = URL(string: bcd.thumbnail_uri ?? "")
 	}
+	
+	/**
+	 Create a more developer friednly `NFT` from a generic `TzKTBalance` object
+	 - parameter fromTzKTBalance: An instance of `TzKTBalance` containing data about an NFT
+	 */
+	public init(fromTzKTBalance tzkt: TzKTBalance) {
+		tokenId = Decimal(string: tzkt.token.tokenId) ?? 0
+		parentContract = tzkt.token.contract.address
+		name = tzkt.token.metadata.name
+		symbol = tzkt.token.metadata.symbol ?? ""
+		description = tzkt.token.metadata.description ?? ""
+		artifactURI = tzkt.token.metadata.artifactUri
+		displayURI = URL(string: tzkt.token.metadata.displayUri ?? "")
+		thumbnailURI = URL(string: tzkt.token.metadata.thumbnailUri ?? "")
+	}
 }
 
 extension NFT: Identifiable {

@@ -12,9 +12,13 @@ import os.log
 
 /// Enum representing the version of tezos "FA" token contracts
 public enum FaVersion: String, Codable {
-	case fa1_2 = "fa1-2"
+	case fa1_2 = "fa1.2"
 	case fa2
 	case unknown
+	
+	public init(from decoder: Decoder) throws {
+		self = try FaVersion(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+	}
 }
 
 
