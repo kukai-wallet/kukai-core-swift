@@ -24,6 +24,7 @@ public class TzKTClient {
 	
 	public struct Constants {
 		public static let tokenBalanceQuerySize = 10000
+		public static let ipfsImageMappingCacheFileName = "tzktclient-ipfs-image-mapping-cache"
 	}
 	
 	private let networkService: NetworkService
@@ -223,7 +224,24 @@ public class TzKTClient {
 		}
 	}
 	
-	public func getAllBalances(forAddress address: String, numberOfPages: Int, numberOfTokens: Int, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
+	public func getAllBalances(forAddress address: String, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
+		getBalanceCount(forAddress: address) { [weak self] result in
+			guard let tokenCount = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
+			}
+			
+			// Calculate the number of pages that will needed to be queried to fetch all the token balances
+			let numberOfPages = Int(tokenCount / TzKTClient.Constants.tokenBalanceQuerySize)
+			let hasRemainder = (tokenCount % TzKTClient.Constants.tokenBalanceQuerySize) > 0
+			let totalNumberOfPages = numberOfPages + (hasRemainder ? 1 : 0)
+			
+			// Call the private func for fetching and grouping balances
+			self?.getAllBalances(forAddress: address, numberOfPages: totalNumberOfPages, completion: completion)
+		}
+	}
+	
+	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
 		var xtzBalance = XTZAmount.zero()
@@ -357,32 +375,79 @@ public class TzKTClient {
 	private func fetchImageUrls(forTokens tokens: [Token], andNFTs nfts: [Token], completion: @escaping (((tokens: [Token], nfts: [Token])) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
+		// Load the current cached images to avoid unnecessary fetching
+		var imageURLsToCache: [URL: URL] = [:]
+		if let cachedURLs = DiskService.read(type: [URL: URL].self, fromFileName: TzKTClient.Constants.ipfsImageMappingCacheFileName) {
+			imageURLsToCache = cachedURLs
+		}
+		
 		let updatedTokens: [Token] = tokens
 		let updatedNFts: [Token] = nfts
 		
+		
+		// Check for Token Icons
 		dispatchGroup.enter()
 		for (index, token) in updatedTokens.enumerated() {
 			dispatchGroup.enter()
 			
-			imageURL(fromIpfsUri: token.thumbnailURI) { [weak self] thumbnailURL in
-				updatedTokens[index].thumbnailURL = (thumbnailURL == nil) ? self?.avatarURL(forToken: token.tokenContractAddress ?? "") : thumbnailURL
+			// Check we have a URL to work with
+			guard let currentURL = token.thumbnailURI else {
+				dispatchGroup.leave()
+				continue
+			}
+			
+			// Load the cached version first if applicable
+			guard imageURLsToCache[currentURL] == nil else {
+				updatedTokens[index].thumbnailURL = imageURLsToCache[currentURL]
+				dispatchGroup.leave()
+				continue
+			}
+			
+			// Else fetch the mapped URL
+			imageURL(fromIpfsUri: currentURL) { [weak self] thumbnailURL in
+				let newURL = (thumbnailURL == nil) ? self?.avatarURL(forToken: token.tokenContractAddress ?? "") : thumbnailURL
+				
+				imageURLsToCache[currentURL] = newURL
+				updatedTokens[index].thumbnailURL = newURL
 				dispatchGroup.leave()
 			}
 		}
 		
+		
+		// Check for NFT thumbnails and display images
 		dispatchGroup.enter()
 		for (outerIndex, nftParent) in updatedNFts.enumerated() {
 			for (innerIndex, nftChild) in (nftParent.nfts ?? []).enumerated() {
 				dispatchGroup.enter()
 				dispatchGroup.enter()
 				
+				// Check we have a URLs to work with
+				guard let currentDisplayURL = nftChild.displayURI, let currentTumbnailURL = nftChild.thumbnailURI else {
+					dispatchGroup.leave()
+					dispatchGroup.leave()
+					continue
+				}
+				
+				// Load the cached versions first if applicable
+				guard imageURLsToCache[currentDisplayURL] == nil, imageURLsToCache[currentTumbnailURL] == nil else {
+					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = imageURLsToCache[currentDisplayURL]
+					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = imageURLsToCache[currentTumbnailURL]
+					dispatchGroup.leave()
+					dispatchGroup.leave()
+					continue
+				}
+				
+				
+				// Else fetch the mapped URLs
 				imageURL(fromIpfsUri: nftChild.displayURI) { displayURL in
 					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = displayURL
+					imageURLsToCache[currentDisplayURL] = displayURL
 					dispatchGroup.leave()
 				}
 				
 				imageURL(fromIpfsUri: nftChild.thumbnailURI) { thumbnailURL in
 					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
+					imageURLsToCache[currentTumbnailURL] = thumbnailURL
 					dispatchGroup.leave()
 				}
 			}
@@ -393,8 +458,13 @@ public class TzKTClient {
 		
 		// When all requests finished, return on main thread
 		dispatchGroup.notify(queue: .main) {
+			let _ = DiskService.write(encodable: imageURLsToCache, toFileName: TzKTClient.Constants.ipfsImageMappingCacheFileName)
 			completion((tokens: updatedTokens, nfts: updatedNFts))
 		}
+	}
+	
+	public func deleteIpfsImageMappingCache() -> Bool {
+		return DiskService.delete(fileName: TzKTClient.Constants.ipfsImageMappingCacheFileName)
 	}
 	
 	/**
@@ -404,7 +474,7 @@ public class TzKTClient {
 	 - parameter ofSize: Optional, the size string of the asset to query (e.g. "150x150")
 	 - parameter completion: Block returning a new URL if possible
 	 */
-	public func imageURL(fromIpfsUri uri: URL?, ofSize: String = "150x150", completion: @escaping ((URL?) -> Void)) {
+	private func imageURL(fromIpfsUri uri: URL?, ofSize: String = "150x150", completion: @escaping ((URL?) -> Void)) {
 		guard let uri = uri else {
 			completion(nil)
 			return

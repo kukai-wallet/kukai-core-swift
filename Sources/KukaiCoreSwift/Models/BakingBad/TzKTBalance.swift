@@ -22,7 +22,6 @@ public struct TzKTBalance: Codable {
 }
 
 public struct TzKTBalanceToken: Codable {
-	public let id: String
 	public let contract: TzKTBalanceContract
 	public let tokenId: String
 	public let standard: FaVersion
