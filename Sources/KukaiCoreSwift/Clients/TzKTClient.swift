@@ -27,6 +27,11 @@ public class TzKTClient {
 		public static let ipfsImageMappingCacheFileName = "tzktclient-ipfs-image-mapping-cache"
 	}
 	
+	public struct ImageUrlCacheObj: Codable {
+		public var thumbnail: URL?
+		public var display: URL?
+	}
+	
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
 	private let betterCallDevClient: BetterCallDevClient
@@ -376,8 +381,8 @@ public class TzKTClient {
 		let dispatchGroup = DispatchGroup()
 		
 		// Load the current cached images to avoid unnecessary fetching
-		var imageURLsToCache: [URL: URL] = [:]
-		if let cachedURLs = DiskService.read(type: [URL: URL].self, fromFileName: TzKTClient.Constants.ipfsImageMappingCacheFileName) {
+		var imageURLsToCache: [String: ImageUrlCacheObj] = [:]
+		if let cachedURLs = DiskService.read(type: [String: ImageUrlCacheObj].self, fromFileName: TzKTClient.Constants.ipfsImageMappingCacheFileName) {
 			imageURLsToCache = cachedURLs
 		}
 		
@@ -390,24 +395,18 @@ public class TzKTClient {
 		for (index, token) in updatedTokens.enumerated() {
 			dispatchGroup.enter()
 			
-			// Check we have a URL to work with
-			guard let currentURL = token.thumbnailURI else {
-				dispatchGroup.leave()
-				continue
-			}
-			
 			// Load the cached version first if applicable
-			guard imageURLsToCache[currentURL] == nil else {
-				updatedTokens[index].thumbnailURL = imageURLsToCache[currentURL]
+			guard imageURLsToCache[token.id] == nil else {
+				updatedTokens[index].thumbnailURL = imageURLsToCache[token.id]?.thumbnail
 				dispatchGroup.leave()
 				continue
 			}
 			
 			// Else fetch the mapped URL
-			imageURL(fromIpfsUri: currentURL) { [weak self] thumbnailURL in
+			imageURL(fromIpfsUri: token.thumbnailURI) { [weak self] thumbnailURL in
 				let newURL = (thumbnailURL == nil) ? self?.avatarURL(forToken: token.tokenContractAddress ?? "") : thumbnailURL
 				
-				imageURLsToCache[currentURL] = newURL
+				imageURLsToCache[token.id]?.thumbnail = newURL
 				updatedTokens[index].thumbnailURL = newURL
 				dispatchGroup.leave()
 			}
@@ -421,17 +420,11 @@ public class TzKTClient {
 				dispatchGroup.enter()
 				dispatchGroup.enter()
 				
-				// Check we have a URLs to work with
-				guard let currentDisplayURL = nftChild.displayURI, let currentTumbnailURL = nftChild.thumbnailURI else {
-					dispatchGroup.leave()
-					dispatchGroup.leave()
-					continue
-				}
-				
 				// Load the cached versions first if applicable
-				guard imageURLsToCache[currentDisplayURL] == nil, imageURLsToCache[currentTumbnailURL] == nil else {
-					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = imageURLsToCache[currentDisplayURL]
-					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = imageURLsToCache[currentTumbnailURL]
+				guard imageURLsToCache[nftChild.id] == nil else {
+					let obj = imageURLsToCache[nftChild.id]
+					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = obj?.display
+					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = obj?.thumbnail
 					dispatchGroup.leave()
 					dispatchGroup.leave()
 					continue
@@ -441,13 +434,13 @@ public class TzKTClient {
 				// Else fetch the mapped URLs
 				imageURL(fromIpfsUri: nftChild.displayURI) { displayURL in
 					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = displayURL
-					imageURLsToCache[currentDisplayURL] = displayURL
+					imageURLsToCache[nftChild.id]?.display = displayURL
 					dispatchGroup.leave()
 				}
 				
 				imageURL(fromIpfsUri: nftChild.thumbnailURI) { thumbnailURL in
 					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
-					imageURLsToCache[currentTumbnailURL] = thumbnailURL
+					imageURLsToCache[nftChild.id]?.thumbnail = thumbnailURL
 					dispatchGroup.leave()
 				}
 			}

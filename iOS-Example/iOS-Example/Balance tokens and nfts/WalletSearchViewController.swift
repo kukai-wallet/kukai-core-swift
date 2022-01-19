@@ -29,7 +29,7 @@ class WalletSearchViewController: UIViewController {
 	@IBAction func tz1SearchTapped(_ sender: Any) {
 		startActivity()
 		
-		ClientsAndData.shared.bcdClient.fetchAccountInfo(forAddress: tz1Textfield.text ?? "") { [weak self] result in
+		ClientsAndData.shared.tzktClient.getAllBalances(forAddress: tz1Textfield.text ?? "") { [weak self] result in
 			switch result {
 				case .failure(let error):
 					let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)
@@ -56,7 +56,7 @@ class WalletSearchViewController: UIViewController {
 			switch torusResult {
 				
 				case .success(let torusAddress):
-					ClientsAndData.shared.bcdClient.fetchAccountInfo(forAddress: torusAddress) { [weak self] bcdResult in
+					ClientsAndData.shared.tzktClient.getAllBalances(forAddress: torusAddress) { bcdResult in
 						switch bcdResult {
 							case .failure(let error):
 								let alert = UIAlertController(title: "Error", message: error.description, preferredStyle: .alert)

@@ -65,6 +65,8 @@ class CreateAndSendOpViewController: UIViewController {
 								// If successful, we will get back a hash of the Operation that was injected to the blockchain. We can look this up later using `TzKTService`
 								self?.opHashLabel.text = opHash
 								
+								// TODO: update
+								/*
 								ClientsAndData.shared.tzktClient.waitForInjection(ofHash: opHash, fromAddress: wallet.address) { success, systemError, errorResponse in
 									if success {
 										let alert = UIAlertController(title: "Success", message: "Operation has been injected", preferredStyle: .alert)
@@ -81,6 +83,7 @@ class CreateAndSendOpViewController: UIViewController {
 										self?.activityIndicator.isHidden = true
 									}
 								}
+								*/
 								
 							case .failure(let sendError):
 								
