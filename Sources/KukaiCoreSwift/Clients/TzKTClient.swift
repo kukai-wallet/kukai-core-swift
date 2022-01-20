@@ -330,7 +330,7 @@ public class TzKTClient {
 			
 			// Else create a Token object and put into array
 			let token = Token(
-				name: balance.token.metadata.name,
+				name: balance.token.metadata.name ?? "",
 				symbol: balance.token.metadata.symbol ?? "",
 				tokenType: .fungible,
 				faVersion: balance.token.standard,

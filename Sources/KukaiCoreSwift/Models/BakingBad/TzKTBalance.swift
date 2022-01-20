@@ -36,7 +36,7 @@ public struct TzKTBalanceContract: Codable {
 public struct TzKTBalanceMetadata: Codable {
 	
 	// Common
-	public let name: String
+	public let name: String?
 	public let symbol: String?
 	public let decimals: String
 	
