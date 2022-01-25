@@ -330,12 +330,12 @@ public class TzKTClient {
 			
 			// Else create a Token object and put into array
 			let token = Token(
-				name: balance.token.metadata.name ?? "",
-				symbol: balance.token.metadata.symbol ?? "",
+				name: balance.token.metadata?.name ?? "",
+				symbol: balance.token.metadata?.symbol ?? "",
 				tokenType: .fungible,
 				faVersion: balance.token.standard,
 				balance: balance.tokenAmount,
-				thumbnailURI: URL(string: balance.token.metadata.thumbnailUri ?? ""),
+				thumbnailURI: URL(string: balance.token.metadata?.thumbnailUri ?? ""),
 				tokenContractAddress: balance.token.contract.address,
 				tokenId: Decimal(string: balance.token.tokenId) ?? 0,
 				nfts: []
@@ -357,11 +357,11 @@ public class TzKTClient {
 			
 			let nftToken = Token(
 				name: first.token.contract.alias ?? first.token.contract.address,
-				symbol: first.token.metadata.symbol ?? "",
+				symbol: first.token.metadata?.symbol ?? "",
 				tokenType: .nonfungible,
 				faVersion: first.token.standard,
 				balance: TokenAmount.zero(),
-				thumbnailURI: URL(string: first.token.metadata.thumbnailUri ?? ""),
+				thumbnailURI: URL(string: first.token.metadata?.thumbnailUri ?? ""),
 				tokenContractAddress: first.token.contract.address,
 				tokenId: Decimal(string: first.token.tokenId) ?? 0,
 				nfts: temp

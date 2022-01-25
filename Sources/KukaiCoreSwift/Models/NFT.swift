@@ -63,12 +63,12 @@ public struct NFT: Codable, Hashable {
 	public init(fromTzKTBalance tzkt: TzKTBalance) {
 		tokenId = Decimal(string: tzkt.token.tokenId) ?? 0
 		parentContract = tzkt.token.contract.address
-		name = tzkt.token.metadata.name ?? ""
-		symbol = tzkt.token.metadata.symbol ?? ""
-		description = tzkt.token.metadata.description ?? ""
-		artifactURI = tzkt.token.metadata.artifactUri
-		displayURI = URL(string: tzkt.token.metadata.displayUri ?? "")
-		thumbnailURI = URL(string: tzkt.token.metadata.thumbnailUri ?? "")
+		name = tzkt.token.metadata?.name ?? ""
+		symbol = tzkt.token.metadata?.symbol ?? ""
+		description = tzkt.token.metadata?.description ?? ""
+		artifactURI = tzkt.token.metadata?.artifactUri
+		displayURI = URL(string: tzkt.token.metadata?.displayUri ?? "")
+		thumbnailURI = URL(string: tzkt.token.metadata?.thumbnailUri ?? "")
 	}
 }
 

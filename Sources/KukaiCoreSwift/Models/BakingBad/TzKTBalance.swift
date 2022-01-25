@@ -13,11 +13,11 @@ public struct TzKTBalance: Codable {
 	public let token: TzKTBalanceToken
 	
 	public var tokenAmount: TokenAmount {
-		return TokenAmount(fromRpcAmount: balance, decimalPlaces: token.metadata.decimalsInt) ?? .zero()
+		return TokenAmount(fromRpcAmount: balance, decimalPlaces: token.metadata?.decimalsInt ?? 0) ?? .zero()
 	}
 	
 	public func isNFT() -> Bool {
-		return token.metadata.decimals == "0" && token.standard == .fa2 && (token.metadata.artifactUri != nil || token.metadata.displayUri != nil || token.metadata.thumbnailUri != nil)
+		return token.metadata?.decimals == "0" && token.standard == .fa2 && (token.metadata?.artifactUri != nil || token.metadata?.displayUri != nil || token.metadata?.thumbnailUri != nil)
 	}
 }
 
@@ -25,7 +25,7 @@ public struct TzKTBalanceToken: Codable {
 	public let contract: TzKTBalanceContract
 	public let tokenId: String
 	public let standard: FaVersion
-	public let metadata: TzKTBalanceMetadata
+	public let metadata: TzKTBalanceMetadata?
 }
 
 public struct TzKTBalanceContract: Codable {
@@ -56,8 +56,8 @@ public struct TzKTBalanceMetadata: Codable {
 
 public struct TzKTBalanceMetadataFormat: Codable {
 	public let uri: String
-	public let mimetype: String
-	public let dimensions: TzKTBalanceMetadataDimensions
+	public let mimeType: String
+	public let dimensions: TzKTBalanceMetadataDimensions?
 }
 
 public struct TzKTBalanceMetadataDimensions: Codable {
