@@ -423,7 +423,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				let userIdentifier = appleIDCredential.user
 				let displayName = appleIDCredential.fullName?.formatted()
 				let claim = JWT.claim(name: "sub")
-				let sub = claim.string
+				let sub = "apple|" + claim.string
 				
 				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .info)
 				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub ?? "", idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
