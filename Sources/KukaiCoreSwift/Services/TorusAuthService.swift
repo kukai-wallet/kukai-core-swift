@@ -423,10 +423,10 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				let userIdentifier = appleIDCredential.user
 				let displayName = appleIDCredential.fullName?.formatted()
 				let claim = JWT.claim(name: "sub")
-				let sub = "apple|" + claim.string
+				let sub = "apple|" + (claim.string ?? "")
 				
 				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .info)
-				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub ?? "", idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
+				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
 						os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
