@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Kingfisher
+import KukaiCoreSwift
 
 class FungibleTokensTableViewController: UITableViewController {
 
@@ -31,7 +31,7 @@ class FungibleTokensTableViewController: UITableViewController {
 		let token = ClientsAndData.shared.account?.tokens[indexPath.row]
 		
 		if let ftCell = cell as? FungibleTokenCell {
-			ftCell.iconView?.setKuakiImage(withURL: token?.thumbnailURL, downSampleStandardImage: (width: 30, height: 30))
+			MediaProxyService.load(url: token?.thumbnailURL, to: ftCell.iconView, fromCache: MediaProxyService.permanentImageCache(), fallback: UIImage(), downSampleSize: (width: 30, height: 30))
 			ftCell.label.text = (token?.balance.normalisedRepresentation ?? "0") + " \(token?.symbol ?? "?")"
 		}
 		

@@ -294,19 +294,9 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances) ?? (tokens: [], nftGroups: [])
+				let account = Account(walletAddress: address, xtzBalance: xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups)
 				
-				self?.fetchImageUrls(forTokens: groupedData.tokens, andNFTs: groupedData.nftGroups) { [weak self] updatedData in
-					groupedData.tokens = updatedData.tokens
-					groupedData.nftGroups = updatedData.nfts
-					
-					
-					self?.downloadTokenIconsAndNFTGroups(tokens: groupedData.tokens, nftGroups: groupedData.nftGroups, completion: { success in
-						let account = Account(walletAddress: address, xtzBalance: xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups)
-						
-						// Finished, call completion success
-						DispatchQueue.main.async { completion(Result.success(account)) }
-					})
-				}
+				completion(Result.success(account))
 			}
 		}
 	}
@@ -331,11 +321,11 @@ public class TzKTClient {
 			// Else create a Token object and put into array
 			let token = Token(
 				name: balance.token.metadata?.name ?? "",
-				symbol: balance.token.metadata?.symbol ?? "",
+				symbol: balance.token.displaySymbol,
 				tokenType: .fungible,
 				faVersion: balance.token.standard,
 				balance: balance.tokenAmount,
-				thumbnailURI: URL(string: balance.token.metadata?.thumbnailUri ?? ""),
+				thumbnailURL: balance.token.metadata?.thumbnailURL ?? avatarURL(forToken: balance.token.contract.address),
 				tokenContractAddress: balance.token.contract.address,
 				tokenId: Decimal(string: balance.token.tokenId) ?? 0,
 				nfts: []
@@ -357,185 +347,20 @@ public class TzKTClient {
 			
 			let nftToken = Token(
 				name: first.token.contract.alias ?? first.token.contract.address,
-				symbol: first.token.metadata?.symbol ?? "",
+				symbol: first.token.displaySymbol,
 				tokenType: .nonfungible,
 				faVersion: first.token.standard,
 				balance: TokenAmount.zero(),
-				thumbnailURI: URL(string: first.token.metadata?.thumbnailUri ?? ""),
+				thumbnailURL: avatarURL(forToken: first.token.contract.address),
 				tokenContractAddress: first.token.contract.address,
 				tokenId: Decimal(string: first.token.tokenId) ?? 0,
 				nfts: temp
 			)
 			
-			let staticNFTData = OfflineConstants.dappDisplayName(forContractAddress: first.token.contract.address, onChain: config.tezosChainName)
-			nftToken.thumbnailURL = staticNFTData.thumbnail
-			
 			nftGroups.append(nftToken)
 		}
 		
 		return (tokens: tokens, nftGroups: nftGroups)
-	}
-	
-	// NFT display and thumbnail URLS need to be processed, and extremely likely converted into URLs pointing to a cache server
-	private func fetchImageUrls(forTokens tokens: [Token], andNFTs nfts: [Token], completion: @escaping (((tokens: [Token], nfts: [Token])) -> Void)) {
-		let dispatchGroup = DispatchGroup()
-		
-		// Load the current cached images to avoid unnecessary fetching
-		var imageURLsToCache: [String: ImageUrlCacheObj] = [:]
-		if let cachedURLs = DiskService.read(type: [String: ImageUrlCacheObj].self, fromFileName: TzKTClient.Constants.ipfsImageMappingCacheFileName) {
-			imageURLsToCache = cachedURLs
-		}
-		
-		let updatedTokens: [Token] = tokens
-		let updatedNFts: [Token] = nfts
-		
-		
-		// Check for Token Icons
-		dispatchGroup.enter()
-		for (index, token) in updatedTokens.enumerated() {
-			dispatchGroup.enter()
-			
-			// Load the cached version first if applicable
-			guard imageURLsToCache[token.id] == nil else {
-				updatedTokens[index].thumbnailURL = imageURLsToCache[token.id]?.thumbnail
-				dispatchGroup.leave()
-				continue
-			}
-			
-			// Else fetch the mapped URL
-			imageURL(fromIpfsUri: token.thumbnailURI) { [weak self] thumbnailURL in
-				let newURL = (thumbnailURL == nil) ? self?.avatarURL(forToken: token.tokenContractAddress ?? "") : thumbnailURL
-				
-				imageURLsToCache[token.id]?.thumbnail = newURL
-				updatedTokens[index].thumbnailURL = newURL
-				dispatchGroup.leave()
-			}
-		}
-		
-		
-		// Check for NFT thumbnails and display images
-		dispatchGroup.enter()
-		for (outerIndex, nftParent) in updatedNFts.enumerated() {
-			for (innerIndex, nftChild) in (nftParent.nfts ?? []).enumerated() {
-				dispatchGroup.enter()
-				dispatchGroup.enter()
-				
-				// Load the cached versions first if applicable
-				guard imageURLsToCache[nftChild.id] == nil else {
-					let obj = imageURLsToCache[nftChild.id]
-					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = obj?.display
-					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = obj?.thumbnail
-					dispatchGroup.leave()
-					dispatchGroup.leave()
-					continue
-				}
-				
-				
-				// Else fetch the mapped URLs
-				imageURL(fromIpfsUri: nftChild.displayURI) { displayURL in
-					updatedNFts[outerIndex].nfts?[innerIndex].displayURL = displayURL
-					imageURLsToCache[nftChild.id]?.display = displayURL
-					dispatchGroup.leave()
-				}
-				
-				imageURL(fromIpfsUri: nftChild.thumbnailURI) { thumbnailURL in
-					updatedNFts[outerIndex].nfts?[innerIndex].thumbnailURL = thumbnailURL
-					imageURLsToCache[nftChild.id]?.thumbnail = thumbnailURL
-					dispatchGroup.leave()
-				}
-			}
-		}
-		
-		dispatchGroup.leave()
-		dispatchGroup.leave()
-		
-		// When all requests finished, return on main thread
-		dispatchGroup.notify(queue: .main) {
-			let _ = DiskService.write(encodable: imageURLsToCache, toFileName: TzKTClient.Constants.ipfsImageMappingCacheFileName)
-			completion((tokens: updatedTokens, nfts: updatedNFts))
-		}
-	}
-	
-	public func deleteIpfsImageMappingCache() -> Bool {
-		return DiskService.delete(fileName: TzKTClient.Constants.ipfsImageMappingCacheFileName)
-	}
-	
-	/**
-	 Convert the IPFS URI, into a cloudflare URL, pass this URL to the Kukai metadata cache service to extract info about the asset. If a non IPFS URI is passed in, it is simply returned
-	 If all goes well, a URL to the asset cached on Kukai's server will be returned
-	 - parameter fromIpfsUri: The IPFS URI to the given asset
-	 - parameter ofSize: Optional, the size string of the asset to query (e.g. "150x150")
-	 - parameter completion: Block returning a new URL if possible
-	 */
-	private func imageURL(fromIpfsUri uri: URL?, ofSize: String = "150x150", completion: @escaping ((URL?) -> Void)) {
-		guard let uri = uri else {
-			completion(nil)
-			return
-		}
-		
-		if String(uri.absoluteString.prefix(5)) == "https" {
-			completion(uri)
-			return
-		}
-		
-		if String(uri.absoluteString.prefix(10)) == "data:image" {
-			completion(uri)
-			return
-		}
-		
-		guard let cloudflareURL = ipfsURIToCloudflareURL(uri: uri) else {
-			completion(nil)
-			return
-		}
-		
-		ipfsKukaiMetadata(url: cloudflareURL) { result in
-			guard let metadata = try? result.get(),
-				  let filename = metadata.Filename,
-				  let ext = metadata.Extension,
-				  let fileURL = URL(string: "https://backend.kukai.network/file/\(filename)_\(ofSize).\(ext)") else {
-					  completion(nil)
-					  return
-				  }
-			
-			completion(fileURL)
-		}
-	}
-	
-	/**
-	 Cloudflare provides an IPFS gateway, take the IPFS URL and reformat to work with cloudflares URL structure
-	 */
-	private func ipfsURIToCloudflareURL(uri: URL) -> URL? {
-		if let strippedURI = uri.absoluteString.components(separatedBy: "ipfs://").last, let url = URL(string: "https://cloudflare-ipfs.com/ipfs/\(strippedURI)") {
-			return url
-		}
-		
-		return nil
-	}
-	
-	/**
-	 Get cached metadata file from Kukai's backend
-	 */
-	private func ipfsKukaiMetadata(url: URL, completion: @escaping ((Result<IpfsKukaiMetadata, ErrorResponse>) -> Void)) {
-		guard let destinationURL = URL(string: "https://backend.kukai.network/file/info?src=\(url.absoluteString)") else {
-			os_log("Invalid URL: %@", log: .bcd, type: .error, url.absoluteString)
-			completion(Result.failure(ErrorResponse.unknownError()))
-			return
-		}
-		
-		networkService.request(url: destinationURL, isPOST: false, withBody: nil, forReturnType: IpfsKukaiMetadata.self) { result in
-			switch result {
-				case .success(let metadata):
-					if metadata.Status == "ok" && metadata.Filename != nil && metadata.Extension != nil && metadata.Extension != "unknown" {
-						completion(Result.success(metadata))
-					} else {
-						os_log("kukai metadata backend returned a status that was not \"ok\"", log: .bcd, type: .error)
-						completion(Result.failure(ErrorResponse.unknownError()))
-					}
-					
-				case .failure(let error):
-					completion(Result.failure(error))
-			}
-		}
 	}
 	
 	/**
@@ -550,58 +375,6 @@ public class TzKTClient {
 		
 		return imageURL
 	}
-	
-	/**
-	 Use `Kingfisher` to bulk download the token icons for all the tokens the user owns, allowing them to be called much easier.
-	 Developers can use https://github.com/onevcat/Kingfisher to display the images then throughout the app.
-	 E.g.  `imageView.kf.setImage(with: URL)`
-	 */
-	private func downloadTokenIconsAndNFTGroups(tokens: [Token], nftGroups: [Token], completion: @escaping ((Bool) -> Void)) {
-		var imageURLs: [URL] = []
-		
-		for token in tokens {
-			if let url = token.thumbnailURL {
-				imageURLs.append(url)
-			}
-		}
-		
-		for nftGroup in nftGroups {
-			if let url = nftGroup.thumbnailURL {
-				imageURLs.append(url)
-			}
-		}
-		
-		if imageURLs.count == 0 {
-			completion(true)
-			return
-		}
-		
-		// Don't donwload real images during unit tests. Investigate mocking kingfisher
-		if Thread.current.isRunningXCTest {
-			completion(true)
-			return
-		}
-		
-		
-		// Set expiration and pre-fetch
-		ImageCache.default.diskStorage.config.expiration = .days(7)
-		ImagePrefetcher(urls: imageURLs, options: nil, progressBlock: nil) { (skipped, failed, completed) in
-			os_log(.debug, log: .bcd, "Token icons downloaded")
-			
-			if !skipped.isEmpty {
-				os_log(.error, log: .bcd, "Some images skipped")
-			}
-			
-			if !failed.isEmpty {
-				os_log(.error, log: .bcd, "Some images failed")
-			}
-			
-			completion(true)
-			
-		}.start()
-	}
-	
-	
 	
 	
 	

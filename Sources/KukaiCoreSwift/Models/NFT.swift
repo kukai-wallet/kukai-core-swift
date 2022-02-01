@@ -54,6 +54,9 @@ public struct NFT: Codable, Hashable {
 		artifactURI = bcd.artifact_uri
 		displayURI = URL(string: bcd.display_uri ?? "")
 		thumbnailURI = URL(string: bcd.thumbnail_uri ?? "")
+		
+		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
+		thumbnailURL = MediaProxyService.url(fromUri: thumbnailURI, ofFormat: .icon)
 	}
 	
 	/**
@@ -69,6 +72,9 @@ public struct NFT: Codable, Hashable {
 		artifactURI = tzkt.token.metadata?.artifactUri
 		displayURI = URL(string: tzkt.token.metadata?.displayUri ?? "")
 		thumbnailURI = URL(string: tzkt.token.metadata?.thumbnailUri ?? "")
+		
+		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
+		thumbnailURL = MediaProxyService.url(fromUri: thumbnailURI, ofFormat: .icon)
 	}
 }
 

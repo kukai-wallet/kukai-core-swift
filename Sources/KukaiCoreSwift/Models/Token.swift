@@ -56,9 +56,6 @@ public class Token: Codable, CustomStringConvertible {
 		}
 	}
 	
-	/// A URI used to locate the tokens icon image (raw data coming from third party)
-	public let thumbnailURI: URL?
-	
 	/// The URL to a cached version of the asset (data that we add later on through other service calls)
 	public var thumbnailURL: URL? = nil
 	
@@ -90,13 +87,13 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter tokenId: The token id if the token is an FA2 token, nil otherwise.
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURI: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?) {
+	public init(name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
 		self.faVersion = faVersion
 		self.balance = balance
-		self.thumbnailURI = thumbnailURI
+		self.thumbnailURL = thumbnailURL
 		self.tokenContractAddress = tokenContractAddress
 		self.tokenId = tokenId
 		self.nfts = nfts
@@ -112,7 +109,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`
 	*/
 	public static func xtz() -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURI: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
 	}
 	
 	/**
@@ -121,7 +118,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`.
 	*/
 	public static func xtz(withAmount amount: TokenAmount) -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURI: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
 	}
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
