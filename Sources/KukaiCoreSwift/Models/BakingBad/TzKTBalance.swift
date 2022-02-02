@@ -129,9 +129,20 @@ public struct TzKTBalanceMetadataFormat: Codable {
 	public let uri: String
 	public let mimeType: String
 	public let dimensions: TzKTBalanceMetadataDimensions?
+	
+	public init(uri: String, mimeType: String, dimensions: TzKTBalanceMetadataDimensions?) {
+		self.uri = uri
+		self.mimeType = mimeType
+		self.dimensions = dimensions
+	}
 }
 
 public struct TzKTBalanceMetadataDimensions: Codable {
 	public let unit: String
 	public let value: String
+	
+	public init(unit: String, value: String) {
+		self.unit = unit
+		self.value = value
+	}
 }

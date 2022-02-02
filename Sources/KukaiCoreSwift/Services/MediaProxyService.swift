@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-public class MediaProxyService {
+public class MediaProxyService: NSObject {
 	
 	public enum Format: String, Codable {
 		case icon		// 80px
@@ -23,10 +23,20 @@ public class MediaProxyService {
 		case web
 	}
 	
+	public enum MediaType: String, Codable {
+		case image
+		case audio
+		case video
+	}
+	
 	public struct Constants {
 		public static let permanentImageCacheName = "kukai-mediaproxy-permanent"
 		public static let temporaryImageCacheName = "kukai-mediaproxy-temporary"
 	}
+	
+	
+	private var getMediaTypeCompletion: ((Result<MediaType, ErrorResponse>) -> Void)? = nil
+	private var getMediaTypeDownloadTask: URLSessionDownloadTask? = nil
 	
 	
 	
@@ -61,18 +71,6 @@ public class MediaProxyService {
 		
 		return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)/\(source.rawValue)/\(sanitizedURL)")
 	}
-	/*
-	/**
-	 Cloudflare provides an IPFS gateway, take the IPFS URL and reformat to work with cloudflares URL structure
-	 */
-	private func ipfsURIToCloudflareURL(uri: URL) -> URL? {
-		if let strippedURI = uri.absoluteString.components(separatedBy: "ipfs://").last, let url = URL(string: "https://cloudflare-ipfs.com/ipfs/\(strippedURI)") {
-			return url
-		}
-		
-		return nil
-	}
-	*/
 	
 	public static func thumbnailURL(uri: URL) -> URL? {
 		return MediaProxyService.url(fromUri: uri, ofFormat: .icon)
@@ -81,6 +79,54 @@ public class MediaProxyService {
 	public static func displayURL(uri: URL) -> URL? {
 		return MediaProxyService.url(fromUri: uri, ofFormat: .small)
 	}
+	
+	
+	
+	// MARK: - Type checking
+	
+	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL, completion: @escaping ((Result<MediaType, ErrorResponse>) -> Void)) {
+		
+		// Check if the metadata contains a format with a mimetype
+		// Gifs may be reencoded as videos, so ignore them
+		for format in formats {
+			if format.mimeType.starts(with: "video/") {
+				completion(Result.success(.video))
+				return
+				
+			} else if format.mimeType.starts(with: "audio/") {
+				completion(Result.success(.audio))
+				return
+				
+			} else if (format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/")) && format.mimeType != "image/gif" {
+				completion(Result.success(.image))
+				return
+			}
+		}
+		
+		// Check if we can get the type from a file extension in the URL
+		if url.pathExtension != "", url.pathExtension != "gif" {
+			if ["png", "jpeg", "jpg", "bmp", "tif", "tiff"].contains(url.pathExtension) {
+				completion(Result.success(.image))
+				return
+				
+			} else if ["mpeg", "mpg", "mp3"].contains(url.pathExtension) {
+				completion(Result.success(.audio))
+				return
+				
+			} else if ["mp4", "mov"].contains(url.pathExtension) {
+				completion(Result.success(.video))
+				return
+			}
+		}
+		
+		// Else fire off a network request to test the actual file type
+		// Can't use a "HEAD" request as it will fail if the proxy is not caching the asset. Need to download a packet and examine the headers, then cancel the request
+		self.getMediaTypeCompletion = completion
+		self.getMediaTypeDownloadTask = URLSession.shared.downloadTask(with: url)
+		self.getMediaTypeDownloadTask?.delegate = self
+		self.getMediaTypeDownloadTask?.resume()
+	}
+	
 	
 	
 	
@@ -146,6 +192,50 @@ public class MediaProxyService {
 			
 			// If image downloading fails, display fallback image
 			imageView.image = fallback
+		}
+	}
+}
+
+extension MediaProxyService: URLSessionDownloadDelegate {
+	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+		
+	}
+	
+	public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+		guard let completion = self.getMediaTypeCompletion else {
+			return
+		}
+		
+		if let e = error {
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: e)))
+		} else {
+			completion(Result.failure(ErrorResponse.unknownError()))
+		}
+	}
+	
+	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+		
+		// We are only interested in seeing the "Content-Type" header. As soon as we have received 1 packet, cancel the request, examine the header and return
+		// "HEAD" requests fail if the proxy hasn't seen the asset before, so to be safe and avoid complex code, just assume its not there
+		downloadTask.cancel()
+		
+		guard let completion = self.getMediaTypeCompletion else {
+			return
+		}
+		
+		guard let httpResponse = downloadTask.response as? HTTPURLResponse, let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type") else {
+			completion(Result.failure(ErrorResponse.error(string: "Unbale to parse Content Type", errorType: .internalApplicationError)))
+			return
+		}
+		
+		if contentType.contains("video/") {
+			completion(Result.success(.video))
+			
+		} else if contentType.contains("audio/") {
+			completion(Result.success(.audio))
+			
+		} else {
+			completion(Result.success(.image))
 		}
 	}
 }

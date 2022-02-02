@@ -118,6 +118,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		
 		print("\n\n\n didBlockStart: \(didBlockStart) \n\n\n")
 		*/
+		
+		
+		let url = MediaProxyService.url(fromUri: URL(string: "https://mediagateway.sweet.io/media/series/nKbK5rq5/media.mp4"), ofFormat: .gallery)!
+		MediaProxyService().getMediaType(fromFormats: [], orURL: url) { result in
+			print("Result: \(result)")
+		}
 	}
 }
 
