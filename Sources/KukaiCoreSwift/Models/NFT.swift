@@ -27,7 +27,7 @@ public struct NFT: Codable, Hashable {
 	public let `description`: String
 	
 	/// A URI to the asset the NFT is controlling ownership of
-	public let artifactURI: String?
+	public let artifactURI: URL?
 	
 	/// A URI used to display media of the artifact
 	public let displayURI: URL?
@@ -41,6 +41,12 @@ public struct NFT: Codable, Hashable {
 	/// The URL to the cached version of the asset
 	public var thumbnailURL: URL? = nil
 	
+	/// The URL to the cached version of the asset
+	public var artifactURL: URL? = nil
+	
+	/// Metadata object containing useful information about the nft and its contents
+	public var metadata: TzKTBalanceMetadata? = nil
+	
 	/**
 	Create a more developer friednly `NFT` from a generic `BetterCallDevTokenBalance` object
 	- parameter fromBcdBalance: An instance of `BetterCallDevTokenBalance` containing data about an NFT
@@ -51,7 +57,7 @@ public struct NFT: Codable, Hashable {
 		name = bcd.name ?? ""
 		symbol = bcd.symbol ?? ""
 		description = bcd.description ?? ""
-		artifactURI = bcd.artifact_uri
+		artifactURI = URL(string: bcd.artifact_uri ?? "")
 		displayURI = URL(string: bcd.display_uri ?? "")
 		thumbnailURI = URL(string: bcd.thumbnail_uri ?? "")
 		
@@ -69,12 +75,24 @@ public struct NFT: Codable, Hashable {
 		name = tzkt.token.metadata?.name ?? ""
 		symbol = tzkt.token.metadata?.symbol ?? ""
 		description = tzkt.token.metadata?.description ?? ""
-		artifactURI = tzkt.token.metadata?.artifactUri
+		artifactURI = URL(string: tzkt.token.metadata?.artifactUri ?? "")
 		displayURI = URL(string: tzkt.token.metadata?.displayUri ?? "")
 		thumbnailURI = URL(string: tzkt.token.metadata?.thumbnailUri ?? "")
+		metadata = tzkt.token.metadata
 		
+		artifactURL = MediaProxyService.url(fromUri: artifactURI, ofFormat: .small)
 		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
 		thumbnailURL = MediaProxyService.url(fromUri: thumbnailURI, ofFormat: .icon)
+	}
+	
+	/// Confomring to Equatable
+	public static func == (lhs: NFT, rhs: NFT) -> Bool {
+		return lhs.id == rhs.id
+	}
+	
+	/// Conforming to `Hashable`
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
 	}
 }
 

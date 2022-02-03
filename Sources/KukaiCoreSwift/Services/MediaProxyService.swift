@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import SwiftUI
 
 public class MediaProxyService: NSObject {
 	
@@ -37,6 +38,10 @@ public class MediaProxyService: NSObject {
 	
 	private var getMediaTypeCompletion: ((Result<MediaType, ErrorResponse>) -> Void)? = nil
 	private var getMediaTypeDownloadTask: URLSessionDownloadTask? = nil
+	
+	private static let videoFormats = ["mp4", "mov"]
+	private static let audioFormats = ["mpeg", "mpg", "mp3"]
+	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg"] // gifs might be reencoded as video, so have to exclude them
 	
 	
 	
@@ -84,7 +89,7 @@ public class MediaProxyService: NSObject {
 	
 	// MARK: - Type checking
 	
-	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL, completion: @escaping ((Result<MediaType, ErrorResponse>) -> Void)) {
+	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<MediaType, ErrorResponse>) -> Void)) {
 		
 		// Check if the metadata contains a format with a mimetype
 		// Gifs may be reencoded as videos, so ignore them
@@ -100,31 +105,48 @@ public class MediaProxyService: NSObject {
 			} else if (format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/")) && format.mimeType != "image/gif" {
 				completion(Result.success(.image))
 				return
+				
+			} else if !format.mimeType.contains("/"), let type = checkFileExtension(fileExtension: format.mimeType) {
+				
+				// Some tokens have a mimetype that doesn't conform to standard, and only includes the file format
+				completion(Result.success(type))
+				return
 			}
 		}
 		
+		guard let url = url else {
+			completion(Result.failure(ErrorResponse.error(string: "No mimetype found inside formats, no URL supplied", errorType: .unknownError)))
+			return
+		}
+		
 		// Check if we can get the type from a file extension in the URL
-		if url.pathExtension != "", url.pathExtension != "gif" {
-			if ["png", "jpeg", "jpg", "bmp", "tif", "tiff"].contains(url.pathExtension) {
-				completion(Result.success(.image))
-				return
-				
-			} else if ["mpeg", "mpg", "mp3"].contains(url.pathExtension) {
-				completion(Result.success(.audio))
-				return
-				
-			} else if ["mp4", "mov"].contains(url.pathExtension) {
-				completion(Result.success(.video))
-				return
-			}
+		if url.pathExtension != "", url.pathExtension != "gif", let type = checkFileExtension(fileExtension: url.pathExtension) {
+			completion(Result.success(type))
+			return
 		}
 		
 		// Else fire off a network request to test the actual file type
 		// Can't use a "HEAD" request as it will fail if the proxy is not caching the asset. Need to download a packet and examine the headers, then cancel the request
 		self.getMediaTypeCompletion = completion
-		self.getMediaTypeDownloadTask = URLSession.shared.downloadTask(with: url)
+		self.getMediaTypeDownloadTask = urlSession.downloadTask(with: url)
 		self.getMediaTypeDownloadTask?.delegate = self
 		self.getMediaTypeDownloadTask?.resume()
+	}
+	
+	private func checkFileExtension(fileExtension: String) -> MediaType? {
+		if fileExtension != "", fileExtension != "gif" {
+			if MediaProxyService.imageFormats.contains(fileExtension) {
+				return .image
+				
+			} else if MediaProxyService.audioFormats.contains(fileExtension) {
+				return .audio
+				
+			} else if MediaProxyService.videoFormats.contains(fileExtension) {
+				return .video
+			}
+		}
+		
+		return nil
 	}
 	
 	
@@ -197,8 +219,9 @@ public class MediaProxyService: NSObject {
 }
 
 extension MediaProxyService: URLSessionDownloadDelegate {
+	
 	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-		
+		process(downloadTask: downloadTask)
 	}
 	
 	public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
@@ -214,9 +237,12 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 	}
 	
 	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-		
+		process(downloadTask: downloadTask)
+	}
+	
+	private func process(downloadTask: URLSessionDownloadTask) {
 		// We are only interested in seeing the "Content-Type" header. As soon as we have received 1 packet, cancel the request, examine the header and return
-		// "HEAD" requests fail if the proxy hasn't seen the asset before, so to be safe and avoid complex code, just assume its not there
+		// "HEAD" requests fail if the proxy hasn't seen the asset before
 		downloadTask.cancel()
 		
 		guard let completion = self.getMediaTypeCompletion else {

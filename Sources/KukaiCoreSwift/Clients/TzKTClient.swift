@@ -24,12 +24,6 @@ public class TzKTClient {
 	
 	public struct Constants {
 		public static let tokenBalanceQuerySize = 10000
-		public static let ipfsImageMappingCacheFileName = "tzktclient-ipfs-image-mapping-cache"
-	}
-	
-	public struct ImageUrlCacheObj: Codable {
-		public var thumbnail: URL?
-		public var display: URL?
 	}
 	
 	private let networkService: NetworkService
