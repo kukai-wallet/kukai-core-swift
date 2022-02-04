@@ -14,7 +14,7 @@ let package = Package(
 		.package(name: "Sodium", url: "https://github.com/jedisct1/swift-sodium.git", from: "0.9.1"),
 		.package(name: "secp256k1", url: "https://github.com/Boilertalk/secp256k1.swift.git", from: "0.1.4"),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
-		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .branch("master")),
+		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .revisionItem("f32880f28b2de1d500b86db6f4bd1fb6329e546b")),
     ],
     targets: [
         .target(
