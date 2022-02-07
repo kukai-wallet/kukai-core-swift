@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import TorusSwiftDirectSDK
+import CustomAuth
 import FetchNodeDetails
 import TorusUtils
 import Sodium
@@ -92,7 +92,7 @@ public class TorusAuthService: NSObject {
 	private let mainnetProxyAddress = "0x638646503746d5456209e33a2ff5e3226d698bea"
 	
 	/// Shared instance of the Torus SDK object, with a temprary init
-	private var torus = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
+	private var torus = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
 	
 	/// Shared instance of the Torus Util object
 	private let torusUtils: TorusUtils
@@ -151,7 +151,7 @@ public class TorusAuthService: NSObject {
 	- parameter displayOver: The `UIViewController` that the webpage will display on top of
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
-	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: TorusSwiftDirectSDK? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
+	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: CustomAuth? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
 		guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
@@ -162,23 +162,10 @@ public class TorusAuthService: NSObject {
 			torus = mockTorus
 			
 		} else if verifierWrapper.isAggregate {
-			torus = TorusSwiftDirectSDK(
-				aggregateVerifierType: .singleIdVerifier,
-				aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
-				subVerifierDetails: [verifierWrapper.subverifier],
-				factory: TDSDKFactory(),
-				network: self.ethereumNetworkType,
-				loglevel: .info
-			)
+			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [verifierWrapper.subverifier], network: self.ethereumNetworkType, loglevel: .info)
+			
 		} else {
-			torus = TorusSwiftDirectSDK(
-				aggregateVerifierType: .singleLogin,
-				aggregateVerifierName: verifierWrapper.subverifier.subVerifierId,
-				subVerifierDetails: [verifierWrapper.subverifier],
-				factory: TDSDKFactory(),
-				network: self.ethereumNetworkType,
-				loglevel: .info
-			)
+			torus = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.subverifier.subVerifierId, subVerifierDetails: [verifierWrapper.subverifier], network: self.ethereumNetworkType, loglevel: .info)
 		}
 		
 		
@@ -302,7 +289,7 @@ public class TorusAuthService: NSObject {
 	
 	/// Private wrapper to avoid duplication in the previous function
 	private func getPublicAddress(nodeDetails: AllNodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
-		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { [weak self] data in
+		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { data in
 			guard let pubX = data["pub_key_X"],
 				  let pubY = data["pub_key_Y"],
 				  let bytesX = Sodium.shared.utils.hex2bin(pubX),
@@ -402,7 +389,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				let claim = JWT.claim(name: "sub")
 				let sub = "apple|" + (claim.string ?? "")
 				
-				let tdsdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .info)
+				let tdsdk = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .info)
 				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {

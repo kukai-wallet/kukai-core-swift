@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import TorusSwiftDirectSDK
+import CustomAuth
 import KukaiCoreSwift
 import Sodium
 import Combine
@@ -59,7 +59,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			return
 		}
 		
-		TorusSwiftDirectSDK.handle(url: url)
+		CustomAuth.handle(url: url)
 	}
 	
 	

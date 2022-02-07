@@ -8,7 +8,6 @@
 
 import Foundation
 import KukaiCoreSwift
-import TorusSwiftDirectSDK
 
 public class ClientsAndData {
 	
