@@ -321,17 +321,6 @@ public class TorusAuthService: NSObject {
 			publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
 			
 			
-			// Generate Base58 encoded version of binary data, so we can check for inverted keys
-			let pk = Base58.encode(message: publicKey, prefix: Prefix.Keys.Secp256k1.public)
-			
-			
-			// Check results are valid
-			if bytesY.count < 32 && prefixVal == 3 && self?.isInvertedPk(pk: pk) == true {
-				publicKey = [2]
-				publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
-			}
-			
-			
 			// Run Blake2b hashing on public key
 			guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
 				os_log("Finding address - generating hash failed", log: .torus, type: .error)
@@ -377,18 +366,6 @@ public class TorusAuthService: NSObject {
 					completion(Result.failure(error))
 			}
 		}
-	}
-	
-	/// Its possible for private keys to be returned inverted. This function provides a quick sanity check, so the key can be flipped if necessary
-	private func isInvertedPk(pk: String) -> Bool {
-		// Detect keys with flipped sign and correct them.
-		let invertedPks = [
-		  "sppk7cqh7BbgUMFh4yh95mUwEeg5aBPG1MBK1YHN7b9geyygrUMZByr", // test variable
-		  "sppk7bMTva1MwF7cXjrcfoj6XVfcYgjrVaR9JKP3JxvPB121Ji5ftHT",
-		  "sppk7bLtXf9CAVZh5jjDACezPnuwHf9CgVoAneNXQFgHknNtCyE5k8A"
-		]
-		
-		return invertedPks.contains(pk);
 	}
 }
 
