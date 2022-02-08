@@ -47,7 +47,7 @@ public struct MockConstants {
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
 		
-		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
+		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/\(config.tezosChainName.rawValue)/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
 		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
 		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 50)
 		bcdTokenBalanceURL.appendQueryItem(name: "hide_empty", value: "true")
@@ -91,18 +91,18 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/balance"): (MockConstants.jsonStub(fromFilename: "xtz-pool"), MockConstants.http200),
 			
 			// BCD URLs
-			bcdURL.appendingPathComponent("v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "bcd_account"), MockConstants.http200),
-			MockConstants.bcdURL(withPath: "v1/account/granadanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/count", queryParams: ["hide_empty": "true"], andConfig: config): (MockConstants.jsonStub(fromFilename: "bcd_token-count"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/account/\(config.tezosChainName.rawValue)/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "bcd_account"), MockConstants.http200),
+			MockConstants.bcdURL(withPath: "v1/account/\(config.tezosChainName.rawValue)/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/count", queryParams: ["hide_empty": "true"], andConfig: config): (MockConstants.jsonStub(fromFilename: "bcd_token-count"), MockConstants.http200),
 			bcdTokenBalanceURL: (MockConstants.jsonStub(fromFilename: "bcd_token-balances"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/granadanet/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
+			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
 			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
 			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
 			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
@@ -138,9 +138,9 @@ public struct MockConstants {
 		MockURLProtocol.mockPostURLs = [
 			
 			// Tezos domains
-			MockPostUrlKey(url: URL(string: "https://granadanet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-domain_request")):
+			MockPostUrlKey(url: URL(string: "https://\(config.tezosChainName.rawValue)-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-domain_request")):
 				(MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
-			MockPostUrlKey(url: URL(string: "https://granadanet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
+			MockPostUrlKey(url: URL(string: "https://\(config.tezosChainName.rawValue)-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
 				(MockConstants.jsonStub(fromFilename: "tezos_domains-domain"), MockConstants.http200),
 			
 			// DipDup
@@ -182,7 +182,7 @@ public struct MockConstants {
 	}
 	
 	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {
-		return MockConstants.bcdURL(withPath: "v1/tokens/granadanet/metadata", queryParams: ["contract": contract], andConfig: config)
+		return MockConstants.bcdURL(withPath: "v1/tokens/\(config.tezosChainName.rawValue)/metadata", queryParams: ["contract": contract], andConfig: config)
 	}
 	
 	
@@ -265,8 +265,8 @@ public struct MockConstants {
 	// MARK: - Tokens
 	
 	public static let tokenXTZ = Token.xtz()
-	public static let token3Decimals = Token(name: "Token 3 decimals", symbol: "TK3", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), thumbnailURI: nil, tokenContractAddress: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", tokenId: nil, nfts: nil)
-	public static let token10Decimals = Token(name: "Token 10 decimals", symbol: "TK10", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURI: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", tokenId: 0, nfts: nil)
+	public static let token3Decimals = Token(name: "Token 3 decimals", symbol: "TK3", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", tokenId: nil, nfts: nil)
+	public static let token10Decimals = Token(name: "Token 10 decimals", symbol: "TK10", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", tokenId: 0, nfts: nil)
 	
 	public static let xtz_1 = XTZAmount(fromNormalisedAmount: 1)
 	public static let token3Decimals_1 = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 3)

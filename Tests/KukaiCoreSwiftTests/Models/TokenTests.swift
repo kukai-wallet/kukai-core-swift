@@ -20,11 +20,11 @@ class TokenTests: XCTestCase {
 	
 	
 	func testToken() {
-		let token = Token(name: "test1", symbol: "T", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount(fromNormalisedAmount: 3, decimalPlaces: 4), thumbnailURI: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: nil, nfts: nil)
+		let token = Token(name: "test1", symbol: "T", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount(fromNormalisedAmount: 3, decimalPlaces: 4), thumbnailURL: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: nil, nfts: nil)
 		
 		let bcdBalance = BetterCallDevTokenBalance(token_id: 4, contract: "KT1", name: "PixelPotus", description: "a card", symbol: nil, artifact_uri: "ipfs://abc", display_uri: "ipfs://abc", thumbnail_uri: "ipfs://abc", is_boolean_amount: true, balance: TokenAmount.zero(), decimals: 0)
 		let nft = NFT(fromBcdBalance: bcdBalance)
-		let token2 = Token(name: "test2", symbol: "F", tokenType: .nonfungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURI: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: 0, nfts: [nft])
+		let token2 = Token(name: "test2", symbol: "F", tokenType: .nonfungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: 0, nfts: [nft])
 		
 		
 		XCTAssert(token.name == "test1", token.name ?? "")
