@@ -111,4 +111,47 @@ class TzKTClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 5)
 	}
+	
+	func testGetAllBalances() {
+		let expectation = XCTestExpectation(description: "tzkt-testGetAllBalances")
+		MockConstants.shared.tzktClient.getAllBalances(forAddress: MockConstants.defaultHdWallet.address) { result in
+			
+			switch result {
+				case .success(let account):
+					XCTAssert(account.xtzBalance.normalisedRepresentation == "1.843617", account.xtzBalance.normalisedRepresentation)
+					XCTAssert(account.tokens.count == 13, "\(account.tokens.count)")
+					XCTAssert(account.tokens[0].symbol == "tzBTC", account.tokens[0].symbol)
+					XCTAssert(account.tokens[0].name == "tzBTC", account.tokens[0].name ?? "")
+					XCTAssert(account.tokens[0].balance.normalisedRepresentation == "0.00038055", account.tokens[0].balance.normalisedRepresentation)
+					XCTAssert(account.tokens[1].symbol == "Liquidity Baking LT", account.tokens[1].symbol)
+					XCTAssert(account.tokens[1].name == "LB Token", account.tokens[1].name ?? "")
+					XCTAssert(account.tokens[1].balance.normalisedRepresentation == "91", account.tokens[1].balance.normalisedRepresentation)
+					XCTAssert(account.tokens[2].symbol == "WHEAT", account.tokens[2].symbol)
+					XCTAssert(account.tokens[2].name == "Wheat", account.tokens[2].name ?? "")
+					XCTAssert(account.tokens[2].balance.normalisedRepresentation == "880562.72985", account.tokens[2].balance.normalisedRepresentation)
+					
+					XCTAssert(account.nfts.count == 6, "\(account.nfts.count)")
+					XCTAssert(account.nfts[0].nfts?.count == 3, "\(account.nfts[0].nfts?.count ?? -1)")
+					XCTAssert(account.nfts[0].nfts?[0].name == "Donald J. Trump (C)", account.nfts[0].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[0].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmS1DhwQ8jfadjAK1kWHH22FPmgL33FNNHfM74cpXyTp7R/full/1045.png", account.nfts[0].nfts?[0].artifactURL?.absoluteString ?? "")
+					XCTAssert(account.nfts[1].nfts?[0].name == "The Nine #0 (Steve Ellis Cover) - Free NFT", account.nfts[1].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[1].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/bafybeihhlrzfelp3rhz4dcz5ydvui5ntfh3j4luyrc2pbwgkjyhqca4ap4", account.nfts[1].nfts?[0].artifactURL?.absoluteString ?? "")
+					XCTAssert(account.nfts[2].nfts?[0].name == "Tez Swords: #5. Excalibur", account.nfts[2].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[2].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmdoYC76e1R9J3fYWCEsktYimAdYSNMSv6avtxmVt9LQrE", account.nfts[2].nfts?[0].artifactURL?.absoluteString ?? "")
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 5)
+	}
+	
+	func testAvatarURL() {
+		let url = MockConstants.shared.tzktClient.avatarURL(forToken: "KT1abc123")
+		
+		XCTAssert(url?.absoluteString == "https://services.tzkt.io/v1/avatars/KT1abc123", url?.absoluteString ?? "-")
+	}
 }

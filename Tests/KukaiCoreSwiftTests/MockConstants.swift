@@ -67,6 +67,16 @@ public struct MockConstants {
 		var tzktBigmapLedgerURL = tzktURL.appendingPathComponent("v1/bigmaps/1493/keys")
 		tzktBigmapLedgerURL.appendQueryItem(name: "key", value: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs")
 		
+		var tzktBalanceCountURL = tzktURL.appendingPathComponent("v1/tokens/balances/count")
+		tzktBalanceCountURL.appendQueryItem(name: "account", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktBalanceCountURL.appendQueryItem(name: "balance.gt", value: 0)
+		
+		var tzktBalancePageURL = tzktURL.appendingPathComponent("v1/tokens/balances")
+		tzktBalancePageURL.appendQueryItem(name: "account", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktBalancePageURL.appendQueryItem(name: "balance.gt", value: 0)
+		tzktBalancePageURL.appendQueryItem(name: "offset", value: 0)
+		tzktBalancePageURL.appendQueryItem(name: "limit", value: 10000)
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -90,27 +100,6 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/balance"): (MockConstants.jsonStub(fromFilename: "xtz-pool"), MockConstants.http200),
 			
 			// BCD URLs
-			bcdURL.appendingPathComponent("v1/account/\(config.tezosChainName.rawValue)/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "bcd_account"), MockConstants.http200),
-			MockConstants.bcdURL(withPath: "v1/account/\(config.tezosChainName.rawValue)/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/count", queryParams: ["hide_empty": "true"], andConfig: config): (MockConstants.jsonStub(fromFilename: "bcd_token-count"), MockConstants.http200),
-			bcdTokenBalanceURL: (MockConstants.jsonStub(fromFilename: "bcd_token-balances"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/contract/\(config.tezosChainName.rawValue)/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_contract-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT198WVepFnjQtx9HUhuKc2x8gUt9z2fvyv6"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1BVwiXfDdaXsvcmvSmBkpZt4vbGVhLmhBh"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1CMbwrQodEYFpdJmk8pzN8SzieupG6ZrZE"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1DEJEcfiMUWYjn1ZCTbbLokRcP26sx2pTH"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata-nft"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1DaKxkR1LdnXW1tr7yozdwEAiSQDpCLUBj"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1FXDTQb1o7Q7HecuxaWQ18XyHTsRrzuaZs"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1P3RGEAa78XLTs3Hkpd1VWtryQRLDjiXqF"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT1VCczKAoRQJKco7NiSaB93PMkYCbL2z1K7"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
-			MockConstants.bcdTokenMetadataURL(config: config, contract: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8"): (MockConstants.jsonStub(fromFilename: "bcd_token-metadata"), MockConstants.http200),
 			bcdURL.appendingPathComponent("v1/opg/ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
 			bcdURL.appendingPathComponent("v1/opg/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
 			
@@ -122,13 +111,10 @@ public struct MockConstants {
 			tzktURL.appendingPathComponent("v1/contracts/KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc/storage"): (MockConstants.jsonStub(fromFilename: "tzkt_storage_quipu"), MockConstants.http200),
 			tzktBigmapUserRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_userrewards"), MockConstants.http200),
 			tzktBigmapLedgerURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_ledger"), MockConstants.http200),
+			tzktBalanceCountURL: (MockConstants.jsonStub(fromFilename: "tzkt_balance-count"), MockConstants.http200),
+			tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "tzkt_account"), MockConstants.http200),
+			tzktBalancePageURL: (MockConstants.jsonStub(fromFilename: "tzkt_balance-page"), MockConstants.http200),
 			
-			// Kukai backend
-			URL(string: "https://backend.kukai.network/file/info?src=https://cloudflare-ipfs.com/ipfs/QmZngequ2m3DuF2wX369xxw6Bzd3jBga1tL5g83bYTnpqN")!: (MockConstants.jsonStub(fromFilename: "kukai_backend-ipfs-data"), MockConstants.http200),
-			
-			// TezTools
-			URL(string: "https://api.teztools.io/v1/contracts")!: (MockConstants.jsonStub(fromFilename: "teztools_tokens"), MockConstants.http200),
-			URL(string: "https://api.teztools.io/v1/prices")!: (MockConstants.jsonStub(fromFilename: "teztools_prices"), MockConstants.http200),
 			
 			// Misc
 			URL(string: "https://api.tezos.help/twitter-lookup/")!: (MockConstants.jsonStub(fromFilename: "twitter_lookup"), MockConstants.http200),

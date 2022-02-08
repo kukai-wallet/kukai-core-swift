@@ -354,7 +354,7 @@ public class TzKTClient {
 			nftGroups.append(nftToken)
 		}
 		
-		return (tokens: tokens, nftGroups: nftGroups)
+		return (tokens: tokens, nftGroups: nftGroups.sorted(by: { $0.id > $1.id }))
 	}
 	
 	/**

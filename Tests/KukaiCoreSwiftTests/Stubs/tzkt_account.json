@@ -1,0 +1,30 @@
+{
+    "type": "user",
+    "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
+    "publicKey": "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E",
+    "revealed": true,
+    "balance": 1843617,
+    "counter": 24121485,
+    "delegate": {
+        "alias": "Bake Nug",
+        "address": "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
+        "active": true
+    },
+    "delegationLevel": 1941611,
+    "delegationTime": "2021-12-13T11:32:56Z",
+    "numContracts": 0,
+    "activeTokensCount": 66,
+    "tokenBalancesCount": 108,
+    "tokenTransfersCount": 969,
+    "numActivations": 0,
+    "numDelegations": 3,
+    "numOriginations": 1,
+    "numTransactions": 1879,
+    "numReveals": 1,
+    "numRegisterConstants": 0,
+    "numMigrations": 0,
+    "firstActivity": 1650827,
+    "firstActivityTime": "2021-08-30T09:21:18Z",
+    "lastActivity": 2097689,
+    "lastActivityTime": "2022-02-07T15:23:54Z"
+}
