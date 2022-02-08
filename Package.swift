@@ -17,10 +17,7 @@ let package = Package(
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", from: "2.1.0"),
 		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.1"),
 		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
-		.package(name: "JWTDecode", url: "https://github.com/auth0/JWTDecode.swift.git", from: "2.6.3"),
-		
-		// Temporary until Argent / CustomAuth fix the target name collision
-		.package(name:"web3.swift", url: "https://github.com/argentlabs/web3.swift", .exact("0.8.2")),
+		.package(name: "JWTDecode", url: "https://github.com/auth0/JWTDecode.swift.git", from: "2.6.3")
 	],
 	targets: [
 		.target(
@@ -34,10 +31,7 @@ let package = Package(
 				"WalletCore",
 				"CustomAuth",
 				"SignalRClient",
-				"JWTDecode",
-				
-				// Temporary until Argent / CustomAuth fix the target name collision
-				"web3.swift"
+				"JWTDecode"
 			],
 			resources: [
 				.copy("Services/External")
