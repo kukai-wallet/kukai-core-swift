@@ -47,23 +47,7 @@ public struct NFT: Codable, Hashable {
 	/// Metadata object containing useful information about the nft and its contents
 	public var metadata: TzKTBalanceMetadata? = nil
 	
-	/**
-	Create a more developer friednly `NFT` from a generic `BetterCallDevTokenBalance` object
-	- parameter fromBcdBalance: An instance of `BetterCallDevTokenBalance` containing data about an NFT
-	*/
-	public init(fromBcdBalance bcd: BetterCallDevTokenBalance) {
-		tokenId = bcd.token_id
-		parentContract = bcd.contract
-		name = bcd.name ?? ""
-		symbol = bcd.symbol ?? ""
-		description = bcd.description ?? ""
-		artifactURI = URL(string: bcd.artifact_uri ?? "")
-		displayURI = URL(string: bcd.display_uri ?? "")
-		thumbnailURI = URL(string: bcd.thumbnail_uri ?? "")
-		
-		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
-		thumbnailURL = MediaProxyService.url(fromUri: thumbnailURI, ofFormat: .icon)
-	}
+	
 	
 	/**
 	 Create a more developer friednly `NFT` from a generic `TzKTBalance` object

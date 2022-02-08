@@ -25,7 +25,6 @@ public struct MockConstants {
 	public let tzktClient: TzKTClient
 	public let tezosDomainsClient: TezosDomainsClient
 	public let dipDupClient: DipDupClient
-	public let tezToolsClient: TezToolsClient
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
@@ -168,7 +167,6 @@ public struct MockConstants {
 		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: networkService, config: config)
 		dipDupClient = DipDupClient(networkService: networkService, config: config)
-		tezToolsClient = TezToolsClient(networkService: networkService, config: config)
 	}
 	
 	public static func bcdURL(withPath: String, queryParams: [String: String], andConfig config: TezosNodeClientConfig) -> URL {
