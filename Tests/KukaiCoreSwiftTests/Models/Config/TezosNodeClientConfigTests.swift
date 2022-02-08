@@ -31,7 +31,7 @@ class TezosNodeClientConfigTests: XCTestCase {
 		XCTAssert(config2.primaryNodeURL.absoluteString == "https://mainnet-tezos.giganode.io/", config2.primaryNodeURL.absoluteString)
 		XCTAssert(config2.parseNodeURL?.absoluteString == "https://tezos-prod.cryptonomic-infra.tech:443/", config2.parseNodeURL?.absoluteString ?? "")
 		XCTAssert(config2.betterCallDevURL.absoluteString == "https://api.better-call.dev/", config2.betterCallDevURL.absoluteString)
-		XCTAssert(config2.tzktURL.absoluteString == "https://staging.api.tzkt.io/", config2.tzktURL.absoluteString)
+		XCTAssert(config2.tzktURL.absoluteString == "https://api.tzkt.io/", config2.tzktURL.absoluteString)
 		XCTAssert(config2.forgingType == .local, "\(config2.forgingType)")
 	}
 }

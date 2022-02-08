@@ -39,7 +39,7 @@ public struct TezosNodeClientConfig {
 		public static let parseNodeURL = URL(string: "https://tezos-prod.cryptonomic-infra.tech:443/")!
 		
 		/// The default mainnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
-		public static let tzktURL = URL(string: "https://staging.api.tzkt.io/")!
+		public static let tzktURL = URL(string: "https://api.tzkt.io/")!
 		
 		/// The default mainnet URL to use for `betterCallDevURL`, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html
 		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
