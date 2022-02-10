@@ -74,7 +74,7 @@ public class TorusAuthService: NSObject {
 	private let networkType: TezosNodeClientConfig.NetworkType
 	
 	/// Shared Network service for a small number of requests
-	private let networkSerice: NetworkService
+	private let networkService: NetworkService
 	
 	/// Torus relies on the Ethereum network for smart contracts. Need to specify which network it uses
 	private let ethereumNetworkType: EthereumNetwork
@@ -122,23 +122,15 @@ public class TorusAuthService: NSObject {
 	- parameter googleRedirectURL: Google works differently and requires that you redirect to a google cloud app, which in turn will redirect to the native app. If using Google auth you must supply a valid URL or else it won't function
 	- parameter browserRedirectURL: Some services can't return to the native app directly, but instead must go to an intermediary webpage that in turn redirects. This page must be created by you and the URL passed in here
 	*/
-	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper],
-				utils: TorusUtils = TorusUtils(), 			// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
-				fetchNodeDetails: FetchNodeDetails? = nil) 	// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
-	{
+	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper]) {
 		self.networkType = networkType
-		self.networkSerice = networkService
+		self.networkService = networkService
 		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
-		self.torusUtils = utils
 		self.testnetVerifiers = testnetVerifiers
 		self.mainnetVerifiers = mainnetVerifiers
 		
-		// TODO: remove when Torus SDK fixed
-		if let fetch = fetchNodeDetails {
-			self.fetchNodeDetails = fetch
-		} else {
-			self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
-		}
+		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: self.ethereumNetworkType, urlSession: networkService.urlSession)
+		self.torusUtils = TorusUtils(nodePubKeys: [], loglevel: .info, urlSession: networkService.urlSession)
 	}
 	
 	
@@ -157,15 +149,24 @@ public class TorusAuthService: NSObject {
 			return
 		}
 		
-		// TODO: remove when Torus SDK fixed
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
 		} else if verifierWrapper.isAggregate {
-			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [verifierWrapper.subverifier], network: self.ethereumNetworkType, loglevel: .info)
+			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
+							   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
+							   subVerifierDetails: [verifierWrapper.subverifier],
+							   network: self.ethereumNetworkType,
+							   loglevel: .info,
+							   urlSession: self.networkService.urlSession)
 			
 		} else {
-			torus = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.subverifier.subVerifierId, subVerifierDetails: [verifierWrapper.subverifier], network: self.ethereumNetworkType, loglevel: .info)
+			torus = CustomAuth(aggregateVerifierType: .singleLogin,
+							   aggregateVerifierName: verifierWrapper.subverifier.subVerifierId,
+							   subVerifierDetails: [verifierWrapper.subverifier],
+							   network: self.ethereumNetworkType,
+							   loglevel: .info,
+							   urlSession: self.networkService.urlSession)
 		}
 		
 		
@@ -340,7 +341,7 @@ public class TorusAuthService: NSObject {
 		}
 		
 		let data = "{\"username\": \"\(sanitizedUsername)\"}".data(using: .utf8)
-		networkSerice.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
+		networkService.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
 			switch result {
 				case .success(let dict):
 					if let id = dict["id"] {
