@@ -24,6 +24,12 @@ public struct Account: Codable, Hashable {
 	/// All the wallets NFT's, grouped into parent FA2 objects so they can be displayed in groups or individaully
 	public let nfts: [Token]
 	
+	/// The Tezos address of the delegated baker, nil if none selected
+	public let bakerAddress: String?
+	
+	/// If the baker has an alias (human friendly name) on the blockchain
+	public let bakerAlias: String?
+	
 	/// Flag to indicate whether or not the object is different since the last query. Defaulted to true.
 	/// Can be set to false by BCD fetch all account info code. In this case it denotes that the inital queried data matched the previous inital data and no expensive update operations should be performed
 	public var changedSinceLastFetch: Bool = true

@@ -97,8 +97,8 @@ public class WalletCacheService {
 			
 			/// Because `Wallet` is a generic protocl, `JSONEncoder` can't be called on an array of it.
 			/// Instead we must iterate through each item in the array, use its `type` to determine the corresponding class, and encode each one
-			/// The only way to encode all of these items indivudally, without loosing data, is to convert each one to a JSON object, pack in an array and call `JSONSerialization.data`
-			/// This results in a JSON blov containing all of the unique properties of each subclass, while allowing the caller to pass in any conforming `Wallet` type
+			/// The only way to encode all of these items individually, without loosing data, is to convert each one to a JSON object, pack in an array and call `JSONSerialization.data`
+			/// This results in a JSON blob containing all of the unique properties of each subclass, while allowing the caller to pass in any conforming `Wallet` type
 			var jsonArray: [Any] = []
 			var walletData: Data = Data()
 			for wallet in wallets {

@@ -8,9 +8,16 @@
 import Foundation
 
 public struct TzKTAccount: Codable {
-	public let balance: Decimal
+	public let balance: Decimal?
+	public let delegate: TzKTAccountDelegate?
 	
 	public var xtzBalance: XTZAmount {
-		return XTZAmount(fromRpcAmount: balance) ?? .zero()
+		return XTZAmount(fromRpcAmount: balance ?? 0) ?? .zero()
 	}
+}
+
+public struct TzKTAccountDelegate: Codable {
+	public let alias: String?
+	public let address: String
+	public let active: Bool
 }

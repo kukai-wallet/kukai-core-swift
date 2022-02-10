@@ -243,7 +243,7 @@ public class TzKTClient {
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var xtzBalance = XTZAmount.zero()
+		var tzkTAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false))
 		var tokenBalances: [TzKTBalance] = []
 		var errorFound: ErrorResponse? = nil
 		var groupedData: (tokens: [Token], nftGroups: [Token]) = (tokens: [], nftGroups: [])
@@ -254,7 +254,7 @@ public class TzKTClient {
 		self.getAccount(forAddress: address) { result in
 			switch result {
 				case .success(let account):
-					xtzBalance = account.xtzBalance
+					tzkTAccount = account
 					
 				case .failure(let error):
 					errorFound = error
@@ -288,7 +288,7 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances) ?? (tokens: [], nftGroups: [])
-				let account = Account(walletAddress: address, xtzBalance: xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups)
+				let account = Account(walletAddress: address, xtzBalance: tzkTAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, bakerAddress: tzkTAccount.delegate?.address, bakerAlias: tzkTAccount.delegate?.alias)
 				
 				completion(Result.success(account))
 			}
