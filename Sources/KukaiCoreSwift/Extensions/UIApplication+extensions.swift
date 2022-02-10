@@ -9,6 +9,7 @@ import UIKit
 
 extension UIApplication {
 	
+	/// SceneDelegate changed the way we manage windows, and removed `.keyWindow` from UIApplication. This computed var returns this functionlaity by fetching the first scene and its first window, for simpiler apps
 	var keyWindow: UIWindow? {
 		return UIApplication.shared.connectedScenes
 			.filter { $0.activationState == .foregroundActive }
