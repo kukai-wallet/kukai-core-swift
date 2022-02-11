@@ -31,15 +31,21 @@ public enum TorusAuthProvider: String {
 
 /// SDK requires information about the verifer that can't be stored inside the verifier, add a wrapper object to allow passing of all the data
 public struct SubverifierWrapper {
+	
+	/// The name of the aggregated verifier
 	public let aggregateVerifierName: String?
+	
+	/// The matching `SubVerifierDetails` object
 	public let subverifier: SubVerifierDetails
 	
+	/// Helper to check if the current verifier is an aggregate or not
 	var isAggregate: Bool {
 		get {
 			return aggregateVerifierName != nil
 		}
 	}
 	
+	/// Create an instance of the object with an option string for the aggregate verifier name, and a `SubVerifierDetails` object
 	public init(aggregateVerifierName: String?, subverifier: SubVerifierDetails) {
 		self.aggregateVerifierName = aggregateVerifierName
 		self.subverifier = subverifier
@@ -118,9 +124,8 @@ public class TorusAuthService: NSObject {
 	Setup the TorusAuthService verifiers and networking clients for testnet and mainnet, so they can be queried easier.
 	- parameter networkType: Testnet or mainnet
 	- parameter networkService: A networking service instance used for converting twitter handles into twitter id's
-	- parameter nativeRedirectURL: The callback URL fired to reopen your native app, after the social handshake has been completed. Must register the URL scheme with your application before it will work. See: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
-	- parameter googleRedirectURL: Google works differently and requires that you redirect to a google cloud app, which in turn will redirect to the native app. If using Google auth you must supply a valid URL or else it won't function
-	- parameter browserRedirectURL: Some services can't return to the native app directly, but instead must go to an intermediary webpage that in turn redirects. This page must be created by you and the URL passed in here
+	- parameter testnetVerifiers: List of verfiiers avaialble on the testnet network
+	- parameter mainnetVerifiers: List of verfiiers avaialble on the mainnet network
 	*/
 	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper]) {
 		self.networkType = networkType
@@ -141,6 +146,7 @@ public class TorusAuthService: NSObject {
 	Create a `TorusWallet` insteace from a social media provider
 	- parameter from: The `TorusAuthProvider` that you want to invoke
 	- parameter displayOver: The `UIViewController` that the webpage will display on top of
+	- parameter mockedTorus: To avoid issues attempting to stub aspects of the Torus SDK, a mocked version of the SDK can be supplied instead
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: CustomAuth? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
