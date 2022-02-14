@@ -47,27 +47,27 @@ dependencies: [
 
 Wallets are created using dedicated classes for each type, conforming to the `Wallet` protocol.
 
-- [LinearWallet](https://kukai.app/kukai-core-swift/LinearWallet/)
+- [LinearWallet](https://kukai-core-swift.kukai.app/LinearWallet/)
   - Created using a BIP 39 mnemonic and optional passphrase
-- [HDWallet](https://kukai.app/kukai-core-swift/HDWallet/)
+- [HDWallet](https://kukai-core-swift.kukai.app/HDWallet/)
   - Created using a BIP 39 mnemonic, optional passphrase, and a BIP 44 derivation path
 
 <br/>
 
 The main functionality centres around client classes and a factory:
 
-- [TezosNodeClient](https://kukai.app/kukai-core-swift/TezosNodeClient/)
+- [TezosNodeClient](https://kukai-core-swift.kukai.app/TezosNodeClient/)
   - Query details about the node
   - Estimate fees via the node RPC
   - Send operations
-- [BetterCallDevClient](https://kukai.app/kukai-core-swift/BetterCallDevClient/)
+- [BetterCallDevClient](https://kukai-core-swift.kukai.app/BetterCallDevClient/)
   - Fetching balances
   - Fetching metadata
   - Detailed operation errors
-- [TzKTClient](https://kukai.app/kukai-core-swift/TzKTClient/)
+- [TzKTClient](https://kukai-core-swift.kukai.app/TzKTClient/)
   - Transaction history
   - Determining if an operation has been successfully injected
-- [OperationFactory](https://kukai.app/kukai-core-swift/OperationFactory/)
+- [OperationFactory](https://kukai-core-swift.kukai.app/OperationFactory/)
   - Helper methods to create arrays of operations needed for common tasks
 
 
@@ -82,4 +82,4 @@ You can see some of this functionality inside the repo's example iOS-Example pro
 
 # Documentation
 
-Compiled Swift Doc's can be found [here](https://kukai.app/kukai-core-swift/)
+Compiled Swift Doc's can be found [here](https://kukai-core-swift.kukai.app)
