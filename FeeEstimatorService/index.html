@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KukaiCoreSwift - FeeEstimatorService</title>
-    <link rel="stylesheet" type="text/css" href="https://kukai.app/kukai-core-swift/all.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="https://kukai-core-swift.kukai.app/all.css" media="all" />
 </head>
 <body>
     <header>
-        <a href="https://kukai.app/kukai-core-swift/">
+        <a href="https://kukai-core-swift.kukai.app">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -49,10 +49,10 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         
         <h3>Nested Types</h3>
 <dl>
-    <dt class="structure"><code><a href="https://kukai.app/kukai-core-swift/FeeEstimatorService_FeeConstants">FeeEstimatorService.FeeConstants</a></code></dt>
+    <dt class="structure"><code><a href="https://kukai-core-swift.kukai.app/FeeEstimatorService_FeeConstants">FeeEstimatorService.FeeConstants</a></code></dt>
 <dd><p>Constants needed to compute a fee</p>
 </dd>
-<dt class="enumeration"><code><a href="https://kukai.app/kukai-core-swift/FeeEstimatorService_FeeEstimatorServiceError">FeeEstimatorService.FeeEstimatorServiceError</a></code></dt>
+<dt class="enumeration"><code><a href="https://kukai-core-swift.kukai.app/FeeEstimatorService_FeeEstimatorServiceError">FeeEstimatorService.FeeEstimatorServiceError</a></code></dt>
 <dd><p>Various possible errors that can occur during an Estimation</p>
 </dd>
 </dl>
@@ -65,7 +65,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         <code><a href="#feeestimatorservice.init(config:operationservice:networkservice:)">init(config:​operation​Service:​network​Service:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">config</span>: <a href="https://kukai.app/kukai-core-swift/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a> = <span class="variable">TezosNodeClientConfig</span>(<span class="variable">withDefaultsForNetworkType</span>: .<span class="variable">mainnet</span>), <span class="variable">operationService</span>: <a href="https://kukai.app/kukai-core-swift/OperationService"><span class="type">OperationService</span></a>, <span class="variable">networkService</span>: <a href="https://kukai.app/kukai-core-swift/NetworkService"><span class="type">NetworkService</span></a>)  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">config</span>: <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a> = <span class="variable">TezosNodeClientConfig</span>(<span class="variable">withDefaultsForNetworkType</span>: .<span class="variable">mainnet</span>), <span class="variable">operationService</span>: <a href="https://kukai-core-swift.kukai.app/OperationService"><span class="type">OperationService</span></a>, <span class="variable">networkService</span>: <a href="https://kukai-core-swift.kukai.app/NetworkService"><span class="type">NetworkService</span></a>)  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Create a FeeEstimatorService that will allow developers to automatically create fees on the users behalf</p>
@@ -126,7 +126,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         <code><a href="#feeestimatorservice.config">config</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">config</span>: <a href="https://kukai.app/kukai-core-swift/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">config</span>: <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The configuration object containing all the necessary settings to connect and communicate with the Tezos node</p>
@@ -138,7 +138,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         <code><a href="#feeestimatorservice.operationservice">operation​Service</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">operationService</span>: <a href="https://kukai.app/kukai-core-swift/OperationService"><span class="type">OperationService</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">operationService</span>: <a href="https://kukai-core-swift.kukai.app/OperationService"><span class="type">OperationService</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The <code>OperationService</code> object that will perform forging, parsing, signing, preapply and injections of operations</p>
@@ -150,7 +150,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         <code><a href="#feeestimatorservice.networkservice">network​Service</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">networkService</span>: <a href="https://kukai.app/kukai-core-swift/NetworkService"><span class="type">NetworkService</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">networkService</span>: <a href="https://kukai-core-swift.kukai.app/NetworkService"><span class="type">NetworkService</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The <code>NetworkService</code> that will handle the remote communication.</p>
@@ -166,7 +166,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         <code><a href="#feeestimatorservice.estimate(operations:operationmetadata:constants:withwallet:completion:)">estimate(operations:​operation​Metadata:​constants:​with​Wallet:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">estimate</span>(<span class="variable">operations</span>: [<a href="https://kukai.app/kukai-core-swift/Operation"><span class="type">Operation</span></a>], <span class="variable">operationMetadata</span>: <a href="https://kukai.app/kukai-core-swift/OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">constants</span>: <a href="https://kukai.app/kukai-core-swift/NetworkConstants"><span class="type">NetworkConstants</span></a>, <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai.app/kukai-core-swift/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="https://kukai.app/kukai-core-swift/Operation"><span class="type">Operation</span></a>], <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">estimate</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <span class="variable">operationMetadata</span>: <a href="https://kukai-core-swift.kukai.app/OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">constants</span>: <a href="https://kukai-core-swift.kukai.app/NetworkConstants"><span class="type">NetworkConstants</span></a>, <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai-core-swift.kukai.app/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Pass in an array of <code>Operation</code> subclasses (use <code>OperationFacotry</code> to create) to have the library estimate the cost of sending the transaction. Function will use local or remote forging based off config passed in.</p>
@@ -221,7 +221,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
         <code><a href="#feeestimatorservice.extractfees(fromoperationresponse:forgedhash:withconstants:)">extract​Fees(from​Operation​Response:​forged​Hash:​with​Constants:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">extractFees</span>(<span class="variable">fromOperationResponse</span> <span class="variable">operationResponse</span>: <a href="https://kukai.app/kukai-core-swift/OperationResponse"><span class="type">OperationResponse</span></a>, <span class="variable">forgedHash</span>: <span class="type">String</span>, <span class="variable">withConstants</span> <span class="variable">constants</span>: <a href="https://kukai.app/kukai-core-swift/NetworkConstants"><span class="type">NetworkConstants</span></a>) -&gt; [<a href="https://kukai.app/kukai-core-swift/OperationFees"><span class="type">OperationFees</span></a>]  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">extractFees</span>(<span class="variable">fromOperationResponse</span> <span class="variable">operationResponse</span>: <a href="https://kukai-core-swift.kukai.app/OperationResponse"><span class="type">OperationResponse</span></a>, <span class="variable">forgedHash</span>: <span class="type">String</span>, <span class="variable">withConstants</span> <span class="variable">constants</span>: <a href="https://kukai-core-swift.kukai.app/NetworkConstants"><span class="type">NetworkConstants</span></a>) -&gt; [<a href="https://kukai-core-swift.kukai.app/OperationFees"><span class="type">OperationFees</span></a>]  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Create an array of <code>OperationFees</code> from an <code>OperationResponse</code>.</p>
@@ -265,7 +265,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-04T17:05:14+0000">February 4, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2022-02-14T15:18:15+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

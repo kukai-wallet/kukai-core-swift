@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KukaiCoreSwift - TezosNodeClient</title>
-    <link rel="stylesheet" type="text/css" href="https://kukai.app/kukai-core-swift/all.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="https://kukai-core-swift.kukai.app/all.css" media="all" />
 </head>
 <body>
     <header>
-        <a href="https://kukai.app/kukai-core-swift/">
+        <a href="https://kukai-core-swift.kukai.app">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -50,7 +50,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         
         <h3>Nested Types</h3>
 <dl>
-    <dt class="enumeration"><code><a href="https://kukai.app/kukai-core-swift/TezosNodeClient_TezosNodeClientError">TezosNodeClient.TezosNodeClientError</a></code></dt>
+    <dt class="enumeration"><code><a href="https://kukai-core-swift.kukai.app/TezosNodeClient_TezosNodeClientError">TezosNodeClient.TezosNodeClientError</a></code></dt>
 <dd><p>Types of errors</p>
 </dd>
 </dl>
@@ -63,7 +63,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.init(config:)">init(config:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">config</span>: <a href="https://kukai.app/kukai-core-swift/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a> = <span class="variable">TezosNodeClientConfig</span>(<span class="variable">withDefaultsForNetworkType</span>: .<span class="variable">mainnet</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">config</span>: <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a> = <span class="variable">TezosNodeClientConfig</span>(<span class="variable">withDefaultsForNetworkType</span>: .<span class="variable">mainnet</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Init a <code>TezosNodeClient</code> with a <code>TezosNodeClientConfig</code>.</p>
@@ -98,7 +98,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.config">config</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">config</span>: <a href="https://kukai.app/kukai-core-swift/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">config</span>: <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The configuration object containing all the necessary settings to connect and communicate with the Tezos node</p>
@@ -110,7 +110,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.networkservice">network​Service</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">networkService</span>: <a href="https://kukai.app/kukai-core-swift/NetworkService"><span class="type">NetworkService</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">networkService</span>: <a href="https://kukai-core-swift.kukai.app/NetworkService"><span class="type">NetworkService</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The <code>NetworkService</code> object that will perform all the networking calls</p>
@@ -122,7 +122,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.operationservice">operation​Service</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">operationService</span>: <a href="https://kukai.app/kukai-core-swift/OperationService"><span class="type">OperationService</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">operationService</span>: <a href="https://kukai-core-swift.kukai.app/OperationService"><span class="type">OperationService</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The <code>OperationService</code> object that will perform forging, parsing, signing, preapply and injections of operations</p>
@@ -134,7 +134,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.feeestimatorservice">fee​Estimator​Service</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">feeEstimatorService</span>: <a href="https://kukai.app/kukai-core-swift/FeeEstimatorService"><span class="type">FeeEstimatorService</span></a></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">feeEstimatorService</span>: <a href="https://kukai-core-swift.kukai.app/FeeEstimatorService"><span class="type">FeeEstimatorService</span></a></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>The service responsible for calculating network fees on behalf of the user</p>
@@ -146,7 +146,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.networkversion">network​Version</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">networkVersion</span>: <a href="https://kukai.app/kukai-core-swift/NetworkVersion"><span class="type">NetworkVersion</span></a>? </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">networkVersion</span>: <a href="https://kukai-core-swift.kukai.app/NetworkVersion"><span class="type">NetworkVersion</span></a>? </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Available information about the version of the network, that the conected server is running. Call <code>tezosNodeClient.fetchNetworkInformation(...)</code> to populate</p>
@@ -158,7 +158,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.networkconstants">network​Constants</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">networkConstants</span>: <a href="https://kukai.app/kukai-core-swift/NetworkConstants"><span class="type">NetworkConstants</span></a>? </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">networkConstants</span>: <a href="https://kukai-core-swift.kukai.app/NetworkConstants"><span class="type">NetworkConstants</span></a>? </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Available information about the constants of the network, that the conected server is running. Call <code>tezosNodeClient.fetchNetworkInformation(...)</code> to populate</p>
@@ -174,7 +174,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.getbalance(foraddress:completion:)">get​Balance(for​Address:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getBalance</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai.app/kukai-core-swift/XTZAmount"><span class="type">XTZAmount</span></a>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getBalance</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Gets the xtz balance for a given Address.</p>
@@ -211,7 +211,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.getdelegate(foraddress:completion:)">get​Delegate(for​Address:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getDelegate</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getDelegate</span>(<span class="variable">forAddress</span> <span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Gets the delegate for the given address.</p>
@@ -248,7 +248,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.estimate(operations:withwallet:completion:)">estimate(operations:​with​Wallet:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">estimate</span>(<span class="variable">operations</span>: [<a href="https://kukai.app/kukai-core-swift/Operation"><span class="type">Operation</span></a>], <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai.app/kukai-core-swift/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="https://kukai.app/kukai-core-swift/Operation"><span class="type">Operation</span></a>], <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">estimate</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai-core-swift.kukai.app/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Take an array of operations and estimate the gas, storage, baker fee and burn fees required to inject it onto the network</p>
@@ -291,7 +291,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.send(operations:withwallet:completion:)">send(operations:​with​Wallet:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>(<span class="variable">operations</span>: [<a href="https://kukai.app/kukai-core-swift/Operation"><span class="type">Operation</span></a>], <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai.app/kukai-core-swift/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai-core-swift.kukai.app/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Send an array of <code>Operation</code>'s to the blockchain. Use <code>OperationFactory</code> to help create this array for common use cases.</p>
@@ -334,7 +334,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.send(operationpayload:operationmetadata:withwallet:completion:)">send(operation​Payload:​operation​Metadata:​with​Wallet:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>(<span class="variable">operationPayload</span>: <a href="https://kukai.app/kukai-core-swift/OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">operationMetadata</span>: <a href="https://kukai.app/kukai-core-swift/OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai.app/kukai-core-swift/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">send</span>(<span class="variable">operationPayload</span>: <a href="https://kukai-core-swift.kukai.app/OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">operationMetadata</span>: <a href="https://kukai-core-swift.kukai.app/OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai-core-swift.kukai.app/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Send an already contrsutructed <code>OperationPayload</code> with the necessary <code>OperationMetadata</code> without having to fetch metadata again.</p>
@@ -383,7 +383,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.getoperationmetadata(forwallet:completion:)">get​Operation​Metadata(for​Wallet:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getOperationMetadata</span>(<span class="variable">forWallet</span> <span class="variable">wallet</span>: <a href="https://kukai.app/kukai-core-swift/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai.app/kukai-core-swift/OperationMetadata"><span class="type">OperationMetadata</span></a>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getOperationMetadata</span>(<span class="variable">forWallet</span> <span class="variable">wallet</span>: <a href="https://kukai-core-swift.kukai.app/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/OperationMetadata"><span class="type">OperationMetadata</span></a>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Get all the metadata necessary from the network to perform operations.</p>
@@ -420,7 +420,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.getcontractstorage(contractaddress:completion:)">get​Contract​Storage(contract​Address:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getContractStorage</span>(<span class="variable">contractAddress</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai.app/kukai-core-swift/MichelsonPair"><span class="type">MichelsonPair</span></a>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getContractStorage</span>(<span class="variable">contractAddress</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/MichelsonPair"><span class="type">MichelsonPair</span></a>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Get the Michelson storage of a given contract from the blockchain.</p>
@@ -457,7 +457,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
         <code><a href="#tezosnodeclient.getnetworkinformation(completion:)">get​Network​Information(completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getNetworkInformation</span>(<span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Bool</span>, <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getNetworkInformation</span>(<span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Bool</span>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>?) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Query the server for the <code>NetworkVersion</code> and <code>NetworkConstants</code>, and store the responses in the tezosNodeClient properties <code>networkVersion</code> and <code>networkConstants</code>,
@@ -493,7 +493,7 @@ so they can be referred too by the application without having to constantly quer
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-04T17:05:13+0000">February 4, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2022-02-14T15:18:16+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

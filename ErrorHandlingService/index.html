@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KukaiCoreSwift - ErrorHandlingService</title>
-    <link rel="stylesheet" type="text/css" href="https://kukai.app/kukai-core-swift/all.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="https://kukai-core-swift.kukai.app/all.css" media="all" />
 </head>
 <body>
     <header>
-        <a href="https://kukai.app/kukai-core-swift/">
+        <a href="https://kukai-core-swift.kukai.app">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -64,7 +64,7 @@
         <code><a href="#errorhandlingservice.erroreventclosure">error​Event​Closure</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">errorEventClosure</span>: ((<a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>) -&gt; <span class="type">Void</span>)? = <span class="keyword">nil</span></body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">var</span> <span class="variable">errorEventClosure</span>: ((<a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>) -&gt; <span class="type">Void</span>)? = <span class="keyword">nil</span></body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Called everytime an error is parsed. Extremely useful to track / log errors globally, in order to run logic or record to external service</p>
@@ -80,7 +80,7 @@
         <code><a href="#errorhandlingservice.parse(string:andlog:)">parse(string:​and​Log:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">string</span>: <span class="type">String</span>, <span class="variable">andLog</span>: <span class="type">Bool</span> = <span class="keyword">true</span>) -&gt; <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">string</span>: <span class="type">String</span>, <span class="variable">andLog</span>: <span class="type">Bool</span> = <span class="keyword">true</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Take in a string and check if it contains a known error string, if so parse into an <code>ErrorResponse</code> object.
@@ -128,7 +128,7 @@ error strings and check to see which constant was present inside it. Its now gro
         <code><a href="#errorhandlingservice.parse(data:response:networkerror:requesturl:requestdata:)">parse(data:​response:​network​Error:​request​URL:​request​Data:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">data</span>: <span class="type">Data</span>?, <span class="variable">response</span>: <span class="type">URLResponse</span>?, <span class="variable">networkError</span>: <span class="type">Error</span>?, <span class="variable">requestURL</span>: <span class="type">URL</span>, <span class="variable">requestData</span>: <span class="type">Data</span>?) -&gt; <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">data</span>: <span class="type">Data</span>?, <span class="variable">response</span>: <span class="type">URLResponse</span>?, <span class="variable">networkError</span>: <span class="type">Error</span>?, <span class="variable">requestURL</span>: <span class="type">URL</span>, <span class="variable">requestData</span>: <span class="type">Data</span>?) -&gt; <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Helper method to wrap around <code>parse(string: ...)</code> in order to process generic network responses.</p>
@@ -191,7 +191,7 @@ error strings and check to see which constant was present inside it. Its now gro
         <code><a href="#errorhandlingservice.containserrors(tzktoperations:)">contains​Errors(tzkt​Operations:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">containsErrors</span>(<span class="variable">tzktOperations</span>: [<a href="https://kukai.app/kukai-core-swift/TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">containsErrors</span>(<span class="variable">tzktOperations</span>: [<a href="https://kukai-core-swift.kukai.app/TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Process an array of <code>TzKTOperation</code> to determine if they contain a tezos error object</p>
@@ -230,7 +230,7 @@ error strings and check to see which constant was present inside it. Its now gro
         <code><a href="#errorhandlingservice.extractmeaningfulerrors(fromtzktoperations:)">extract​Meaningful​Errors(from​TzKTOperations:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">extractMeaningfulErrors</span>(<span class="variable">fromTzKTOperations</span> <span class="variable">operations</span>: [<a href="https://kukai.app/kukai-core-swift/TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">extractMeaningfulErrors</span>(<span class="variable">fromTzKTOperations</span> <span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/TzKTOperation"><span class="type">TzKTOperation</span></a>]) -&gt; <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>There are 2 types of high level errors in Tezos.</p>
@@ -255,7 +255,7 @@ attempt to abstract this logic away from developers, by simply taking in an arra
         <code><a href="#errorhandlingservice.extractmeaningfulerrors(fromrpcoperations:withrequesturl:requestpayload:responsepayload:httpstatuscode:)">extract​Meaningful​Errors(from​RPCOperations:​with​Request​URL:​request​Payload:​response​Payload:​http​Status​Code:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">extractMeaningfulErrors</span>(<span class="variable">fromRPCOperations</span> <span class="variable">operations</span>: [<a href="https://kukai.app/kukai-core-swift/OperationResponse"><span class="type">OperationResponse</span></a>], <span class="variable">withRequestURL</span>: <span class="type">URL</span>?, <span class="variable">requestPayload</span>: <span class="type">Data</span>?, <span class="variable">responsePayload</span>: <span class="type">Data</span>?, <span class="variable">httpStatusCode</span>: <span class="type">Int</span>?) -&gt; <a href="https://kukai.app/kukai-core-swift/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="keyword">func</span> <span class="function">extractMeaningfulErrors</span>(<span class="variable">fromRPCOperations</span> <span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/OperationResponse"><span class="type">OperationResponse</span></a>], <span class="variable">withRequestURL</span>: <span class="type">URL</span>?, <span class="variable">requestPayload</span>: <span class="type">Data</span>?, <span class="variable">responsePayload</span>: <span class="type">Data</span>?, <span class="variable">httpStatusCode</span>: <span class="type">Int</span>?) -&gt; <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>?  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>There are 2 types of high level errors in Tezos.</p>
@@ -284,7 +284,7 @@ attempt to abstract this logic away from developers, by simply taking in an arra
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-04T17:05:14+0000">February 4, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2022-02-14T15:18:16+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>
