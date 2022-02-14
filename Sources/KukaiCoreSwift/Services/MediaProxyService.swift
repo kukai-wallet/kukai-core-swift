@@ -274,13 +274,14 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 	
 	public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
 		guard let completion = self.getMediaTypeCompletion else {
+			completion(Result.failure(ErrorResponse.error(string: "Unable to find callback", errorType: .unknownError)))
 			return
 		}
 		
 		if let e = error {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: e)))
 		} else {
-			completion(Result.failure(ErrorResponse.unknownError()))
+			completion(Result.failure(ErrorResponse.error(string: "didCompleteWithError called with no Error", errorType: .unknownError)))
 		}
 	}
 	
@@ -294,6 +295,7 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 		downloadTask.cancel()
 		
 		guard let completion = self.getMediaTypeCompletion else {
+			completion(Result.failure(ErrorResponse.error(string: "Unable to find callback", errorType: .unknownError)))
 			return
 		}
 		
