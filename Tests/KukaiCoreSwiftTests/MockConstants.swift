@@ -28,8 +28,8 @@ public struct MockConstants {
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-	public static let http200WithHeaders = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: ["Content-Type": "image/png"])
 	public static let http500 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 500, httpVersion: nil, headerFields: nil)
+	public static let ipfsResponseWithHeaders = HTTPURLResponse(url: URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!, statusCode: 200, httpVersion: nil, headerFields: ["Content-Type": "image/png"])
 	
 	// MARK: - Init
 	
@@ -117,7 +117,7 @@ public struct MockConstants {
 			tzktBalancePageURL: (MockConstants.jsonStub(fromFilename: "tzkt_balance-page"), MockConstants.http200),
 			
 			// Media proxy
-			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.http200WithHeaders),
+			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.ipfsResponseWithHeaders),
 			
 			// Misc
 			URL(string: "https://api.tezos.help/twitter-lookup/")!: (MockConstants.jsonStub(fromFilename: "twitter_lookup"), MockConstants.http200),
