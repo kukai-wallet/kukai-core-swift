@@ -31,15 +31,21 @@ public enum TorusAuthProvider: String {
 
 /// SDK requires information about the verifer that can't be stored inside the verifier, add a wrapper object to allow passing of all the data
 public struct SubverifierWrapper {
+	
+	/// The name of the aggregated verifier
 	public let aggregateVerifierName: String?
+	
+	/// The matching `SubVerifierDetails` object
 	public let subverifier: SubVerifierDetails
 	
+	/// Helper to check if the current verifier is an aggregate or not
 	var isAggregate: Bool {
 		get {
 			return aggregateVerifierName != nil
 		}
 	}
 	
+	/// Create an instance of the object with an option string for the aggregate verifier name, and a `SubVerifierDetails` object
 	public init(aggregateVerifierName: String?, subverifier: SubVerifierDetails) {
 		self.aggregateVerifierName = aggregateVerifierName
 		self.subverifier = subverifier
@@ -74,7 +80,7 @@ public class TorusAuthService: NSObject {
 	private let networkType: TezosNodeClientConfig.NetworkType
 	
 	/// Shared Network service for a small number of requests
-	private let networkSerice: NetworkService
+	private let networkService: NetworkService
 	
 	/// Torus relies on the Ethereum network for smart contracts. Need to specify which network it uses
 	private let ethereumNetworkType: EthereumNetwork
@@ -118,27 +124,18 @@ public class TorusAuthService: NSObject {
 	Setup the TorusAuthService verifiers and networking clients for testnet and mainnet, so they can be queried easier.
 	- parameter networkType: Testnet or mainnet
 	- parameter networkService: A networking service instance used for converting twitter handles into twitter id's
-	- parameter nativeRedirectURL: The callback URL fired to reopen your native app, after the social handshake has been completed. Must register the URL scheme with your application before it will work. See: https://docs.tor.us/integration-builder/?b=customauth&lang=iOS&chain=Ethereum
-	- parameter googleRedirectURL: Google works differently and requires that you redirect to a google cloud app, which in turn will redirect to the native app. If using Google auth you must supply a valid URL or else it won't function
-	- parameter browserRedirectURL: Some services can't return to the native app directly, but instead must go to an intermediary webpage that in turn redirects. This page must be created by you and the URL passed in here
+	- parameter testnetVerifiers: List of verfiiers avaialble on the testnet network
+	- parameter mainnetVerifiers: List of verfiiers avaialble on the mainnet network
 	*/
-	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper],
-				utils: TorusUtils = TorusUtils(), 			// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
-				fetchNodeDetails: FetchNodeDetails? = nil) 	// TODO: workaround as Torus SDK's have no ability to mock anything, or pass anything in
-	{
+	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper]) {
 		self.networkType = networkType
-		self.networkSerice = networkService
+		self.networkService = networkService
 		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
-		self.torusUtils = utils
 		self.testnetVerifiers = testnetVerifiers
 		self.mainnetVerifiers = mainnetVerifiers
 		
-		// TODO: remove when Torus SDK fixed
-		if let fetch = fetchNodeDetails {
-			self.fetchNodeDetails = fetch
-		} else {
-			self.fetchNodeDetails = FetchNodeDetails(proxyAddress: (networkType == .testnet ? testnetProxyAddress : mainnetProxyAddress), network: ethereumNetworkType)
-		}
+		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: self.ethereumNetworkType, urlSession: networkService.urlSession)
+		self.torusUtils = TorusUtils(nodePubKeys: [], loglevel: .info, urlSession: networkService.urlSession)
 	}
 	
 	
@@ -149,6 +146,7 @@ public class TorusAuthService: NSObject {
 	Create a `TorusWallet` insteace from a social media provider
 	- parameter from: The `TorusAuthProvider` that you want to invoke
 	- parameter displayOver: The `UIViewController` that the webpage will display on top of
+	- parameter mockedTorus: To avoid issues attempting to stub aspects of the Torus SDK, a mocked version of the SDK can be supplied instead
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: CustomAuth? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
@@ -157,15 +155,24 @@ public class TorusAuthService: NSObject {
 			return
 		}
 		
-		// TODO: remove when Torus SDK fixed
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
 		} else if verifierWrapper.isAggregate {
-			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [verifierWrapper.subverifier], network: self.ethereumNetworkType, loglevel: .info)
+			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
+							   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
+							   subVerifierDetails: [verifierWrapper.subverifier],
+							   network: self.ethereumNetworkType,
+							   loglevel: .info,
+							   urlSession: self.networkService.urlSession)
 			
 		} else {
-			torus = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.subverifier.subVerifierId, subVerifierDetails: [verifierWrapper.subverifier], network: self.ethereumNetworkType, loglevel: .info)
+			torus = CustomAuth(aggregateVerifierType: .singleLogin,
+							   aggregateVerifierName: verifierWrapper.subverifier.subVerifierId,
+							   subVerifierDetails: [verifierWrapper.subverifier],
+							   network: self.ethereumNetworkType,
+							   loglevel: .info,
+							   urlSession: self.networkService.urlSession)
 		}
 		
 		
@@ -340,7 +347,7 @@ public class TorusAuthService: NSObject {
 		}
 		
 		let data = "{\"username\": \"\(sanitizedUsername)\"}".data(using: .utf8)
-		networkSerice.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
+		networkService.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
 			switch result {
 				case .success(let dict):
 					if let id = dict["id"] {

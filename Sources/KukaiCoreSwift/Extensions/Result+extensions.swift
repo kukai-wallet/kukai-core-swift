@@ -13,6 +13,7 @@ public enum ResultExtensionError: Error {
 
 public extension Result {
 	
+	/// Similar to `Result.get()`, getError returns the failure case or throws
 	func getError() throws -> Failure {
 		switch self {
 			case .success(_):
@@ -26,6 +27,7 @@ public extension Result {
 
 public extension Result where Failure == ErrorResponse {
 	
+	/// Similar to `Result.get()`, getFailure returns the kukai-core-specific `ErrorResponse` case or throws
 	func getFailure() -> Failure {
 		switch self {
 			case .success(_):

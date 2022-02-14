@@ -190,6 +190,11 @@ public class TzKTClient {
 	
 	// MARK: - Balances
 	
+	/**
+	 Get the count of tokens the given address has balances for (excluding zero balances)
+	 - parameter forAddress: The tz address to search for
+	 - parameter completion: The completion block called with a `Result` containing the number or an error
+	 */
 	public func getBalanceCount(forAddress: String, completion: @escaping (Result<Int, ErrorResponse>) -> Void) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/tokens/balances/count")
@@ -201,6 +206,12 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	 Tokens balances and metadata need to be fetch from a paginated API. THis function calls a sinlerequest or 1 page of balances / metadata
+	 - parameter forAddress: The tz address to search for
+	 - parameter offset: The starting position
+	 - parameter completion: The completion block called with a `Result` containing an array of balances or an error
+	 */
 	public func getBalancePage(forAddress: String, offset: Int = 0, completion: @escaping ((Result<[TzKTBalance], ErrorResponse>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/tokens/balances")
@@ -214,6 +225,11 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	 Get the account object from TzKT caontaining information about the address, its balance and baker
+	 - parameter forAddress: The tz address to search for
+	 - parameter completion: The completion block called with a `Result` containing an object or an error
+	 */
 	public func getAccount(forAddress: String, completion: @escaping ((Result<TzKTAccount, ErrorResponse>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/accounts/\(forAddress)")
@@ -223,6 +239,11 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	 Get all balances from one function call, by fetching the result from `getBalanceCount` and using that to decide how many pages should be called
+	 - parameter forAddress: The tz address to search for
+	 - parameter completion: The completion block called with a `Result` containing an object or an error
+	 */
 	public func getAllBalances(forAddress address: String, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
 		getBalanceCount(forAddress: address) { [weak self] result in
 			guard let tokenCount = try? result.get() else {
@@ -240,10 +261,11 @@ public class TzKTClient {
 		}
 	}
 	
+	/// Private function to fetch all the balance pages and stich together
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var xtzBalance = XTZAmount.zero()
+		var tzkTAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false))
 		var tokenBalances: [TzKTBalance] = []
 		var errorFound: ErrorResponse? = nil
 		var groupedData: (tokens: [Token], nftGroups: [Token]) = (tokens: [], nftGroups: [])
@@ -254,7 +276,7 @@ public class TzKTClient {
 		self.getAccount(forAddress: address) { result in
 			switch result {
 				case .success(let account):
-					xtzBalance = account.xtzBalance
+					tzkTAccount = account
 					
 				case .failure(let error):
 					errorFound = error
@@ -288,13 +310,14 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances) ?? (tokens: [], nftGroups: [])
-				let account = Account(walletAddress: address, xtzBalance: xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups)
+				let account = Account(walletAddress: address, xtzBalance: tzkTAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, bakerAddress: tzkTAccount.delegate?.address, bakerAlias: tzkTAccount.delegate?.alias)
 				
 				completion(Result.success(account))
 			}
 		}
 	}
 	
+	/// Private function to add balance pages together and group NFTs under their parent contracts
 	private func groupBalances(_ balances: [TzKTBalance]) -> (tokens: [Token], nftGroups: [Token]) {
 		var tokens: [Token] = []
 		var nftGroups: [Token] = []

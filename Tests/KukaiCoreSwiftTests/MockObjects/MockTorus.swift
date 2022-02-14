@@ -6,14 +6,12 @@
 //
 
 import UIKit
-//import TorusSwiftDirectSDK
-//import TorusUtils
-//import PromiseKit
-//import FetchNodeDetails
-//import BestLogger
+import CustomAuth
+import TorusUtils
+import PromiseKit
+import FetchNodeDetails
 
-/*
-public class MockTorusSwiftDirectSDK: TorusSwiftDirectSDK {
+public class MockCustomAuth: CustomAuth {
 	
 	override open func triggerLogin(controller: UIViewController? = nil, browserType: URLOpenerTypes = .sfsafari, modalPresentationStyle: UIModalPresentationStyle = .fullScreen) -> Promise<[String : Any]> {
 		guard let verifierType = self.subVerifierDetails.first?.loginProvider else {
@@ -62,6 +60,17 @@ public class MockTorusSwiftDirectSDK: TorusSwiftDirectSDK {
 				]
 			])
 			
+		} else if verifierType == .google { // Google
+			seal.fulfill([
+				"privateKey": MockConstants.linearWalletSecp256k1.privateKey,
+				"publicAddress": "0xf2f31e21fA3D60DC19feF2CB20804EF2CB20804EF",
+				"userInfo": [
+					"name": "testyMcTestface",
+					"email": "testy@domain.com",
+					"picture": "https://www.redditstatic.com/avatars/avatar_default_06_0DD3BB.png",
+				]
+			])
+			
 		} else {
 			fatalError("Invalid verifier")
 		}
@@ -70,13 +79,8 @@ public class MockTorusSwiftDirectSDK: TorusSwiftDirectSDK {
 	}
 }
 
-class MockFetchNodeDetails: FetchNodeDetails {
-	
-	override func getNodeDetails() -> NodeDetails {
-		return NodeDetails(_currentEpoch: "13246798", _nodeListAddress: "", _torusNodeEndpoints: [""], _torusIndexes: [123], _torusNodePub: [TorusNodePub(_X: "", _Y: "")], _updated: true)
-	}
-}
-
+/*
+// Method that needs to be overridden is not marked as open
 class MockTorusUtils: TorusUtils {
 	
 	override func getPublicAddress(endpoints: Array<String>, torusNodePubs: Array<TorusNodePub>, verifier: String, verifierId: String, isExtended: Bool) -> Promise<[String : String]> {
