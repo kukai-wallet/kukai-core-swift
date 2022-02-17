@@ -30,9 +30,25 @@ public struct Account: Codable, Hashable {
 	/// If the baker has an alias (human friendly name) on the blockchain
 	public let bakerAlias: String?
 	
-	/// Flag to indicate whether or not the object is different since the last query. Defaulted to true.
-	/// Can be set to false by BCD fetch all account info code. In this case it denotes that the inital queried data matched the previous inital data and no expensive update operations should be performed
-	public var changedSinceLastFetch: Bool = true
+	/// Basic init to default properties to zero / empty, so that optionals can be avoided on a key model throughout an app
+	public init(walletAddress: String) {
+		self.walletAddress = walletAddress
+		self.xtzBalance = .zero()
+		self.tokens = []
+		self.nfts = []
+		self.bakerAddress = nil
+		self.bakerAlias = nil
+	}
+	
+	/// Full init
+	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], bakerAddress: String? = nil, bakerAlias: String? = nil) {
+		self.walletAddress = walletAddress
+		self.xtzBalance = xtzBalance
+		self.tokens = tokens
+		self.nfts = nfts
+		self.bakerAddress = bakerAddress
+		self.bakerAlias = bakerAlias
+	}
 }
 
 extension Account: Identifiable {
