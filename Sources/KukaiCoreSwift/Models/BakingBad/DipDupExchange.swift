@@ -18,7 +18,7 @@ public struct DipDupExchangesAndTokens: Codable {
 	
 	public let symbol: String
 	public let address: String
-	public let tokenId: Int
+	public let tokenId: Decimal
 	public let exchanges: [DipDupExchange]
 }
 

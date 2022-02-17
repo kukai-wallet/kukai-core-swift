@@ -17,7 +17,7 @@ public struct DipDupToken: Codable, Hashable, Equatable {
 	public let address: String
 	
 	/// The token ID of the token (always 0 for FA1.2 tokens)
-	public let tokenId: Int
+	public let tokenId: Decimal
 	
 	/// The number of decimals for the token
 	public let decimals: Int
