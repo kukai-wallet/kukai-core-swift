@@ -63,6 +63,8 @@ public class DipDupClient {
 		query {
 			token(limit: \(limit), offset: \(offset), order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }, where: {exchanges: {name: {_in: ["lb", "quipuswap"]}}}) {
 				symbol,
+				address,
+				tokenId,
 				exchanges(where: {name: {_in: ["lb", "quipuswap"]}}) {
 					name,
 					tezPool,

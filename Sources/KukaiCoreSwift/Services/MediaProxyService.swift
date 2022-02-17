@@ -229,7 +229,7 @@ public class MediaProxyService: NSObject {
 	 - parameter fallback: If an error occurs and an image can't be downloaded/loaded in, display this image instead
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: (width: Int, height: Int)?) {
+	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?) {
 		guard let url = url else {
 			imageView.image = fallback
 			return
@@ -251,7 +251,7 @@ public class MediaProxyService: NSObject {
 			
 		} else if let size = downSampleSize {
 			// Only possible on non SVG's and non gifs, like jpeg, png etc
-			processors = [.processor( DownsamplingImageProcessor(size: CGSize(width: size.width, height: size.height)))]
+			processors = [.processor( DownsamplingImageProcessor(size: size))]
 		}
 		
 		imageView.kf.indicatorType = .activity

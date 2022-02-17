@@ -1,1 +1,2221 @@
-{"data":{"token":[{"symbol":"tzBTC","exchanges":[{"name":"lb","tezPool":"1821302.868928","tokenPool":"175.538608250000000000000000000000000000","address":"KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5","sharesTotal":"171068922","midPrice":"10375.511616","token":{"address":"KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn","decimals":8,"symbol":"tzBTC","tokenId":0,"standard":"fa12"}}, {"name":"quipuswap","tezPool":"5496.013007","tokenPool":"0.527027470000000000000000000000000000","address":"KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc","sharesTotal":"4579144922","midPrice":"10428.323607","token":{"address":"KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn","decimals":8,"symbol":"tzBTC","tokenId":0,"standard":"fa12"}}]}, {"symbol":"kUSD","exchanges":[{"name":"quipuswap","tezPool":"161251.816537","tokenPool":"925855.339776633157888294000000000000000000","address":"KT1K4EwTpbvYN9agJdjpyJm4ZZdhpUNKB3F6","sharesTotal":"132915483875","midPrice":"0.174165","token":{"address":"KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV","decimals":18,"symbol":"kUSD","tokenId":0,"standard":"fa12"}}]}, {"symbol":"CRUNCH","exchanges":[{"name":"quipuswap","tezPool":"137278.000523","tokenPool":"23793951.731284570000000000000000000000000000","address":"KT1RRgK6eXvCWCiEGWhRZCSVGzhDzwXEEjS4","sharesTotal":"179292703834","midPrice":"0.005769","token":{"address":"KT1BHCumksALJQJ8q8to2EPigPW6qpyTr7Ng","decimals":8,"symbol":"CRUNCH","tokenId":0,"standard":"fa2"}}]}, {"symbol":"PLENTY","exchanges":[{"name":"quipuswap","tezPool":"105979.843112","tokenPool":"1376252.515508819283134455000000000000000000","address":"KT1X1LgNkQShpF9nRLYw3Dgdy4qp38MX617z","sharesTotal":"55985687667","midPrice":"0.077006","token":{"address":"KT1GRSvLoikDsXujKgZPsGLX8k8VvR2Tq95b","decimals":18,"symbol":"PLENTY","tokenId":0,"standard":"fa12"}}]}, {"symbol":"WRAP","exchanges":[{"name":"quipuswap","tezPool":"84863.528949","tokenPool":"4756388.792185370000000000000000000000000000","address":"KT1FG63hhFtMEEEtmBSX2vuFmP87t9E7Ab4t","sharesTotal":"206219469001","midPrice":"0.017842","token":{"address":"KT1LRboPna9yQY9BrjtQYDS1DVxhKESK4VVd","decimals":8,"symbol":"WRAP","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wXTZ","exchanges":[{"name":"quipuswap","tezPool":"45556.278105","tokenPool":"58907.352431000000000000000000000000000000","address":"KT1W3VGRUjvS869r4ror8kdaxqJAZUbPyjMT","sharesTotal":"46746566065","midPrice":"0.773355","token":{"address":"KT1VYsVfmobT7rsMVivvZ4J8i3bPiqz12NaH","decimals":6,"symbol":"wXTZ","tokenId":0,"standard":"fa12"}}]}, {"symbol":"PXL","exchanges":[{"name":"quipuswap","tezPool":"42339.871661","tokenPool":"5115154.401306000000000000000000000000000000","address":"KT1UJ1hVTdiUen7H3zk1CXGC7PbANb57VkS4","sharesTotal":"30765615625","midPrice":"0.008277","token":{"address":"KT1F1mn2jbqQCJcsNgYKVAQjvenecNMY2oPK","decimals":6,"symbol":"PXL","tokenId":0,"standard":"fa2"}}]}, {"symbol":"GIF","exchanges":[{"name":"quipuswap","tezPool":"41547.493457","tokenPool":"6554244.604733781000000000000000000000000000","address":"KT1LuXT6jZPhUH1qCnSUqAzFedjoBwePLQnF","sharesTotal":"62600064405","midPrice":"0.006339","token":{"address":"KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv","decimals":9,"symbol":"GIF","tokenId":0,"standard":"fa2"}}]}, {"symbol":"UNO","exchanges":[{"name":"quipuswap","tezPool":"39332.307880","tokenPool":"912.360565966000000000000000000000000000","address":"KT1Cq3pyv6QEXugsAC2iyXr7ecFqN7fJVTnA","sharesTotal":"41301199904","midPrice":"43.110487","token":{"address":"KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF","decimals":9,"symbol":"UNO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wWBTC","exchanges":[{"name":"quipuswap","tezPool":"38538.473865","tokenPool":"3.718552820000000000000000000000000000","address":"KT1DksKXvCBJN7Mw6frGj6y6F3CbABWZVpj1","sharesTotal":"34526464096","midPrice":"10363.836613","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":8,"symbol":"wWBTC","tokenId":19,"standard":"fa2"}}]}, {"symbol":"USDtz","exchanges":[{"name":"quipuswap","tezPool":"34248.367948","tokenPool":"193471.496409000000000000000000000000000000","address":"KT1WxgZ1ZSfMgmsSDDcUn8Xn577HwnQ7e1Lb","sharesTotal":"25259624542","midPrice":"0.177020","token":{"address":"KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9","decimals":6,"symbol":"USDtz","tokenId":0,"standard":"fa12"}}]}, {"symbol":"QUIPU","exchanges":[{"name":"quipuswap","tezPool":"33452.788795","tokenPool":"55964.216275000000000000000000000000000000","address":"KT1X3zxdTzPB9DgVzA3ad6dgZe9JEamoaeRy","sharesTotal":"36421271806","midPrice":"0.597753","token":{"address":"KT193D4vozYnhGJQVtw7CoxxqphqUEEwK6Vb","decimals":6,"symbol":"QUIPU","tokenId":0,"standard":"fa2"}}]}, {"symbol":"ETHtz","exchanges":[{"name":"quipuswap","tezPool":"28801.176365","tokenPool":"34.755570442998363996000000000000000000","address":"KT1Evsp2yA19Whm24khvFPcwimK6UaAJu8Zo","sharesTotal":"15720956971","midPrice":"828.677993","token":{"address":"KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8","decimals":18,"symbol":"ETHtz","tokenId":0,"standard":"fa12"}}]}, {"symbol":"RCKT","exchanges":[{"name":"quipuswap","tezPool":"25677.219224","tokenPool":"17741229.361466000000000000000000000000000000","address":"KT1B7NqoQQkALYPS9fdxrcjGMQST6Wv4yy3h","sharesTotal":"54532773311","midPrice":"0.001447","token":{"address":"KT19JYndHaesXpvUfiwgg8BtE41HKkjjGMRC","decimals":6,"symbol":"RCKT","tokenId":0,"standard":"fa2"}}]}, {"symbol":"INSTA","exchanges":[{"name":"quipuswap","tezPool":"25025.509861","tokenPool":"871975.294886357000000000000000000000000000","address":"KT1UzjhUhau9g5MjPxKUzM6KRJNwdW1oo52G","sharesTotal":"21393384872","midPrice":"0.028700","token":{"address":"KT19y6R8x53uDKiM46ahgguS6Tjqhdj2rSzZ","decimals":9,"symbol":"INSTA","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wUSDC","exchanges":[{"name":"quipuswap","tezPool":"21707.204106","tokenPool":"121830.430981000000000000000000000000000000","address":"KT1U2hs5eNdeCpHouAvQXGMzGFGJowbhjqmo","sharesTotal":"16700577670","midPrice":"0.178176","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":6,"symbol":"wUSDC","tokenId":17,"standard":"fa2"}}]}, {"symbol":"IDZ","exchanges":[{"name":"quipuswap","tezPool":"21559.896152","tokenPool":"428761.962253570000000000000000000000000000","address":"KT18rJtJNmwTfbJMinWqHzpkLeBQa4BVqGoJ","sharesTotal":"25134905322","midPrice":"0.050284","token":{"address":"KT1WapdVeFqhCfqwdHWwTzSTX7yXoHgiPRPU","decimals":8,"symbol":"IDZ","tokenId":0,"standard":"fa2"}}]}, {"symbol":"STKR","exchanges":[{"name":"quipuswap","tezPool":"20829.342569","tokenPool":"2945150.493555831076788927000000000000000000","address":"KT1BMEEPX7MWzwwadW3NCSZe9XGmFJ7rs7Dr","sharesTotal":"41112287438","midPrice":"0.007072","token":{"address":"KT1AEfeckNbdEYwaMKkytBwPJPycz7jdSGea","decimals":18,"symbol":"STKR","tokenId":0,"standard":"fa12"}}]}, {"symbol":"wBUSD","exchanges":[{"name":"quipuswap","tezPool":"19316.007055","tokenPool":"108035.217186340082844273000000000000000000","address":"KT1UMAE2PBskeQayP5f2ZbGiVYF7h8bZ2gyp","sharesTotal":"4952264758","midPrice":"0.178794","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wBUSD","tokenId":1,"standard":"fa2"}}]}, {"symbol":"PAUL","exchanges":[{"name":"quipuswap","tezPool":"18220.429999","tokenPool":"655608.868187370000000000000000000000000000","address":"KT1K8A8DLUTVuHaDBCZiG6AJdvKJbtH8dqmN","sharesTotal":"101888328563","midPrice":"0.027792","token":{"address":"KT19DUSZw7mfeEATrbWVPHRrWNVbNnmfFAE6","decimals":8,"symbol":"PAUL","tokenId":0,"standard":"fa12"}}]}, {"symbol":"crDAO","exchanges":[{"name":"quipuswap","tezPool":"16586.272129","tokenPool":"445.034442670000000000000000000000000000","address":"KT1FHiJmJUgZMPtv5F8M4ZEa6cb1D9Lf758T","sharesTotal":"222525867152","midPrice":"37.269637","token":{"address":"KT1XPFjZqCULSnqfKaaYy8hJjeY63UNSGwXg","decimals":8,"symbol":"crDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"KALAM","exchanges":[{"name":"quipuswap","tezPool":"16402.022623","tokenPool":"281212.991058076900000000000000000000000000","address":"KT1J3wTYb4xk5BsSBkg6ML55bX1xq7desS34","sharesTotal":"28339190145","midPrice":"0.058326","token":{"address":"KT1A5P4ejnLix13jtadsfV9GCnXLMNnab8UT","decimals":10,"symbol":"KALAM","tokenId":0,"standard":"fa2"}}]}, {"symbol":"SMAK","exchanges":[{"name":"quipuswap","tezPool":"15797.413465","tokenPool":"2339677.692000000000000000000000000000000000","address":"KT1Gdix8LoDoQng7YqdPNhdP5V7JRX8FqWvM","sharesTotal":"10663056128","midPrice":"0.006752","token":{"address":"KT1TwzD6zV3WeJ39ukuqxcfK2fJCnhvrdN1X","decimals":3,"symbol":"SMAK","tokenId":0,"standard":"fa12"}}]}, {"symbol":"wWETH","exchanges":[{"name":"quipuswap","tezPool":"13116.493754","tokenPool":"15.942895327218109287000000000000000000","address":"KT1DuYujxrmgepwSDHtADthhKBje9BosUs1w","sharesTotal":"8918114922","midPrice":"822.717172","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wWETH","tokenId":20,"standard":"fa2"}}]}, {"symbol":"GOT","exchanges":[{"name":"quipuswap","tezPool":"13056.728641","tokenPool":"5071624.701890270000000000000000000000000000","address":"KT1JyPE1BWdYoRGBvvKhEPbcVRd3C9NCCwQC","sharesTotal":"44060150516","midPrice":"0.002574","token":{"address":"KT1GioMCKwRyWoQpdrwxvsPVEsFJkkLyquVZ","decimals":8,"symbol":"GOT","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wUSDT","exchanges":[{"name":"quipuswap","tezPool":"12839.294840","tokenPool":"70510.121181000000000000000000000000000000","address":"KT1T4pfr6NL8dUiz8ibesjEvH2Ne3k6AuXgn","sharesTotal":"13016451547","midPrice":"0.182092","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":6,"symbol":"wUSDT","tokenId":18,"standard":"fa2"}}]}, {"symbol":"wDAI","exchanges":[{"name":"quipuswap","tezPool":"12696.860877","tokenPool":"70099.805816031162659235000000000000000000","address":"KT1PQ8TMzGMfViRq4tCMFKD2QF5zwJnY67Xn","sharesTotal":"11957604998","midPrice":"0.181125","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wDAI","tokenId":5,"standard":"fa2"}}]}, {"symbol":"wCRO","exchanges":[{"name":"quipuswap","tezPool":"10177.094742","tokenPool":"65398.477112380000000000000000000000000000","address":"KT1GSjkSg6MFmEMnTJSk6uyYpWXaEYFahrS4","sharesTotal":"1518547386","midPrice":"0.155617","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":8,"symbol":"wCRO","tokenId":4,"standard":"fa2"}}]}, {"symbol":"EASY","exchanges":[{"name":"quipuswap","tezPool":"9795.304779","tokenPool":"394217.574181000000000000000000000000000000","address":"KT1QHbWZPsXK8rpKkudNLmx4VVvgHvGqjnwP","sharesTotal":"12905111705","midPrice":"0.024847","token":{"address":"KT1QgAtLPu3SNq9c6DPLanwL5bvfX3rgh2CS","decimals":6,"symbol":"EASY","tokenId":0,"standard":"fa2"}}]}, {"symbol":"hDAO","exchanges":[{"name":"quipuswap","tezPool":"9160.221375","tokenPool":"5170.806350000000000000000000000000000000","address":"KT1QxLqukyfohPV5kPkw97Rs6cw1DDDvYgbB","sharesTotal":"8986503328","midPrice":"1.771527","token":{"address":"KT1AFA2mwNUMNd4SsujE1YYp29vd8BZejyKW","decimals":6,"symbol":"hDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"FLAME","exchanges":[{"name":"quipuswap","tezPool":"8477.922080","tokenPool":"66508192.920941000000000000000000000000000000","address":"KT1Q93ftAUzvfMGPwC78nX8eouL1VzmHPd4d","sharesTotal":"26931516315","midPrice":"0.000127","token":{"address":"KT1Wa8yqRBpFCusJWgcQyjhRz7hUQAmFxW7j","decimals":6,"symbol":"FLAME","tokenId":0,"standard":"fa2"}}]}, {"symbol":"AQRtz","exchanges":[{"name":"quipuswap","tezPool":"8251.681828","tokenPool":"204009.013683807061490000000000000000000000","address":"KT1Sjz9RF7bABNi6rwaoWS8jGNmyf2RxJkrQ","sharesTotal":"9126262480","midPrice":"0.040448","token":{"address":"KT19wuExNXayErfuCkcy6Z56cd1FWzF96xXk","decimals":14,"symbol":"AQRtz","tokenId":0,"standard":"fa2"}}]}, {"symbol":"uUSD","exchanges":[{"name":"quipuswap","tezPool":"8048.032008","tokenPool":"44906.473125294161000000000000000000000000","address":"KT1EtjRRCBC2exyCRXz8UfV7jz7svnkqi7di","sharesTotal":"10276243775","midPrice":"0.179218","token":{"address":"KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW","decimals":12,"symbol":"uUSD","tokenId":0,"standard":"fa2"}}]}, {"symbol":"kDAO","exchanges":[{"name":"quipuswap","tezPool":"6827.582444","tokenPool":"13499.360017483262102527000000000000000000","address":"KT1NEa7CmaLaWgHNi6LkRi5Z1f4oHfdzRdGA","sharesTotal":"269369410103","midPrice":"0.505771","token":{"address":"KT1JkoE42rrMBP9b2oDhbx6EUr26GcySZMUH","decimals":18,"symbol":"kDAO","tokenId":0,"standard":"fa12"}}]}, {"symbol":"MYH","exchanges":[{"name":"quipuswap","tezPool":"6291.057511","tokenPool":"3532940476.641464830000000000000000000000000000","address":"KT1Ed11bNukFdYSc3qQFZ2HGYdF13XU6WZ4A","sharesTotal":"1453022593","midPrice":"0.000002","token":{"address":"KT1BB1uMwVvJ1M3vVHXWALs1RWdgTp1rnXTR","decimals":8,"symbol":"MYH","tokenId":0,"standard":"fa2"}}]}, {"symbol":"hrDAO","exchanges":[{"name":"quipuswap","tezPool":"5445.014419","tokenPool":"17203.381623000000000000000000000000000000","address":"KT1PiXcVdqgsaYnkQ7KAec9skLRMtmDcsnMy","sharesTotal":"28856697336","midPrice":"0.316508","token":{"address":"KT1ExpspQSag2x5dATrBxEQzrHP5PJd28fA4","decimals":6,"symbol":"hrDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"ctez","exchanges":[{"name":"quipuswap","tezPool":"5418.301772","tokenPool":"5512.560497000000000000000000000000000000","address":"KT1FbYwEWU8BTfrvNoL5xDEC5owsDxv9nqKT","sharesTotal":"5352346469","midPrice":"0.982901","token":{"address":"KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4","decimals":6,"symbol":"ctez","tokenId":0,"standard":"fa12"}}]}, {"symbol":"SOIL","exchanges":[{"name":"quipuswap","tezPool":"5331.863468","tokenPool":"826191078.041700000000000000000000000000000000","address":"KT1NXdxJkCiPkhwPvaT9CytFowuUoNcwGM1p","sharesTotal":"863431789","midPrice":"0.000006","token":{"address":"KT1TtaMcoSx5cZrvaVBWsFoeZ1L15cxo5AEy","decimals":4,"symbol":"SOIL","tokenId":0,"standard":"fa2"}}]}, {"symbol":"EVIL","exchanges":[{"name":"quipuswap","tezPool":"4028.390658","tokenPool":"95.807000000000000000000000000000000000","address":"KT1Ap7YfZAstC8sbnE6Kwm9iywt13NjwRrNB","sharesTotal":"435253633","midPrice":"42.046935","token":{"address":"KT1Ava7Qm338ZJj83P1ZhNbGkaRZM8N1FsPD","decimals":4,"symbol":"EVIL","tokenId":0,"standard":"fa2"}}]}, {"symbol":"USDS","exchanges":[{"name":"quipuswap","tezPool":"4021.360016","tokenPool":"21562.995867000000000000000000000000000000","address":"KT1KFszq8UFCcWxnXuhZPUyHT9FK3gjmSKm6","sharesTotal":"4422172968","midPrice":"0.186494","token":{"address":"KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf","decimals":6,"symbol":"USDS","tokenId":0,"standard":"fa2"}}]}, {"symbol":"TZD","exchanges":[{"name":"quipuswap","tezPool":"3296.723479","tokenPool":"682305.745934280000000000000000000000000000","address":"KT1ERmjYo3hotAFmegVCJ2EAgUmc7RtXyV87","sharesTotal":"858338255","midPrice":"0.004832","token":{"address":"KT1RhRYoGmhDr4DShdggQqumRAhwAETxrs3t","decimals":8,"symbol":"TZD","tokenId":0,"standard":"fa2"}}]}, {"symbol":"pxlDAO","exchanges":[{"name":"quipuswap","tezPool":"2642.135564","tokenPool":"55485.765285000000000000000000000000000000","address":"KT1RbvTVdb5jiT3dMyc9PxLdjzQD6QJjfZ9G","sharesTotal":"8022895589","midPrice":"0.047618","token":{"address":"KT1VQG4kZR6FkF8jppegp8cGhjJF66jJejLf","decimals":6,"symbol":"pxlDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"CVZA","exchanges":[{"name":"quipuswap","tezPool":"2298.999631","tokenPool":"138623859.862203810000000000000000000000000000","address":"KT1F3BqwEAoa2koYX4Hz7zJ8xfGSxxAGVT8t","sharesTotal":"167770565","midPrice":"0.000017","token":{"address":"KT1BCzAq3PrTKPsEBKuoTGZdwX6rN6WE8rJj","decimals":8,"symbol":"CVZA","tokenId":0,"standard":"fa2"}}]}, {"symbol":"YOU","exchanges":[{"name":"quipuswap","tezPool":"2206.224264","tokenPool":"8593.320736673185000000000000000000000000","address":"KT1PL1YciLdwMbydt21Ax85iZXXyGSrKT2BE","sharesTotal":"2223839549","midPrice":"0.256737","token":{"address":"KT1Xobej4mc6XgEjDoJoHtTKgbD1ELMvcQuL","decimals":12,"symbol":"YOU","tokenId":0,"standard":"fa2"}}]}, {"symbol":"FARM","exchanges":[{"name":"quipuswap","tezPool":"2108.803456","tokenPool":"107976140056.374600000000000000000000000000000000","address":"KT1NF5vZdWjYQcb8Uq9SkgTrLgc9P23AraX7","sharesTotal":"4365142142","midPrice":"0.000000","token":{"address":"KT1CnuKyaAuYBAwJf9g5LobtxRZsF2KCD3o6","decimals":4,"symbol":"FARM","tokenId":0,"standard":"fa2"}}]}, {"symbol":"BTCtz","exchanges":[{"name":"quipuswap","tezPool":"1911.867973","tokenPool":"0.164223940000000000000000000000000000","address":"KT1B6nXwMpGTjYjVQporXUFDQNDGnfCFsx4a","sharesTotal":"1783544958","midPrice":"11641.834759","token":{"address":"KT1T87QbpXEVgkwsNPzz8iRoah3SS3D1MDmh","decimals":8,"symbol":"BTCtz","tokenId":0,"standard":"fa2"}}]}, {"symbol":"HEH","exchanges":[{"name":"quipuswap","tezPool":"1687.047920","tokenPool":"6242393.867061000000000000000000000000000000","address":"KT1BgezWwHBxA9NrczwK9x3zfgFnUkc7JJ4b","sharesTotal":"4889127915","midPrice":"0.000270","token":{"address":"KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9","decimals":6,"symbol":"HEH","tokenId":0,"standard":"fa12"}}]}, {"symbol":"RADIO","exchanges":[{"name":"quipuswap","tezPool":"1675.059007","tokenPool":"15120.177925000000000000000000000000000000","address":"KT1VEhYnyUpxtJPAdpAW8NZhhSzCAYFCf1oE","sharesTotal":"953005700","midPrice":"0.110783","token":{"address":"KT1NSLhBqkWbGnr6PeYwigwKzurRgUF36vas","decimals":6,"symbol":"RADIO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wLINK","exchanges":[{"name":"quipuswap","tezPool":"1651.655575","tokenPool":"356.009757261990835599000000000000000000","address":"KT1Lpysr4nzcFegC9ci9kjoqVidwoanEmJWt","sharesTotal":"1760836898","midPrice":"4.639355","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wLINK","tokenId":10,"standard":"fa2"}}]}, {"symbol":"sDAO","exchanges":[{"name":"quipuswap","tezPool":"1570.363642","tokenPool":"496166.000000000000000000000000000000000000","address":"KT1PrRTVNgxkRgyqqNQvwTiVhd55dqyxXJ6n","sharesTotal":"2022982265","midPrice":"0.003165","token":{"address":"KT19ovJhcsUn4YU8Q5L3BGovKSixfbWcecEA","decimals":0,"symbol":"sDAO","tokenId":1,"standard":"fa2"}}]}, {"symbol":"fDAO","exchanges":[{"name":"quipuswap","tezPool":"1542.102948","tokenPool":"697.140113000000000000000000000000000000","address":"KT1BweorZK1CJDEu76SyKcxfzeiAxip73Kot","sharesTotal":"3595051869","midPrice":"2.212042","token":{"address":"KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc","decimals":6,"symbol":"fDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"HERA","exchanges":[{"name":"quipuswap","tezPool":"1366.779429","tokenPool":"5091326.449000000000000000000000000000000000","address":"KT1DgbAE84xno2wdaEgeYpZkFZMs5fskAgP7","sharesTotal":"6299575571","midPrice":"0.000268","token":{"address":"KT1JXxK3bd39ayLiiBdKm2cdReYnVSG3bkzK","decimals":3,"symbol":"HERA","tokenId":0,"standard":"fa2"}}]}, {"symbol":"uDEFI","exchanges":[{"name":"quipuswap","tezPool":"1302.808958","tokenPool":"6602.861848393389000000000000000000000000","address":"KT1H8sJY2VzrbiX4pYeUVsoMUd4iGw2DV7XH","sharesTotal":"1318715920","midPrice":"0.197310","token":{"address":"KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW","decimals":12,"symbol":"uDEFI","tokenId":1,"standard":"fa2"}}]}, {"symbol":"ENR","exchanges":[{"name":"quipuswap","tezPool":"1282.202085","tokenPool":"579742.413255544000000000000000000000000000","address":"KT1GxxLmBC7tfx4Enpe5YLaCXppAKKfzNRYF","sharesTotal":"258202520935","midPrice":"0.002212","token":{"address":"KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF","decimals":9,"symbol":"ENR","tokenId":2,"standard":"fa2"}}]}, {"symbol":"bDAO","exchanges":[{"name":"quipuswap","tezPool":"1215.738012","tokenPool":"63098.234045000000000000000000000000000000","address":"KT1DssMzoSr8fnUUq1WxeSuHfLG4gzS7pgge","sharesTotal":"6173203808","midPrice":"0.019267","token":{"address":"KT1GUNKmkrgtMQjJp3XxcmCj6HZBhkUmMbge","decimals":6,"symbol":"bDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wAAVE","exchanges":[{"name":"quipuswap","tezPool":"1159.338324","tokenPool":"24.250683370149688853000000000000000000","address":"KT1Lvtxpg4MiT2Bs38XGxwh3LGi5MkCENp4v","sharesTotal":"994948597","midPrice":"47.806419","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wAAVE","tokenId":0,"standard":"fa2"}}]}, {"symbol":"MAG","exchanges":[{"name":"quipuswap","tezPool":"1068.855301","tokenPool":"3419445.777295000000000000000000000000000000","address":"KT1WREc3cpr36Nqjvegr6WSPgQKwDjL7XxLN","sharesTotal":"5721214838","midPrice":"0.000313","token":{"address":"KT1H5KJDxuM9DURSfttepebb6Cn7GbvAAT45","decimals":6,"symbol":"MAG","tokenId":0,"standard":"fa12"}}]}, {"symbol":"wMATIC","exchanges":[{"name":"quipuswap","tezPool":"988.187422","tokenPool":"3059.268576869756384470000000000000000000","address":"KT1RsfuBee5o7GtYrdB7bzQ1M6oVgyBnxY4S","sharesTotal":"501027115","midPrice":"0.323014","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wMATIC","tokenId":11,"standard":"fa2"}}]}, {"symbol":"TILLA","exchanges":[{"name":"quipuswap","tezPool":"908.287342","tokenPool":"15798653433.988939000000000000000000000000000000","address":"KT1WtgJSktmmUyAvYbC7YCiQ73xKN6NBH5zc","sharesTotal":"3743837984","midPrice":"0.000000","token":{"address":"KT1K7vvj7bQAY7YqCRnvrddoSaLp9tbJLn8Y","decimals":6,"symbol":"TILLA","tokenId":0,"standard":"fa2"}}]}, {"symbol":"MCH","exchanges":[{"name":"quipuswap","tezPool":"846.549598","tokenPool":"32075.185454013000000000000000000000000000","address":"KT1JAgJC6FTJ9SzGGits8GVonCr8cfFp5HGV","sharesTotal":"1511226639","midPrice":"0.026393","token":{"address":"KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF","decimals":9,"symbol":"MCH","tokenId":3,"standard":"fa2"}}]}, {"symbol":"tDAO","exchanges":[{"name":"quipuswap","tezPool":"827.677927","tokenPool":"523109242.638800000000000000000000000000000000","address":"KT1X6dAh8fwQMkWC9yh4yuvkJaS5NjqY4NvW","sharesTotal":"282020711","midPrice":"0.000002","token":{"address":"KT1Cjx8hYwzaCAke6rLWoZBLp8w89VeAduAR","decimals":4,"symbol":"tDAO","tokenId":0,"standard":"fa2"}}]}, {"symbol":"GUTS","exchanges":[{"name":"quipuswap","tezPool":"1553.919562","tokenPool":"13987.000000000000000000000000000000000000","address":"KT1GaR1CmFoTTjqRwYSE8WdpBuxuviKGbcqs","sharesTotal":"2044501067","midPrice":"0.111097","token":{"address":"KT1Nbc9cmx19qFrYYFpkiDoojVYL8UZJYVcj","decimals":0,"symbol":"GUTS","tokenId":0,"standard":"fa2"}}, {"name":"quipuswap","tezPool":"8.797338","tokenPool":"44.000000000000000000000000000000000000","address":"KT1WYQj3HEt3sxdsV4dMLA8RKzUnYAzXgguS","sharesTotal":"21615930","midPrice":"0.199940","token":{"address":"KT1Nbc9cmx19qFrYYFpkiDoojVYL8UZJYVcj","decimals":0,"symbol":"GUTS","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wUNI","exchanges":[{"name":"quipuswap","tezPool":"712.541453","tokenPool":"186.000093549435675513000000000000000000","address":"KT1Ti3nJT85vNn81Dy5VyNzgufkAorUoZ96q","sharesTotal":"314509979","midPrice":"3.830866","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wUNI","tokenId":16,"standard":"fa2"}}]}, {"symbol":"PURPLE","exchanges":[{"name":"quipuswap","tezPool":"533.317856","tokenPool":"405453255.048869000000000000000000000000000000","address":"KT1CgUDhiEQute6BxcgeSbZj3FiG2ZbdQC6B","sharesTotal":"4527525999","midPrice":"0.000001","token":{"address":"KT1Trhji1aVzDtGiAxiCfWNi9T74Kyi49DK1","decimals":6,"symbol":"PURPLE","tokenId":0,"standard":"fa12"}}]}, {"symbol":"SEB","exchanges":[{"name":"quipuswap","tezPool":"516.108167","tokenPool":"89635.550000000000000000000000000000000000","address":"KT1S4WyNiYPoYheihysddNh5hojNFdiVBwZL","sharesTotal":"259385051","midPrice":"0.005758","token":{"address":"KT1981tPmXh4KrUQKZpQKb55kREX7QGJcF3E","decimals":2,"symbol":"SEB","tokenId":0,"standard":"fa2"}}]}, {"symbol":"PLAT","exchanges":[{"name":"quipuswap","tezPool":"477.055067","tokenPool":"1.122967000000000000000000000000000000","address":"KT1TZFWpS7zvLCsGEqS3xjvC4SkfngeyszyY","sharesTotal":"1291156366","midPrice":"424.816639","token":{"address":"KT1SybeY3QZ3kX4PS5ZXhxyv2dZWghTFuCdu","decimals":6,"symbol":"PLAT","tokenId":0,"standard":"fa2"}}]}, {"symbol":"DARK","exchanges":[{"name":"quipuswap","tezPool":"469.225135","tokenPool":"9.899233220000000000000000000000000000","address":"KT1UUbdvhUXW9j7oRbQdQHnPCFisn4qv19BK","sharesTotal":"167310371","midPrice":"47.400150","token":{"address":"KT1CYyafaf8FybXzny7VZK93tfktVSw1N3Rd","decimals":8,"symbol":"DARK","tokenId":0,"standard":"fa2"}}]}, {"symbol":"ptai","exchanges":[{"name":"quipuswap","tezPool":"448.010189","tokenPool":"3412.836100000000000000000000000000000000","address":"KT1TtpMxWwAR41b8f8k4ujqjd8YoWvYDR5tN","sharesTotal":"122476805","midPrice":"0.131272","token":{"address":"KT1AyVdjSZffJtiMkdwwztEK7ePVyTogzogr","decimals":4,"symbol":"ptai","tokenId":0,"standard":"fa2"}}]}, {"symbol":"ECN","exchanges":[{"name":"quipuswap","tezPool":"441.840051","tokenPool":"49238.370507030000000000000000000000000000","address":"KT1D9PA7tvuCe9XnDskd2F67XwdrT4ueqjGe","sharesTotal":"2906697785","midPrice":"0.008973","token":{"address":"KT1M81KrJr6TxYLkZkVqcpSTNKGoya8XytWT","decimals":8,"symbol":"ECN","tokenId":0,"standard":"fa2"}}]}, {"symbol":"CLOVER","exchanges":[{"name":"quipuswap","tezPool":"433.967143","tokenPool":"418737.179856000000000000000000000000000000","address":"KT1CYDRyzipkmRgndFrrYfyiAuwKxkFXxfki","sharesTotal":"4105977448","midPrice":"0.001036","token":{"address":"KT18jyxMDSMJRPPaZjoe49SUkXxax9QZtcWH","decimals":6,"symbol":"CLOVER","tokenId":0,"standard":"fa12"}}]}, {"symbol":"TCZ","exchanges":[{"name":"quipuswap","tezPool":"418.985006","tokenPool":"594364722.768292410737388265000000000000000000","address":"KT1VfiExduEkrpM4TbsnAw9QV1VURqaRFGKs","sharesTotal":"2211419570","midPrice":"0.000001","token":{"address":"KT1GGxCNiJ7yaBAH4hAw5AHXbP3PSmAiy3wK","decimals":18,"symbol":"TCZ","tokenId":0,"standard":"fa2"}}]}, {"symbol":"GONZ","exchanges":[{"name":"quipuswap","tezPool":"399.576345","tokenPool":"192445069.840606000000000000000000000000000000","address":"KT1V2ycxoY55ACtvdbxQMM7d4wnQ1QCxTCJg","sharesTotal":"135736499751","midPrice":"0.000002","token":{"address":"KT1RTsRfBxLf6egtsXrQX1CcXCqKL3XwpuFT","decimals":6,"symbol":"GONZ","tokenId":0,"standard":"fa2"}}]}, {"symbol":"RSAL","exchanges":[{"name":"quipuswap","tezPool":"398.958744","tokenPool":"6589508.000000000000000000000000000000000000","address":"KT1WDe2vJCDqz5euKupppQsioPcakUd45Tfo","sharesTotal":"1144960228","midPrice":"0.000061","token":{"address":"KT19ovJhcsUn4YU8Q5L3BGovKSixfbWcecEA","decimals":0,"symbol":"RSAL","tokenId":0,"standard":"fa2"}}]}, {"symbol":"SEXP","exchanges":[{"name":"quipuswap","tezPool":"393.135872","tokenPool":"577587259.746106365192345051000000000000000000","address":"KT1EVNuwjj7GijvVaxR7Vd9mejy4V6toZkeK","sharesTotal":"3526834613","midPrice":"0.000001","token":{"address":"KT1Kyc366SrSJ1camxByr363F9WAiHAaReMv","decimals":18,"symbol":"SEXP","tokenId":0,"standard":"fa2"}}]}, {"symbol":"GSAL","exchanges":[{"name":"quipuswap","tezPool":"370.713802","tokenPool":"9851042.000000000000000000000000000000000000","address":"KT1BzNUUjURkTtNhXFkbGtu9fY3Q5scKZrvK","sharesTotal":"1311616808","midPrice":"0.000038","token":{"address":"KT1VHd7ysjnvxEzwtjBAmYAmasvVCfPpSkiG","decimals":0,"symbol":"GSAL","tokenId":0,"standard":"fa2"}}]}, {"symbol":"MIN","exchanges":[{"name":"quipuswap","tezPool":"360.847367","tokenPool":"140287.799236744000000000000000000000000000","address":"KT1H5YwfF6nmFZavwzftddbcfxAXmbGhyDCY","sharesTotal":"2141997920","midPrice":"0.002572","token":{"address":"KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF","decimals":9,"symbol":"MIN","tokenId":1,"standard":"fa2"}}]}, {"symbol":"BDVXP","exchanges":[{"name":"quipuswap","tezPool":"348.620785","tokenPool":"11440841.088649000000000000000000000000000000","address":"KT1C755xS3TLH4HEWaCJvWuoHTcytTBdEjgS","sharesTotal":"754013992","midPrice":"0.000030","token":{"address":"KT1T1PeeRDbsKDYM2nX8JjJ1kkAhHh5FnjgC","decimals":6,"symbol":"BDVXP","tokenId":0,"standard":"fa2"}}]}, {"symbol":"BEEF","exchanges":[{"name":"quipuswap","tezPool":"346.103116","tokenPool":"981880186.919390000000000000000000000000000000","address":"KT1BtmMAnmTGHAA9ZV8xPzuwZu4ibL7f5qb3","sharesTotal":"2432075908","midPrice":"0.000000","token":{"address":"KT1M2Ws52krJrwJi1ZFsmVfazBiafWYKZTvd","decimals":6,"symbol":"BEEF","tokenId":0,"standard":"fa2"}}]}, {"symbol":"DeMN","exchanges":[{"name":"quipuswap","tezPool":"271.781987","tokenPool":"258268.029899920000000000000000000000000000","address":"KT1TcGBPvmcHawQLdFx5ADDo2hR6XMDhRVdc","sharesTotal":"82783673","midPrice":"0.001052","token":{"address":"KT1GBgCd5dk7v4TSzWvtk1X64TxMyG4r7eRX","decimals":8,"symbol":"DeMN","tokenId":0,"standard":"fa2"}}]}, {"symbol":"YEZ","exchanges":[{"name":"quipuswap","tezPool":"251.108283","tokenPool":"80936.087280830000000000000000000000000000","address":"KT1TYMNmRjbTpqdTz4hAwbJD9Now3Kxv2ycz","sharesTotal":"449053282","midPrice":"0.003103","token":{"address":"KT1SL8LGYTBrKjPydUawSFGZXWWVzwnkRjEN","decimals":8,"symbol":"YEZ","tokenId":0,"standard":"fa12"}}]}, {"symbol":"wHUSD","exchanges":[{"name":"quipuswap","tezPool":"208.029414","tokenPool":"941.117207030000000000000000000000000000","address":"KT1AN7BBmeSUN5eDDQLEhWmXv1gn4exc5k8R","sharesTotal":"64803209","midPrice":"0.221045","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":8,"symbol":"wHUSD","tokenId":8,"standard":"fa2"}}]}, {"symbol":"BRR","exchanges":[{"name":"quipuswap","tezPool":"203.777267","tokenPool":"249203371.037031000000000000000000000000000000","address":"KT1PmH3JCEo65koqSGGUArKSpbKMN8dJ3BPZ","sharesTotal":"214895293","midPrice":"0.000001","token":{"address":"KT1UHNDNjrCAAiRbzZrtQF9qHSHVMYeJyX1y","decimals":6,"symbol":"BRR","tokenId":0,"standard":"fa2"}}]}, {"symbol":"Bezos","exchanges":[{"name":"quipuswap","tezPool":"191.268875","tokenPool":"300778864.000000000000000000000000000000000000","address":"KT1ETAtdv2PTvXwbGGsWWjnswfagdUc77hiP","sharesTotal":"165483101","midPrice":"0.000001","token":{"address":"KT1J4m9nxZQSKDwRNahAL1fziuwW9o5hb8Tb","decimals":0,"symbol":"Bezos","tokenId":0,"standard":"fa2"}}]}, {"symbol":"CHEESE","exchanges":[{"name":"quipuswap","tezPool":"183.288117","tokenPool":"8698692.701728640000000000000000000000000000","address":"KT1Bi5RQGyTNiQubUyLtZYknE5u3Y6CeznWo","sharesTotal":"16188056","midPrice":"0.000021","token":{"address":"KT1URY2DcLd3v6XRjXKYvQmZMBncWYMuphNg","decimals":8,"symbol":"CHEESE","tokenId":0,"standard":"fa2"}}]}, {"symbol":"WOJAK","exchanges":[{"name":"quipuswap","tezPool":"151.551332","tokenPool":"1206.538266020000000000000000000000000000","address":"KT1RyjnbuY3WNqQ29jarPynBQMqa5JyvQNbA","sharesTotal":"134267705","midPrice":"0.125608","token":{"address":"KT1DH7nnWLSBM5f4i8KehH1F5nMvDvknXgJj","decimals":8,"symbol":"WOJAK","tokenId":0,"standard":"fa2"}}]}, {"symbol":"YODA","exchanges":[{"name":"quipuswap","tezPool":"130.304529","tokenPool":"25949622.683209000000000000000000000000000000","address":"KT1X3vM69kdau4dAYa7ZXLdT5H6Gpyvoniui","sharesTotal":"125000000","midPrice":"0.000005","token":{"address":"KT1BdFvYD2Z1cPEMoREUtMNBcBPmrm5s4Xww","decimals":6,"symbol":"YODA","tokenId":0,"standard":"fa2"}}]}, {"symbol":"TZK","exchanges":[{"name":"quipuswap","tezPool":"125.401056","tokenPool":"5376840.759221120000000000000000000000000000","address":"KT1StK6SjE5TsxpCpKPBHwrVs7VpND5L97jK","sharesTotal":"297915161","midPrice":"0.000023","token":{"address":"KT1JoBx9GQmWZts7vdUEe5uU2wsWZiAhrepf","decimals":8,"symbol":"TZK","tokenId":0,"standard":"fa2"}}]}, {"symbol":"BART","exchanges":[{"name":"quipuswap","tezPool":"123.152925","tokenPool":"91862200.465913008000000000000000000000000000","address":"KT1WJVYEjLRirPQDSWqfggjqFGn14y9hiCBL","sharesTotal":"7047390168","midPrice":"0.000001","token":{"address":"KT1T3Ly4RkMehwNpC4iWr86EV5D155bTRvce","decimals":9,"symbol":"BART","tokenId":0,"standard":"fa2"}}]}, {"symbol":"BOGDANOFF","exchanges":[{"name":"quipuswap","tezPool":"120.728003","tokenPool":"0.834700000000000000000000000000000000","address":"KT1SFefVtCDkAPj2KtiDm3Rc3rdLyK7Y5stP","sharesTotal":"100000000","midPrice":"144.636400","token":{"address":"KT1QaHZUKx3vZEwjSD4r5KpSkKUdHyg2HMCC","decimals":4,"symbol":"BOGDANOFF","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wSUSHI","exchanges":[{"name":"quipuswap","tezPool":"115.388267","tokenPool":"94.491091759927221205000000000000000000","address":"KT1Lotcahh85kp878JCEc1TjetZ2EgqB24vA","sharesTotal":"146969507","midPrice":"1.221155","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wSUSHI","tokenId":15,"standard":"fa2"}}]}, {"symbol":"ONE","exchanges":[{"name":"quipuswap","tezPool":"109.451249","tokenPool":"0.083046246000000000000000000000000000","address":"KT1Js2KkULwMdJM8iZH8G36qb56skqSWuhce","sharesTotal":"4200200","midPrice":"1317.955408","token":{"address":"KT1VRB9X1KjCpaxT5V7PQrTxQPunLejQLwG7","decimals":10,"symbol":"ONE","tokenId":0,"standard":"fa2"}}]}, {"symbol":"NATAS","exchanges":[{"name":"quipuswap","tezPool":"106.585483","tokenPool":"3500.000000000000000000000000000000000000","address":"KT1Xoo3KC18TjW5dSLeQwVkk9pkCL26hZfva","sharesTotal":"18753000","midPrice":"0.030453","token":{"address":"KT1GaEvbD4zA3pHs7mv3grpuqR1KGtjXAEDe","decimals":0,"symbol":"NATAS","tokenId":0,"standard":"fa2"}}]}, {"symbol":"wPAX","exchanges":[{"name":"quipuswap","tezPool":"103.312941","tokenPool":"549.683989915276710281000000000000000000","address":"KT1Ca5FGSeFLH3ugstc5p56gJDMPeraBcDqE","sharesTotal":"94387415","midPrice":"0.187950","token":{"address":"KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ","decimals":18,"symbol":"wPAX","tokenId":14,"standard":"fa2"}}]}, {"symbol":"OBJKT","exchanges":[{"name":"quipuswap","tezPool":"86.651631","tokenPool":"7022356.000000000000000000000000000000000000","address":"KT1A4Sj8TBg4pazMkj226bAAcH6A4iCNQno4","sharesTotal":"428961826","midPrice":"0.000012","token":{"address":"KT1M2JnD1wsg7w2B4UXJXtKQPuDUpU2L7cJH","decimals":0,"symbol":"OBJKT","tokenId":79,"standard":"fa2"}}]}, {"symbol":"TTT","exchanges":[{"name":"quipuswap","tezPool":"83.782162","tokenPool":"276123.436497780000000000000000000000000000","address":"KT1WYoYSdHNmNJf9pHWPoHJWDA3bid1NP9SJ","sharesTotal":"6974214","midPrice":"0.000303","token":{"address":"KT1TsUFkH4pa48wmrGRmFpFW13nxHbP4xEKN","decimals":8,"symbol":"TTT","tokenId":0,"standard":"fa2"}}]}, {"symbol":"tChicken","exchanges":[{"name":"quipuswap","tezPool":"83.107166","tokenPool":"133030338.589859000000000000000000000000000000","address":"KT1JzZtBeHDBS9XyEqUc9nZhsqcfeNLxVV1T","sharesTotal":"147358871","midPrice":"0.000001","token":{"address":"KT1QoDjTpkG9jmAMwrPCsaRR78xHDcRKydBp","decimals":6,"symbol":"tChicken","tokenId":0,"standard":"fa2"}}]}, {"symbol":"BAN","exchanges":[{"name":"quipuswap","tezPool":"76.408709","tokenPool":"9278.250000000000000000000000000000000000","address":"KT1Sd8jvepChHEHo63owNfjnqgzJEkUWSj9q","sharesTotal":"55498300","midPrice":"0.008235","token":{"address":"KT1AhSVv4Se1j3Hf5Y6a56vBV44zNzjP91D2","decimals":2,"symbol":"BAN","tokenId":0,"standard":"fa2"}}]}, {"symbol":"BIRD","exchanges":[{"name":"quipuswap","tezPool":"74.191881","tokenPool":"277.890700000000000000000000000000000000","address":"KT1SbBu8v8Knwx2kTD4hawbFYu8h4oKX8J6X","sharesTotal":"13323072","midPrice":"0.266982","token":{"address":"KT1GkBaPh5pnPYNjMvm3hCGp6Q7tay1pkbjT","decimals":4,"symbol":"BIRD","tokenId":0,"standard":"fa2"}}]}, {"symbol":"QLkUSD","exchanges":[{"name":"quipuswap","tezPool":"73.301116","tokenPool":"312.904891087337818312292551180835366760","address":"KT1WtFb1mTsFRd1n1nAYMdrE2Ud9XREz5hjK","sharesTotal":"62800589","midPrice":"0.234260","token":{"address":"KT1AxaBxkFLCUi3f8rdDAAxBKHfzY8LfKDRA","decimals":36,"symbol":"QLkUSD","tokenId":0,"standard":"fa12"}}]}, {"symbol":"SHTz","exchanges":[{"name":"quipuswap","tezPool":"71.690392","tokenPool":"16728.140000000000000000000000000000000000","address":"KT1G7Z14RJLKbfu96Hc22bwNL67aykunAGyH","sharesTotal":"496478190","midPrice":"0.004286","token":{"address":"KT19oivKN2qzeWgCs886BbttSVYtkcJHRtuQ","decimals":2,"symbol":"SHTz","tokenId":0,"standard":"fa2"}}]}]}} 
+{
+    "data": {
+        "token": [
+            {
+                "symbol": "tzBTC",
+                "address": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "lb",
+                        "tezPool": "2812610.757224",
+                        "tokenPool": "257.440135520000000000000000000000000000",
+                        "address": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+                        "sharesTotal": "225981758",
+                        "midPrice": "10925.300173",
+                        "token": {
+                            "address": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+                            "decimals": 8,
+                            "symbol": "tzBTC",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    },
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "6872.313168",
+                        "tokenPool": "0.625203360000000000000000000000000000",
+                        "address": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+                        "sharesTotal": "5324528635",
+                        "midPrice": "10992.124495",
+                        "token": {
+                            "address": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+                            "decimals": 8,
+                            "symbol": "tzBTC",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ctez",
+                "address": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "138951.848878",
+                        "tokenPool": "131994.073569000000000000000000000000000000",
+                        "address": "KT1FbYwEWU8BTfrvNoL5xDEC5owsDxv9nqKT",
+                        "sharesTotal": "127404376417",
+                        "midPrice": "1.052713",
+                        "token": {
+                            "address": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4",
+                            "decimals": 6,
+                            "symbol": "ctez",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "CRUNCH",
+                "address": "KT1BHCumksALJQJ8q8to2EPigPW6qpyTr7Ng",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "103461.398158",
+                        "tokenPool": "27710864.042489220000000000000000000000000000",
+                        "address": "KT1RRgK6eXvCWCiEGWhRZCSVGzhDzwXEEjS4",
+                        "sharesTotal": "167862607168",
+                        "midPrice": "0.003734",
+                        "token": {
+                            "address": "KT1BHCumksALJQJ8q8to2EPigPW6qpyTr7Ng",
+                            "decimals": 8,
+                            "symbol": "CRUNCH",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "kUSD",
+                "address": "KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "55026.772167",
+                        "tokenPool": "214228.802319553733742123000000000000000000",
+                        "address": "KT1K4EwTpbvYN9agJdjpyJm4ZZdhpUNKB3F6",
+                        "sharesTotal": "35035881156",
+                        "midPrice": "0.256860",
+                        "token": {
+                            "address": "KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV",
+                            "decimals": 18,
+                            "symbol": "kUSD",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "GIF",
+                "address": "KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "46303.722435",
+                        "tokenPool": "3251161.663796847000000000000000000000000000",
+                        "address": "KT1LuXT6jZPhUH1qCnSUqAzFedjoBwePLQnF",
+                        "sharesTotal": "45813835603",
+                        "midPrice": "0.014242",
+                        "token": {
+                            "address": "KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv",
+                            "decimals": 9,
+                            "symbol": "GIF",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "PLENTY",
+                "address": "KT1GRSvLoikDsXujKgZPsGLX8k8VvR2Tq95b",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "42473.142018",
+                        "tokenPool": "1122672.391555723219658027000000000000000000",
+                        "address": "KT1X1LgNkQShpF9nRLYw3Dgdy4qp38MX617z",
+                        "sharesTotal": "30398589036",
+                        "midPrice": "0.037832",
+                        "token": {
+                            "address": "KT1GRSvLoikDsXujKgZPsGLX8k8VvR2Tq95b",
+                            "decimals": 18,
+                            "symbol": "PLENTY",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "QUIPU",
+                "address": "KT193D4vozYnhGJQVtw7CoxxqphqUEEwK6Vb",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "41400.076926",
+                        "tokenPool": "72587.914484000000000000000000000000000000",
+                        "address": "KT1X3zxdTzPB9DgVzA3ad6dgZe9JEamoaeRy",
+                        "sharesTotal": "45777340646",
+                        "midPrice": "0.570344",
+                        "token": {
+                            "address": "KT193D4vozYnhGJQVtw7CoxxqphqUEEwK6Vb",
+                            "decimals": 6,
+                            "symbol": "QUIPU",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "USDtz",
+                "address": "KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "33042.355189",
+                        "tokenPool": "132352.411347000000000000000000000000000000",
+                        "address": "KT1WxgZ1ZSfMgmsSDDcUn8Xn577HwnQ7e1Lb",
+                        "sharesTotal": "19560266114",
+                        "midPrice": "0.249654",
+                        "token": {
+                            "address": "KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9",
+                            "decimals": 6,
+                            "symbol": "USDtz",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wXTZ",
+                "address": "KT1VYsVfmobT7rsMVivvZ4J8i3bPiqz12NaH",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "30798.795952",
+                        "tokenPool": "39370.070652000000000000000000000000000000",
+                        "address": "KT1W3VGRUjvS869r4ror8kdaxqJAZUbPyjMT",
+                        "sharesTotal": "31361917017",
+                        "midPrice": "0.782290",
+                        "token": {
+                            "address": "KT1VYsVfmobT7rsMVivvZ4J8i3bPiqz12NaH",
+                            "decimals": 6,
+                            "symbol": "wXTZ",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "UNO",
+                "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "29304.822121",
+                        "tokenPool": "1328.309675535000000000000000000000000000",
+                        "address": "KT1Cq3pyv6QEXugsAC2iyXr7ecFqN7fJVTnA",
+                        "sharesTotal": "42585191933",
+                        "midPrice": "22.061740",
+                        "token": {
+                            "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                            "decimals": 9,
+                            "symbol": "UNO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "WRAP",
+                "address": "KT1LRboPna9yQY9BrjtQYDS1DVxhKESK4VVd",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "22915.779374",
+                        "tokenPool": "4067656.801007960000000000000000000000000000",
+                        "address": "KT1FG63hhFtMEEEtmBSX2vuFmP87t9E7Ab4t",
+                        "sharesTotal": "98765155785",
+                        "midPrice": "0.005634",
+                        "token": {
+                            "address": "KT1LRboPna9yQY9BrjtQYDS1DVxhKESK4VVd",
+                            "decimals": 8,
+                            "symbol": "WRAP",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wUSDC",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 17,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "22321.214332",
+                        "tokenPool": "88926.020129000000000000000000000000000000",
+                        "address": "KT1U2hs5eNdeCpHouAvQXGMzGFGJowbhjqmo",
+                        "sharesTotal": "13449109679",
+                        "midPrice": "0.251009",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 6,
+                            "symbol": "wUSDC",
+                            "tokenId": 17,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "PXL",
+                "address": "KT1F1mn2jbqQCJcsNgYKVAQjvenecNMY2oPK",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "21398.863956",
+                        "tokenPool": "6565422.159833000000000000000000000000000000",
+                        "address": "KT1UJ1hVTdiUen7H3zk1CXGC7PbANb57VkS4",
+                        "sharesTotal": "24744341707",
+                        "midPrice": "0.003259",
+                        "token": {
+                            "address": "KT1F1mn2jbqQCJcsNgYKVAQjvenecNMY2oPK",
+                            "decimals": 6,
+                            "symbol": "PXL",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "IDZ",
+                "address": "KT1WapdVeFqhCfqwdHWwTzSTX7yXoHgiPRPU",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "16282.353904",
+                        "tokenPool": "766182.632718190000000000000000000000000000",
+                        "address": "KT18rJtJNmwTfbJMinWqHzpkLeBQa4BVqGoJ",
+                        "sharesTotal": "29113086219",
+                        "midPrice": "0.021251",
+                        "token": {
+                            "address": "KT1WapdVeFqhCfqwdHWwTzSTX7yXoHgiPRPU",
+                            "decimals": 8,
+                            "symbol": "IDZ",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "SMAK",
+                "address": "KT1TwzD6zV3WeJ39ukuqxcfK2fJCnhvrdN1X",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "14521.574513",
+                        "tokenPool": "2504007.013000000000000000000000000000000000",
+                        "address": "KT1Gdix8LoDoQng7YqdPNhdP5V7JRX8FqWvM",
+                        "sharesTotal": "10314492410",
+                        "midPrice": "0.005799",
+                        "token": {
+                            "address": "KT1TwzD6zV3WeJ39ukuqxcfK2fJCnhvrdN1X",
+                            "decimals": 3,
+                            "symbol": "SMAK",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ETHtz",
+                "address": "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "13591.507721",
+                        "tokenPool": "17.491276471271562013000000000000000000",
+                        "address": "KT1Evsp2yA19Whm24khvFPcwimK6UaAJu8Zo",
+                        "sharesTotal": "7516739217",
+                        "midPrice": "777.044931",
+                        "token": {
+                            "address": "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8",
+                            "decimals": 18,
+                            "symbol": "ETHtz",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "USDS",
+                "address": "KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "12555.745771",
+                        "tokenPool": "50236.530252000000000000000000000000000000",
+                        "address": "KT1KFszq8UFCcWxnXuhZPUyHT9FK3gjmSKm6",
+                        "sharesTotal": "11741553111",
+                        "midPrice": "0.249933",
+                        "token": {
+                            "address": "KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf",
+                            "decimals": 6,
+                            "symbol": "USDS",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wBUSD",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 1,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "12195.038766",
+                        "tokenPool": "48653.633589211289394364000000000000000000",
+                        "address": "KT1UMAE2PBskeQayP5f2ZbGiVYF7h8bZ2gyp",
+                        "sharesTotal": "2567971151",
+                        "midPrice": "0.250650",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wBUSD",
+                            "tokenId": 1,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "INSTA",
+                "address": "KT19y6R8x53uDKiM46ahgguS6Tjqhdj2rSzZ",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "12142.799856",
+                        "tokenPool": "1472066.216910162000000000000000000000000000",
+                        "address": "KT1UzjhUhau9g5MjPxKUzM6KRJNwdW1oo52G",
+                        "sharesTotal": "19222249915",
+                        "midPrice": "0.008249",
+                        "token": {
+                            "address": "KT19y6R8x53uDKiM46ahgguS6Tjqhdj2rSzZ",
+                            "decimals": 9,
+                            "symbol": "INSTA",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "GOT",
+                "address": "KT1GioMCKwRyWoQpdrwxvsPVEsFJkkLyquVZ",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "11973.711716",
+                        "tokenPool": "5512231.714893430000000000000000000000000000",
+                        "address": "KT1JyPE1BWdYoRGBvvKhEPbcVRd3C9NCCwQC",
+                        "sharesTotal": "43975894908",
+                        "midPrice": "0.002172",
+                        "token": {
+                            "address": "KT1GioMCKwRyWoQpdrwxvsPVEsFJkkLyquVZ",
+                            "decimals": 8,
+                            "symbol": "GOT",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "crDAO",
+                "address": "KT1XPFjZqCULSnqfKaaYy8hJjeY63UNSGwXg",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "11492.285097",
+                        "tokenPool": "595.007772090000000000000000000000000000",
+                        "address": "KT1FHiJmJUgZMPtv5F8M4ZEa6cb1D9Lf758T",
+                        "sharesTotal": "210995535439",
+                        "midPrice": "19.314513",
+                        "token": {
+                            "address": "KT1XPFjZqCULSnqfKaaYy8hJjeY63UNSGwXg",
+                            "decimals": 8,
+                            "symbol": "crDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "KALAM",
+                "address": "KT1A5P4ejnLix13jtadsfV9GCnXLMNnab8UT",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "11245.169082",
+                        "tokenPool": "348567.516713693200000000000000000000000000",
+                        "address": "KT1J3wTYb4xk5BsSBkg6ML55bX1xq7desS34",
+                        "sharesTotal": "25978056970",
+                        "midPrice": "0.032261",
+                        "token": {
+                            "address": "KT1A5P4ejnLix13jtadsfV9GCnXLMNnab8UT",
+                            "decimals": 10,
+                            "symbol": "KALAM",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "EASY",
+                "address": "KT1QgAtLPu3SNq9c6DPLanwL5bvfX3rgh2CS",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "9990.450982",
+                        "tokenPool": "388342.760765000000000000000000000000000000",
+                        "address": "KT1QHbWZPsXK8rpKkudNLmx4VVvgHvGqjnwP",
+                        "sharesTotal": "12927545092",
+                        "midPrice": "0.025726",
+                        "token": {
+                            "address": "KT1QgAtLPu3SNq9c6DPLanwL5bvfX3rgh2CS",
+                            "decimals": 6,
+                            "symbol": "EASY",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wWBTC",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 19,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "9486.074637",
+                        "tokenPool": "0.865489000000000000000000000000000000",
+                        "address": "KT1DksKXvCBJN7Mw6frGj6y6F3CbABWZVpj1",
+                        "sharesTotal": "8060569625",
+                        "midPrice": "10960.364184",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 8,
+                            "symbol": "wWBTC",
+                            "tokenId": 19,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "kDAO",
+                "address": "KT1JkoE42rrMBP9b2oDhbx6EUr26GcySZMUH",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "8714.834712",
+                        "tokenPool": "19935.968500846303916216000000000000000000",
+                        "address": "KT1NEa7CmaLaWgHNi6LkRi5Z1f4oHfdzRdGA",
+                        "sharesTotal": "363767285926",
+                        "midPrice": "0.437141",
+                        "token": {
+                            "address": "KT1JkoE42rrMBP9b2oDhbx6EUr26GcySZMUH",
+                            "decimals": 18,
+                            "symbol": "kDAO",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wCRO",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 4,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "8267.170807",
+                        "tokenPool": "81079.367626960000000000000000000000000000",
+                        "address": "KT1GSjkSg6MFmEMnTJSk6uyYpWXaEYFahrS4",
+                        "sharesTotal": "1521501248",
+                        "midPrice": "0.101964",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 8,
+                            "symbol": "wCRO",
+                            "tokenId": 4,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "SZO",
+                "address": "KT1WzRVUnrJ4mNu59m9hPQZDY8Nq9JWtUbRf",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "7356.471185",
+                        "tokenPool": "865559.066401000000000000000000000000000000",
+                        "address": "KT1KnbXt3MCjXZNHJtUvzrK8wvBCBUcvhwrq",
+                        "sharesTotal": "14690555704",
+                        "midPrice": "0.008499",
+                        "token": {
+                            "address": "KT1WzRVUnrJ4mNu59m9hPQZDY8Nq9JWtUbRf",
+                            "decimals": 6,
+                            "symbol": "SZO",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "PAUL",
+                "address": "KT19DUSZw7mfeEATrbWVPHRrWNVbNnmfFAE6",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "6242.860614",
+                        "tokenPool": "1029162.776216660000000000000000000000000000",
+                        "address": "KT1K8A8DLUTVuHaDBCZiG6AJdvKJbtH8dqmN",
+                        "sharesTotal": "73707955355",
+                        "midPrice": "0.006066",
+                        "token": {
+                            "address": "KT19DUSZw7mfeEATrbWVPHRrWNVbNnmfFAE6",
+                            "decimals": 8,
+                            "symbol": "PAUL",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "FLAME",
+                "address": "KT1Wa8yqRBpFCusJWgcQyjhRz7hUQAmFxW7j",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "5968.770670",
+                        "tokenPool": "56055227.312898000000000000000000000000000000",
+                        "address": "KT1Q93ftAUzvfMGPwC78nX8eouL1VzmHPd4d",
+                        "sharesTotal": "20539850983",
+                        "midPrice": "0.000106",
+                        "token": {
+                            "address": "KT1Wa8yqRBpFCusJWgcQyjhRz7hUQAmFxW7j",
+                            "decimals": 6,
+                            "symbol": "FLAME",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "AQRtz",
+                "address": "KT19wuExNXayErfuCkcy6Z56cd1FWzF96xXk",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "5476.414917",
+                        "tokenPool": "221777.453164444643450000000000000000000000",
+                        "address": "KT1Sjz9RF7bABNi6rwaoWS8jGNmyf2RxJkrQ",
+                        "sharesTotal": "7692258730",
+                        "midPrice": "0.024693",
+                        "token": {
+                            "address": "KT19wuExNXayErfuCkcy6Z56cd1FWzF96xXk",
+                            "decimals": 14,
+                            "symbol": "AQRtz",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "STKR",
+                "address": "KT1AEfeckNbdEYwaMKkytBwPJPycz7jdSGea",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "5327.872988",
+                        "tokenPool": "2226053.681839625599424167000000000000000000",
+                        "address": "KT1BMEEPX7MWzwwadW3NCSZe9XGmFJ7rs7Dr",
+                        "sharesTotal": "18036621605",
+                        "midPrice": "0.002393",
+                        "token": {
+                            "address": "KT1AEfeckNbdEYwaMKkytBwPJPycz7jdSGea",
+                            "decimals": 18,
+                            "symbol": "STKR",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wWETH",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 20,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "5091.822112",
+                        "tokenPool": "6.638463141209752713000000000000000000",
+                        "address": "KT1DuYujxrmgepwSDHtADthhKBje9BosUs1w",
+                        "sharesTotal": "3464022731",
+                        "midPrice": "767.018209",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wWETH",
+                            "tokenId": 20,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "SOIL",
+                "address": "KT1TtaMcoSx5cZrvaVBWsFoeZ1L15cxo5AEy",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "4995.979264",
+                        "tokenPool": "834970652.209800000000000000000000000000000000",
+                        "address": "KT1NXdxJkCiPkhwPvaT9CytFowuUoNcwGM1p",
+                        "sharesTotal": "840081803",
+                        "midPrice": "0.000006",
+                        "token": {
+                            "address": "KT1TtaMcoSx5cZrvaVBWsFoeZ1L15cxo5AEy",
+                            "decimals": 4,
+                            "symbol": "SOIL",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "akaDAO",
+                "address": "KT1AM3PV1cwmGRw28DVTgsjjsjHvmL6z4rGh",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "4668.789825",
+                        "tokenPool": "79275.089331000000000000000000000000000000",
+                        "address": "KT1Qej1k8WxPvBLUjGVtFXStgzQtcx3itSk5",
+                        "sharesTotal": "8293660122",
+                        "midPrice": "0.058894",
+                        "token": {
+                            "address": "KT1AM3PV1cwmGRw28DVTgsjjsjHvmL6z4rGh",
+                            "decimals": 6,
+                            "symbol": "akaDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "MYH",
+                "address": "KT1BB1uMwVvJ1M3vVHXWALs1RWdgTp1rnXTR",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "4361.429594",
+                        "tokenPool": "8211405738.472129360000000000000000000000000000",
+                        "address": "KT1Ed11bNukFdYSc3qQFZ2HGYdF13XU6WZ4A",
+                        "sharesTotal": "1797343278",
+                        "midPrice": "0.000001",
+                        "token": {
+                            "address": "KT1BB1uMwVvJ1M3vVHXWALs1RWdgTp1rnXTR",
+                            "decimals": 8,
+                            "symbol": "MYH",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "uUSD",
+                "address": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "4019.378703",
+                        "tokenPool": "15999.013240961973000000000000000000000000",
+                        "address": "KT1EtjRRCBC2exyCRXz8UfV7jz7svnkqi7di",
+                        "sharesTotal": "3832305011",
+                        "midPrice": "0.251227",
+                        "token": {
+                            "address": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+                            "decimals": 12,
+                            "symbol": "uUSD",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "hDAO",
+                "address": "KT1AFA2mwNUMNd4SsujE1YYp29vd8BZejyKW",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "3947.884975",
+                        "tokenPool": "8996.547479000000000000000000000000000000",
+                        "address": "KT1QxLqukyfohPV5kPkw97Rs6cw1DDDvYgbB",
+                        "sharesTotal": "7443680535",
+                        "midPrice": "0.438822",
+                        "token": {
+                            "address": "KT1AFA2mwNUMNd4SsujE1YYp29vd8BZejyKW",
+                            "decimals": 6,
+                            "symbol": "hDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "TZD",
+                "address": "KT1RhRYoGmhDr4DShdggQqumRAhwAETxrs3t",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "3258.316349",
+                        "tokenPool": "683971.359159480000000000000000000000000000",
+                        "address": "KT1ERmjYo3hotAFmegVCJ2EAgUmc7RtXyV87",
+                        "sharesTotal": "854348317",
+                        "midPrice": "0.004764",
+                        "token": {
+                            "address": "KT1RhRYoGmhDr4DShdggQqumRAhwAETxrs3t",
+                            "decimals": 8,
+                            "symbol": "TZD",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "YOU",
+                "address": "KT1Xobej4mc6XgEjDoJoHtTKgbD1ELMvcQuL",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "2991.061181",
+                        "tokenPool": "6227.872233972048000000000000000000000000",
+                        "address": "KT1PL1YciLdwMbydt21Ax85iZXXyGSrKT2BE",
+                        "sharesTotal": "2054174362",
+                        "midPrice": "0.480270",
+                        "token": {
+                            "address": "KT1Xobej4mc6XgEjDoJoHtTKgbD1ELMvcQuL",
+                            "decimals": 12,
+                            "symbol": "YOU",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "SEB",
+                "address": "KT1981tPmXh4KrUQKZpQKb55kREX7QGJcF3E",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "2500.927843",
+                        "tokenPool": "271420.790000000000000000000000000000000000",
+                        "address": "KT1S4WyNiYPoYheihysddNh5hojNFdiVBwZL",
+                        "sharesTotal": "982750181",
+                        "midPrice": "0.009214",
+                        "token": {
+                            "address": "KT1981tPmXh4KrUQKZpQKb55kREX7QGJcF3E",
+                            "decimals": 2,
+                            "symbol": "SEB",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "uDEFI",
+                "address": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+                "tokenId": 1,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1878.914341",
+                        "tokenPool": "7398.288985269260000000000000000000000000",
+                        "address": "KT1H8sJY2VzrbiX4pYeUVsoMUd4iGw2DV7XH",
+                        "sharesTotal": "1653939566",
+                        "midPrice": "0.253966",
+                        "token": {
+                            "address": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+                            "decimals": 12,
+                            "symbol": "uDEFI",
+                            "tokenId": 1,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wUSDT",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 18,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1811.157561",
+                        "tokenPool": "7294.424306000000000000000000000000000000",
+                        "address": "KT1T4pfr6NL8dUiz8ibesjEvH2Ne3k6AuXgn",
+                        "sharesTotal": "1534332464",
+                        "midPrice": "0.248293",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 6,
+                            "symbol": "wUSDT",
+                            "tokenId": 18,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "MCH",
+                "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                "tokenId": 3,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1752.102243",
+                        "tokenPool": "168871.154533309000000000000000000000000000",
+                        "address": "KT1JAgJC6FTJ9SzGGits8GVonCr8cfFp5HGV",
+                        "sharesTotal": "4587532628",
+                        "midPrice": "0.010375",
+                        "token": {
+                            "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                            "decimals": 9,
+                            "symbol": "MCH",
+                            "tokenId": 3,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "pxlDAO",
+                "address": "KT1VQG4kZR6FkF8jppegp8cGhjJF66jJejLf",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1696.379519",
+                        "tokenPool": "87632.574708000000000000000000000000000000",
+                        "address": "KT1RbvTVdb5jiT3dMyc9PxLdjzQD6QJjfZ9G",
+                        "sharesTotal": "8069691172",
+                        "midPrice": "0.019358",
+                        "token": {
+                            "address": "KT1VQG4kZR6FkF8jppegp8cGhjJF66jJejLf",
+                            "decimals": 6,
+                            "symbol": "pxlDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wLINK",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 10,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1612.552274",
+                        "tokenPool": "378.988797233743517490000000000000000000",
+                        "address": "KT1Lpysr4nzcFegC9ci9kjoqVidwoanEmJWt",
+                        "sharesTotal": "1760847724",
+                        "midPrice": "4.254881",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wLINK",
+                            "tokenId": 10,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "CVZA",
+                "address": "KT1BCzAq3PrTKPsEBKuoTGZdwX6rN6WE8rJj",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1487.846235",
+                        "tokenPool": "173902277.531223590000000000000000000000000000",
+                        "address": "KT1F3BqwEAoa2koYX4Hz7zJ8xfGSxxAGVT8t",
+                        "sharesTotal": "150624717",
+                        "midPrice": "0.000009",
+                        "token": {
+                            "address": "KT1BCzAq3PrTKPsEBKuoTGZdwX6rN6WE8rJj",
+                            "decimals": 8,
+                            "symbol": "CVZA",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ENR",
+                "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                "tokenId": 2,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1399.369280",
+                        "tokenPool": "3797898.479499054000000000000000000000000000",
+                        "address": "KT1GxxLmBC7tfx4Enpe5YLaCXppAKKfzNRYF",
+                        "sharesTotal": "677901141066",
+                        "midPrice": "0.000368",
+                        "token": {
+                            "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                            "decimals": 9,
+                            "symbol": "ENR",
+                            "tokenId": 2,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "MAG",
+                "address": "KT1H5KJDxuM9DURSfttepebb6Cn7GbvAAT45",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1388.494029",
+                        "tokenPool": "3739957.369699000000000000000000000000000000",
+                        "address": "KT1WREc3cpr36Nqjvegr6WSPgQKwDjL7XxLN",
+                        "sharesTotal": "6810262534",
+                        "midPrice": "0.000371",
+                        "token": {
+                            "address": "KT1H5KJDxuM9DURSfttepebb6Cn7GbvAAT45",
+                            "decimals": 6,
+                            "symbol": "MAG",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wDAI",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 5,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1291.473108",
+                        "tokenPool": "5165.628435435341089447000000000000000000",
+                        "address": "KT1PQ8TMzGMfViRq4tCMFKD2QF5zwJnY67Xn",
+                        "sharesTotal": "1015848603",
+                        "midPrice": "0.250013",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wDAI",
+                            "tokenId": 5,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "hrDAO",
+                "address": "KT1ExpspQSag2x5dATrBxEQzrHP5PJd28fA4",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1248.228395",
+                        "tokenPool": "2114.347858000000000000000000000000000000",
+                        "address": "KT1PiXcVdqgsaYnkQ7KAec9skLRMtmDcsnMy",
+                        "sharesTotal": "4829060351",
+                        "midPrice": "0.590361",
+                        "token": {
+                            "address": "KT1ExpspQSag2x5dATrBxEQzrHP5PJd28fA4",
+                            "decimals": 6,
+                            "symbol": "hrDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "sDAO",
+                "address": "KT19ovJhcsUn4YU8Q5L3BGovKSixfbWcecEA",
+                "tokenId": 1,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1138.358956",
+                        "tokenPool": "676952.000000000000000000000000000000000000",
+                        "address": "KT1PrRTVNgxkRgyqqNQvwTiVhd55dqyxXJ6n",
+                        "sharesTotal": "1993090364",
+                        "midPrice": "0.001682",
+                        "token": {
+                            "address": "KT19ovJhcsUn4YU8Q5L3BGovKSixfbWcecEA",
+                            "decimals": 0,
+                            "symbol": "sDAO",
+                            "tokenId": 1,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "RCKT",
+                "address": "KT19JYndHaesXpvUfiwgg8BtE41HKkjjGMRC",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1050.356742",
+                        "tokenPool": "801307.429395000000000000000000000000000000",
+                        "address": "KT1B7NqoQQkALYPS9fdxrcjGMQST6Wv4yy3h",
+                        "sharesTotal": "2343221690",
+                        "midPrice": "0.001311",
+                        "token": {
+                            "address": "KT19JYndHaesXpvUfiwgg8BtE41HKkjjGMRC",
+                            "decimals": 6,
+                            "symbol": "RCKT",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "FARM",
+                "address": "KT1CnuKyaAuYBAwJf9g5LobtxRZsF2KCD3o6",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "1000.942199",
+                        "tokenPool": "41614884225.988500000000000000000000000000000000",
+                        "address": "KT1NF5vZdWjYQcb8Uq9SkgTrLgc9P23AraX7",
+                        "sharesTotal": "1846406319",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1CnuKyaAuYBAwJf9g5LobtxRZsF2KCD3o6",
+                            "decimals": 4,
+                            "symbol": "FARM",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wMATIC",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 11,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "934.106162",
+                        "tokenPool": "2092.633456615432282423000000000000000000",
+                        "address": "KT1RsfuBee5o7GtYrdB7bzQ1M6oVgyBnxY4S",
+                        "sharesTotal": "385267116",
+                        "midPrice": "0.446378",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wMATIC",
+                            "tokenId": 11,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "HERA",
+                "address": "KT1JXxK3bd39ayLiiBdKm2cdReYnVSG3bkzK",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "797.033731",
+                        "tokenPool": "5113124.606000000000000000000000000000000000",
+                        "address": "KT1DgbAE84xno2wdaEgeYpZkFZMs5fskAgP7",
+                        "sharesTotal": "4810550167",
+                        "midPrice": "0.000156",
+                        "token": {
+                            "address": "KT1JXxK3bd39ayLiiBdKm2cdReYnVSG3bkzK",
+                            "decimals": 3,
+                            "symbol": "HERA",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "WTZ",
+                "address": "KT1PnUZCp3u2KzWr93pn4DD7HAJnm3rWVrgn",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "620.035829",
+                        "tokenPool": "613.018484000000000000000000000000000000",
+                        "address": "KT1VXBX6NwapYf9Sq6LsQVr4SdsDq3ta1nss",
+                        "sharesTotal": "544356067",
+                        "midPrice": "1.011447",
+                        "token": {
+                            "address": "KT1PnUZCp3u2KzWr93pn4DD7HAJnm3rWVrgn",
+                            "decimals": 6,
+                            "symbol": "WTZ",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "HEH",
+                "address": "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "604.170489",
+                        "tokenPool": "6376476.319471000000000000000000000000000000",
+                        "address": "KT1BgezWwHBxA9NrczwK9x3zfgFnUkc7JJ4b",
+                        "sharesTotal": "2945497436",
+                        "midPrice": "0.000095",
+                        "token": {
+                            "address": "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9",
+                            "decimals": 6,
+                            "symbol": "HEH",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "BRR",
+                "address": "KT1UHNDNjrCAAiRbzZrtQF9qHSHVMYeJyX1y",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "473.246464",
+                        "tokenPool": "307219033.118826000000000000000000000000000000",
+                        "address": "KT1PmH3JCEo65koqSGGUArKSpbKMN8dJ3BPZ",
+                        "sharesTotal": "362392750",
+                        "midPrice": "0.000002",
+                        "token": {
+                            "address": "KT1UHNDNjrCAAiRbzZrtQF9qHSHVMYeJyX1y",
+                            "decimals": 6,
+                            "symbol": "BRR",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wHUSD",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 8,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "406.195601",
+                        "tokenPool": "1630.839139160000000000000000000000000000",
+                        "address": "KT1AN7BBmeSUN5eDDQLEhWmXv1gn4exc5k8R",
+                        "sharesTotal": "118531268",
+                        "midPrice": "0.249072",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 8,
+                            "symbol": "wHUSD",
+                            "tokenId": 8,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "GSAL",
+                "address": "KT1VHd7ysjnvxEzwtjBAmYAmasvVCfPpSkiG",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "402.100304",
+                        "tokenPool": "9184993.000000000000000000000000000000000000",
+                        "address": "KT1BzNUUjURkTtNhXFkbGtu9fY3Q5scKZrvK",
+                        "sharesTotal": "1316252713",
+                        "midPrice": "0.000044",
+                        "token": {
+                            "address": "KT1VHd7ysjnvxEzwtjBAmYAmasvVCfPpSkiG",
+                            "decimals": 0,
+                            "symbol": "GSAL",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ptai",
+                "address": "KT1AyVdjSZffJtiMkdwwztEK7ePVyTogzogr",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "391.093136",
+                        "tokenPool": "3912.760100000000000000000000000000000000",
+                        "address": "KT1TtpMxWwAR41b8f8k4ujqjd8YoWvYDR5tN",
+                        "sharesTotal": "122504055",
+                        "midPrice": "0.099953",
+                        "token": {
+                            "address": "KT1AyVdjSZffJtiMkdwwztEK7ePVyTogzogr",
+                            "decimals": 4,
+                            "symbol": "ptai",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "bDAO",
+                "address": "KT1GUNKmkrgtMQjJp3XxcmCj6HZBhkUmMbge",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "383.297963",
+                        "tokenPool": "107100.277002000000000000000000000000000000",
+                        "address": "KT1DssMzoSr8fnUUq1WxeSuHfLG4gzS7pgge",
+                        "sharesTotal": "4505742333",
+                        "midPrice": "0.003579",
+                        "token": {
+                            "address": "KT1GUNKmkrgtMQjJp3XxcmCj6HZBhkUmMbge",
+                            "decimals": 6,
+                            "symbol": "bDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "DeMN",
+                "address": "KT1GBgCd5dk7v4TSzWvtk1X64TxMyG4r7eRX",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "383.072266",
+                        "tokenPool": "255911.778525250000000000000000000000000000",
+                        "address": "KT1TcGBPvmcHawQLdFx5ADDo2hR6XMDhRVdc",
+                        "sharesTotal": "97752670",
+                        "midPrice": "0.001497",
+                        "token": {
+                            "address": "KT1GBgCd5dk7v4TSzWvtk1X64TxMyG4r7eRX",
+                            "decimals": 8,
+                            "symbol": "DeMN",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "PLAT",
+                "address": "KT1SybeY3QZ3kX4PS5ZXhxyv2dZWghTFuCdu",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "381.746179",
+                        "tokenPool": "1.410300000000000000000000000000000000",
+                        "address": "KT1TZFWpS7zvLCsGEqS3xjvC4SkfngeyszyY",
+                        "sharesTotal": "1291140826",
+                        "midPrice": "270.684379",
+                        "token": {
+                            "address": "KT1SybeY3QZ3kX4PS5ZXhxyv2dZWghTFuCdu",
+                            "decimals": 6,
+                            "symbol": "PLAT",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ECN",
+                "address": "KT1M81KrJr6TxYLkZkVqcpSTNKGoya8XytWT",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "377.176703",
+                        "tokenPool": "77099.119149380000000000000000000000000000",
+                        "address": "KT1D9PA7tvuCe9XnDskd2F67XwdrT4ueqjGe",
+                        "sharesTotal": "963159364",
+                        "midPrice": "0.004892",
+                        "token": {
+                            "address": "KT1M81KrJr6TxYLkZkVqcpSTNKGoya8XytWT",
+                            "decimals": 8,
+                            "symbol": "ECN",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "RSAL",
+                "address": "KT19ovJhcsUn4YU8Q5L3BGovKSixfbWcecEA",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "345.617711",
+                        "tokenPool": "6317857.000000000000000000000000000000000000",
+                        "address": "KT1WDe2vJCDqz5euKupppQsioPcakUd45Tfo",
+                        "sharesTotal": "1042611342",
+                        "midPrice": "0.000055",
+                        "token": {
+                            "address": "KT19ovJhcsUn4YU8Q5L3BGovKSixfbWcecEA",
+                            "decimals": 0,
+                            "symbol": "RSAL",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wAAVE",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "338.336564",
+                        "tokenPool": "8.680123639656074981000000000000000000",
+                        "address": "KT1Lvtxpg4MiT2Bs38XGxwh3LGi5MkCENp4v",
+                        "sharesTotal": "320944708",
+                        "midPrice": "38.978312",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wAAVE",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "CHIPS",
+                "address": "KT19uWeDEun67XcoPHPs59FFHsS24Jh12osw",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "329.527503",
+                        "tokenPool": "38741756.452875330000000000000000000000000000",
+                        "address": "KT1Fmcb7LXTki2xx9omhzpjsgwhgDNXsrYWs",
+                        "sharesTotal": "110687342300988",
+                        "midPrice": "0.000009",
+                        "token": {
+                            "address": "KT19uWeDEun67XcoPHPs59FFHsS24Jh12osw",
+                            "decimals": 8,
+                            "symbol": "CHIPS",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "TCZ",
+                "address": "KT1GGxCNiJ7yaBAH4hAw5AHXbP3PSmAiy3wK",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "303.706197",
+                        "tokenPool": "811694231.411701780061349239000000000000000000",
+                        "address": "KT1VfiExduEkrpM4TbsnAw9QV1VURqaRFGKs",
+                        "sharesTotal": "2198609371",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1GGxCNiJ7yaBAH4hAw5AHXbP3PSmAiy3wK",
+                            "decimals": 18,
+                            "symbol": "TCZ",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "SEXP",
+                "address": "KT1Kyc366SrSJ1camxByr363F9WAiHAaReMv",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "295.062213",
+                        "tokenPool": "705106394.442317695553881391000000000000000000",
+                        "address": "KT1EVNuwjj7GijvVaxR7Vd9mejy4V6toZkeK",
+                        "sharesTotal": "3288673942",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1Kyc366SrSJ1camxByr363F9WAiHAaReMv",
+                            "decimals": 18,
+                            "symbol": "SEXP",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "GONZ",
+                "address": "KT1RTsRfBxLf6egtsXrQX1CcXCqKL3XwpuFT",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "278.159871",
+                        "tokenPool": "180275782.126972000000000000000000000000000000",
+                        "address": "KT1V2ycxoY55ACtvdbxQMM7d4wnQ1QCxTCJg",
+                        "sharesTotal": "109586018179",
+                        "midPrice": "0.000002",
+                        "token": {
+                            "address": "KT1RTsRfBxLf6egtsXrQX1CcXCqKL3XwpuFT",
+                            "decimals": 6,
+                            "symbol": "GONZ",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "CLOVER",
+                "address": "KT18jyxMDSMJRPPaZjoe49SUkXxax9QZtcWH",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "274.593237",
+                        "tokenPool": "278584.927064000000000000000000000000000000",
+                        "address": "KT1CYDRyzipkmRgndFrrYfyiAuwKxkFXxfki",
+                        "sharesTotal": "2661106297",
+                        "midPrice": "0.000986",
+                        "token": {
+                            "address": "KT18jyxMDSMJRPPaZjoe49SUkXxax9QZtcWH",
+                            "decimals": 6,
+                            "symbol": "CLOVER",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "PURPLE",
+                "address": "KT1Trhji1aVzDtGiAxiCfWNi9T74Kyi49DK1",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "220.821572",
+                        "tokenPool": "172625658.538755000000000000000000000000000000",
+                        "address": "KT1CgUDhiEQute6BxcgeSbZj3FiG2ZbdQC6B",
+                        "sharesTotal": "1899279200",
+                        "midPrice": "0.000001",
+                        "token": {
+                            "address": "KT1Trhji1aVzDtGiAxiCfWNi9T74Kyi49DK1",
+                            "decimals": 6,
+                            "symbol": "PURPLE",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "BDVXP",
+                "address": "KT1T1PeeRDbsKDYM2nX8JjJ1kkAhHh5FnjgC",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "202.188174",
+                        "tokenPool": "11279557.157761000000000000000000000000000000",
+                        "address": "KT1C755xS3TLH4HEWaCJvWuoHTcytTBdEjgS",
+                        "sharesTotal": "569916802",
+                        "midPrice": "0.000018",
+                        "token": {
+                            "address": "KT1T1PeeRDbsKDYM2nX8JjJ1kkAhHh5FnjgC",
+                            "decimals": 6,
+                            "symbol": "BDVXP",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "NATAS",
+                "address": "KT1GaEvbD4zA3pHs7mv3grpuqR1KGtjXAEDe",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "200.483823",
+                        "tokenPool": "4483.000000000000000000000000000000000000",
+                        "address": "KT1Xoo3KC18TjW5dSLeQwVkk9pkCL26hZfva",
+                        "sharesTotal": "28993535",
+                        "midPrice": "0.044721",
+                        "token": {
+                            "address": "KT1GaEvbD4zA3pHs7mv3grpuqR1KGtjXAEDe",
+                            "decimals": 0,
+                            "symbol": "NATAS",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "BEEF",
+                "address": "KT1M2Ws52krJrwJi1ZFsmVfazBiafWYKZTvd",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "187.745977",
+                        "tokenPool": "1150150028.553931000000000000000000000000000000",
+                        "address": "KT1BtmMAnmTGHAA9ZV8xPzuwZu4ibL7f5qb3",
+                        "sharesTotal": "1933774233",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1M2Ws52krJrwJi1ZFsmVfazBiafWYKZTvd",
+                            "decimals": 6,
+                            "symbol": "BEEF",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "Bezos",
+                "address": "KT1J4m9nxZQSKDwRNahAL1fziuwW9o5hb8Tb",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "167.308162",
+                        "tokenPool": "344015181.000000000000000000000000000000000000",
+                        "address": "KT1ETAtdv2PTvXwbGGsWWjnswfagdUc77hiP",
+                        "sharesTotal": "165483101",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1J4m9nxZQSKDwRNahAL1fziuwW9o5hb8Tb",
+                            "decimals": 0,
+                            "symbol": "Bezos",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "EVIL",
+                "address": "KT1Ava7Qm338ZJj83P1ZhNbGkaRZM8N1FsPD",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "150.274518",
+                        "tokenPool": "56.076100000000000000000000000000000000",
+                        "address": "KT1Ap7YfZAstC8sbnE6Kwm9iywt13NjwRrNB",
+                        "sharesTotal": "64142654",
+                        "midPrice": "2.679832",
+                        "token": {
+                            "address": "KT1Ava7Qm338ZJj83P1ZhNbGkaRZM8N1FsPD",
+                            "decimals": 4,
+                            "symbol": "EVIL",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "WOJAK",
+                "address": "KT1DH7nnWLSBM5f4i8KehH1F5nMvDvknXgJj",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "148.857000",
+                        "tokenPool": "1228.442772970000000000000000000000000000",
+                        "address": "KT1RyjnbuY3WNqQ29jarPynBQMqa5JyvQNbA",
+                        "sharesTotal": "134267705",
+                        "midPrice": "0.121175",
+                        "token": {
+                            "address": "KT1DH7nnWLSBM5f4i8KehH1F5nMvDvknXgJj",
+                            "decimals": 8,
+                            "symbol": "WOJAK",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "dUAC",
+                "address": "KT1N6eu73zztodRsxhJSMEU7R7sxmyBcCV2t",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "141.374679",
+                        "tokenPool": "349373.339886270000000000000000000000000000",
+                        "address": "KT1E9Ze9JGKZGb4jZne86EqLvLuA3woSZvPV",
+                        "sharesTotal": "85916053",
+                        "midPrice": "0.000405",
+                        "token": {
+                            "address": "KT1N6eu73zztodRsxhJSMEU7R7sxmyBcCV2t",
+                            "decimals": 8,
+                            "symbol": "dUAC",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "uBTC",
+                "address": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+                "tokenId": 2,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "140.475423",
+                        "tokenPool": "0.012694656401000000000000000000000000",
+                        "address": "KT1Ao9HNxW9tqGMAvAMGyvP36VhJEUGWVRpx",
+                        "sharesTotal": "149204425",
+                        "midPrice": "11065.712892",
+                        "token": {
+                            "address": "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+                            "decimals": 12,
+                            "symbol": "uBTC",
+                            "tokenId": 2,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "YODA",
+                "address": "KT1BdFvYD2Z1cPEMoREUtMNBcBPmrm5s4Xww",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "130.314529",
+                        "tokenPool": "25947637.349727000000000000000000000000000000",
+                        "address": "KT1X3vM69kdau4dAYa7ZXLdT5H6Gpyvoniui",
+                        "sharesTotal": "125000000",
+                        "midPrice": "0.000005",
+                        "token": {
+                            "address": "KT1BdFvYD2Z1cPEMoREUtMNBcBPmrm5s4Xww",
+                            "decimals": 6,
+                            "symbol": "YODA",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "WHEAT",
+                "address": "KT1DgP4K39T1Wqqax9YZuwnkstnY1gNtqcri",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "127.585406",
+                        "tokenPool": "51677636583.096049000000000000000000000000000000",
+                        "address": "KT1DZuoqhhA6rcViB4seqDbjYDgr3UfCFNt3",
+                        "sharesTotal": "5631863597",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1DgP4K39T1Wqqax9YZuwnkstnY1gNtqcri",
+                            "decimals": 6,
+                            "symbol": "WHEAT",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "fDAO",
+                "address": "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "127.344507",
+                        "tokenPool": "152.558221000000000000000000000000000000",
+                        "address": "KT1BweorZK1CJDEu76SyKcxfzeiAxip73Kot",
+                        "sharesTotal": "468959606",
+                        "midPrice": "0.834727",
+                        "token": {
+                            "address": "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc",
+                            "decimals": 6,
+                            "symbol": "fDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "TZK",
+                "address": "KT1JoBx9GQmWZts7vdUEe5uU2wsWZiAhrepf",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "125.335818",
+                        "tokenPool": "5377230.721840970000000000000000000000000000",
+                        "address": "KT1StK6SjE5TsxpCpKPBHwrVs7VpND5L97jK",
+                        "sharesTotal": "297848180",
+                        "midPrice": "0.000023",
+                        "token": {
+                            "address": "KT1JoBx9GQmWZts7vdUEe5uU2wsWZiAhrepf",
+                            "decimals": 8,
+                            "symbol": "TZK",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "BOGDANOFF",
+                "address": "KT1QaHZUKx3vZEwjSD4r5KpSkKUdHyg2HMCC",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "120.728003",
+                        "tokenPool": "0.834700000000000000000000000000000000",
+                        "address": "KT1SFefVtCDkAPj2KtiDm3Rc3rdLyK7Y5stP",
+                        "sharesTotal": "100000000",
+                        "midPrice": "144.636400",
+                        "token": {
+                            "address": "KT1QaHZUKx3vZEwjSD4r5KpSkKUdHyg2HMCC",
+                            "decimals": 4,
+                            "symbol": "BOGDANOFF",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "MIN",
+                "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                "tokenId": 1,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "120.034024",
+                        "tokenPool": "263714.431561594000000000000000000000000000",
+                        "address": "KT1H5YwfF6nmFZavwzftddbcfxAXmbGhyDCY",
+                        "sharesTotal": "1593975784",
+                        "midPrice": "0.000455",
+                        "token": {
+                            "address": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+                            "decimals": 9,
+                            "symbol": "MIN",
+                            "tokenId": 1,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "DRIP",
+                "address": "KT1XsmJTskZtrJUUmaz3D7nynaZ28mM8HCez",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "114.131884",
+                        "tokenPool": "877151.745572140000000000000000000000000000",
+                        "address": "KT1HWT1vYFyn1t1y5z1Ma2SWr8Lx8UzGjCwM",
+                        "sharesTotal": "0",
+                        "midPrice": "0.000130",
+                        "token": {
+                            "address": "KT1XsmJTskZtrJUUmaz3D7nynaZ28mM8HCez",
+                            "decimals": 8,
+                            "symbol": "DRIP",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ONE",
+                "address": "KT1VRB9X1KjCpaxT5V7PQrTxQPunLejQLwG7",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "109.451249",
+                        "tokenPool": "0.083046246000000000000000000000000000",
+                        "address": "KT1Js2KkULwMdJM8iZH8G36qb56skqSWuhce",
+                        "sharesTotal": "4200200",
+                        "midPrice": "1317.955408",
+                        "token": {
+                            "address": "KT1VRB9X1KjCpaxT5V7PQrTxQPunLejQLwG7",
+                            "decimals": 10,
+                            "symbol": "ONE",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wPAX",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 14,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "108.788396",
+                        "tokenPool": "524.563362269141307218000000000000000000",
+                        "address": "KT1Ca5FGSeFLH3ugstc5p56gJDMPeraBcDqE",
+                        "sharesTotal": "94387415",
+                        "midPrice": "0.207388",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wPAX",
+                            "tokenId": 14,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "tChicken",
+                "address": "KT1QoDjTpkG9jmAMwrPCsaRR78xHDcRKydBp",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "102.656481",
+                        "tokenPool": "107777520.235348000000000000000000000000000000",
+                        "address": "KT1JzZtBeHDBS9XyEqUc9nZhsqcfeNLxVV1T",
+                        "sharesTotal": "147358871",
+                        "midPrice": "0.000001",
+                        "token": {
+                            "address": "KT1QoDjTpkG9jmAMwrPCsaRR78xHDcRKydBp",
+                            "decimals": 6,
+                            "symbol": "tChicken",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wSUSHI",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 15,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "102.604810",
+                        "tokenPool": "104.362886582537582696000000000000000000",
+                        "address": "KT1Lotcahh85kp878JCEc1TjetZ2EgqB24vA",
+                        "sharesTotal": "144665771",
+                        "midPrice": "0.983154",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wSUSHI",
+                            "tokenId": 15,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "GANJA",
+                "address": "KT1NYhjbPh1mPz6DoBsgBRzpLAUTAJbLP9TU",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "100.223422",
+                        "tokenPool": "6863787.000000000000000000000000000000000000",
+                        "address": "KT1NNdfrEgMLsWbYaPyMKsUXkqTSh8hcPs9X",
+                        "sharesTotal": "52386161",
+                        "midPrice": "0.000015",
+                        "token": {
+                            "address": "KT1NYhjbPh1mPz6DoBsgBRzpLAUTAJbLP9TU",
+                            "decimals": 0,
+                            "symbol": "GANJA",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "tDAO",
+                "address": "KT1Cjx8hYwzaCAke6rLWoZBLp8w89VeAduAR",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "95.525696",
+                        "tokenPool": "465171525.416600000000000000000000000000000000",
+                        "address": "KT1X6dAh8fwQMkWC9yh4yuvkJaS5NjqY4NvW",
+                        "sharesTotal": "89722010",
+                        "midPrice": "0.000000",
+                        "token": {
+                            "address": "KT1Cjx8hYwzaCAke6rLWoZBLp8w89VeAduAR",
+                            "decimals": 4,
+                            "symbol": "tDAO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "BAN",
+                "address": "KT1AhSVv4Se1j3Hf5Y6a56vBV44zNzjP91D2",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "77.408710",
+                        "tokenPool": "9158.750000000000000000000000000000000000",
+                        "address": "KT1Sd8jvepChHEHo63owNfjnqgzJEkUWSj9q",
+                        "sharesTotal": "55498300",
+                        "midPrice": "0.008452",
+                        "token": {
+                            "address": "KT1AhSVv4Se1j3Hf5Y6a56vBV44zNzjP91D2",
+                            "decimals": 2,
+                            "symbol": "BAN",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "BIRD",
+                "address": "KT1GkBaPh5pnPYNjMvm3hCGp6Q7tay1pkbjT",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "74.191881",
+                        "tokenPool": "277.890700000000000000000000000000000000",
+                        "address": "KT1SbBu8v8Knwx2kTD4hawbFYu8h4oKX8J6X",
+                        "sharesTotal": "13323072",
+                        "midPrice": "0.266982",
+                        "token": {
+                            "address": "KT1GkBaPh5pnPYNjMvm3hCGp6Q7tay1pkbjT",
+                            "decimals": 4,
+                            "symbol": "BIRD",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "SHTz",
+                "address": "KT19oivKN2qzeWgCs886BbttSVYtkcJHRtuQ",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "71.679669",
+                        "tokenPool": "16730.650000000000000000000000000000000000",
+                        "address": "KT1G7Z14RJLKbfu96Hc22bwNL67aykunAGyH",
+                        "sharesTotal": "496478190",
+                        "midPrice": "0.004284",
+                        "token": {
+                            "address": "KT19oivKN2qzeWgCs886BbttSVYtkcJHRtuQ",
+                            "decimals": 2,
+                            "symbol": "SHTz",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "wUNI",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                "tokenId": 16,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "71.402314",
+                        "tokenPool": "29.052452199486376918000000000000000000",
+                        "address": "KT1Ti3nJT85vNn81Dy5VyNzgufkAorUoZ96q",
+                        "sharesTotal": "39226985",
+                        "midPrice": "2.457704",
+                        "token": {
+                            "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ",
+                            "decimals": 18,
+                            "symbol": "wUNI",
+                            "tokenId": 16,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "AVO",
+                "address": "KT18k2r2n87iRLC38k8ogoZL2uLx2WrvGA1v",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "70.466341",
+                        "tokenPool": "133897473.819863000000000000000000000000000000",
+                        "address": "KT1Cj8DKpSimWLD8JLxAgxhfuNjTH7fheTJj",
+                        "sharesTotal": "94984042",
+                        "midPrice": "0.000001",
+                        "token": {
+                            "address": "KT18k2r2n87iRLC38k8ogoZL2uLx2WrvGA1v",
+                            "decimals": 6,
+                            "symbol": "AVO",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "TTT",
+                "address": "KT1TsUFkH4pa48wmrGRmFpFW13nxHbP4xEKN",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "68.094183",
+                        "tokenPool": "273244.163300570000000000000000000000000000",
+                        "address": "KT1WYoYSdHNmNJf9pHWPoHJWDA3bid1NP9SJ",
+                        "sharesTotal": "6253487",
+                        "midPrice": "0.000249",
+                        "token": {
+                            "address": "KT1TsUFkH4pa48wmrGRmFpFW13nxHbP4xEKN",
+                            "decimals": 8,
+                            "symbol": "TTT",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
