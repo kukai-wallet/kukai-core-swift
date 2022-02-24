@@ -17,6 +17,9 @@ public struct NFT: Codable, Hashable {
 	/// The address of the FA2 contract that created this NFT
 	public let parentContract: String
 	
+	/// Number of duplicate items of this NFT
+	public let balance: Decimal
+	
 	/// Human readbale name (e.g. "Tezos")
 	public let name: String
 	
@@ -56,6 +59,7 @@ public struct NFT: Codable, Hashable {
 	public init(fromTzKTBalance tzkt: TzKTBalance) {
 		tokenId = Decimal(string: tzkt.token.tokenId) ?? 0
 		parentContract = tzkt.token.contract.address
+		balance = Decimal(string: tzkt.balance) ?? 1
 		name = tzkt.token.metadata?.name ?? ""
 		symbol = tzkt.token.metadata?.symbol ?? ""
 		description = tzkt.token.metadata?.description ?? ""
