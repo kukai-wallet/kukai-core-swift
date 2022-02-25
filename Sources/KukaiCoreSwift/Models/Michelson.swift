@@ -334,7 +334,7 @@ public class MichelsonPairArray: AbstractMichelson, Sequence, IteratorProtocol {
 		var container = encoder.unkeyedContainer()
 		try container.encode(contentsOf: args)
 		
-		try super.encode(to: encoder)
+		//try super.encode(to: encoder)
 	}
 	
 	/// Adhearing to `Equatable`
