@@ -41,7 +41,11 @@ public class OperationFactory {
 				let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
 				let michelson = sendTokenMichelson(forFaVersion: token.faVersion ?? .fa1_2, tokenAmount: tokenAmount, tokenId: token.tokenId ?? 0, to: to, from: from)
 				
-				return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)]
+				if (token.faVersion ?? .fa1_2) == .fa1_2 {
+					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)]
+				} else {
+					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: [michelson])]
+				}
 			
 			case .nonfungible:
 				// Can't send an entire NFT group, need to rethink this
@@ -69,8 +73,8 @@ public class OperationFactory {
 		
 		let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
 		let michelson = sendTokenMichelson(forFaVersion: nft.faVersion, tokenAmount: TokenAmount(fromNormalisedAmount: amount, decimalPlaces: nft.decimalPlaces), tokenId: nft.tokenId, to: to, from: from)
-				
-		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, entrypoint: entrypoint, value: michelson)]
+		
+		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, entrypoint: entrypoint, value: [michelson])]
 	}
 	
 	/**
@@ -358,8 +362,9 @@ public class OperationFactory {
 				
 				let amountId = MichelsonPair(args: [idMichelson, tokenAmountMichelson])
 				let destinationAmountId = MichelsonPair(args: [destinationMicheslon, amountId])
+				let destinationAmountIdArrayWrapper = MichelsonPairArray(args: [destinationAmountId])
 				
-				return MichelsonPair(args: [sourceMichelson, destinationAmountId])
+				return MichelsonPair(args: [sourceMichelson, destinationAmountIdArrayWrapper])
 		}
 	}
 	

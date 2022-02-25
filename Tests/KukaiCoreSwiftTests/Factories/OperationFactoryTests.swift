@@ -49,7 +49,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp2[0] is OperationTransaction)
 		
 		if let asTransaction2 = (tokenOp2[0] as? OperationTransaction), let parameters2 = asTransaction2.parameters?["value"] {
-			let targetParameters = "{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"0\"},{\"int\": \"10000000000\"}]}]}]}"
+			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"0\"},{\"int\": \"10000000000\"}]}]}]]}]"
 			XCTAssert("\(parameters2)" == targetParameters, "\(parameters2)")
 		} else {
 			XCTFail("No parameters found")
@@ -64,7 +64,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp3[0] is OperationTransaction)
 		
 		if let asTransaction3 = (tokenOp3[0] as? OperationTransaction), let parameters3 = asTransaction3.parameters?["value"] {
-			let targetParameters = "{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]}"
+			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]]}]"
 			XCTAssert("\(parameters3)" == targetParameters, "\(parameters3)")
 		} else {
 			XCTFail("No parameters found")

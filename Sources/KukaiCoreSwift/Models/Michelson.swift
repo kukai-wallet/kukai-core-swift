@@ -217,6 +217,7 @@ public class MichelsonPair: AbstractMichelson {
 		
 		while !arrayContainer.isAtEnd {
 			if let tempPair = try? arrayContainer.decode(MichelsonPair.self) { tempArgs.append(tempPair) } // Must come before `MichelsonValue` as they share similarities
+			else if let tempPairArray = try? arrayContainer.decode(MichelsonPairArray.self) { tempArgs.append(tempPairArray) }
 			else if let tempValue = try? arrayContainer.decode(MichelsonValue.self) { tempArgs.append(tempValue) }
 			else {
 				let _ = try? arrayContainer.decode(DummyCodable.self)
@@ -241,5 +242,91 @@ public class MichelsonPair: AbstractMichelson {
 	/// Adhearing to `Equatable`
 	public static func == (lhs: MichelsonPair, rhs: MichelsonPair) -> Bool {
 		return lhs.prim == rhs.prim && lhs.args == rhs.args
+	}
+}
+
+
+
+public class MichelsonPairArray: AbstractMichelson, Sequence, IteratorProtocol {
+	
+	/// An array of key / value objects, MichelsonPair's or combination of both
+	public let args: [AbstractMichelson]
+	
+	private var current = 0
+	
+	public func next() -> AbstractMichelson? {
+		defer {
+			current += 1
+		}
+		
+		return args[current]
+	}
+	
+	
+	/// Customized `description` to allow object to be logged to console, how it is returned from the RPC
+	public override var description: String {
+		get {
+			var json = "["
+			
+			for (index, arg) in args.enumerated() {
+				json.append("\(arg)")
+				
+				if index != args.count-1 {
+					json.append(",")
+				}
+			}
+			
+			json.append("]")
+			return json
+		}
+	}
+	
+	
+	
+	// MARK: - Init
+	
+	/// Init accepting any combination of `MichelsonValue` or `MichelsonPair`
+	public init(args: [AbstractMichelson]) {
+		self.args = args
+		
+		super.init()
+	}
+	
+	
+	// MARK: - Protocols
+	
+	/// Adhearing to `Decodable`
+	
+	private struct DummyCodable: Codable {} // Workaround to skipping unknown michelson types in array, as there is no ".skip" or ".next"
+	
+	public required init(from decoder: Decoder) throws {
+		var arrayContainer = try decoder.unkeyedContainer()
+		var tempArgs: [AbstractMichelson] = []
+		
+		while !arrayContainer.isAtEnd {
+			if let tempPair = try? arrayContainer.decode(MichelsonPair.self) { tempArgs.append(tempPair) } // Must come before `MichelsonValue` as they share similarities
+			else if let tempValue = try? arrayContainer.decode(MichelsonValue.self) { tempArgs.append(tempValue) }
+			else {
+				let _ = try? arrayContainer.decode(DummyCodable.self)
+				os_log("Unknown Michelson type found, progress so far: %@", log: .kukaiCoreSwift, type: .error, tempArgs)
+			}
+		}
+		
+		args = tempArgs
+		
+		try super.init(from: decoder)
+	}
+	
+	/// Adhearing to `Encodable`
+	public override func encode(to encoder: Encoder) throws {
+		var container = encoder.unkeyedContainer()
+		try container.encode(contentsOf: args)
+		
+		try super.encode(to: encoder)
+	}
+	
+	/// Adhearing to `Equatable`
+	public static func == (lhs: MichelsonPairArray, rhs: MichelsonPairArray) -> Bool {
+		return lhs.args == rhs.args
 	}
 }

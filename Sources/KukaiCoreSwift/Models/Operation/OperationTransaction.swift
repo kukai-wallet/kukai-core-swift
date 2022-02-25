@@ -88,6 +88,25 @@ public class OperationTransaction: Operation {
 		super.init(operationKind: .transaction, source: source)
 	}
 	
+	/**
+	 Create an OperationTransaction, to invoke a smart contract call
+	 - parameter amount: The amount of XTZ to send. Use `TokenAmount().rpcRepresentation` to create this value.
+	 - parameter source: The address of the acocunt sending the operation.
+	 - parameter entrypoint: The name of the entrypoint to invoke on a smart contract
+	 - parameter value: An array of the MichelsonPair / MichlesonValue to send to the give entrypoint
+	 - parameter destination: The destination address to recieve the funds.
+	 */
+	public init(amount: TokenAmount, source: String, destination: String, entrypoint: String, value: [AbstractMichelson]) {
+		self.amount = amount.rpcRepresentation
+		self.destination = destination
+		
+		var tempDictionary: [String: Encodable] = [CodingKeys.entrypoint.rawValue: entrypoint]
+		tempDictionary[CodingKeys.value.rawValue] = value
+		self.parameters = tempDictionary
+		
+		super.init(operationKind: .transaction, source: source)
+	}
+	
 	
 	
 	// MARK: - Codable
