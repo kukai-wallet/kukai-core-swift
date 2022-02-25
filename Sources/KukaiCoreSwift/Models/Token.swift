@@ -125,6 +125,11 @@ public class Token: Codable, CustomStringConvertible {
 	public var description: String {
 		return "{Symbol: \(symbol), Name: \(name ?? ""), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
 	}
+	
+	/// Helper function to check if the `Token` instance being passed aroun is pointing to XTZ. As many functions will require different functionality for fa token versus XTZ
+	public func isXTZ() -> Bool {
+		return (self.tokenContractAddress == nil && self.symbol.lowercased() == "xtz")
+	}
 }
 
 extension Token: Equatable {
