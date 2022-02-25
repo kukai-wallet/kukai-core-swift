@@ -57,7 +57,7 @@ public class DiskService {
 			return write(data: encodedData, toFileName: toFileName)
 
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, "\(error)")
 			return false
 		}
 	}
@@ -83,7 +83,7 @@ public class DiskService {
 			return try Data(contentsOf: fileURL)
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to read from %@: %@", fromFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to read from %@: %@", fromFileName, "\(error)")
 			return nil
 		}
 	}
@@ -102,7 +102,7 @@ public class DiskService {
 			return try JSONDecoder().decode(T.self, from: data)
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to parse decodable from %@: %@", fromFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to parse decodable from %@: %@", fromFileName, "\(error)")
 			return nil
 		}
 	}
@@ -125,7 +125,7 @@ public class DiskService {
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to delete file %@: %@", fileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to delete file %@: %@", fileName, "\(error)")
 			return false
 		}
 	}

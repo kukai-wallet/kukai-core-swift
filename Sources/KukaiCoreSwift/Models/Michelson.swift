@@ -234,7 +234,19 @@ public class MichelsonPair: AbstractMichelson {
 	public override func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		try container.encode(prim, forKey: .prim)
-		try container.encode(args, forKey: .args)
+		
+		var arrayContainer = container.nestedUnkeyedContainer(forKey: .args)
+		for arg in args {
+			if let a = arg as? MichelsonPair {
+				try arrayContainer.encode(a)
+				
+			} else if let a = arg as? MichelsonPairArray {
+				try arrayContainer.encode(a)
+				
+			} else {
+				try arrayContainer.encode(arg)
+			}
+		}
 		
 		try super.encode(to: encoder)
 	}

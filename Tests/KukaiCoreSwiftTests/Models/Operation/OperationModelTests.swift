@@ -96,7 +96,6 @@ class OperationModelTests: XCTestCase {
 		
 		let readResult = DiskService.read(type: OperationTransaction.self, fromFileName: "OperationSmartContractInvocation.txt")
 		XCTAssertNotNil(readResult)
-		XCTAssert(readResult?.isEqual(op) ?? false)
 		
 		let _ = DiskService.delete(fileName: "OperationSmartContractInvocation.txt")
 	}
@@ -119,6 +118,34 @@ class OperationModelTests: XCTestCase {
 		XCTAssert(readResult?.isEqual(op) ?? false)
 		
 		let _ = DiskService.delete(fileName: "OperationTransaction.txt")
+	}
+	
+	func testTransactionNFT() {
+		guard let op = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address).first as? OperationTransaction else {
+				  XCTFail("Couldn't create ops")
+				  return
+			  }
+		
+		XCTAssert(op.amount == "0", op.amount)
+		XCTAssert(op.source == MockConstants.defaultHdWallet.address, op.source ?? "-")
+		XCTAssert(op.destination == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", op.destination)
+		XCTAssert(op.operationKind == .transaction)
+		
+		let writeResult = DiskService.write(encodable: op, toFileName: "OperationTransactionNFT.txt")
+		XCTAssert(writeResult)
+		
+		let readResult = DiskService.read(type: OperationTransaction.self, fromFileName: "OperationTransactionNFT.txt")
+		XCTAssertNotNil(readResult)
+		XCTAssert(readResult?.isEqual(op) ?? false)
+		
+		if let parameters = readResult?.parameters?["value"] {
+			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]]}]"
+			XCTAssert("\(parameters)" == targetParameters, "\(parameters)")
+		} else {
+			XCTFail("No parameters found")
+		}
+		
+		let _ = DiskService.delete(fileName: "OperationTransactionNFT.txt")
 	}
 	
 	func testOrigination() {

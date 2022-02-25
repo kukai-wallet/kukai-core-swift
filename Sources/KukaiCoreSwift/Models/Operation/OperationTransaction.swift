@@ -101,7 +101,7 @@ public class OperationTransaction: Operation {
 		self.destination = destination
 		
 		var tempDictionary: [String: Encodable] = [CodingKeys.entrypoint.rawValue: entrypoint]
-		tempDictionary[CodingKeys.value.rawValue] = value
+		tempDictionary[CodingKeys.value.rawValue] = value.description
 		self.parameters = tempDictionary
 		
 		super.init(operationKind: .transaction, source: source)
@@ -124,6 +124,11 @@ public class OperationTransaction: Operation {
 		if let parametersContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .parameters),
 		   let entrypoint = try? parametersContainer.decode(String.self, forKey: .entrypoint) {
 			
+			// TODO: revisit
+			// Ran into an unknown issue trying to decode, when MichelsonPair contains a MichelsonPairArray.
+			// Workaround, string description printing works fine, use that to convert Michelson into a string ans just store that instead
+			
+			/*
 			// Try to parse Michelson
 			var michelsonValue: AbstractMichelson? = nil
 			if let value = try? parametersContainer.decodeIfPresent(MichelsonPair.self, forKey: .value) {
@@ -135,7 +140,9 @@ public class OperationTransaction: Operation {
 			} else {
 				throw OperationTransactionError.invalidMichelsonValue
 			}
+			*/
 			
+			let michelsonValue = try? parametersContainer.decode(String.self, forKey: .value)
 			
 			var tempDictionary: [String: Encodable] = [CodingKeys.entrypoint.rawValue: entrypoint]
 			if let val = michelsonValue {
@@ -166,6 +173,9 @@ public class OperationTransaction: Operation {
 				try parametersContainer.encode(pair, forKey: .value)
 				
 			} else if let value = params[CodingKeys.value.rawValue] as? MichelsonValue {
+				try parametersContainer.encode(value, forKey: .value)
+				
+			} else if let value = params[CodingKeys.value.rawValue] as? String {
 				try parametersContainer.encode(value, forKey: .value)
 			}
 		}

@@ -106,6 +106,23 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(payload.contents[0].counter == "143231", payload.contents[0].counter ?? "")
 	}
 	
+	func testPayloadNFT() {
+		let operation = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let payload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: operation, withWallet: MockConstants.defaultHdWallet)
+		XCTAssert(payload.branch == "BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK", payload.branch)
+		XCTAssert(payload.contents.count == 1)
+		XCTAssert(payload.contents[0].operationKind == .transaction)
+		XCTAssert(payload.contents[0] is OperationTransaction)
+		XCTAssert(payload.contents[0].counter == "143231", payload.contents[0].counter ?? "")
+		
+		if let asTransaction = (payload.contents[0] as? OperationTransaction), let parameters = asTransaction.parameters?["value"] {
+			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]]}]"
+			XCTAssert("\(parameters)" == targetParameters, "\(parameters)")
+		} else {
+			XCTFail("No parameters found")
+		}
+	}
+	
 	func testXtzToToken() {
 		let op = OperationFactory.swapXtzToToken(withdex: .lb, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
