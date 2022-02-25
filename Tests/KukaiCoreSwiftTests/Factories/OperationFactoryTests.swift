@@ -56,7 +56,7 @@ class OperationFactoryTests: XCTestCase {
 		}
 		
 		
-		let tokenOp3 = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], parentToken: MockConstants.tokenWithNFTs, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let tokenOp3 = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		XCTAssert(tokenOp3.count == 1)
 		XCTAssert(tokenOp3[0].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(tokenOp3[0].counter == "0")

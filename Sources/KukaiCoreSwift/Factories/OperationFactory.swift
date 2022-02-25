@@ -59,7 +59,7 @@ public class OperationFactory {
 	 - parameter to: The destination address that will recieve the funds.
 	 - returns: An array of `Operation` subclasses.
 	 */
-	public static func sendOperation(_ amount: Decimal, of nft: NFT, parentToken: Token, from: String, to: String) -> [Operation] {
+	public static func sendOperation(_ amount: Decimal, of nft: NFT, from: String, to: String) -> [Operation] {
 		
 		// Return empty array if `amount` is a negaitve value
 		if amount < 0 {
@@ -68,7 +68,7 @@ public class OperationFactory {
 		}
 		
 		let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
-		let michelson = sendTokenMichelson(forFaVersion: parentToken.faVersion ?? .fa2, tokenAmount: TokenAmount(fromNormalisedAmount: amount, decimalPlaces: parentToken.decimalPlaces), tokenId: nft.tokenId, to: to, from: from)
+		let michelson = sendTokenMichelson(forFaVersion: nft.faVersion, tokenAmount: TokenAmount(fromNormalisedAmount: amount, decimalPlaces: nft.decimalPlaces), tokenId: nft.tokenId, to: to, from: from)
 				
 		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, entrypoint: entrypoint, value: michelson)]
 	}
