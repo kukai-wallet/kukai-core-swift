@@ -36,5 +36,10 @@ class TokenTests: XCTestCase {
 		XCTAssert(token2.symbol == "F", token2.symbol)
 		XCTAssert(token2.tokenType == .nonfungible, token2.tokenType.rawValue)
 		XCTAssert(token2.tokenId == 0)
+		
+		let xtzToken = Token.xtz()
+		XCTAssert(xtzToken.isXTZ() == true)
+		XCTAssert(xtzToken.symbol == "XTZ")
+		XCTAssert(xtzToken.tokenContractAddress == nil)
 	}
 }

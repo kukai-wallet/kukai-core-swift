@@ -254,6 +254,10 @@ public struct MockConstants {
 	public static let tokenXTZ = Token.xtz()
 	public static let token3Decimals = Token(name: "Token 3 decimals", symbol: "TK3", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", tokenId: nil, nfts: nil)
 	public static let token10Decimals = Token(name: "Token 10 decimals", symbol: "TK10", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", tokenId: 0, nfts: nil)
+	public static let tokenWithNFTs = Token(name: "TOjen with NFTS", symbol: "T-NFT", tokenType: .nonfungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", tokenId: 0, nfts: [
+		NFT(fromTzKTBalance: TzKTBalance(balance: "1", token: TzKTBalanceToken(contract: TzKTBalanceContract(alias: nil, address: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123"), tokenId: "4",standard: .fa2, metadata: nil)))
+	])
+	
 	
 	public static let xtz_1 = XTZAmount(fromNormalisedAmount: 1)
 	public static let token3Decimals_1 = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 3)

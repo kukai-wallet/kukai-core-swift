@@ -44,9 +44,33 @@ public class OperationFactory {
 				return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)]
 			
 			case .nonfungible:
-				// TODO: implement
+				// Can't send an entire NFT group, need to rethink this
+				os_log(.error, log: .kukaiCoreSwift, "Can't send an entire NFT group. Must send individual NFT's from token.nfts array, via the other sendOperation")
 				return []
 		}
+	}
+	
+	/**
+	 Create the operations necessary to send aan NFT
+	 - parameter : The amount of the given token to send.
+	 - parameter of: The `NFT` type that will be sent.
+	 - parameter parentToken: The `Token` type that the NFT belongs too.
+	 - parameter from: The address to deduct the funds from.
+	 - parameter to: The destination address that will recieve the funds.
+	 - returns: An array of `Operation` subclasses.
+	 */
+	public static func sendOperation(_ amount: Decimal, of nft: NFT, parentToken: Token, from: String, to: String) -> [Operation] {
+		
+		// Return empty array if `amount` is a negaitve value
+		if amount < 0 {
+			os_log(.error, log: .kukaiCoreSwift, "Negative value passed to OperationFactory.sendOperation")
+			return []
+		}
+		
+		let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
+		let michelson = sendTokenMichelson(forFaVersion: parentToken.faVersion ?? .fa2, tokenAmount: TokenAmount(fromNormalisedAmount: amount, decimalPlaces: parentToken.decimalPlaces), tokenId: nft.tokenId, to: to, from: from)
+				
+		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, entrypoint: entrypoint, value: michelson)]
 	}
 	
 	/**

@@ -54,6 +54,21 @@ class OperationFactoryTests: XCTestCase {
 		} else {
 			XCTFail("No parameters found")
 		}
+		
+		
+		let tokenOp3 = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], parentToken: MockConstants.tokenWithNFTs, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		XCTAssert(tokenOp3.count == 1)
+		XCTAssert(tokenOp3[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(tokenOp3[0].counter == "0")
+		XCTAssert(tokenOp3[0].operationKind == .transaction)
+		XCTAssert(tokenOp3[0] is OperationTransaction)
+		
+		if let asTransaction3 = (tokenOp3[0] as? OperationTransaction), let parameters3 = asTransaction3.parameters?["value"] {
+			let targetParameters = "{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]}"
+			XCTAssert("\(parameters3)" == targetParameters, "\(parameters3)")
+		} else {
+			XCTFail("No parameters found")
+		}
 	}
 	
 	func testDelegate() {
