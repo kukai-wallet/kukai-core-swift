@@ -273,7 +273,7 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 	}
 	
 	public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-		guard let completion = self.getMediaTypeCompletion, let e = error else {
+		guard let completion = self.getMediaTypeCompletion, let e = error, e.code != -999 else {
 			// When .cancel() is called it also triggers this callback, but without an error. Just ignore
 			return
 		}
