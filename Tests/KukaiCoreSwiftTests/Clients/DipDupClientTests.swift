@@ -68,6 +68,7 @@ class DipDupClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
+	/*
 	func testChartData() {
 		let expectation = XCTestExpectation(description: "dipdup-get-chart")
 		
@@ -97,4 +98,5 @@ class DipDupClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 3)
 	}
+	*/
 }

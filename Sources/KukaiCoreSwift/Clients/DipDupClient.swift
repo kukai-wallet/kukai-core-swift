@@ -183,30 +183,40 @@ public class DipDupClient {
 	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
 	 */
 	public func getChartDataFor(exchangeContract: String, completion: @escaping ((Result<GraphQLResponse<DipDupChartData>, ErrorResponse>) -> Void)) {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		
+		let now = Date().timeIntervalSince1970
+		
+		let dayAgo = Date(timeIntervalSince1970: now - (60 * 60 * 24))
+		let weekAgo = Date(timeIntervalSince1970: now - (60 * 60 * 24 * 7))
+		let monthAgo = Date(timeIntervalSince1970: now - (60 * 60 * 24 * 7 * 30))
+		let yearAgo = Date(timeIntervalSince1970: now - (60 * 60 * 24 * 365))
+		
 		var query = """
 		query {
-			quotes15mNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+			quotes15mNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}, bucket: {_gt: "\(dateFormatter.string(from: dayAgo))"}}, order_by: {bucket: asc}) {
 				average,
 				exchangeId,
 				bucket,
 				high,
 				low
 			},
-			quotes1hNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+			quotes1hNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}, bucket: {_gt: "\(dateFormatter.string(from: weekAgo))"}}, order_by: {bucket: asc}) {
 				average,
 				exchangeId,
 				bucket,
 				high,
 				low
 			},
-			quotes1dNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+			quotes1dNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}, bucket: {_gt: "\(dateFormatter.string(from: monthAgo))"}}, order_by: {bucket: asc}) {
 				average,
 				exchangeId,
 				bucket,
 				high,
 				low
 			},
-			quotes1wNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+			quotes1wNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}, bucket: {_gt: "\(dateFormatter.string(from: yearAgo))"}}, order_by: {bucket: asc}) {
 				average,
 				exchangeId,
 				bucket,
