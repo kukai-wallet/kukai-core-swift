@@ -80,12 +80,13 @@ class DipDupClientTests: XCTestCase {
 			
 			XCTAssert(res.data?.quotes15mNogaps.count == 6, "\(res.data?.quotes15mNogaps.count ?? -1)")
 			XCTAssert(res.data?.quotes15mNogaps[0].average == 12608.237, "\(res.data?.quotes15mNogaps[0].average ?? 0)")
+			XCTAssert(res.data?.quotes15mNogaps[0].averageDouble() == 12608.237, "\(res.data?.quotes15mNogaps[0].average ?? 0)")
 			XCTAssert(res.data?.quotes15mNogaps[0].bucket == "2022-03-04T03:30:00+00:00", "\(res.data?.quotes15mNogaps[0].bucket ?? "-")")
 			XCTAssert(res.data?.quotes15mNogaps[0].high == "12608.23692735", res.data?.quotes15mNogaps[0].high ?? "-")
 			XCTAssert(res.data?.quotes15mNogaps[0].low == "12608.23692735", res.data?.quotes15mNogaps[0].low ?? "-")
 			XCTAssert(res.data?.quotes15mNogaps[0].date() == Date(timeIntervalSince1970: 1646364600.0), "\(res.data?.quotes15mNogaps[0].date()?.timeIntervalSince1970 ?? 0)")
-			XCTAssert(res.data?.quotes15mNogaps[0].highDecimal().description == "12608.23692735", res.data?.quotes15mNogaps[0].highDecimal().description ?? "-")
-			XCTAssert(res.data?.quotes15mNogaps[0].lowDecimal().description == "12608.23692735", res.data?.quotes15mNogaps[0].lowDecimal().description ?? "-")
+			XCTAssert(res.data?.quotes15mNogaps[0].highDouble().description == "12608.23692735", res.data?.quotes15mNogaps[0].highDouble().description ?? "-")
+			XCTAssert(res.data?.quotes15mNogaps[0].lowDouble().description == "12608.23692735", res.data?.quotes15mNogaps[0].lowDouble().description ?? "-")
 			
 			XCTAssert(res.data?.quotes1hNogaps.count == 5, "\(res.data?.quotes1hNogaps.count ?? -1)")
 			XCTAssert(res.data?.quotes1dNogaps.count == 3, "\(res.data?.quotes1dNogaps.count ?? -1)")

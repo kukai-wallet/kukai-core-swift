@@ -49,13 +49,18 @@ public struct DipDupChartObject: Codable {
 		return dateFormatter.date(from: bucket)
 	}
 	
-	/// Convert the `high` value into a `Decimal`
-	public func highDecimal() -> Decimal {
-		return Decimal(string: high) ?? 0
+	/// Convert the `average` value into a `Double`
+	public func averageDouble() -> Double {
+		return (average as NSDecimalNumber).doubleValue
 	}
 	
-	/// Convert the `low` value into a `Decimal`
-	public func lowDecimal() -> Decimal {
-		return Decimal(string: low) ?? 0
+	/// Convert the `high` value into a `Double`
+	public func highDouble() -> Double {
+		return Double(high) ?? 0
+	}
+	
+	/// Convert the `low` value into a `Double`
+	public func lowDouble() -> Double {
+		return Double(low) ?? 0
 	}
 }
