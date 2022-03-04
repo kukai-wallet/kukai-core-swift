@@ -186,31 +186,31 @@ public class DipDupClient {
 		var query = """
 		query {
 			quotes15mNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
-				average
-				exchangeId
-				bucket
-				high
+				average,
+				exchangeId,
+				bucket,
+				high,
 				low
 			},
 			quotes1hNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
-				average
-				exchangeId
-				bucket
-				high
+				average,
+				exchangeId,
+				bucket,
+				high,
 				low
 			},
 			quotes1dNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
-				average
-				exchangeId
-				bucket
-				high
+				average,
+				exchangeId,
+				bucket,
+				high,
 				low
 			},
 			quotes1wNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
-				average
-				exchangeId
-				bucket
-				high
+				average,
+				exchangeId,
+				bucket,
+				high,
 				low
 			}
 		}
