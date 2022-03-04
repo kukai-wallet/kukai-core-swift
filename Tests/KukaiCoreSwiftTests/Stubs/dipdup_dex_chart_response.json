@@ -1,0 +1,124 @@
+{
+	"data": {
+	  "quotes15mNogaps": [
+		{
+		  "average": 12608.237,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-04T03:30:00+00:00",
+		  "high": "12608.23692735",
+		  "low": "12608.23692735"
+		},
+		{
+		  "average": 12597.654,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-04T00:45:00+00:00",
+		  "high": "12631.21959546",
+		  "low": "12564.08842582"
+		},
+		{
+		  "average": 12487.7705,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T23:15:00+00:00",
+		  "high": "12487.77097165",
+		  "low": "12487.77097165"
+		},
+		{
+		  "average": 12511.677,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T23:00:00+00:00",
+		  "high": "12511.67705017",
+		  "low": "12511.67705017"
+		},
+		{
+		  "average": 12535.931,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T22:45:00+00:00",
+		  "high": "12535.93110872",
+		  "low": "12535.93110872"
+		},
+		{
+		  "average": 12645.173,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T22:00:00+00:00",
+		  "high": "12684.42095723",
+		  "low": "12605.92474363"
+		}
+	  ],
+	  "quotes1hNogaps": [
+		{
+		  "average": 12608.237,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-04T03:00:00+00:00",
+		  "high": "12608.23692735",
+		  "low": "12608.23692735"
+		},
+		{
+		  "average": 12597.654,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-04T00:00:00+00:00",
+		  "high": "12631.21959546",
+		  "low": "12564.08842582"
+		},
+		{
+		  "average": 12499.724,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T23:00:00+00:00",
+		  "high": "12511.67705017",
+		  "low": "12487.77097165"
+		},
+		{
+		  "average": 12608.759,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T22:00:00+00:00",
+		  "high": "12684.42095723",
+		  "low": "12535.93110872"
+		},
+		{
+		  "average": 12575.4,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T21:00:00+00:00",
+		  "high": "12587.14858097",
+		  "low": "12563.65263060"
+		}
+	  ],
+	  "quotes1dNogaps": [
+		{
+		  "average": 12601.182,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-04T00:00:00+00:00",
+		  "high": "12631.21959546",
+		  "low": "12564.08842582"
+		},
+		{
+		  "average": 12514.254,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-03T00:00:00+00:00",
+		  "high": "12696.99006647",
+		  "low": "12126.93470000"
+		},
+		{
+		  "average": 12591.865,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-03-02T00:00:00+00:00",
+		  "high": "12847.83153673",
+		  "low": "12122.21320774"
+		}
+	  ],
+	  "quotes1wNogaps": [
+		{
+		  "average": 12477.271,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-02-28T00:00:00+00:00",
+		  "high": "12847.83153673",
+		  "low": "12089.06914168"
+		},
+		{
+		  "average": 12229.603,
+		  "exchangeId": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+		  "bucket": "2022-02-21T00:00:00+00:00",
+		  "high": "13353.13958457",
+		  "low": "11356.98521556"
+		}
+	  ]
+	}
+  }

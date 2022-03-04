@@ -45,7 +45,7 @@ class NonFungibleChildTableViewController: UITableViewController {
 		}
 		
 		if let ftCell = cell as? NonFungibleTokenCell {
-			MediaProxyService.load(url: nft.displayURL, to: ftCell.iconView, fromCache: MediaProxyService.temporaryImageCache(), fallback: UIImage(), downSampleSize: (width: 150, height: 150))
+			MediaProxyService.load(url: nft.displayURL, to: ftCell.iconView, fromCache: MediaProxyService.temporaryImageCache(), fallback: UIImage(), downSampleSize: ftCell.iconView.frame.size)
 			ftCell.label.text = nft.name
 			ftCell.desc.text = nft.description
 		}

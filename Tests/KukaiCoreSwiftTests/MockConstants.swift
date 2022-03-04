@@ -142,6 +142,8 @@ public struct MockConstants {
 				(MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_response_4"), MockConstants.http200),
 			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_liquidity_request")):
 				(MockConstants.jsonStub(fromFilename: "dipdup_dex_liquidity_response"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_chart_request")):
+				(MockConstants.jsonStub(fromFilename: "dipdup_dex_chart_response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession

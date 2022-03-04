@@ -174,4 +174,64 @@ public class DipDupClient {
 			}
 		}
 	}
+	
+	
+	
+	/**
+	 Query a given contract address for pricing data for the given token
+	 - parameter exchangeContract: The KT address of the dex contract to query data for
+	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
+	 */
+	public func getChartDataFor(exchangeContract: String, completion: @escaping ((Result<GraphQLResponse<DipDupChartData>, ErrorResponse>) -> Void)) {
+		var query = """
+		query {
+			quotes15mNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+				average
+				exchangeId
+				bucket
+				high
+				low
+			},
+			quotes1hNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+				average
+				exchangeId
+				bucket
+				high
+				low
+			},
+			quotes1dNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+				average
+				exchangeId
+				bucket
+				high
+				low
+			},
+			quotes1wNogaps(where: {exchangeId: {_eq: "\(exchangeContract)"}}, order_by: {bucket: desc}) {
+				average
+				exchangeId
+				bucket
+				high
+				low
+			}
+		}
+		"""
+		
+		query = query.replacingOccurrences(of: "\n", with: "")
+		query = query.replacingOccurrences(of: "\t", with: "")
+		
+		let data = try? JSONEncoder().encode(["query": query])
+		
+		self.networkService.request(url: DipDupClient.dexURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<DipDupChartData>.self) { result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
+			}
+			
+			if res.containsErrors() {
+				completion(Result.failure(ErrorResponse.error(string: res.errors?.first?.message ?? "unknown", errorType: .unknownError)))
+			} else {
+				completion(Result.success(res))
+			}
+		}
+	}
 }

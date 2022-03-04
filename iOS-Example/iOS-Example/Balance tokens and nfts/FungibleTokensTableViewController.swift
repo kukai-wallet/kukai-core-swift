@@ -31,7 +31,7 @@ class FungibleTokensTableViewController: UITableViewController {
 		let token = ClientsAndData.shared.account?.tokens[indexPath.row]
 		
 		if let ftCell = cell as? FungibleTokenCell {
-			MediaProxyService.load(url: token?.thumbnailURL, to: ftCell.iconView, fromCache: MediaProxyService.permanentImageCache(), fallback: UIImage(), downSampleSize: (width: 30, height: 30))
+			MediaProxyService.load(url: token?.thumbnailURL, to: ftCell.iconView, fromCache: MediaProxyService.permanentImageCache(), fallback: UIImage(), downSampleSize: ftCell.iconView.frame.size)
 			ftCell.label.text = (token?.balance.normalisedRepresentation ?? "0") + " \(token?.symbol ?? "?")"
 		}
 		
