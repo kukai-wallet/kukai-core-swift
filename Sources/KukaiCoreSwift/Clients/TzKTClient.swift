@@ -397,6 +397,143 @@ public class TzKTClient {
 	
 	// MARK: - Transaction History
 	
+	public func fetchTransactions(forAddress address: String, completion: @escaping (([TzKTTransaction]) -> Void)) {
+		self.dispatchGroupTransactions = DispatchGroup()
+		dispatchGroupTransactions.enter()
+		//dispatchGroupTransactions.enter()
+		//dispatchGroupTransactions.enter()
+		
+		var url = config.tzktURL
+		url.appendPathComponent("v1/accounts/\(address)/operations")
+		url.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
+		url.appendQueryItem(name: "micheline", value: 1)
+		url.appendQueryItem(name: "limit", value: 50)
+		
+		tempTransactions = []
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
+			guard let self = self else { return }
+			
+			switch result {
+				case .success(let transactions):
+					self.tempTransactions = transactions
+					//self.queryFaTokenReceives(forAddress: address, lastId: self.tempTransactions.last?.id)
+					self.dispatchGroupTransactions.leave()
+					
+				case .failure(let error):
+					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
+					self.dispatchGroupTransactions.leave()
+					//self.dispatchGroupTransactions.leave()
+					//self.dispatchGroupTransactions.leave()
+			}
+		}
+		
+		
+		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
+		self.dispatchGroupTransactions.notify(queue: .main) { [weak self] in
+			self?.tempTransactions.sort { $0.level > $1.level }
+			
+			completion(self?.tempTransactions ?? [])
+			
+			//self?.parseTransactions(self?.tempTransactions)
+			//self?.tempTransactions = []
+			//completion()
+		}
+	}
+	
+	private func queryFaTokenReceives(forAddress address: String, lastId: Int?) {
+		guard let id = lastId else {
+			self.dispatchGroupTransactions.leave()
+			self.dispatchGroupTransactions.leave()
+			return
+		}
+		
+		var url1 = config.tzktURL
+		url1.appendPathComponent("v1/operations/transactions")
+		url1.appendQueryItem(name: "sender.ne", value: address)
+		url1.appendQueryItem(name: "target.ne", value: address)
+		url1.appendQueryItem(name: "initiator.ne", value: address)
+		url1.appendQueryItem(name: "entrypoint", value: "transfer")
+		url1.appendQueryItem(name: "parameter.to", value: address)
+		url1.appendQueryItem(name: "id.gt", value: id)
+		url1.appendQueryItem(name: "status", value: "applied")
+		
+		var url2 = config.tzktURL
+		url2.appendPathComponent("v1/accounts/\(address)/operations")
+		url2.appendQueryItem(name: "sender.ne", value: address)
+		url2.appendQueryItem(name: "target.ne", value: address)
+		url2.appendQueryItem(name: "initiator.ne", value: address)
+		url2.appendQueryItem(name: "entrypoint", value: "transfer")
+		url2.appendQueryItem(name: "parameter.%5B*%5D.txs.%5B*%5D.to_", value: address)
+		url2.appendQueryItem(name: "id.gt", value: id)
+		url2.appendQueryItem(name: "status", value: "applied")
+		
+		
+		networkService.request(url: url1, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
+			guard let self = self else { return }
+			
+			switch result {
+				case .success(let transactions):
+					self.tempTransactions.append(contentsOf: transactions)
+					self.dispatchGroupTransactions.leave()
+					
+				case .failure(let error):
+					os_log(.error, log: .kukaiCoreSwift, "Parse error 2: %@", "\(error)")
+					self.dispatchGroupTransactions.leave()
+			}
+		}
+		
+		networkService.request(url: url2, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
+			guard let self = self else { return }
+			
+			switch result {
+				case .success(let transactions):
+					self.tempTransactions.append(contentsOf: transactions)
+					self.dispatchGroupTransactions.leave()
+					
+				case .failure(let error):
+					os_log(.error, log: .kukaiCoreSwift, "Parse error 3: %@", "\(error)")
+					self.dispatchGroupTransactions.leave()
+			}
+		}
+	}
+	
+	public func groupTransactions(transactions: [TzKTTransaction], currentWalletAddress: String) -> [TzKTTransactionGroup] {
+		var tempTrans: [TzKTTransaction] = []
+		var groups: [TzKTTransactionGroup] = []
+		
+		print("\n\n\n")
+		for tran in transactions {
+			print("checking op hash: \(tran.hash)")
+			
+			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
+				tempTrans.append(tran)
+				print("added to array")
+				
+			} else if tempTrans.first?.hash != tran.hash, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
+				groups.append(group)
+				tempTrans = [tran]
+				print("create group from previous, add new to temp")
+			}
+		}
+		
+		if tempTrans.count > 0, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
+			groups.append(group)
+			tempTrans = []
+			print("create from held")
+		}
+		
+		
+		groups.forEach { group in
+			print("group.hash: \(group.hash)")
+		}
+		
+		return groups
+	}
+	
+	
+	
+	/*
 	/**
 	Clear the in RAM copy of transaction history
 	*/
@@ -603,6 +740,7 @@ public class TzKTClient {
 			}
 		}
 	}
+	*/
 }
 
 extension TzKTClient: HubConnectionDelegate {

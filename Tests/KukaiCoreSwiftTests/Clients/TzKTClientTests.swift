@@ -53,6 +53,7 @@ class TzKTClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
+	/*
 	func testTransactionHistory() {
 		let expectation = XCTestExpectation(description: "tzkt-testTransactionHistory")
 		MockConstants.shared.tzktClient.refreshTransactionHistory(forAddress: MockConstants.defaultHdWallet.address, andSupportedTokens: [MockConstants.token3Decimals, MockConstants.token10Decimals]) {
@@ -111,6 +112,7 @@ class TzKTClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 5)
 	}
+	*/
 	
 	func testGetAllBalances() {
 		let expectation = XCTestExpectation(description: "tzkt-testGetAllBalances")
