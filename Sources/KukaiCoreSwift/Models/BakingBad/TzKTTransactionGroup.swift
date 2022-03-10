@@ -62,7 +62,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			self.entrypointCalled = entrypoint
 			self.primaryToken = createTokenDetails(transaction: first)
 			
-			if first.getTokenTransferDestination() == currentWalletAddress {
+			if first.sender != currentWalletAddress && first.initiater != currentWalletAddress {
 				self.groupType = .receive
 				
 			} else {
