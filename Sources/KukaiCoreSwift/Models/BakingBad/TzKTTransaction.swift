@@ -200,7 +200,13 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		return entrypoint
 	}
 	
-	public func getTokenTransferAmount() -> String? {
+	/**
+	 The TzKT transaction API doesn't provide all the info needed to normalise Token amounts. It only gives address and rpc amount.
+	 Burried inside the michelson, the dex contract needs to be told the token id, and the `target` will contain the address.
+	 This function will try to extract address, token id and rpc amount and return them in the standard objects, so that they can be used in conjuction with other functions to fetch the decimal data.
+	 e.g. DipDup client can fetch all tokens from dexes, containing all token info. Using the address and id, the rest could be found via that, assuming zero for anything else (such as NFTs)
+	 */
+	public func getFaTokenTransferData() -> (token: Token, tokenAmountMinusDecimalData: TokenAmount)? {
 		guard getEntrypoint() == "transfer" else {
 			return nil
 		}
@@ -209,23 +215,36 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		if let json = parameterValueAsArrayOfDictionary(),
 		   let txs = json.first?["txs"] as? [[String: Any]],
 		   let obj = txs.first as? [String: String],
-		   let amount = obj["amount"]
+		   let amount = obj["amount"],
+		   let tokenId = obj["token_id"],
+		   let contractAddress = target?.address
 		{
-			return amount
+			return (
+				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: Decimal(string: tokenId), nfts: nil),
+				tokenAmountMinusDecimalData: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+			)
 		}
 		
 		// FA1 token
 		if let json = parameterValueAsDict(),
-		   let amount = json["value"] as? String
+		   let amount = json["value"] as? String,
+		   let contractAddress = target?.address
 		{
-			return amount
+			return (
+				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: 0, nfts: nil),
+				tokenAmountMinusDecimalData: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+			)
 		}
 		
 		// Different type of dex contract
 		if let json = parameterValueAsDict(),
-		   let amount = json["amount"] as? String
+		   let amount = json["amount"] as? String,
+		   let contractAddress = target?.address
 		{
-			return amount
+			return (
+				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: 0, nfts: nil),
+				tokenAmountMinusDecimalData: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+			)
 		}
 		
 		return nil

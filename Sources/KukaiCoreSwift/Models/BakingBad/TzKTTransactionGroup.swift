@@ -22,11 +22,11 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 	}
 	
 	public struct TokenDetails: Codable {
-		public let target: TzKTTransaction.TransactionLocation?
-		public let rpcAmount: String
+		public let token: Token
+		public let amount: TokenAmount
 		
 		public func isXTZ() -> Bool {
-			return target == nil
+			return token.isXTZ()
 		}
 	}
 	
@@ -89,8 +89,8 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 				  (exchangeLast.target?.address == currentWalletAddress || exchangeLast.getTokenTransferDestination() == currentWalletAddress),
 				  let primary = createTokenDetails(transaction: exchangeFirst),
 				  let secondary = createTokenDetails(transaction: exchangeLast),
-				  (primary.isXTZ() || primary.target != nil),
-				  (secondary.isXTZ() || secondary.target != nil) {
+				  (primary.isXTZ() || primary.token.tokenContractAddress != nil),
+				  (secondary.isXTZ() || secondary.token.tokenContractAddress != nil) {
 			
 			// Going from reverse order, get first op in the array that transfers token or XTZ amount
 			// get the last op that transfers a token or an XTZ amount
@@ -115,10 +115,10 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 	
 	private func createTokenDetails(transaction: TzKTTransaction) -> TokenDetails? {
 		if (transaction.amount != .zero()) {
-			return TokenDetails(target: nil, rpcAmount: transaction.amount.rpcRepresentation)
+			return TokenDetails(token: Token.xtz(), amount: transaction.amount)
 			
-		} else if let amount = transaction.getTokenTransferAmount() {
-			return TokenDetails(target: transaction.target, rpcAmount: amount)
+		} else if let data = transaction.getFaTokenTransferData() {
+			return TokenDetails(token: data.token, amount: data.tokenAmountMinusDecimalData)
 		}
 		
 		return nil
