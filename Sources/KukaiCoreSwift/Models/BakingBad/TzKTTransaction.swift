@@ -9,7 +9,7 @@
 import Foundation
 
 /// A model matching the response that comes back from TzKT's API: `v1/accounts/<address>/operations`
-public struct TzKTTransaction: Codable, CustomStringConvertible {
+public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Identifiable {
 	
 	// MARK: Types
 	
@@ -66,6 +66,18 @@ public struct TzKTTransaction: Codable, CustomStringConvertible {
 	
 	public var description: String {
 		return "\(type.rawValue): \nCounter: \(counter), level: \(level), Hash: \(hash), \nInitiater: \(initiater?.address ?? "-"), Sender: \(sender.address), Target: \(target?.address ?? "-"), Amount: \(amount.description)\n"
+	}
+	
+	
+	
+	// MARK: - Hashable
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
+	}
+	
+	public static func == (lhs: TzKTTransaction, rhs: TzKTTransaction) -> Bool {
+		return lhs.id == rhs.id
 	}
 	
 	

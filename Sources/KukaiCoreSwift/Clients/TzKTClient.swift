@@ -29,10 +29,7 @@ public class TzKTClient {
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
 	private let betterCallDevClient: BetterCallDevClient
-	private var currentWalletAddress: String = ""
-	private var supportedTokens: [Token] = []
 	
-	private var transactionHistory: [TimeInterval: [TzKTTransaction]] = [:]
 	private var tempTransactions: [TzKTTransaction] = []
 	private var dispatchGroupTransactions = DispatchGroup()
 	private let tokenBalanceQueue: DispatchQueue
@@ -400,8 +397,8 @@ public class TzKTClient {
 	public func fetchTransactions(forAddress address: String, completion: @escaping (([TzKTTransaction]) -> Void)) {
 		self.dispatchGroupTransactions = DispatchGroup()
 		dispatchGroupTransactions.enter()
-		//dispatchGroupTransactions.enter()
-		//dispatchGroupTransactions.enter()
+		dispatchGroupTransactions.enter()
+		dispatchGroupTransactions.enter()
 		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/accounts/\(address)/operations")
@@ -417,14 +414,14 @@ public class TzKTClient {
 			switch result {
 				case .success(let transactions):
 					self.tempTransactions = transactions
-					//self.queryFaTokenReceives(forAddress: address, lastId: self.tempTransactions.last?.id)
+					self.queryFaTokenReceives(forAddress: address, lastId: self.tempTransactions.last?.id)
 					self.dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
 					self.dispatchGroupTransactions.leave()
-					//self.dispatchGroupTransactions.leave()
-					//self.dispatchGroupTransactions.leave()
+					self.dispatchGroupTransactions.leave()
+					self.dispatchGroupTransactions.leave()
 			}
 		}
 		
@@ -502,30 +499,19 @@ public class TzKTClient {
 		var tempTrans: [TzKTTransaction] = []
 		var groups: [TzKTTransactionGroup] = []
 		
-		print("\n\n\n")
 		for tran in transactions {
-			print("checking op hash: \(tran.hash)")
-			
 			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
 				tempTrans.append(tran)
-				print("added to array")
 				
 			} else if tempTrans.first?.hash != tran.hash, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 				groups.append(group)
 				tempTrans = [tran]
-				print("create group from previous, add new to temp")
 			}
 		}
 		
 		if tempTrans.count > 0, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 			groups.append(group)
 			tempTrans = []
-			print("create from held")
-		}
-		
-		
-		groups.forEach { group in
-			print("group.hash: \(group.hash)")
 		}
 		
 		return groups

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct TzKTTransactionGroup: Codable {
+public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 	
 	// MARK: Types
 	
@@ -41,6 +41,12 @@ public struct TzKTTransactionGroup: Codable {
 	public var primaryToken: TokenDetails? = nil
 	public var secondaryToken: TokenDetails? = nil
 	public var entrypointCalled: String? = nil
+	
+	public var id: Int {
+		get {
+			return transactions.map({ $0.id }).reduce(0, +)
+		}
+	}
 	
 	public init?(withTransactions transactions: [TzKTTransaction], currentWalletAddress: String) {
 		guard let first = transactions.first, let last = transactions.last else {
@@ -86,11 +92,11 @@ public struct TzKTTransactionGroup: Codable {
 				  (primary.isXTZ() || primary.target != nil),
 				  (secondary.isXTZ() || secondary.target != nil) {
 			
-			// going from reverse order, get first op in the array that transfers token or XTZ amount
+			// Going from reverse order, get first op in the array that transfers token or XTZ amount
 			// get the last op that transfers a token or an XTZ amount
 			// Double check that both are not the same op
 			//
-			// Then confirm that the first token transfer is not point to current address, andlast token transfer
+			// Then confirm that the first token transfer is not pointing to current address, and last token transfer
 			// is pointing to the current wallet (either top level address or inside michelson)
 			// as harvesting farms looks similar to exchange, with the difference that a harvest is all tokens coming to the wallet
 			
@@ -116,5 +122,17 @@ public struct TzKTTransactionGroup: Codable {
 		}
 		
 		return nil
+	}
+	
+	
+	
+	// MARK: - Hashable
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
+	}
+	
+	public static func == (lhs: TzKTTransactionGroup, rhs: TzKTTransactionGroup) -> Bool {
+		return lhs.id == rhs.id
 	}
 }
