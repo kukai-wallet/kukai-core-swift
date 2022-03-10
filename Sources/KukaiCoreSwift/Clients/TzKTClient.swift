@@ -450,6 +450,7 @@ public class TzKTClient {
 		url1.appendQueryItem(name: "parameter.to", value: address)
 		url1.appendQueryItem(name: "id.gt", value: id)
 		url1.appendQueryItem(name: "status", value: "applied")
+		url1.appendQueryItem(name: "micheline", value: 1)
 		
 		var url2 = config.tzktURL
 		url2.appendPathComponent("v1/operations/transactions")
@@ -460,6 +461,7 @@ public class TzKTClient {
 		url2.appendQueryItem(name: "parameter.[*].txs.[*].to_", value: address)
 		url2.appendQueryItem(name: "id.gt", value: id)
 		url2.appendQueryItem(name: "status", value: "applied")
+		url2.appendQueryItem(name: "micheline", value: 1)
 		
 		
 		networkService.request(url: url1, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
