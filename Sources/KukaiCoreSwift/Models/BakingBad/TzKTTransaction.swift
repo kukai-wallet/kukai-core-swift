@@ -60,6 +60,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public let parameter: [String: String]?
 	public let status: TransactionStatus
 	
+	public let date: Date?
+	
 	
 	
 	// MARK: - CustomStringConvertible
@@ -107,6 +109,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.amount = amount
 		self.parameter = parameter
 		self.status = status
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		date = dateFormatter.date(from: timestamp)
 	}
 	
 	public init(from decoder: Decoder) throws {
@@ -145,6 +151,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		// Convert status to enum
 		let statusString = try container.decode(String.self, forKey: .status)
 		status = TransactionStatus(rawValue: statusString) ?? .unknown
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		date = dateFormatter.date(from: timestamp)
 	}
 	
 	public func encode(to encoder: Encoder) throws {
