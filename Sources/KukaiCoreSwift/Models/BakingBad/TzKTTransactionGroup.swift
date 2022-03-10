@@ -69,7 +69,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 				self.groupType = .send
 			}
 			
-		} else if if transactions.count == 1, let entrypoint = first.getEntrypoint() {
+		} else if transactions.count == 1, let entrypoint = first.getEntrypoint() {
 			self.groupType = .contractCall
 			self.entrypointCalled = entrypoint
 			
