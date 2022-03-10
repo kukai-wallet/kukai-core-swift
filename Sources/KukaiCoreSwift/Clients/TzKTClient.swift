@@ -431,10 +431,6 @@ public class TzKTClient {
 			self?.tempTransactions.sort { $0.level > $1.level }
 			
 			completion(self?.tempTransactions ?? [])
-			
-			//self?.parseTransactions(self?.tempTransactions)
-			//self?.tempTransactions = []
-			//completion()
 		}
 	}
 	
@@ -456,12 +452,12 @@ public class TzKTClient {
 		url1.appendQueryItem(name: "status", value: "applied")
 		
 		var url2 = config.tzktURL
-		url2.appendPathComponent("v1/accounts/\(address)/operations")
+		url2.appendPathComponent("v1/operations/transactions")
 		url2.appendQueryItem(name: "sender.ne", value: address)
 		url2.appendQueryItem(name: "target.ne", value: address)
 		url2.appendQueryItem(name: "initiator.ne", value: address)
 		url2.appendQueryItem(name: "entrypoint", value: "transfer")
-		url2.appendQueryItem(name: "parameter.%5B*%5D.txs.%5B*%5D.to_", value: address)
+		url2.appendQueryItem(name: "parameter.[*].txs.[*].to_", value: address)
 		url2.appendQueryItem(name: "id.gt", value: id)
 		url2.appendQueryItem(name: "status", value: "applied")
 		
