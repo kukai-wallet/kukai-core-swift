@@ -58,7 +58,18 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 		self.groupType = .unknown
 		
 		
-		if transactions.count == 1, let entrypoint = first.getEntrypoint() {
+		if transactions.count == 1, let entrypoint = first.getEntrypoint(), entrypoint == "transfer" {
+			self.entrypointCalled = entrypoint
+			self.primaryToken = createTokenDetails(transaction: first)
+			
+			if first.getTokenTransferDestination() == currentWalletAddress {
+				self.groupType = .receive
+				
+			} else {
+				self.groupType = .send
+			}
+			
+		} else if if transactions.count == 1, let entrypoint = first.getEntrypoint() {
 			self.groupType = .contractCall
 			self.entrypointCalled = entrypoint
 			
@@ -66,20 +77,19 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			if first.target?.address == currentWalletAddress {
 				self.groupType = .receive
 				self.primaryToken = createTokenDetails(transaction: first)
-				return
 				
 			} else if first.target?.address != currentWalletAddress {
 				self.groupType = .send
 				self.primaryToken = createTokenDetails(transaction: first)
-				return
 				
 			} else if first.type == .delegation {
 				self.groupType = .delegate
-				return
 				
 			} else if first.type == .reveal {
 				self.groupType = .reveal
-				return
+				
+			} else {
+				self.groupType = .unknown
 			}
 			
 		} else if transactions.count > 1,
