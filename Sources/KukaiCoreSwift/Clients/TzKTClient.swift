@@ -36,6 +36,7 @@ public class TzKTClient {
 	
 	private var signalrConnection: HubConnection? = nil
 	private var addressToWatch: String = ""
+	private var newAddressToWatch: String? = nil
 	
 	public var isListening = false
 	
@@ -184,6 +185,14 @@ public class TzKTClient {
 		os_log(.debug, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
 		signalrConnection?.stop()
 		isListening = false
+	}
+	
+	/**
+	 Close the current connection and open another
+	 */
+	public func changeAddressToListenForChanges(address: String) {
+		self.newAddressToWatch = address
+		self.stopListeningForAccountChanges()
 	}
 	
 	
@@ -539,35 +548,14 @@ extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidClose(error: Error?) {
 		os_log("SignalR connection closed: %@", log: .tzkt, type: .debug, String(describing: error))
+		
+		if let address = newAddressToWatch {
+			self.listenForAccountChanges(address: address)
+			newAddressToWatch = nil
+		}
 	}
 	
 	public func connectionDidFailToOpen(error: Error) {
 		os_log("Failed to open SignalR connection to listen for changes: %@", log: .tzkt, type: .error, "\(error)")
-	}
-	
-	public func changeAddressToListenForChanges(address: String) {
-		addressToWatch = address
-		
-		let subscription = AccountSubscription(addresses: [])
-		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
-			if let error = error {
-				os_log("Remove account subscription failed: %@", log: .tzkt, type: .error, "\(error)")
-				self?.signalrConnection?.stop()
-				
-			} else {
-				os_log("Remove account subscription succeeded, requesting new subscription", log: .tzkt, type: .debug)
-				
-				
-				let subscription = AccountSubscription(addresses: [address])
-				self?.signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
-					if let error = error {
-						os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
-						self?.signalrConnection?.stop()
-					} else {
-						os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .debug)
-					}
-				}
-			}
-		}
 	}
 }
