@@ -525,16 +525,7 @@ extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidOpen(hubConnection: HubConnection) {
 		
-		// Request to be subscribed to events belonging to the given account
-		let subscription = AccountSubscription(addresses: [addressToWatch])
-		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
-			if let error = error {
-				os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
-				self?.signalrConnection?.stop()
-			} else {
-				os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .debug)
-			}
-		}
+		changeAddressToListenForChanges(address: addressToWatch)
 	}
 	
 	public func connectionDidClose(error: Error?) {
@@ -543,5 +534,20 @@ extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidFailToOpen(error: Error) {
 		os_log("Failed to open SignalR connection to listen for changes: %@", log: .tzkt, type: .error, "\(error)")
+	}
+	
+	public func changeAddressToListenForChanges(address: String) {
+		addressToWatch = address
+		
+		// Request to be subscribed to events belonging to the given account
+		let subscription = AccountSubscription(addresses: [address])
+		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
+			if let error = error {
+				os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
+				self?.signalrConnection?.stop()
+			} else {
+				os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .debug)
+			}
+		}
 	}
 }
