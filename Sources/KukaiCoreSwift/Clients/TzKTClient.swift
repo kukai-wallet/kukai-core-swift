@@ -37,6 +37,8 @@ public class TzKTClient {
 	private var signalrConnection: HubConnection? = nil
 	private var addressToWatch: String = ""
 	
+	public var isListening = false
+	
 	@Published public var accountDidChange: Bool = false
 	
 	
@@ -142,6 +144,7 @@ public class TzKTClient {
 	 */
 	public func listenForAccountChanges(address: String) {
 		addressToWatch = address
+		isListening = true
 		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/events")
@@ -166,6 +169,7 @@ public class TzKTClient {
 			} catch (let error) {
 				os_log("Failed to parse incoming websocket data: %@", log: .tzkt, type: .error, "\(error)")
 				self?.signalrConnection?.stop()
+				self?.isListening = false
 				//completion(false, error, ErrorResponse.unknownParseError(error: error))
 			}
 		})
@@ -176,9 +180,10 @@ public class TzKTClient {
 	/**
 	 Close the websocket from `listenForAccountChanges`
 	 */
-	public func stopListeningFOrAccountChanges() {
+	public func stopListeningForAccountChanges() {
 		os_log(.debug, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
 		signalrConnection?.stop()
+		isListening = false
 	}
 	
 	
@@ -514,217 +519,6 @@ public class TzKTClient {
 		
 		return groups
 	}
-	
-	
-	
-	/*
-	/**
-	Clear the in RAM copy of transaction history
-	*/
-	public func clearHistory() {
-		transactionHistory = [:]
-	}
-	
-	/**
-	Get the current in RAM transation history, with optional filters
-	- parameter filterByToken: only retuns transactions where the primary or secondary token is of this type.
-	- parameter orFilterByAddress: only retuns transactions where the source or destination address matches this string
-	- returns transactions grouped by day in a dictionary with a key of `TimeInterval`.
-	*/
-	public func currentTransactionHistory(filterByToken: Token?, orFilterByAddress: String?) -> [TimeInterval: [TzKTTransaction]] {
-		
-		// Anything involving the given token
-		if let filterToken = filterByToken {
-			return transactionHistory.mapValues {
-				$0.filter {
-					return ($0.secondaryToken?.symbol == filterToken.symbol || $0.token?.symbol == filterToken.symbol)
-				}
-			}.filter { !$0.value.isEmpty }
-		}
-		
-		// Anything sent or recieved by the given address
-		if let filterAddress = orFilterByAddress {
-			return transactionHistory.mapValues {
-				$0.filter {
-					return ($0.sender.address == filterAddress || $0.target?.address == filterAddress || $0.newDelegate?.address == filterAddress)
-				}
-			}.filter { !$0.value.isEmpty }
-		}
-		
-		// else return everything
-		return transactionHistory
-	}
-	
-	/**
-	Query the lastest transaction history and store in RAM. Get access to the data via `currentTransactionHistory(...)`
-	- parameter forAddress: the wallet address to query the history for.
-	- parameter andSupportedTokens: a list of known tokens, used to add more detail to the transaction objects.
-	- parameter completion: a closure indicating the request and processing has finished.
-	*/
-	public func refreshTransactionHistory(forAddress address: String, andSupportedTokens: [Token], completion: @escaping (() -> Void)) {
-		self.currentWalletAddress = address
-		self.supportedTokens = andSupportedTokens
-		
-		var url = config.tzktURL
-		url.appendPathComponent("v1/accounts/\(address)/operations")
-		url.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
-		
-		self.dispatchGroupTransactions = DispatchGroup()
-		tempTransactions = []
-		
-		
-		// Fetch "Account Transactions" from TZKT. Currently includes everything except Native Token Receives
-		self.dispatchGroupTransactions.enter()
-		self.dispatchGroupTransactions.enter()
-		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
-			switch result {
-				case .success(let transactions):
-					self?.tempTransactions = transactions
-					self?.queryNativeTokenReceives(forAddress: address, lastTransaction: self?.tempTransactions.last)
-					self?.dispatchGroupTransactions.leave()
-					
-				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Parse error full: %@", "\(error)")
-					self?.dispatchGroupTransactions.leave()
-					self?.dispatchGroupTransactions.leave()
-			}
-		}
-		
-		
-		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
-		self.dispatchGroupTransactions.notify(queue: .main) { [weak self] in
-			self?.tempTransactions.sort { $0.level > $1.level }
-			
-			self?.parseTransactions(self?.tempTransactions)
-			self?.tempTransactions = []
-			completion()
-		}
-	}
-	
-	/**
-	Private helper function to seperately query the FA token recieve events
-	*/
-	private func queryNativeTokenReceives(forAddress address: String, lastTransaction: TzKTTransaction?) {
-		// Fetch Native Token Receives using a separate request
-		var url = config.tzktURL
-		url.appendPathComponent("v1/operations/transactions")
-		url.appendQueryItem(name: "entrypoint", value: "transfer")
-		url.appendQueryItem(name: "parameter.to", value: "\(address)")
-		url.appendQueryItem(name: "initiator.null", value: nil) // filter out duplicates from Dexter send events
-		url.appendQueryItem(name: "sort.desc", value: "level")
-		
-		if let transaction = lastTransaction {
-			url.appendQueryItem(name: "timestamp.gt", value: "\(transaction.timestamp)")
-		} else {
-			url.appendQueryItem(name: "limit", value: "25")
-		}
-		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
-			switch result {
-				case .success(let transactions):
-					self?.tempTransactions.append(contentsOf: transactions)
-					self?.dispatchGroupTransactions.leave()
-	
-				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Transaction history native token error: %@", "\(error)")
-					self?.dispatchGroupTransactions.leave()
-			}
-		}
-	}
-	
-	/**
-	Private helper function to parse and process the JSON data into more useful objects
-	*/
-	private func parseTransactions(_ transactions: [TzKTTransaction]?) {
-		guard let transactions = transactions else {
-			return
-		}
-		
-		// Add additional data to transactions so that we can group / merge to make them easier to understand for users
-		self.transactionHistory = [:]
-		var transactionsToBeMerged: [TzKTTransaction] = []
-		var transactionToAdd: TzKTTransaction? = nil
-		
-		// Loop through transactions to determine which need to be displayed, and which need to be merged
-		for (index, transaction) in transactions.enumerated() {
-			transaction.augmentTransaction(withUsersAddress: currentWalletAddress, andTokens: supportedTokens)
-			transactionToAdd = nil
-			
-			// If there is another transaction, check if counters match. If so, store for merging with next transaction (or next again)
-			if let nextTransaction = transactions[safe: index+1], transaction.counter == nextTransaction.counter {
-				transactionsToBeMerged.append(transaction)
-				continue
-			}
-			
-			// If current transaction is .exchangeXtzToToken or .exchangeTokenToXTZ, grab missing info from `transactionsToBeMerged`
-			if transaction.subType == .exchangeXTZToToken {
-				guard let tokenReceiveTransaction = transactionsToBeMerged.last else {
-					transactionsToBeMerged = []
-					continue
-				}
-				
-				transaction.secondaryToken = tokenReceiveTransaction.token
-				transaction.secondaryAmount = tokenReceiveTransaction.amount
-				
-				// Clean merged list
-				transactionsToBeMerged = []
-				transactionToAdd = transaction
-				
-			} else if transaction.subType == .exchangeTokenToXTZ {
-				guard transactionsToBeMerged.count == 2,
-					  let subTransaction1 = transactionsToBeMerged[safe: 0],
-					  let subTransaction1Token = subTransaction1.token,
-					  let subTransaction2 = transactionsToBeMerged[safe: 1] else {
-					transactionsToBeMerged = []
-					continue
-				}
-				
-				let xtzReceivedTransaction = subTransaction1Token.tokenType == .xtz ? subTransaction1 : subTransaction2
-				let tokenDeductedTransaction = subTransaction1Token.tokenType == .xtz ? subTransaction2 : subTransaction1
-				
-				transaction.token = tokenDeductedTransaction.token
-				transaction.amount = tokenDeductedTransaction.amount
-				transaction.secondaryToken = xtzReceivedTransaction.token
-				transaction.secondaryAmount = xtzReceivedTransaction.amount
-				
-				// Clean merged list
-				transactionsToBeMerged = []
-				transactionToAdd = transaction
-				
-			} else if transaction.subType == .approve {
-				
-				// Approves happen behind the scenes as a security measure for other operations (e.g. Exchanges).
-				// User only cares about the network fee incured. Add to transaction before this one and skip displaying this operation
-				if let previousTransaction = transactions[safe: index-1] {
-					let tempTransaction = self.transactionHistory[previousTransaction.truncatedTimeInterval]?.last
-					tempTransaction?.bakerFee += transaction.bakerFee
-					tempTransaction?.storageFee += transaction.storageFee
-					tempTransaction?.allocationFee += transaction.allocationFee
-					
-				} else {
-					// If we can't find a previous transaction, then display the approve
-					transactionToAdd = transaction
-				}
-				
-			} else {
-				transactionToAdd = transaction
-			}
-			
-			
-			// add to transaction history array
-			guard let transToAdd = transactionToAdd else {
-				continue
-			}
-			
-			if self.transactionHistory[transToAdd.truncatedTimeInterval] == nil {
-				self.transactionHistory[transToAdd.truncatedTimeInterval] = [transToAdd]
-			} else {
-				self.transactionHistory[transToAdd.truncatedTimeInterval]?.append(transToAdd)
-			}
-		}
-	}
-	*/
 }
 
 extension TzKTClient: HubConnectionDelegate {

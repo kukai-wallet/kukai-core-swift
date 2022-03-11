@@ -54,13 +54,28 @@ public struct MockConstants {
 		
 		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
 		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
+		tzktHistoryMainURL.appendQueryItem(name: "micheline", value: "1")
+		tzktHistoryMainURL.appendQueryItem(name: "limit", value: "50")
 		
 		var tzktHistoryNativeReceiveURL = tzktURL.appendingPathComponent("v1/operations/transactions")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "sender.ne", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "target.ne", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "initiator.ne", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "entrypoint", value: "transfer")
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "parameter.to", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
-		tzktHistoryNativeReceiveURL.appendQueryItem(name: "initiator.null", value: nil)
-		tzktHistoryNativeReceiveURL.appendQueryItem(name: "sort.desc", value: "level")
-		tzktHistoryNativeReceiveURL.appendQueryItem(name: "timestamp.gt", value: "2020-10-16T16:55:51Z")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "id.gt", value: 174472305)
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "status", value: "applied")
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "micheline", value: 1)
+		
+		var tzktHistoryNativeReceiveURL2 = tzktURL.appendingPathComponent("v1/operations/transactions")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "sender.ne", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "target.ne", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "initiator.ne", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "entrypoint", value: "transfer")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "parameter.[*].txs.[*].to_", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "id.gt", value: 174472305)
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "status", value: "applied")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "micheline", value: 1)
 		
 		var tzktBigmapUserRewardsURL = tzktURL.appendingPathComponent("v1/bigmaps/1494/keys")
 		tzktBigmapUserRewardsURL.appendQueryItem(name: "key", value: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs")
@@ -109,6 +124,7 @@ public struct MockConstants {
 			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
 			tzktHistoryMainURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main"), MockConstants.http200),
 			tzktHistoryNativeReceiveURL: (MockConstants.jsonStub(fromFilename: "tzkt_transaction-native-receive"), MockConstants.http200),
+			tzktHistoryNativeReceiveURL2: (MockConstants.jsonStub(fromFilename: "tzkt_transaction-native-receive2"), MockConstants.http200),
 			tzktURL.appendingPathComponent("v1/contracts/KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc/storage"): (MockConstants.jsonStub(fromFilename: "tzkt_storage_quipu"), MockConstants.http200),
 			tzktBigmapUserRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_userrewards"), MockConstants.http200),
 			tzktBigmapLedgerURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_ledger"), MockConstants.http200),

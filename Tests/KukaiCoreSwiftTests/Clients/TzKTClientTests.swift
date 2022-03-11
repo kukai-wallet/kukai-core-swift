@@ -53,66 +53,90 @@ class TzKTClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
-	/*
 	func testTransactionHistory() {
 		let expectation = XCTestExpectation(description: "tzkt-testTransactionHistory")
-		MockConstants.shared.tzktClient.refreshTransactionHistory(forAddress: MockConstants.defaultHdWallet.address, andSupportedTokens: [MockConstants.token3Decimals, MockConstants.token10Decimals]) {
+		
+		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
+			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
+			XCTAssert(groups.count == 35, "\(groups.count)")
 			
-			let transactions = MockConstants.shared.tzktClient.currentTransactionHistory(filterByToken: nil, orFilterByAddress: nil)
-			XCTAssert(transactions.count == 7, "\(transactions.count)")
+			XCTAssert(groups[0].groupType == .exchange, groups[0].groupType.rawValue)
 			
-			for key in transactions.keys {
-				let transactionArray = transactions[key]
-				
-				if key == 1603234800.0 {
-					XCTAssert(transactionArray?.count == 2, "\(transactionArray?.count ?? 0)")
-					XCTAssert(transactionArray?.first?.type == .transaction, transactionArray?.first?.type.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.subType == .receive, transactionArray?.first?.subType.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.hash == "ooNikcHDL1DUsfuh7N8DkJwbcHPBhgyij2FxQvA99NtuRWTzcnk", transactionArray?.first?.hash ?? "-")
-					XCTAssert(transactionArray?.first?.sender.address == "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN", transactionArray?.first?.sender.address ?? "-")
-					XCTAssert(transactionArray?.first?.networkFee == XTZAmount(fromNormalisedAmount: "0.259415", decimalPlaces: 6), transactionArray?.first?.networkFee.normalisedRepresentation ?? "-")
-					
-				} else if key == 1595458800.0 {
-					XCTAssert(transactionArray?.count == 1, "\(transactionArray?.count ?? 0)")
-					XCTAssert(transactionArray?.first?.type == .delegation, transactionArray?.first?.type.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.subType == .delegation, transactionArray?.first?.subType.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.hash == "ooPWdDR8L1zz6uAmdCPFLf5rVwba7HrStZX1PxKc8vKuS9y1tBh", transactionArray?.first?.hash ?? "-")
-					XCTAssert(transactionArray?.first?.sender.address == "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN", transactionArray?.first?.sender.address ?? "-")
-					XCTAssert(transactionArray?.first?.networkFee == XTZAmount(fromNormalisedAmount: 0.00138), transactionArray?.first?.networkFee.normalisedRepresentation ?? "-")
-					
-				} else if key == 1602802800.0  {
-					XCTAssert(transactionArray?.count == 1, "\(transactionArray?.count ?? 0)")
-					XCTAssert(transactionArray?.first?.type == .transaction, transactionArray?.first?.type.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.subType == .receive, transactionArray?.first?.subType.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.hash == "opND5nyS1GWgxvp3xhFwi9heLjUvgvbTCSLsgRcSU3xghk1hCYd", transactionArray?.first?.hash ?? "-")
-					XCTAssert(transactionArray?.first?.sender.address == "tz1RKLWbGm7T4mnxDZHWazkbnvaryKsxxZTF", transactionArray?.first?.sender.address ?? "-")
-					XCTAssert(transactionArray?.first?.networkFee == XTZAmount(fromNormalisedAmount: 0.258413), transactionArray?.first?.networkFee.normalisedRepresentation ?? "-")
-					
-				} else if key == 1603756800.0  {
-					XCTAssert(transactionArray?.count == 2, "\(transactionArray?.count ?? 0)")
-					XCTAssert(transactionArray?.first?.type == .transaction, transactionArray?.first?.type.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.subType == .exchangeTokenToXTZ, transactionArray?.first?.subType.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.hash == "ooRXrm9wNiguRhJSAfy58ta2ZE89W3aW5ZPprAhSWojwNQFdwb9", transactionArray?.first?.hash ?? "-")
-					XCTAssert(transactionArray?.first?.sender.address == "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN", transactionArray?.first?.sender.address ?? "-")
-					XCTAssert(transactionArray?.first?.networkFee == XTZAmount(fromNormalisedAmount: 0.0876), transactionArray?.first?.networkFee.normalisedRepresentation ?? "-")
-					
-				} else if key == 1603843200.0  {
-					XCTAssert(transactionArray?.count == 1, "\(transactionArray?.count ?? 0)")
-					XCTAssert(transactionArray?.first?.type == .transaction, transactionArray?.first?.type.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.subType == .exchangeXTZToToken, transactionArray?.first?.subType.rawValue ?? "-")
-					XCTAssert(transactionArray?.first?.hash == "ooVkQGcqMdtYbbrNAmE1Ht1v46LD4NQVnDCLCviL5QQ9HukUJUJ", transactionArray?.first?.hash ?? "-")
-					XCTAssert(transactionArray?.first?.sender.address == "tz1X2yA7evDKputSBthrwuGpxpAYHkDUkVCN", transactionArray?.first?.sender.address ?? "-")
-					XCTAssert(transactionArray?.first?.networkFee == XTZAmount(fromNormalisedAmount: 0.045359), transactionArray?.first?.networkFee.normalisedRepresentation ?? "-")
-				}
-			}
+			// Test Exchange
+			XCTAssert(groups[0].hash == "opPA7o4i7JtR2bnsW7rTnqFHoTzK4kDcMgV5SJmR6QS8vhYHp2X", groups[0].hash)
+			XCTAssert(groups[0].primaryToken?.token.tokenContractAddress == "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn", groups[0].primaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[0].primaryToken?.token.tokenId == 0, groups[0].primaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[0].primaryToken?.amount.normalisedRepresentation == "811", groups[0].primaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[0].secondaryToken?.token.tokenContractAddress == nil, groups[0].secondaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[0].secondaryToken?.token.tokenId == nil, groups[0].secondaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[0].secondaryToken?.amount.normalisedRepresentation == "0.107519", groups[0].secondaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[0].entrypointCalled == nil, groups[0].entrypointCalled ?? "-")
+			
+			XCTAssert(groups[0].transactions.count == 4, "\(groups[0].transactions.count)")
+			XCTAssert(groups[0].transactions[0].id == 184404704, "\(groups[0].transactions[0].id)")
+			XCTAssert(groups[0].transactions[0].amount.normalisedRepresentation == "0.107519", groups[0].transactions[0].amount.normalisedRepresentation)
+			XCTAssert(groups[0].transactions[1].id == 184404703, "\(groups[0].transactions[1].id)")
+			XCTAssert(groups[0].transactions[1].amount.normalisedRepresentation == "0", groups[0].transactions[1].amount.normalisedRepresentation)
+			XCTAssert(groups[0].transactions[2].id == 184404702, "\(groups[0].transactions[2].id)")
+			XCTAssert(groups[0].transactions[2].amount.normalisedRepresentation == "0", groups[0].transactions[2].amount.normalisedRepresentation)
+			
+			// Test Receive
+			XCTAssert(groups[1].hash == "onvh7egDq7RmM9CaY8W2hKMPxF4fNhv6sDaNxvpnDKqKNrAwVQq", groups[1].hash)
+			XCTAssert(groups[1].primaryToken?.token.tokenContractAddress == nil, groups[1].primaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[1].primaryToken?.token.tokenId == nil, groups[1].primaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[1].primaryToken?.amount.normalisedRepresentation == "3.298723", groups[1].primaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[1].secondaryToken?.token.tokenContractAddress == nil, groups[1].secondaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[1].secondaryToken?.token.tokenId == nil, groups[1].secondaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[1].secondaryToken?.amount.normalisedRepresentation == nil, groups[1].secondaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[1].entrypointCalled == nil, groups[1].entrypointCalled ?? "-")
+			
+			// Test Contract call
+			XCTAssert(groups[4].hash == "oosSXAfCAqq18RUydvLvzajATaKzE9DcmgWEKHpqKsQBZGPmrwi", groups[4].hash)
+			XCTAssert(groups[4].primaryToken?.token.tokenContractAddress == nil, groups[4].primaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[4].primaryToken?.token.tokenId == nil, groups[4].primaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[4].primaryToken?.amount.normalisedRepresentation == nil, groups[4].primaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[4].secondaryToken?.token.tokenContractAddress == nil, groups[4].secondaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[4].secondaryToken?.token.tokenId == nil, groups[4].secondaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[4].secondaryToken?.amount.normalisedRepresentation == nil, groups[4].secondaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[4].entrypointCalled == "update_operators", groups[4].entrypointCalled ?? "-")
+			
+			// Test Harvest
+			XCTAssert(groups[6].hash == "oopWrK35bXMtHoeHsRRUfaMgDX8NNGAVJBzior57zkJWVYubgGX", groups[6].hash)
+			XCTAssert(groups[6].primaryToken?.token.tokenContractAddress == nil, groups[6].primaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[6].primaryToken?.token.tokenId == nil, groups[6].primaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[6].primaryToken?.amount.normalisedRepresentation == nil, groups[6].primaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].secondaryToken?.token.tokenContractAddress == nil, groups[6].secondaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[6].secondaryToken?.token.tokenId == nil, groups[6].secondaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[6].secondaryToken?.amount.normalisedRepresentation == nil, groups[6].secondaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].entrypointCalled == "harvest", groups[6].entrypointCalled ?? "-")
+			
+			XCTAssert(groups[6].transactions.count == 6, "\(groups[6].transactions.count)")
+			XCTAssert(groups[6].transactions[0].id == 183382669, "\(groups[6].transactions[0].id)")
+			XCTAssert(groups[6].transactions[0].amount.normalisedRepresentation == "0", groups[6].transactions[0].amount.normalisedRepresentation)
+			XCTAssert(groups[6].transactions[0].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation == "387545563", groups[6].transactions[0].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].transactions[1].id == 183382668, "\(groups[6].transactions[1].id)")
+			XCTAssert(groups[6].transactions[1].amount.normalisedRepresentation == "0", groups[6].transactions[1].amount.normalisedRepresentation)
+			XCTAssert(groups[6].transactions[1].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation == nil, groups[6].transactions[1].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].transactions[2].id == 183382667, "\(groups[6].transactions[2].id)")
+			XCTAssert(groups[6].transactions[2].amount.normalisedRepresentation == "0", groups[6].transactions[2].amount.normalisedRepresentation)
+			XCTAssert(groups[6].transactions[2].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation == "435173012223", groups[6].transactions[2].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation ?? "-")
+			
+			// Test FA receive
+			XCTAssert(groups[14].hash == "ooetYdtgaC7FTYwfTmWYMHL688ax4vqfcV46MZjXhzQBY7xT9dA", groups[14].hash)
+			XCTAssert(groups[14].primaryToken?.token.tokenContractAddress == "KT1Qm7MHmbdiBzoRs7xqBiqoRxw7T2cxTTJN", groups[14].primaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[14].primaryToken?.token.tokenId == 2, groups[14].primaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[14].primaryToken?.amount.normalisedRepresentation == "2", groups[14].primaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[14].secondaryToken?.token.tokenContractAddress == nil, groups[14].secondaryToken?.token.tokenContractAddress ?? "-")
+			XCTAssert(groups[14].secondaryToken?.token.tokenId == nil, groups[14].secondaryToken?.token.tokenId?.description ?? "-")
+			XCTAssert(groups[14].secondaryToken?.amount.normalisedRepresentation == nil, groups[14].secondaryToken?.amount.normalisedRepresentation ?? "-")
+			XCTAssert(groups[14].entrypointCalled == "transfer", groups[14].entrypointCalled ?? "-")
 			
 			expectation.fulfill()
 		}
 		
 		wait(for: [expectation], timeout: 5)
 	}
-	*/
 	
 	func testGetAllBalances() {
 		let expectation = XCTestExpectation(description: "tzkt-testGetAllBalances")
