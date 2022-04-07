@@ -12,10 +12,10 @@ import CustomAuth
 class TorusAuthServiceTests: XCTestCase {
 	
 	static let googleSubVerifier = SubVerifierDetails(loginType: .web, loginProvider: .google, clientId: "mock-google-id", verifierName: "mock-google-name", redirectURL: "native://mock1")
-	let torusService = TorusAuthService(networkType: .testnet, networkService: MockConstants.shared.networkService, testnetVerifiers: [
-		.twitter: SubverifierWrapper(aggregateVerifierName: "mock-twitter-verifier", subverifier: SubVerifierDetails(loginType: .web, loginProvider: .twitter, clientId: "mock-twitter-id", verifierName: "mock-twitter-name", redirectURL: "native://mock1", jwtParams: ["domain": "torus-test.auth0.com"])),
-		.google: SubverifierWrapper(aggregateVerifierName: "mock-google-verifier", subverifier: TorusAuthServiceTests.googleSubVerifier)
-	], mainnetVerifiers: [:])
+	let torusService = TorusAuthService(networkService: MockConstants.shared.networkService, verifiers: [
+		.twitter: SubverifierWrapper(aggregateVerifierName: "mock-twitter-verifier", networkType: .testnet, subverifier: SubVerifierDetails(loginType: .web, loginProvider: .twitter, clientId: "mock-twitter-id", verifierName: "mock-twitter-name", redirectURL: "native://mock1", jwtParams: ["domain": "torus-test.auth0.com"])),
+		.google: SubverifierWrapper(aggregateVerifierName: "mock-google-verifier", networkType: .testnet, subverifier: TorusAuthServiceTests.googleSubVerifier)
+	])
 	
 	override func setUpWithError() throws {
 	}

@@ -35,6 +35,9 @@ public struct SubverifierWrapper {
 	/// The name of the aggregated verifier
 	public let aggregateVerifierName: String?
 	
+	/// Unlike seed based wallets, Torus verifiers are bound to a network and generate different addresses. In order to give the same experience on Tezos, we need to supply the network for each verifier
+	public let networkType: TezosNodeClientConfig.NetworkType
+	
 	/// The matching `SubVerifierDetails` object
 	public let subverifier: SubVerifierDetails
 	
@@ -46,8 +49,9 @@ public struct SubverifierWrapper {
 	}
 	
 	/// Create an instance of the object with an option string for the aggregate verifier name, and a `SubVerifierDetails` object
-	public init(aggregateVerifierName: String?, subverifier: SubVerifierDetails) {
+	public init(aggregateVerifierName: String?, networkType: TezosNodeClientConfig.NetworkType, subverifier: SubVerifierDetails) {
 		self.aggregateVerifierName = aggregateVerifierName
+		self.networkType = networkType
 		self.subverifier = subverifier
 	}
 }
@@ -76,20 +80,11 @@ public class TorusAuthService: NSObject {
 	
 	// MARK: - Private properties
 	
-	/// Tezos mainnet or testnet
-	private let networkType: TezosNodeClientConfig.NetworkType
-	
 	/// Shared Network service for a small number of requests
 	private let networkService: NetworkService
 	
-	/// Torus relies on the Ethereum network for smart contracts. Need to specify which network it uses
-	private let ethereumNetworkType: EthereumNetwork
-	
-	/// Torus verifier settings used on Testnet
-	private let testnetVerifiers: [TorusAuthProvider: SubverifierWrapper]
-	
-	/// Torus verifier settings used on mainnet
-	private let mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper]
+	/// Torus verifier settings used by the app
+	private let verifiers: [TorusAuthProvider: SubverifierWrapper]
 	
 	/// The Ethereum contract address to use on testnet
 	private let testnetProxyAddress = "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183"
@@ -104,7 +99,7 @@ public class TorusAuthService: NSObject {
 	private let torusUtils: TorusUtils
 	
 	/// Shared instance of the Torus object used for fetching details about the Ethereum node, in order to query it for public tz2 addresses
-	private let fetchNodeDetails: FetchNodeDetails
+	private var fetchNodeDetails: FetchNodeDetails
 	
 	/// Stored copy of the Torus NodeDetails object. The fetching of this is forced onto the main thread, blocking the UI. Need to push it onto a background thread and store it for other code to access
 	private var nodeDetails: AllNodeDetails? = nil
@@ -122,19 +117,14 @@ public class TorusAuthService: NSObject {
 	
 	/**
 	Setup the TorusAuthService verifiers and networking clients for testnet and mainnet, so they can be queried easier.
-	- parameter networkType: Testnet or mainnet
 	- parameter networkService: A networking service instance used for converting twitter handles into twitter id's
-	- parameter testnetVerifiers: List of verfiiers avaialble on the testnet network
-	- parameter mainnetVerifiers: List of verfiiers avaialble on the mainnet network
+	- parameter verifiers: List of verifiers available to the library for the given app context
 	*/
-	public init(networkType: TezosNodeClientConfig.NetworkType, networkService: NetworkService, testnetVerifiers: [TorusAuthProvider: SubverifierWrapper], mainnetVerifiers: [TorusAuthProvider: SubverifierWrapper]) {
-		self.networkType = networkType
+	public init(networkService: NetworkService, verifiers: [TorusAuthProvider: SubverifierWrapper]) {
 		self.networkService = networkService
-		self.ethereumNetworkType = (networkType == .testnet ? .ROPSTEN : .MAINNET)
-		self.testnetVerifiers = testnetVerifiers
-		self.mainnetVerifiers = mainnetVerifiers
+		self.verifiers = verifiers
 		
-		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: self.ethereumNetworkType, urlSession: networkService.urlSession)
+		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: .MAINNET, urlSession: networkService.urlSession)
 		self.torusUtils = TorusUtils(nodePubKeys: [], loglevel: .info, urlSession: networkService.urlSession)
 	}
 	
@@ -150,7 +140,7 @@ public class TorusAuthService: NSObject {
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: CustomAuth? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
-		guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+		guard let verifierWrapper = verifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
@@ -162,7 +152,7 @@ public class TorusAuthService: NSObject {
 			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
 							   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
 							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: self.ethereumNetworkType,
+							   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
 							   loglevel: .info,
 							   urlSession: self.networkService.urlSession)
 			
@@ -170,7 +160,7 @@ public class TorusAuthService: NSObject {
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
 							   aggregateVerifierName: verifierWrapper.subverifier.subVerifierId,
 							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: self.ethereumNetworkType,
+							   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
 							   loglevel: .info,
 							   urlSession: self.networkService.urlSession)
 		}
@@ -261,11 +251,12 @@ public class TorusAuthService: NSObject {
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
 	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
-		guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[authType] : mainnetVerifiers[authType] else {
+		guard let verifierWrapper = verifiers[authType] else {
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
 		
+		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET), urlSession: networkService.urlSession)
 		self.fetchNodeDetails.getAllNodeDetails().done { [weak self] allNodeDetails in
 			self?.nodeDetails = allNodeDetails
 			
@@ -381,7 +372,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 		switch authorization.credential {
 			case let appleIDCredential as ASAuthorizationAppleIDCredential:
 				
-				guard let verifierWrapper = self.networkType == .testnet ? testnetVerifiers[.apple] : mainnetVerifiers[.apple] else {
+				guard let verifierWrapper = verifiers[.apple] else {
 					createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
 					return
 				}
@@ -396,7 +387,11 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				let claim = JWT.claim(name: "sub")
 				let sub = claim.string ?? ""
 				
-				let tdsdk = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "", subVerifierDetails: [], network: ethereumNetworkType, loglevel: .info)
+				let tdsdk = CustomAuth(aggregateVerifierType: .singleLogin,
+									   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
+									   subVerifierDetails: [],
+									   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
+									   loglevel: .info)
 				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
