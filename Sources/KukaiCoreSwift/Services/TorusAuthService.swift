@@ -387,7 +387,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				let claim = JWT.claim(name: "sub")
 				let sub = claim.string ?? ""
 				
-				let tdsdk = CustomAuth(aggregateVerifierType: .singleLogin,
+				let tdsdk = CustomAuth(aggregateVerifierType: .singleIdVerifier,
 									   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
 									   subVerifierDetails: [],
 									   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
