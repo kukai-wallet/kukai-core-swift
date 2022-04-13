@@ -34,6 +34,9 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet))
 		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
 		
+		// Check it fails if we try add the same wallet a second time
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet) == false)
+		
 		// Check they have been stored
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 2)
 		

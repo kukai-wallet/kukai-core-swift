@@ -70,13 +70,13 @@ public class WalletCacheService {
 	// MARK: - Storage and Retrieval
 	
 	/**
-	Add a `Wallet` object to the local encrypted storage
+	Add a `Wallet` object to the local encrypted storage, provided it doesn't already exist
 	- Parameter wallet: An object conforming to `Wallet` to be stored
 	- Returns: Bool, indicating if the storage was successful or not
 	*/
 	public func cache<T: Wallet>(wallet: T) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt() else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets")
+		guard let existingWallets = readFromDiskAndDecrypt(), !existingWallets.contains(where: { $0.address == wallet.address }) else {
+			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets or wallet already exists in cache")
 			return false
 		}
 		

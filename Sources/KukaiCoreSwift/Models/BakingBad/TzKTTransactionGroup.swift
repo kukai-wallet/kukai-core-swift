@@ -25,6 +25,11 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 		public let token: Token
 		public let amount: TokenAmount
 		
+		public init(token: Token, amount: TokenAmount) {
+			self.token = token
+			self.amount = amount
+		}
+		
 		public func isXTZ() -> Bool {
 			return token.isXTZ()
 		}
@@ -128,7 +133,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			return TokenDetails(token: Token.xtz(), amount: transaction.amount)
 			
 		} else if let data = transaction.getFaTokenTransferData() {
-			return TokenDetails(token: data.token, amount: data.tokenAmountMinusDecimalData)
+			return data
 		}
 		
 		return nil

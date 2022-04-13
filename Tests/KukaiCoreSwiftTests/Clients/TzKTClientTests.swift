@@ -114,13 +114,13 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[6].transactions.count == 6, "\(groups[6].transactions.count)")
 			XCTAssert(groups[6].transactions[0].id == 183382669, "\(groups[6].transactions[0].id)")
 			XCTAssert(groups[6].transactions[0].amount.normalisedRepresentation == "0", groups[6].transactions[0].amount.normalisedRepresentation)
-			XCTAssert(groups[6].transactions[0].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation == "387545563", groups[6].transactions[0].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].transactions[0].getFaTokenTransferData()?.amount.normalisedRepresentation == "387545563", groups[6].transactions[0].getFaTokenTransferData()?.amount.normalisedRepresentation ?? "-")
 			XCTAssert(groups[6].transactions[1].id == 183382668, "\(groups[6].transactions[1].id)")
 			XCTAssert(groups[6].transactions[1].amount.normalisedRepresentation == "0", groups[6].transactions[1].amount.normalisedRepresentation)
-			XCTAssert(groups[6].transactions[1].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation == nil, groups[6].transactions[1].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].transactions[1].getFaTokenTransferData()?.amount.normalisedRepresentation == nil, groups[6].transactions[1].getFaTokenTransferData()?.amount.normalisedRepresentation ?? "-")
 			XCTAssert(groups[6].transactions[2].id == 183382667, "\(groups[6].transactions[2].id)")
 			XCTAssert(groups[6].transactions[2].amount.normalisedRepresentation == "0", groups[6].transactions[2].amount.normalisedRepresentation)
-			XCTAssert(groups[6].transactions[2].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation == "435173012223", groups[6].transactions[2].getFaTokenTransferData()?.tokenAmountMinusDecimalData.normalisedRepresentation ?? "-")
+			XCTAssert(groups[6].transactions[2].getFaTokenTransferData()?.amount.normalisedRepresentation == "435173012223", groups[6].transactions[2].getFaTokenTransferData()?.amount.normalisedRepresentation ?? "-")
 			
 			// Test FA receive
 			XCTAssert(groups[14].hash == "ooetYdtgaC7FTYwfTmWYMHL688ax4vqfcV46MZjXhzQBY7xT9dA", groups[14].hash)

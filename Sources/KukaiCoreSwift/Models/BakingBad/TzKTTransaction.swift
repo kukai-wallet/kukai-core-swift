@@ -216,7 +216,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	 This function will try to extract address, token id and rpc amount and return them in the standard objects, so that they can be used in conjuction with other functions to fetch the decimal data.
 	 e.g. DipDup client can fetch all tokens from dexes, containing all token info. Using the address and id, the rest could be found via that, assuming zero for anything else (such as NFTs)
 	 */
-	public func getFaTokenTransferData() -> (token: Token, tokenAmountMinusDecimalData: TokenAmount)? {
+	public func getFaTokenTransferData() -> TzKTTransactionGroup.TokenDetails? {
 		guard getEntrypoint() == "transfer" else {
 			return nil
 		}
@@ -229,9 +229,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let tokenId = obj["token_id"],
 		   let contractAddress = target?.address
 		{
-			return (
+			return TzKTTransactionGroup.TokenDetails(
 				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: Decimal(string: tokenId), nfts: nil),
-				tokenAmountMinusDecimalData: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+				amount: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
 			)
 		}
 		
@@ -240,9 +240,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let amount = json["value"] as? String,
 		   let contractAddress = target?.address
 		{
-			return (
+			return TzKTTransactionGroup.TokenDetails(
 				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: 0, nfts: nil),
-				tokenAmountMinusDecimalData: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+				amount: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
 			)
 		}
 		
@@ -251,9 +251,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let amount = json["amount"] as? String,
 		   let contractAddress = target?.address
 		{
-			return (
+			return TzKTTransactionGroup.TokenDetails(
 				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: 0, nfts: nil),
-				tokenAmountMinusDecimalData: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+				amount: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
 			)
 		}
 		
