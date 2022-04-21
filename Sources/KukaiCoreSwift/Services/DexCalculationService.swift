@@ -359,7 +359,7 @@ public class DexCalculationService {
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("xtzToTokenPriceImpact"),
-			  let result = inner.call(withArguments: [xtz, xtzPool, tokenPool, settings.burn, settings.includeSubsidy]) else {
+			  let result = inner.call(withArguments: [xtz, xtzPool, tokenPool, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
@@ -524,7 +524,7 @@ public class DexCalculationService {
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
 			  let inner = outer.objectForKeyedSubscript("tokenToXtzPriceImpact"),
-			  let result = inner.call(withArguments: [token, xtzPool, tokenPool, settings.burn, settings.includeSubsidy]) else {
+			  let result = inner.call(withArguments: [token, xtzPool, tokenPool, settings.fee, settings.burn, settings.includeSubsidy]) else {
 			return nil
 		}
 		
