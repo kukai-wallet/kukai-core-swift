@@ -34,7 +34,7 @@ public class ClientsAndData {
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		torusAuthService = TorusAuthService(networkType: clientConfig.networkType, networkService: tezosNodeClient.networkService, testnetVerifiers: [:], mainnetVerifiers: [:])
+		torusAuthService = TorusAuthService(networkService: tezosNodeClient.networkService, verifiers: [:])
 		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 	}
 	
@@ -44,7 +44,7 @@ public class ClientsAndData {
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		torusAuthService = TorusAuthService(networkType: clientConfig.networkType, networkService: tezosNodeClient.networkService, testnetVerifiers: [:], mainnetVerifiers: [:])
+		torusAuthService = TorusAuthService(networkService: tezosNodeClient.networkService, verifiers: [:])
 		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 	}
 }

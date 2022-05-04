@@ -31,6 +31,7 @@ public class HDWallet: Wallet {
 	
 	/// The default derivation path used by this library
 	public static let defaultDerivationPath = "m/44'/1729'/0'/0'"
+	public static let defaultDerivationPathWithPlaceHolder = "m/44'/1729'/%i'/0'"
 	
 	
 	
@@ -56,6 +57,9 @@ public class HDWallet: Wallet {
 	
 	/// The Bip44 derivationPath used to create the wallet
 	public var derivationPath: String
+	
+	/// HDWallets created with the same key pair, by incrementing the derivation path. Stored so they can be grouped appropriately
+	public var childWallets: [HDWallet] = []
 	
 	/// The passphrase used to create the wallet. Needed to recreate wallet object using `Codable`
 	private var passphrase: String?
@@ -135,6 +139,7 @@ public class HDWallet: Wallet {
 		case sortIndex
 		case mnemonic
 		case derivationPath
+		case childWallets
 		case seed
 		case passphrase
 	}
@@ -150,6 +155,7 @@ public class HDWallet: Wallet {
 		sortIndex = try container.decode(Int.self, forKey: .sortIndex)
 		mnemonic = try container.decode(String.self, forKey: .mnemonic)
 		derivationPath = try container.decode(String.self, forKey: .derivationPath)
+		childWallets = try container.decode([HDWallet].self, forKey: .childWallets)
 		passphrase = try container.decodeIfPresent(String.self, forKey: .passphrase)
 		
 		// Rebuild trust wallet object and extract private and public key
@@ -172,6 +178,7 @@ public class HDWallet: Wallet {
 		try container.encode(sortIndex, forKey: .sortIndex)
 		try container.encode(mnemonic, forKey: .mnemonic)
 		try container.encode(derivationPath, forKey: .derivationPath)
+		try container.encode(childWallets, forKey: .childWallets)
 		try container.encodeIfPresent(passphrase, forKey: .passphrase)
 	}
 	
@@ -207,6 +214,21 @@ public class HDWallet: Wallet {
 	*/
 	public func publicKeyBase58encoded() -> String {
 		return Base58.encode(message: publicKey.data.bytes, prefix: Prefix.Keys.Ed25519.public)
+	}
+	
+	/**
+	 The default implementation in Ledger is to not give users the option to provide their own derivation path, but instead increment the "account" field by 1 each time.
+	 This function will create a new `HDWallet`, by taking the default derivation path and changing the account to `self.childWallets.count + 1`, and using the same key
+	 */
+	public func addNextChildWallet() -> Bool {
+		let newDerivationPath = HDWallet.defaultDerivationPathWithPlaceHolder.replacingOccurrences(of: "%i", with: "\(self.childWallets.count + 1)")
+		
+		guard let newWallet = HDWallet(withInternalTrustWallet: self.internalTrustWallet, derivationPath: newDerivationPath, passphrase: nil) else {
+			return false
+		}
+		
+		self.childWallets.append(newWallet)
+		return true
 	}
 }
 

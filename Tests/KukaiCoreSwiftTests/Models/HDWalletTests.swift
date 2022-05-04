@@ -66,4 +66,18 @@ class HDWalletTests: XCTestCase {
 		let encoded = MockConstants.defaultHdWallet.publicKeyBase58encoded()
 		XCTAssert(encoded == MockConstants.hdWallet.base58Encoded, encoded)
 	}
+	
+	func testChildWallets() {
+		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")
+		XCTAssert(wallet?.address == MockConstants.hdWallet.address, wallet?.address ?? "-")
+		
+		XCTAssert(wallet?.addNextChildWallet() ?? false)
+		XCTAssert(wallet?.childWallets[0].address == MockConstants.hdWallet.childWalletAddresses[0], wallet?.childWallets[0].address ?? "-")
+		
+		XCTAssert(wallet?.addNextChildWallet() ?? false)
+		XCTAssert(wallet?.childWallets[1].address == MockConstants.hdWallet.childWalletAddresses[1], wallet?.childWallets[1].address ?? "-")
+		
+		XCTAssert(wallet?.addNextChildWallet() ?? false)
+		XCTAssert(wallet?.childWallets[2].address == MockConstants.hdWallet.childWalletAddresses[2], wallet?.childWallets[2].address ?? "-")
+	}
 }

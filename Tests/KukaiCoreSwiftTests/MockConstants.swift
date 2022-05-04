@@ -227,6 +227,8 @@ public struct MockConstants {
 		public static let publicKey = "1e4291f2501ce283e55ce583d4388ec8d247dd6c72fff3ff2d48b2af84cc9a23"
 		public static let signedData = "3882ed4ec04ca29e12f3aecea23f50297f8c569c21092dfcef3196eff55ac39a637c2da93d348935a88110f30b177c052f17c432d888a06c9eba434cc3707601"
 		public static let base58Encoded = "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E"
+		
+		public static let childWalletAddresses = ["tz1UT8i2XoS3c8fosNhJeBQ9fRSYURT7m5gZ", "tz1LbbJKLx3Epu8hNqzRQk82fVT6AEWXMymB", "tz1YWuMAR5r15tqHwgBP5cAQULua3o7ZfiJf"]
 	}
 	
 	public struct hdWallet_withPassphrase {
