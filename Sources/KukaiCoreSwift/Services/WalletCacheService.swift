@@ -89,6 +89,42 @@ public class WalletCacheService {
 	}
 	
 	/**
+	 Remove a specific wallet, or child wallet from the cache
+	 - Parameter withAddress: The address of the wallet to remove
+	 - Parameter parentHDWallet: Optional, required if trying to remove the child address of a HDWallet
+	 - Returns: Bool, indicating if the storage was successful or not
+	 */
+	public func deleteWallet(withAddress: String, parentHDWallet: String?) -> Bool {
+		guard let existingWallets = readFromDiskAndDecrypt() else {
+			os_log(.error, log: .kukaiCoreSwift, "Unable to fetch wallets")
+			return false
+		}
+		
+		var newWallets = existingWallets
+		
+		// Either find the parent HDWallet and then remove its child, else find the wallet and remove it
+		if let hdWalletAddress = parentHDWallet {
+			guard let hdWallet = newWallets.first(where: { $0.address == hdWalletAddress }) as? HDWallet, let index = hdWallet.childWallets.firstIndex(where: { $0.address == withAddress }) else {
+				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
+				return false
+			}
+			
+			let _ = hdWallet.childWallets.remove(at: index)
+			
+			
+		} else {
+			guard let index = newWallets.firstIndex(where: { $0.address == withAddress }) else {
+				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
+				return false
+			}
+			
+			let _ = newWallets.remove(at: index)
+		}
+		
+		return encryptAndWriteToDisk(wallets: newWallets)
+	}
+	
+	/**
 	Take an array of `Wallet` objects, serialise to JSON, encrypt and then write to disk
 	- Returns: Bool, indicating if the process was successful
 	*/
