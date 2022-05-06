@@ -89,6 +89,24 @@ public class WalletCacheService {
 	}
 	
 	/**
+	 Update a `HDWallet` instance to record changes to `.childWallets` in the cache
+	 - Parameter hdWallet: The modified `HDWallet` to be stored
+	 - Parameter atIndex: the index of the old copy of the the `HDWallet` to replace
+	 - Returns: Bool, indicating if the storage was successful or not
+	 */
+	public func update(hdWallet: HDWallet, atIndex: Int) -> Bool {
+		guard let existingWallets = readFromDiskAndDecrypt(), atIndex < existingWallets.count else {
+			os_log(.error, log: .kukaiCoreSwift, "Unable to fetch wallets or range out of bounds")
+			return false
+		}
+		
+		var newWallets = existingWallets
+		newWallets[atIndex] = hdWallet
+		
+		return encryptAndWriteToDisk(wallets: newWallets)
+	}
+	
+	/**
 	 Remove a specific wallet, or child wallet from the cache
 	 - Parameter withAddress: The address of the wallet to remove
 	 - Parameter parentHDWallet: Optional, required if trying to remove the child address of a HDWallet

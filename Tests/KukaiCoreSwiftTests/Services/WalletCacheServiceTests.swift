@@ -100,6 +100,34 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.deleteCacheAndKeys())
 	}
 	
+	func testUpdate() {
+		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		
+		// Check its empty to begin with
+		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
+		
+		// Check we can write wallet objects
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
+		
+		// Check what was stored
+		let cachedWallet = (walletCacheService.fetchPrimaryWallet() as? HDWallet)
+		XCTAssert(cachedWallet?.childWallets.count == 0)
+		
+		// Update and check again
+		if let hdWallet = cachedWallet {
+			XCTAssert(hdWallet.addNextChildWallet())
+			XCTAssert(walletCacheService.update(hdWallet: hdWallet, atIndex: 0))
+		} else {
+			XCTFail("Failed to unwrap HDWallet")
+		}
+		
+		let cachedWallet2 = (walletCacheService.fetchPrimaryWallet() as? HDWallet)
+		XCTAssert(cachedWallet2?.childWallets.count == 1)
+		
+		// Clean up
+		XCTAssert(walletCacheService.deleteCacheAndKeys())
+	}
+	
 	func testCurves() {
 		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
 		
