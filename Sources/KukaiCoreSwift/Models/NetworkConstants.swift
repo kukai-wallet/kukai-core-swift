@@ -10,7 +10,7 @@ import Foundation
 
 /// The contants that a given Tezos node is using for block times, blakc size etc
 public struct NetworkConstants: Codable {
-	public let time_between_blocks: [String]
+	public let minimal_block_delay: String
 	public let hard_gas_limit_per_operation: String
 	public let hard_gas_limit_per_block: String
 	public let origination_size: Int
@@ -18,7 +18,7 @@ public struct NetworkConstants: Codable {
 	public let hard_storage_limit_per_operation: String
 	
 	public func secondsBetweenBlocks() -> Int {
-		return Int(time_between_blocks[0]) ?? 60
+		return Int(minimal_block_delay) ?? 30
 	}
 	
 	public func mutezPerByte() -> Int {
