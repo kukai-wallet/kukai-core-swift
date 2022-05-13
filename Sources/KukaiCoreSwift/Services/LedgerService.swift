@@ -439,6 +439,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				peripheral.setNotifyValue(true, for: notify)
 				
 				self.deviceConnectedPublisher.send(true)
+				return
 			}
 		}
 	}
