@@ -9,10 +9,7 @@
     "blocks_per_commitment": 16,
     "blocks_per_roll_snapshot": 128,
     "blocks_per_voting_period": 1024,
-    "time_between_blocks": [
-        "30",
-        "20"
-    ],
+    "minimal_block_delay": "30",
     "endorsers_per_block": 32,
     "hard_gas_limit_per_operation": "1040000",
     "hard_gas_limit_per_block": "10400000",
