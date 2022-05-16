@@ -19,6 +19,8 @@ public enum TezosChainName: String {
 	case florencenet
 	case granadanet
 	case hangzhounet
+	case ithacanet
+	case jakartanet
 	case unknwon
 }
 
