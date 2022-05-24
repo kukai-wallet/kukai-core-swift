@@ -22,6 +22,8 @@ class FeeEstimatorServiceTests: XCTestCase {
     }
 	
 	func testEstimation1() {
+		MockConstants.resetOperations()
+		
 		let expectation = XCTestExpectation(description: "Estimation service")
 		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, receivedSuggestedGas: false) { result in
 			switch result {
@@ -41,13 +43,15 @@ class FeeEstimatorServiceTests: XCTestCase {
 	}
 	
 	func testEstimation2() {
+		MockConstants.resetOperations()
+		
 		let expectation = XCTestExpectation(description: "Estimation service")
 		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, receivedSuggestedGas: true) { result in
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
 					XCTAssert(operations[0].operationFees?.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees?.allFees().description ?? "")
-					XCTAssert(operations[1].operationFees?.allFees() == XTZAmount(fromNormalisedAmount: 0.000666), operations[1].operationFees?.allFees().description ?? "")
+					XCTAssert(operations[1].operationFees?.allFees() == XTZAmount(fromNormalisedAmount: 0.130977), operations[1].operationFees?.allFees().description ?? "")
 					
 				case .failure(let error):
 					XCTFail(error.description)

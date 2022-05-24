@@ -170,7 +170,7 @@ public class FeeEstimatorService {
 			
 			
 			// Extract gas, storage, burn, allocation etc, fees from the response body
-			guard let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
+			guard let newFee = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
 				completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
 				return
 			}
@@ -179,9 +179,12 @@ public class FeeEstimatorService {
 			// Apply the full fee to the last operation so its only charged if the whole thing is successful
 			for (index, op) in operations.enumerated() {
 				if index == operations.count-1 {
-					op.operationFees = fees
+					op.operationFees?.transactionFee = newFee.transactionFee
+					op.operationFees?.networkFees = newFee.networkFees
+					
 				} else {
-					op.operationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
+					op.operationFees?.transactionFee = .zero()
+					op.operationFees?.networkFees = [[:]]
 				}
 			}
 			
@@ -198,9 +201,13 @@ public class FeeEstimatorService {
 		// Apply the full fee to the last operation so its only charged if the whole thing is successful
 		for (index, op) in operations.enumerated() {
 			if index == operations.count-1 {
-				op.operationFees = operationFee(forGas: totalGas, forgedHash: forgedHex, storage: totalStorage, constants: constants, allocationStorage: 0, allocationFee: .zero())
+				let newFee = operationFee(forGas: totalGas, forgedHash: forgedHex, storage: totalStorage, constants: constants, allocationStorage: 0, allocationFee: .zero())
+				op.operationFees?.transactionFee = newFee.transactionFee
+				op.operationFees?.networkFees = newFee.networkFees
+				
 			} else {
-				op.operationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
+				op.operationFees?.transactionFee = .zero()
+				op.operationFees?.networkFees = [[:]]
 			}
 		}
 		
