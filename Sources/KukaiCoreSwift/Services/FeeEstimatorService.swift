@@ -234,6 +234,24 @@ public class FeeEstimatorService {
 		return opFees
 	}
 	
+	/**
+	 When working with tools like Beacon, you may be given a suggestion for operation gas / storage limits, but not the fees. In these cases we need the ability to create a Fee object from these already supplied details
+	 - parameter forGas: The gas limit returned form some service
+	 - parameter storage: The storage limit returned form some service
+	 - parameter forgedHash: The forged hash of the operation
+	 - parameter constants: The network constants object containing fee constants
+	 - returns: `OperationFees`
+	 */
+	public func fee(forGas gas: Int, storage storage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
+		let gasFee = feeForGas(gas)
+		let storageFee = feeForStorage(forgedHash)
+		let burnFee = feeForBurn(storage, withConstants: constants)
+		
+		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
+		
+		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: gas, storageLimit: storage)
+	}
+	
 	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.
 	private func extractAndParseAttributes(fromResult result: OperationResponseResult?, withConstants constants: NetworkConstants) -> (consumedGas: Int, storageBytesUsed: Int, allocationFee: XTZAmount) {
 		guard let result = result else {

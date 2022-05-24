@@ -62,10 +62,21 @@ public class Operation: Codable {
 			source = try container.decodeIfPresent(String.self, forKey: .source)
 			counter = try container.decodeIfPresent(String.self, forKey: .counter)
 			
+			
+			// When we encode, we encode all properties. But when coming from beacon it will sometimes supply a suggestion for gas and storage, but will not include a fee
+			// When we have all, just encode
 			if let storageInt = Int(try container.decodeIfPresent(String.self, forKey: .storageLimit) ?? ""),
 			   let gasInt = Int(try container.decodeIfPresent(String.self, forKey: .gasLimit) ?? ""),
 			   let feeString = try container.decodeIfPresent(String.self, forKey: .fee) {
 				operationFees = OperationFees(transactionFee: XTZAmount(fromRpcAmount: feeString) ?? XTZAmount.zero(), gasLimit: gasInt, storageLimit: storageInt)
+			}
+			
+			// When we have gas and storage suggestions, encode those and compute a fee
+			else if let storageInt = Int(try container.decodeIfPresent(String.self, forKey: .storageLimit) ?? ""),
+					let gasInt = Int(try container.decodeIfPresent(String.self, forKey: .gasLimit) ?? "") {
+				
+				let fee = XTZAmount.zero() // Fee will need to be computed outside. Requires network calls to see current constants and forging the JSON. Can't be done here
+				operationFees = OperationFees(transactionFee: fee, gasLimit: gasInt, storageLimit: storageInt)
 			}
 			
 		} else {
