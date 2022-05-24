@@ -242,13 +242,14 @@ public class FeeEstimatorService {
 	 - parameter constants: The network constants object containing fee constants
 	 - returns: `OperationFees`
 	 */
-	public func fee(forGas gas: Int, storage: Int, constants: NetworkConstants) -> OperationFees {
+	public func fee(forGas gas: Int, storage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
 		let gasFee = feeForGas(gas)
+		let storageFee = feeForStorage(forgedHash)
 		let burnFee = feeForBurn(storage, withConstants: constants)
 		
 		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
 		
-		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee, networkFees: networkFees, gasLimit: gas, storageLimit: storage)
+		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: gas, storageLimit: storage)
 	}
 	
 	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.
@@ -277,7 +278,7 @@ public class FeeEstimatorService {
 	/// Calculate the fee to add based on the size of the forged string
 	private func feeForStorage(_ forgedHexString: String) -> XTZAmount {
 		let forgedHexWithSignature = (forgedHexString + FeeEstimatorService.defaultSignatureHex)
-		let nanoTez = (forgedHexWithSignature.count/2) * FeeConstants.feePerStorageByte // Multiply bytes (2 characters per byte) by the fee perSotrageByteConstant
+		let nanoTez = ((forgedHexWithSignature.count/2) + 10) * FeeConstants.feePerStorageByte // Multiply bytes (2 characters per byte) by the fee perSotrageByteConstant. Add 10 bytes to account for any variations
 		return nanoTeztoXTZ(nanoTez)
 	}
 	
