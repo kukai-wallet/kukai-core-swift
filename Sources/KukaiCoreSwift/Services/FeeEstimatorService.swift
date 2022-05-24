@@ -242,14 +242,13 @@ public class FeeEstimatorService {
 	 - parameter constants: The network constants object containing fee constants
 	 - returns: `OperationFees`
 	 */
-	public func fee(forGas gas: Int, storage storage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
+	public func fee(forGas gas: Int, storage: Int, constants: NetworkConstants) -> OperationFees {
 		let gasFee = feeForGas(gas)
-		let storageFee = feeForStorage(forgedHash)
 		let burnFee = feeForBurn(storage, withConstants: constants)
 		
 		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
 		
-		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: gas, storageLimit: storage)
+		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee, networkFees: networkFees, gasLimit: gas, storageLimit: storage)
 	}
 	
 	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.
