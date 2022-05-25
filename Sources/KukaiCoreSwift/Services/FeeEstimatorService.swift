@@ -170,22 +170,27 @@ public class FeeEstimatorService {
 			
 			
 			// Extract gas, storage, burn, allocation etc, fees from the response body
-			guard let newFee = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
+			guard let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
 				completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
 				return
 			}
 			
+			// Make sure we have created a `OperationFees` for each operation
+			if fees.count != operations.count {
+				completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
+				return
+			}
 			
-			// Apply the full fee to the last operation so its only charged if the whole thing is successful
+			// Add the fee to the corresponding `Operation`
 			for (index, op) in operations.enumerated() {
-				if index == operations.count-1 {
-					op.operationFees?.transactionFee = newFee.transactionFee
-					op.operationFees?.networkFees = newFee.networkFees
-					
-				} else {
-					op.operationFees?.transactionFee = .zero()
-					op.operationFees?.networkFees = [[:]]
+				op.operationFees = fees[index]
+				
+				/*
+				if op.operationKind == .reveal {
+					op.operationFees?.networkFees = [[OperationFees.NetworkFeeType.burnFee: constants.xtzForReveal()]]
+					op.operationFees?.storageLimit += constants.bytesForReveal()
 				}
+				*/
 			}
 			
 			completion(Result.success(operations))
@@ -201,9 +206,15 @@ public class FeeEstimatorService {
 		// Apply the full fee to the last operation so its only charged if the whole thing is successful
 		for (index, op) in operations.enumerated() {
 			if index == operations.count-1 {
-				let newFee = operationFee(forGas: totalGas, forgedHash: forgedHex, storage: totalStorage, constants: constants, allocationStorage: 0, allocationFee: .zero())
-				op.operationFees?.transactionFee = newFee.transactionFee
-				op.operationFees?.networkFees = newFee.networkFees
+				let newFee = createLimitsAndTotalFeeObj(totalGas: totalGas,
+														opGas: op.operationFees?.gasLimit ?? 0,
+														totalStorage: totalStorage,
+														opStorage: op.operationFees?.storageLimit ?? 0,
+														forgedHash: forgedHex,
+														constants: constants,
+														allocationStorage: 0,
+														totalAllocationFee: .zero())
+				op.operationFees = newFee
 				
 			} else {
 				op.operationFees?.transactionFee = .zero()
@@ -220,52 +231,75 @@ public class FeeEstimatorService {
 	- parameter forgedHash: The forged hash string resulting from a call to `TezosNodeClient.forge(...)`
 	- returns: An array of `OperationFees`
 	*/
-	public func extractFees(fromOperationResponse operationResponse: OperationResponse, forgedHash: String, withConstants constants: NetworkConstants) -> OperationFees {
+	public func extractFees(fromOperationResponse operationResponse: OperationResponse, forgedHash: String, withConstants constants: NetworkConstants) -> [OperationFees] {
+		var opFees: [OperationFees] = []
 		var totalGas = 0
 		var totalStorage = 0
-		var totalAllocationStorage = 0 // Needs to be included in `storage_limit`, but ignored as a burn fee because it is an "allocation fee"
 		var totalAllocationFee = XTZAmount.zero()
 		
-		for content in operationResponse.contents {
+		for (index, content) in operationResponse.contents.enumerated() {
+			var opGas = 0
+			var opStorage = 0
+			var opAllocationStorage = 0 // Needs to be included in `storage_limit`, but ignored as a burn fee because it is an "allocation fee"
+			var opAllocationFee = XTZAmount.zero()
+			
 			let results = extractAndParseAttributes(fromResult: content.metadata.operationResult, withConstants: constants)
-			totalGas += results.consumedGas
+			opGas = results.consumedGas + gasSafetyMargin
+			opStorage = results.storageBytesUsed
+			opAllocationFee = results.allocationFee
+			
+			totalGas += results.consumedGas + gasSafetyMargin
 			totalStorage += results.storageBytesUsed
 			totalAllocationFee += results.allocationFee
 			
 			// If we are allocating an address, we need to include it as storage on our operation
 			if results.allocationFee > XTZAmount.zero() {
-				totalAllocationStorage += constants.bytesForReveal()
+				opAllocationStorage = constants.bytesForReveal()
 			}
-			
 			
 			if let innerOperationResults = content.metadata.internalOperationResults {
 				for innerResult in innerOperationResults {
 					let results = extractAndParseAttributes(fromResult: innerResult.result, withConstants: constants)
-					totalGas += results.consumedGas
+					opGas += results.consumedGas + gasSafetyMargin
+					opStorage += results.storageBytesUsed
+					opAllocationFee += results.allocationFee
+					
+					totalGas += results.consumedGas + gasSafetyMargin
 					totalStorage += results.storageBytesUsed
 					totalAllocationFee += results.allocationFee
 					
 					// If we are allocating an address, we need to include it as storage on our operation
 					if results.allocationFee > XTZAmount.zero() {
-						totalAllocationStorage += constants.bytesForReveal()
+						opAllocationStorage += constants.bytesForReveal()
 					}
 				}
 			}
+			
+			// If last
+			if index == operationResponse.contents.count-1 {
+				opFees.append( createLimitsAndTotalFeeObj(totalGas: totalGas, opGas: opGas, totalStorage: totalStorage, opStorage: opStorage, forgedHash: forgedHash, constants: constants, allocationStorage: opAllocationStorage, totalAllocationFee: totalAllocationFee) )
+				
+			} else {
+				opFees.append( createLimitsOnlyFeeObj(gas: opGas, storage: opStorage, allocationStorage: opAllocationStorage) )
+			}
 		}
 		
-		return operationFee(forGas: totalGas, forgedHash: forgedHash, storage: totalStorage, constants: constants, allocationStorage: totalAllocationStorage, allocationFee: totalAllocationFee)
+		return opFees
 	}
 	
-	/// Private helper to extract fee calcualtion logic, as its needed in multiple places
-	private func operationFee(forGas: Int, forgedHash: String, storage: Int, constants: NetworkConstants, allocationStorage: Int, allocationFee: XTZAmount) -> OperationFees {
-		let totalGas = forGas + gasSafetyMargin
-		
+	/// Create an instance of `OperationFees` for a non-last operation, with no fee, but accurate gas + storage
+	private func createLimitsOnlyFeeObj(gas: Int, storage: Int, allocationStorage: Int) -> OperationFees {
+		return OperationFees(transactionFee: .zero(), gasLimit: gas, storageLimit: storage + allocationStorage)
+	}
+	
+	/// Create an instance of `OperationFees` for a last operation, with its corresponding gas + storage, but fees for the entire list of operations
+	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants, allocationStorage: Int, totalAllocationFee: XTZAmount) -> OperationFees {
 		let gasFee = feeForGas(totalGas)
 		let storageFee = feeForStorage(forgedHash)
-		let burnFee = feeForBurn(storage, withConstants: constants)
-		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: allocationFee]]
+		let burnFee = feeForBurn(totalStorage, withConstants: constants)
+		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: totalAllocationFee]]
 		
-		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: totalGas, storageLimit: storage + allocationStorage)
+		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage + allocationStorage)
 	}
 	
 	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.

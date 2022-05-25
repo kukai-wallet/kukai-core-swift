@@ -303,7 +303,7 @@ public class OperationService {
 					completion(Result.success(operationResponse))
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Unable to remote forge: %@", "\(error)")
+					os_log(.error, log: .kukaiCoreSwift, "Preapply returned an error: %@", "\(error)")
 					completion(Result.failure(error))
 			}
 		}
