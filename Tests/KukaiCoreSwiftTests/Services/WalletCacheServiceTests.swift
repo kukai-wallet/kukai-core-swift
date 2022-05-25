@@ -87,6 +87,10 @@ class WalletCacheServiceTests: XCTestCase {
 		
 		XCTAssert(wallet2 != nil)
 		XCTAssert(wallet2?.address == MockConstants.defaultHdWallet.address, wallet2?.address ?? "-")
+		
+		// Clean up
+		MockConstants.defaultHdWallet.childWallets = []
+		XCTAssert(walletCacheService.deleteCacheAndKeys())
 	}
 	
 	func testRemove() {
