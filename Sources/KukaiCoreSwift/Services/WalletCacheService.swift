@@ -287,6 +287,37 @@ public class WalletCacheService {
 		
 		return first
 	}
+	
+	/**
+	 A shorthand function to avoid unnecessary processing. It will read, decrypt and re-create the first `Wallet` object matching the address, if found
+	 - Returns: A `Wallet` object if present on disk
+	 */
+	public func fetchWallet(address: String) -> Wallet? {
+		guard let cacheItems = readFromDiskAndDecrypt() else {
+			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items")
+			return nil
+		}
+		
+		// Cycle through all wallets
+		for item in cacheItems {
+			
+			// If top level item matches, return it
+			if item.address == address {
+				return item
+			}
+			
+			// If not, and wallet is of type hd, cycle through its child wallets to see if they match
+			if item.type == .hd, let hdWallet = item as? HDWallet {
+				for subItem in hdWallet.childWallets {
+					if subItem.address == address {
+						return subItem
+					}
+				}
+			}
+		}
+		
+		return nil
+	}
 
 	/**
 	Delete the cached file and the assoicate keys used to encrypt it

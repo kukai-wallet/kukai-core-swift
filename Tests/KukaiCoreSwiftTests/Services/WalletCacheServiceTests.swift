@@ -64,6 +64,31 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 	}
 	
+	func testFetch() {
+		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		
+		// Check its empty to begin with
+		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
+		
+		// Check we can write wallet objects
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
+		
+		// Check they have been stored
+		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 2)
+		
+		// Check they can be parsed
+		let wallet = walletCacheService.fetchWallet(address: MockConstants.defaultLinearWallet.address)
+		
+		XCTAssert(wallet != nil)
+		XCTAssert(wallet?.address == MockConstants.defaultLinearWallet.address, wallet?.address ?? "-")
+		
+		let wallet2 = walletCacheService.fetchWallet(address: MockConstants.defaultHdWallet.address)
+		
+		XCTAssert(wallet2 != nil)
+		XCTAssert(wallet2?.address == MockConstants.defaultHdWallet.address, wallet2?.address ?? "-")
+	}
+	
 	func testRemove() {
 		XCTAssert(walletCacheService.deleteCacheAndKeys())
 		
