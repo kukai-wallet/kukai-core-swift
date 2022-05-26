@@ -29,8 +29,8 @@ class FeeEstimatorServiceTests: XCTestCase {
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
-					XCTAssert(operations[0].operationFees?.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees?.allFees().description ?? "")
-					XCTAssert(operations[1].operationFees?.allFees() == XTZAmount(fromNormalisedAmount: 0.000674), operations[1].operationFees?.allFees().description ?? "")
+					XCTAssert(operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees.allFees().description)
+					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000674), operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -50,8 +50,8 @@ class FeeEstimatorServiceTests: XCTestCase {
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
-					XCTAssert(operations[0].operationFees?.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees?.allFees().description ?? "")
-					XCTAssert(operations[1].operationFees?.allFees() == XTZAmount(fromNormalisedAmount: 0.130927), operations[1].operationFees?.allFees().description ?? "")
+					XCTAssert(operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees.allFees().description)
+					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000321), operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)

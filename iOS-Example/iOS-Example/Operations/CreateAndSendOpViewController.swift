@@ -51,7 +51,7 @@ class CreateAndSendOpViewController: UIViewController {
 		activityIndicator.startAnimating()
 		
 		// Estimate the cost of the operation (ideally display this to a user first and let them confirm)
-		ClientsAndData.shared.tezosNodeClient.estimate(operations: operations, withWallet: wallet) { [weak self] estimationResult in
+		ClientsAndData.shared.tezosNodeClient.estimate(operations: operations, withWallet: wallet, receivedSuggestedGas: false) { [weak self] estimationResult in
 			switch estimationResult {
 				case .success(let estimatedOperations):
 					

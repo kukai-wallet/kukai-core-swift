@@ -56,6 +56,12 @@ public struct OperationFees: Equatable {
 		return total
 	}
 	
+	/**
+	 Creates an `OperationFees` object, with everything set to zero. Primarly used as a default / placeholder until an estimation can be performed
+	 */
+	public static func zero() -> OperationFees {
+		return OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
+	}
 	
 	/**
 	Get a default fees for each type of `Operation`. No guarentee these will succeed.

@@ -52,10 +52,10 @@ public struct TezosNodeClientConfig {
 	public struct defaultTestnetURLs {
 		
 		/// The default testnet URL to use for `primaryNodeURL`, For more information on this service, see: https://tezos.giganode.io/
-		public static let primaryNodeURL = URL(string: "https://ithacanet.api.tez.ie")! // Doesn't seem to be available on Giganode atm
+		public static let primaryNodeURL = URL(string: "https://rpc.ithacanet.teztnets.xyz")! // Doesn't seem to be available on Giganode atm
 		
 		/// The default testnet URL to use for `parseNodeURL`
-		public static let parseNodeURL = URL(string: "https://ithacanet.api.tez.ie")!
+		public static let parseNodeURL = URL(string: "https://rpc.ithacanet.teztnets.xyz")!
 		
 		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
 		public static let tzktURL = URL(string: "https://api.ithacanet.tzkt.io/")!

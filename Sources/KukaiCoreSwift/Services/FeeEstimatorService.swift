@@ -77,13 +77,13 @@ public class FeeEstimatorService {
 	*/
 	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, receivedSuggestedGas: Bool, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		
+		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, withWallet: wallet)
+		
 		if !receivedSuggestedGas {
 			// Before estimating, set the maximum gas and storage to ensure the operation suceeds (excluding any errors such as invalid address, insufficnet funds etc)
 			let maxGasAndStorage = OperationFees(transactionFee: XTZAmount.zero(), gasLimit: constants.maxGasPerOperation(), storageLimit: constants.maxStoragePerOperation())
-			operations.forEach { $0.operationFees = maxGasAndStorage }
+			operationPayload.contents.forEach { $0.operationFees = maxGasAndStorage }
 		}
-		
-		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, withWallet: wallet)
 		
 		switch self.config.forgingType {
 			case .local:
@@ -146,28 +146,29 @@ public class FeeEstimatorService {
 					
 				case .failure(let error):
 					
-					// There are some cases where estimation ignores the wallets balance and allows you to estimate the cost of sending funds, where it would be impossible to pay the fee
-					// There are other situations, such as sending to an unrevealed destination account, that estimation won't ignore the lack of balance to pay an allocation fee
-					// For this reason, we check all errors to see if it is an insufficient funds error. If so we check if its an XTZ send (and doesn't include a reveal operation).
-					// If these cases match, we try to parse the JSON anyway, as it will still contain the estimated fees. We continue processing, and return the fees.
-					// We do this because the caller of this code must always be prepared for (sendingAmount + fees) is greater than the avialble wallet balance, and deduct the difference
+					// There are some situations where a estimation (simulation) will ignore fees that need to be paid and return a success, regardless of if the operation is possible with that send amount + fee
+					// There are types of fees where this doesn't work. For example burn fees, which are charged by the network itself.
+					// So if, for example, a user is trying to send all of their XTZ to an unrevealed destination, and we are trying to figure out the cost, the estimation will fail with an insufficnet funds error.
+					// The error will return with the correct amount of gas and storage, but the error forces it into here.
+					// So in an attempt to prevent this affecting users, we are trying to solve this hueristically, by saying if we get an insufficent_funds error, and we are trying to send a non-zero amount of XTZ,
+					// ignore the error and attempt to parse. Returning the result to the client, where they must examine the fee and decide if an amount needs to be deducted from the sending amount
 					if error.errorType == .insufficientFunds,
-					   !(operations.first is OperationReveal),
+					   operations.count <= 2,
 					   operations.last is OperationTransaction,
-					   let jsonObjectWithError = try? JSONDecoder().decode(OperationResponse.self, from: error.responseJSON?.data(using: .utf8) ?? Data()) {
+					   (operations.last as? OperationTransaction)?.amount != "0",
+					   let jsonObjectWithError = try? JSONDecoder().decode(OperationResponse.self, from: error.responseJSON?.data(using: .utf8) ?? Data())
+					{
 						operationResponseToProcess = jsonObjectWithError
 					} else {
 						errorToProcess = error
 					}
 			}
 			
-			
 			guard let opToProcess = operationResponseToProcess else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to estimate: %@", "\(errorToProcess?.description ?? "-")")
 				completion(Result.failure(errorToProcess ?? ErrorResponse.unknownError()))
 				return
 			}
-			
 			
 			// Extract gas, storage, burn, allocation etc, fees from the response body
 			guard let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
@@ -184,13 +185,6 @@ public class FeeEstimatorService {
 			// Add the fee to the corresponding `Operation`
 			for (index, op) in operations.enumerated() {
 				op.operationFees = fees[index]
-				
-				/*
-				if op.operationKind == .reveal {
-					op.operationFees?.networkFees = [[OperationFees.NetworkFeeType.burnFee: constants.xtzForReveal()]]
-					op.operationFees?.storageLimit += constants.bytesForReveal()
-				}
-				*/
 			}
 			
 			completion(Result.success(operations))
@@ -199,17 +193,17 @@ public class FeeEstimatorService {
 	
 	/// When we recieve a suggestion from Beacon, we don't need to perform a runOperation, instead just grab the suggestions and work out the fee
 	private func estimateFeesOnly(operations: [Operation], constants: NetworkConstants, forgedHex: String, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
-		let totalGas = operations.map({ $0.operationFees?.gasLimit ?? 0 }).reduce(0, +)
-		let totalStorage = operations.map({ $0.operationFees?.storageLimit ?? 0 }).reduce(0, +)
+		let totalGas = operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
+		let totalStorage = operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
 		
 		
 		// Apply the full fee to the last operation so its only charged if the whole thing is successful
 		for (index, op) in operations.enumerated() {
 			if index == operations.count-1 {
 				let newFee = createLimitsAndTotalFeeObj(totalGas: totalGas,
-														opGas: op.operationFees?.gasLimit ?? 0,
+														opGas: op.operationFees.gasLimit,
 														totalStorage: totalStorage,
-														opStorage: op.operationFees?.storageLimit ?? 0,
+														opStorage: op.operationFees.storageLimit,
 														forgedHash: forgedHex,
 														constants: constants,
 														allocationStorage: 0,
@@ -217,8 +211,8 @@ public class FeeEstimatorService {
 				op.operationFees = newFee
 				
 			} else {
-				op.operationFees?.transactionFee = .zero()
-				op.operationFees?.networkFees = [[:]]
+				op.operationFees.transactionFee = .zero()
+				op.operationFees.networkFees = [[:]]
 			}
 		}
 		

@@ -63,9 +63,9 @@ class OperationServiceTests: XCTestCase {
 					XCTAssert(object.payload.contents.count == 1, "\(object.payload.contents.count)")
 					XCTAssert(object.payload.contents.first is OperationTransaction, "\(String(describing: object.payload.contents.first))")
 					
-					XCTAssert(object.forgedOp == "43f597d84037e88354ed041cc6356f737cc6638691979bb64415451b58b4af2c6c00ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d820bffde0884528102c0843d00005134b25890279835eb946e6369a3d719bc0d617700", object.forgedOp)
-					XCTAssert(object.watermarkedOp == "0343f597d84037e88354ed041cc6356f737cc6638691979bb64415451b58b4af2c6c00ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d820bffde0884528102c0843d00005134b25890279835eb946e6369a3d719bc0d617700", object.watermarkedOp)
-					XCTAssert(object.blake2bHash == "587009c22b2cbc2de10541341e0dd2a9166569ce17bdb5b40d1d9584d79b8b9b", object.blake2bHash)
+					XCTAssert(object.forgedOp == "43f597d84037e88354ed041cc6356f737cc6638691979bb64415451b58b4af2c6c00ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00ffde080000c0843d00005134b25890279835eb946e6369a3d719bc0d617700", object.forgedOp)
+					XCTAssert(object.watermarkedOp == "0343f597d84037e88354ed041cc6356f737cc6638691979bb64415451b58b4af2c6c00ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00ffde080000c0843d00005134b25890279835eb946e6369a3d719bc0d617700", object.watermarkedOp)
+					XCTAssert(object.blake2bHash == "a49d693a7bf5c22564bbb9368c94362ea64f07e5c5d1c443b63190ae5c85adf2", object.blake2bHash)
 					XCTAssert(object.canLedgerParse == true)
 				
 				case .failure(let error):
@@ -87,7 +87,7 @@ class OperationServiceTests: XCTestCase {
 					XCTAssert(object.payload.contents.count == 2, "\(object.payload.contents.count)")
 					XCTAssert(String(object.forgedOp.prefix(50)) == "43f597d84037e88354ed041cc6356f737cc6638691979bb644", String(object.forgedOp.prefix(50)))
 					XCTAssert(String(object.watermarkedOp.prefix(50)) == "0343f597d84037e88354ed041cc6356f737cc6638691979bb6", String(object.watermarkedOp.prefix(50)))
-					XCTAssert(object.blake2bHash == "194c3f9628584cdc90f14210fa775131e7d3492936e737617f14217a44343fad", object.blake2bHash)
+					XCTAssert(object.blake2bHash == "0d2efb76df791a2e29fd7e47b09ba76e842a230c47393b7ba172b95313520970", object.blake2bHash)
 					XCTAssert(object.canLedgerParse == false)
 					
 				case .failure(let error):

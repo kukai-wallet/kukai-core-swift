@@ -30,7 +30,7 @@ public class Operation: Codable {
 	public var counter: String? = "0"
 	
 	/// Object representing the various fees, storage and compute required to fulfil this operation
-	public var operationFees: OperationFees? = OperationFees.defaultFees(operationKind: .transaction)
+	public var operationFees: OperationFees = OperationFees.zero()
 	
 	/**
 	Create a base operation.
@@ -46,7 +46,7 @@ public class Operation: Codable {
 		} else {
 			self.source = nil
 			self.counter = nil
-			self.operationFees = nil
+			self.operationFees = OperationFees.zero()
 		}
 	}
     
@@ -82,7 +82,7 @@ public class Operation: Codable {
 		} else {
 			source = nil
 			counter = nil
-			operationFees = nil
+			operationFees = OperationFees.zero()
 		}
 	}
 	
@@ -97,9 +97,9 @@ public class Operation: Codable {
 		if operationKind != .activate_account {
 			try container.encode(source, forKey: .source)
 			try container.encode(counter, forKey: .counter)
-			try container.encode("\(operationFees?.storageLimit ?? -1)", forKey: .storageLimit)
-			try container.encode("\(operationFees?.gasLimit ?? -1)", forKey: .gasLimit)
-			try container.encode(operationFees?.transactionFee.rpcRepresentation, forKey: .fee)
+			try container.encode("\(operationFees.storageLimit)", forKey: .storageLimit)
+			try container.encode("\(operationFees.gasLimit)", forKey: .gasLimit)
+			try container.encode(operationFees.transactionFee.rpcRepresentation, forKey: .fee)
 		}
     }
 	
