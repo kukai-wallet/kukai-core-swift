@@ -689,4 +689,25 @@ public class DexCalculationService {
 			return nil
 		}
 	}
+	
+	
+	
+	// MARK: Misc
+	
+	/**
+	 Estimate the APY of liquidity baking contract, as it has a known income.
+	 - parameter xtzPool: The total XTZ held in the dex contract
+	 - returns: `Decimal` The estimated percentage APY
+	 */
+	public func estimateLiquidityBakingAPY(xtzPool: XTZAmount) -> Decimal {
+		let xPool = xtzPool.rpcRepresentation
+		
+		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
+			  let inner = outer.objectForKeyedSubscript("estimateLiquidityBakingAPY"),
+			  let result = inner.call(withArguments: [xPool]) else {
+			return nil
+		}
+		
+		return Decimal(string: result.toString())?.rounded(scale: 2, roundingMode: .bankers)
+	}
 }
