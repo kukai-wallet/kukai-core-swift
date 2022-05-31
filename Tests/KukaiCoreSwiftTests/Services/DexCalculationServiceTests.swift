@@ -450,4 +450,15 @@ class DexCalculationServiceTests: XCTestCase {
 		XCTAssert(result?.minimumXTZ.normalisedRepresentation == "0.01125", result?.minimumXTZ.normalisedRepresentation ?? "-")
 		XCTAssert(result?.exchangeRate.description == "0.007689", result?.exchangeRate.description ?? "-")
 	}
+	
+	
+	
+	// MARK: - Misc
+	
+	func testAPY() {
+		let xtzPool = XTZAmount(fromRpcAmount: 4551716114466) ?? XTZAmount.zero()
+		let result = dexCalculationService.estimateLiquidityBakingAPY(xtzPool: xtzPool)
+		
+		XCTAssert(result?.description == "28.87", result?.description ?? "-")
+	}
 }

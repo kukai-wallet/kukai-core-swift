@@ -699,7 +699,7 @@ public class DexCalculationService {
 	 - parameter xtzPool: The total XTZ held in the dex contract
 	 - returns: `Decimal` The estimated percentage APY
 	 */
-	public func estimateLiquidityBakingAPY(xtzPool: XTZAmount) -> Decimal {
+	public func estimateLiquidityBakingAPY(xtzPool: XTZAmount) -> Decimal? {
 		let xPool = xtzPool.rpcRepresentation
 		
 		guard let outer = jsContext.objectForKeyedSubscript("dexterCalculations"),
