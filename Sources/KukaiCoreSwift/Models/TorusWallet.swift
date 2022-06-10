@@ -6,8 +6,8 @@
 //
 
 import Foundation
+import KukaiCryptoSwift
 import Sodium
-import WalletCore
 import os.log
 
 /**
@@ -18,7 +18,7 @@ In order to help developers achieve this, use the `WalletCacheService` to store/
 This wallet is a subclass of `LinearWallet` created by using the Torus network to generate wallets from social media accounts.
 This class is equivalent to a LinearWallet producing a TZ2 address via secp256k1, without the use of a mnemonic, and instead including the social profile of the user.
 */
-public class TorusWallet: LinearWallet {
+public class TorusWallet: RegularWallet {
 	
 	// MARK: - Properties
 	
@@ -52,14 +52,14 @@ public class TorusWallet: LinearWallet {
 			return nil
 		}
 		
-		let base58encode = Base58.encode(message: bytes, prefix: Prefix.Keys.Secp256k1.secret)
+		let base58encode = Base58Check.encode(message: bytes, prefix: Prefix.Keys.Secp256k1.secret)
 		
 		self.authProvider = authProvider
 		self.socialUsername = username
 		self.socialUserId = userId
 		self.socialProfilePictureURL = URL(string: profilePicture ?? "")
 		
-		super.init(withPrivateKey: base58encode, ellipticalCurve: .secp256k1, type: .torus)
+		super.init(withBase58String: base58encode, ellipticalCurve: .secp256k1, type: .social)
 	}
 	
 	

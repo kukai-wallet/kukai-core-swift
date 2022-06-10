@@ -5,15 +5,16 @@ import PackageDescription
 
 let package = Package(
 	name: "KukaiCoreSwift",
-	platforms: [.iOS("15.0")],
+	platforms: [
+		.iOS("15.0"),
+		.macOS(.v11),
+	],
 	products: [
 		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
 	],
 	dependencies: [
-		.package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
-		.package(name: "Sodium", url: "https://github.com/jedisct1/swift-sodium", from: "0.9.1"),
+		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", .branch("develop")),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
-		.package(name: "WalletCore", url: "https://github.com/trustwallet/wallet-core", .exact("2.6.34")),
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", from: "2.1.0"),
 		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.1"),
 		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
@@ -23,12 +24,9 @@ let package = Package(
 		.target(
 			name: "KukaiCoreSwift",
 			dependencies: [
-				.product(name: "Clibsodium", package: "Sodium"),
-				"Sodium",
-				"BigInt",
+				"KukaiCryptoSwift",
 				"Kingfisher",
 				"SVGKit",
-				"WalletCore",
 				"CustomAuth",
 				"SignalRClient",
 				"JWTDecode"
@@ -40,7 +38,9 @@ let package = Package(
 		
 		.testTarget(
 			name: "KukaiCoreSwiftTests",
-			dependencies: ["KukaiCoreSwift"],
+			dependencies: [
+				"KukaiCoreSwift"
+			],
 			resources: [
 				.copy("Stubs"),
 				.copy("Services/MockData")

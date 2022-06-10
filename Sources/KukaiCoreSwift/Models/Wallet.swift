@@ -6,32 +6,17 @@
 //
 
 import Foundation
-import WalletCore
+import KukaiCryptoSwift
 
 
 // MARK: - Enums
 
 /// Enum to distingush between linear (non-hd) wallets, using the Bip39 standard, and hd wallets using the Bip44 standard.
 public enum WalletType: String, Codable {
-	case linear
+	case regular
 	case hd
-	case torus
+	case social
 	case ledger
-}
-
-/// Helper enum used to choose the number of words for a mnemonic
-public enum MnemonicPhraseLength: Int {
-	case twelve = 128
-	case fifteen = 160
-	case eighteen = 192
-	case twentyOne = 224
-	case twentyFour = 256
-}
-
-/// Distingush between ed25519 (TZ1...) and secp256k1 (TZ2...) curves for creating and using wallet addresses
-public enum EllipticalCurve: String, Codable {
-	case ed25519
-	case secp256k1
 }
 
 
@@ -60,21 +45,4 @@ public protocol Wallet: Codable {
 	
 	/// Base58 encoded version of the publicKey, used when performing a reveal operation
 	func publicKeyBase58encoded() -> String
-}
-
-
-
-// MARK: - Objects
-
-/// A collection of utility functions, not unique to any given wallet type
-public struct WalletUtils {
-	
-	/**
-	A function to check does a given mnemonic string, match the Bip39 standard.
-	- Parameter mnemonic: A String containing a user supplied mnemonic
-	- Returns: Bool
-	*/
-	public static func isMnemonicValid(mnemonic: String) -> Bool {
-		return WalletCore.Mnemonic.isValid(mnemonic: mnemonic)
-	}
 }

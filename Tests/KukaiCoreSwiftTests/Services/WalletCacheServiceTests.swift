@@ -48,13 +48,13 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(wallets?.last?.address == MockConstants.defaultHdWallet.address, wallets?.first?.address ?? "-")
 		
 		// Check that the underlying keys were reconstructed correctly
-		let linear = (wallets?.first as? LinearWallet)
+		let linear = (wallets?.first as? RegularWallet)
 		let hd = (wallets?.last as? HDWallet)
 		
 		XCTAssert(linear?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, linear?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(linear?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, linear?.publicKey.bytes.toHexString() ?? "-")
-		XCTAssert(hd?.privateKey.data.toHexString() == MockConstants.hdWallet.privateKey, hd?.privateKey.data.toHexString() ?? "-")
-		XCTAssert(hd?.publicKey.data.toHexString() == MockConstants.hdWallet.publicKey, hd?.publicKey.data.toHexString() ?? "-")
+		XCTAssert(hd?.privateKey.bytes.hexString == MockConstants.hdWallet.privateKey, hd?.privateKey.bytes.hexString ?? "-")
+		XCTAssert(hd?.publicKey.bytes.hexString == MockConstants.hdWallet.publicKey, hd?.publicKey.bytes.hexString ?? "-")
 		
 		
 		// Check they are deleted
@@ -158,7 +158,7 @@ class WalletCacheServiceTests: XCTestCase {
 	}
 	
 	func testCurves() {
-		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
+		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
 		
 		XCTAssert(walletCacheService.cache(wallet: wallet))
 		
@@ -170,22 +170,21 @@ class WalletCacheServiceTests: XCTestCase {
 	}
 	
 	func testDerivationPaths() {
-		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", derivationPath: MockConstants.hdWallet_non_hardened.derivationPath)!
+		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase, derivationPath: MockConstants.hdWallet_hardened_change.derivationPath)!
 		
 		XCTAssert(walletCacheService.cache(wallet: wallet))
-		
 		
 		let wallets = walletCacheService.fetchWallets()
 		let hdWallet = (wallets?.first as? HDWallet)
 		
 		XCTAssert(wallets != nil)
-		XCTAssert(hdWallet?.address == MockConstants.hdWallet_non_hardened.address, hdWallet?.address ?? "-")
-		XCTAssert(hdWallet?.derivationPath == MockConstants.hdWallet_non_hardened.derivationPath, hdWallet?.derivationPath ?? "-")
+		XCTAssert(hdWallet?.address == MockConstants.hdWallet_hardened_change.address, hdWallet?.address ?? "-")
+		XCTAssert(hdWallet?.derivationPath == MockConstants.hdWallet_hardened_change.derivationPath, hdWallet?.derivationPath ?? "-")
 		XCTAssert(walletCacheService.deleteCacheAndKeys())
 	}
 	
 	func testPassphrase() {
-		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)!
+		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)!
 		
 		XCTAssert(walletCacheService.cache(wallet: wallet))
 		

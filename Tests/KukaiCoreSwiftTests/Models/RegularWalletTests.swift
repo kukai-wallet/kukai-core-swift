@@ -1,5 +1,5 @@
 //
-//  LinearWalletTests.swift
+//  RegularWalletTests.swift
 //  KukaiCoreSwiftTests
 //
 //  Created by Simon Mcloughlin on 25/01/2021.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import KukaiCoreSwift
 
-class LinearWalletTests: XCTestCase {
+class RegularWalletTests: XCTestCase {
 
     override func setUpWithError() throws {
 		
@@ -20,37 +20,37 @@ class LinearWalletTests: XCTestCase {
     }
 	
 	func testCreateWithMnemonic() {
-		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")
+		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")
 		XCTAssert(wallet?.address == MockConstants.linearWalletEd255519.address, wallet?.address ?? "-")
 		XCTAssert(wallet?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, wallet?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(wallet?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, wallet?.publicKey.bytes.toHexString() ?? "-")
 	}
 	
 	func testCreateWithMnemonicLength() {
-		let wallet1 = LinearWallet(withMnemonicLength: .twelve, passphrase: "")
-		XCTAssert(wallet1?.mnemonic?.components(separatedBy: " ").count == 12, "\(wallet1?.mnemonic?.components(separatedBy: " ").count ?? -1)")
+		let wallet1 = RegularWallet(withMnemonicLength: .twelve, passphrase: "")
+		XCTAssert(wallet1?.mnemonic?.words.count == 12, "\(wallet1?.mnemonic?.words.count ?? -1)")
 		
-		let wallet2 = LinearWallet(withMnemonicLength: .fifteen, passphrase: "")
-		XCTAssert(wallet2?.mnemonic?.components(separatedBy: " ").count == 15, "\(wallet2?.mnemonic?.components(separatedBy: " ").count ?? -1)")
+		let wallet2 = RegularWallet(withMnemonicLength: .fifteen, passphrase: "")
+		XCTAssert(wallet2?.mnemonic?.words.count == 15, "\(wallet2?.mnemonic?.words.count ?? -1)")
 		
-		let wallet3 = LinearWallet(withMnemonicLength: .twentyFour, passphrase: "")
-		XCTAssert(wallet3?.mnemonic?.components(separatedBy: " ").count == 24, "\(wallet3?.mnemonic?.components(separatedBy: " ").count ?? -1)")
+		let wallet3 = RegularWallet(withMnemonicLength: .twentyFour, passphrase: "")
+		XCTAssert(wallet3?.mnemonic?.words.count == 24, "\(wallet3?.mnemonic?.words.count ?? -1)")
 	}
 	
 	func testPassphrases() {
-		let wallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)
+		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)
 		XCTAssert(wallet?.address == MockConstants.linearWalletEd255519_withPassphrase.address, wallet?.address ?? "-")
 		XCTAssert(wallet?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519_withPassphrase.privateKey, wallet?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(wallet?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519_withPassphrase.publicKey, wallet?.publicKey.bytes.toHexString() ?? "-")
 	}
 	
 	func testCurves() {
-		let wallet1 = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .ed25519)
+		let wallet1 = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .ed25519)
 		XCTAssert(wallet1?.address == MockConstants.linearWalletEd255519.address, wallet1?.address ?? "-")
 		XCTAssert(wallet1?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, wallet1?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(wallet1?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, wallet1?.publicKey.bytes.toHexString() ?? "-")
 		
-		let wallet2 = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)
+		let wallet2 = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)
 		XCTAssert(wallet2?.address == MockConstants.linearWalletSecp256k1.address, wallet2?.address ?? "-")
 		XCTAssert(wallet2?.privateKey.bytes.toHexString() == MockConstants.linearWalletSecp256k1.privateKey, wallet2?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(wallet2?.publicKey.bytes.toHexString() == MockConstants.linearWalletSecp256k1.publicKey, wallet2?.publicKey.bytes.toHexString() ?? "-")

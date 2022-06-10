@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import KukaiCryptoSwift
 import JavaScriptCore
 import CoreBluetooth
 import Combine
@@ -306,7 +307,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
 	- returns: A publisher which will return a tuple containing the address and publicKey, or an `ErrorResponse`
 	*/
-	public func getAddress(forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> {
+	public func getAddress(forDerivationPath derivationPath: String = HD.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> {
 		self.setupWriteSubject()
 		self.requestType = .address
 		
@@ -335,7 +336,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter parse: Ledger can parse non-hashed (blake2b) hex data and display operation data to user (e.g. transfer 1 XTZ to TZ1abc, for fee: 0.001). There are many limitations around what can be parsed. Frequnetly it will require passing in false
 	- returns: A Publisher which will return a string containing the hex signature, or an `ErrorResponse`
 	*/
-	public func sign(hex: String, forDerivationPath derivationPath: String = HDWallet.defaultDerivationPath, parse: Bool) -> AnyPublisher<String, ErrorResponse>  {
+	public func sign(hex: String, forDerivationPath derivationPath: String = HD.defaultDerivationPath, parse: Bool) -> AnyPublisher<String, ErrorResponse>  {
 		self.setupWriteSubject()
 		self.signaturePublisher = PassthroughSubject<String, ErrorResponse>()
 		self.requestType = .signing
@@ -585,7 +586,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				let components = apdu.components(separatedBy: " ")
 				for component in components {
 					if component != "" {
-						let data = Data(hexString: component) ?? Data()
+						let data = (try? Data(hexString: component)) ?? Data()
 						
 						os_log("sendAPDU - writing payload", log: .ledger, type: .debug)
 						self.connectedDevice?.writeValue(data, for: writeCharacteristic, type: .withResponse)

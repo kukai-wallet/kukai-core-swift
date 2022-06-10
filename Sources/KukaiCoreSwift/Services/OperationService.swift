@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import KukaiCryptoSwift
 import Sodium
 import os.log
 

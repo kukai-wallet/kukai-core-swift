@@ -6,9 +6,7 @@
 //
 
 import UIKit
-import CustomAuth
 import KukaiCoreSwift
-import Sodium
 import Combine
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

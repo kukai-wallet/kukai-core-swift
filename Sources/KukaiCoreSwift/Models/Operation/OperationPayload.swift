@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import WalletCore
+import KukaiCryptoSwift
 import os.log
 
 /// A structure representing the request that needs to be made when sending `Opertion`'s to the RPC
@@ -52,7 +52,7 @@ public struct OperationPayload: Codable, Equatable {
 	- parameter andProtocol: An `OperationMetadata` containing the network protocol to use to perform the injection.
 	*/
 	public mutating func addSignature(_ binarySignature: [UInt8], signingCurve: EllipticalCurve) {
-		self.signature = Base58.encode(message: binarySignature, ellipticalCurve: signingCurve)
+		self.signature = Base58Check.encode(message: binarySignature, ellipticalCurve: signingCurve)
 	}
 	
 	public mutating func addProtcol(fromMetadata metadata: OperationMetadata) {

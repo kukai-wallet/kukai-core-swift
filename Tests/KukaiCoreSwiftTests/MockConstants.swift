@@ -8,6 +8,7 @@
 
 import Foundation
 @testable import KukaiCoreSwift
+@testable import KukaiCryptoSwift
 
 public struct MockConstants {
 	
@@ -194,11 +195,11 @@ public struct MockConstants {
 	
 	// MARK: - Wallets
 	
-	public static let mnemonic = "remember smile trip tumble era cube worry fuel bracket eight kitten inform"
+	public static let mnemonic = try! Mnemonic(seedPhrase: "remember smile trip tumble era cube worry fuel bracket eight kitten inform")
 	public static let passphrase = "superSecurePassphrase"
 	public static let messageToSign = "something very interesting that needs to be signed"
 	
-	public static let defaultLinearWallet = LinearWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")!
+	public static let defaultLinearWallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")!
 	public static let defaultHdWallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")!
 	
 	public struct linearWalletEd255519 {
@@ -223,7 +224,7 @@ public struct MockConstants {
 	
 	public struct hdWallet {
 		public static let address = "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
-		public static let privateKey = "3f54684924468bc4a7044729ee578176aef5933c69ad16ff3340412e4a5ca396"
+		public static let privateKey = "3f54684924468bc4a7044729ee578176aef5933c69ad16ff3340412e4a5ca3961e4291f2501ce283e55ce583d4388ec8d247dd6c72fff3ff2d48b2af84cc9a23"
 		public static let publicKey = "1e4291f2501ce283e55ce583d4388ec8d247dd6c72fff3ff2d48b2af84cc9a23"
 		public static let signedData = "3882ed4ec04ca29e12f3aecea23f50297f8c569c21092dfcef3196eff55ac39a637c2da93d348935a88110f30b177c052f17c432d888a06c9eba434cc3707601"
 		public static let base58Encoded = "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E"
@@ -233,7 +234,7 @@ public struct MockConstants {
 	
 	public struct hdWallet_withPassphrase {
 		public static let address = "tz1dcAi3sVtc5xLyNu53avkEiPvhi9cN2idj"
-		public static let privateKey = "f76414eebdfea880ada1dad22186f150335547a124d64a65a10fbda25d70dac1"
+		public static let privateKey = "f76414eebdfea880ada1dad22186f150335547a124d64a65a10fbda25d70dac19ce8d8d68df863ed6e2c7a8172726f3bd71ddf7e968ba0095bfdf549fea7d67c"
 		public static let publicKey = "9ce8d8d68df863ed6e2c7a8172726f3bd71ddf7e968ba0095bfdf549fea7d67c"
 	}
 	
@@ -246,7 +247,7 @@ public struct MockConstants {
 	
 	public struct hdWallet_hardened_change {
 		public static let address = "tz1iKnE1sKYvB6F42XAKAf9iR6YauEv2ENzZ"
-		public static let privateKey = "8ad51941e26afcdd6408ff59d94188449180bdbda71d8529fafd1948eca8af04"
+		public static let privateKey = "8ad51941e26afcdd6408ff59d94188449180bdbda71d8529fafd1948eca8af04ace4ba9cc11a961a78324700ed36feb0277ee005d7cb79ccdb821503029bc672"
 		public static let publicKey = "ace4ba9cc11a961a78324700ed36feb0277ee005d7cb79ccdb821503029bc672"
 		public static let derivationPath = "m/44'/1729'/0'/1'"
 	}

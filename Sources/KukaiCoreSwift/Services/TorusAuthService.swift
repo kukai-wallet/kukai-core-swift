@@ -6,12 +6,12 @@
 //
 
 import Foundation
+import KukaiCryptoSwift
+import Sodium
 import UIKit
 import CustomAuth
 import FetchNodeDetails
 import TorusUtils
-import Sodium
-import WalletCore
 import JWTDecode
 import AuthenticationServices
 import os.log
@@ -314,7 +314,7 @@ public class TorusAuthService: NSObject {
 			}
 			
 			// Create tz2 address and return
-			let tz2Address = Base58.encode(message: hash, prefix: Prefix.Address.tz2)
+			let tz2Address = Base58Check.encode(message: hash, prefix: Prefix.Address.tz2)
 			completion(Result.success(tz2Address))
 			
 		}.catch { error in

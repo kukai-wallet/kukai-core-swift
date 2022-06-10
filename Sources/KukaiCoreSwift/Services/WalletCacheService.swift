@@ -157,8 +157,8 @@ public class WalletCacheService {
 			var walletData: Data = Data()
 			for wallet in wallets {
 				switch wallet.type {
-					case .linear:
-						if let walletObj = wallet as? LinearWallet {
+					case .regular:
+						if let walletObj = wallet as? RegularWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
 						
@@ -167,7 +167,7 @@ public class WalletCacheService {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
 					
-					case .torus:
+					case .social:
 						if let walletObj = wallet as? TorusWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
@@ -233,15 +233,15 @@ public class WalletCacheService {
 				let jsonObjAsData = try JSONSerialization.data(withJSONObject: jsonObj, options: .fragmentsAllowed)
 				
 				switch type {
-					case .linear:
-						let wallet = try JSONDecoder().decode(LinearWallet.self, from: jsonObjAsData)
+					case .regular:
+						let wallet = try JSONDecoder().decode(RegularWallet.self, from: jsonObjAsData)
 						wallets.append(wallet)
 						
 					case .hd:
 						let wallet = try JSONDecoder().decode(HDWallet.self, from: jsonObjAsData)
 						wallets.append(wallet)
 					
-					case .torus:
+					case .social:
 						let wallet = try JSONDecoder().decode(TorusWallet.self, from: jsonObjAsData)
 						wallets.append(wallet)
 						
