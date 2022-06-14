@@ -108,6 +108,7 @@ public class TezosNodeClient {
 	
 	/**
 	Take an array of operations and estimate the gas, storage, baker fee and burn fees required to inject it onto the network
+	If the supplied operations contain suggested fees (e.g. from a dApp) this function will estimate the fee and pick which ever is higher
 	- parameter operations: An array of `Operation`'s to be injected.
 	- parameter wallet: The `Wallet` that will sign the operation
 	- parameter completion: A callback containing an updated array of `Operation`'s with fees set correctly, or an error.
@@ -115,7 +116,7 @@ public class TezosNodeClient {
 	public func estimate(operations: [Operation], withWallet wallet: Wallet, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		
 		if let constants = self.networkConstants {
-			self.estimate(operations: operations, constants: constants, withWallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
+			self.estimate(operations: operations, constants: constants, withWallet: wallet, completion: completion)
 			
 		} else {
 			self.getNetworkInformation { [weak self] (success, error) in
@@ -124,17 +125,17 @@ public class TezosNodeClient {
 					return
 				}
 				
-				self?.estimate(operations: operations, constants: constants, withWallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
+				self?.estimate(operations: operations, constants: constants, withWallet: wallet, completion: completion)
 			}
 		}
 	}
 	
 	/// Internal function to break up code and make it easier to read. Public function checks to see if the network constants are present, if not will query them and then estimate
-	private func estimate(operations: [Operation], constants: NetworkConstants, withWallet wallet: Wallet, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	private func estimate(operations: [Operation], constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		getOperationMetadata(forWallet: wallet) { [weak self] (result) in
 			switch result {
 				case .success(let metadata):
-					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, withWallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
+					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, withWallet: wallet, completion: completion)
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Unable to fetch metadata: %@", "\(error)")

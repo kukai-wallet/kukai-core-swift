@@ -38,6 +38,7 @@ public class FeeEstimatorService {
 		case tezosNodeClientNotPresent
 		case unableToSetupRunOperation
 		case invalidNumberOfFeesReturned
+		case failedToCopyOperations
 		case estimationRemoteError(errors: [OperationResponseInternalResultError]?)
 	}
 	
@@ -69,13 +70,21 @@ public class FeeEstimatorService {
 	
 	/**
 	Pass in an array of `Operation` subclasses (use `OperationFacotry` to create) to have the library estimate the cost of sending the transaction. Function will use local or remote forging based off config passed in.
+	If the supplied operations contain suggested fees (e.g. from a dApp) this function will estimate the fee and pick which ever is higher
 	- parameter operations: An array of `Operation` subclasses to be estimated.
 	- parameter operationMetadata: An `OperationMetadata` object containing necessary info about the current blockchain state.
 	- parameter networkConstants: A `NetworkConstants` used to provide information about the current network requirements.
 	- parameter withWallet: The `Wallet` object used for signing the transaction.
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
-	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+		
+		// Make a copy of the operations before they are modified
+		guard let opJson = try? JSONEncoder().encode(operations), let opsCopy = try? JSONDecoder().decode([Operation].self, from: opJson) else {
+			completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.failedToCopyOperations)))
+			return
+		}
+		
 		
 		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, withWallet: wallet)
 		
@@ -86,12 +95,12 @@ public class FeeEstimatorService {
 		switch self.config.forgingType {
 			case .local:
 				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
+					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, originalOps: opsCopy, completion: completion)
 				}
 				
 			case .remote:
 				operationService.remoteForge(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
+					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, originalOps: opsCopy, completion: completion)
 				}
 		}
 	}
@@ -102,7 +111,7 @@ public class FeeEstimatorService {
 							 operationMetadata: OperationMetadata,
 							 constants: NetworkConstants,
 							 wallet: Wallet,
-							 suggestedOpsAndFees: [Operation]?,
+							 originalOps: [Operation],
 							 completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void))
 	{
 		switch forgeResult {
@@ -111,7 +120,7 @@ public class FeeEstimatorService {
 				mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: wallet.privateKeyCurve())
 				let runOperationPayload = RunOperationPayload(chainID: operationMetadata.chainID, operation: mutablePayload)
 				
-				self.estimate(runOperationPayload: runOperationPayload, operations: mutablePayload.contents, constants: constants, forgedHex: hexString, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
+				self.estimate(runOperationPayload: runOperationPayload, operations: mutablePayload.contents, constants: constants, forgedHex: hexString, originalOps: originalOps, completion: completion)
 			
 			case .failure(let error):
 				completion(Result.failure(error))
@@ -120,7 +129,7 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, originalOps: [Operation], completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create runOperation RPC, cancelling event")
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
@@ -173,14 +182,13 @@ public class FeeEstimatorService {
 				return
 			}
 			
-			
+			// Operations can come in with suggested fees (e.g. when using a dApp through something like Beacon).
+			// We always do an estimation and pick which ever is higher, the supplied suggested fees (which should always be worst case, but can be flawed), or the result of the estimation
 			var lastOpFee: OperationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
 			var operationFeesToUse: [OperationFees] = []
-			
-			// If there are suggested fees, and they contain a higher gasLimit, use those. Otherwise use the estimated values
-			if let suggestedOpsAndFees = suggestedOpsAndFees, suggestedOpsAndFees.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
-				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: suggestedOpsAndFees, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
-				operationFeesToUse = suggestedOpsAndFees.map({ $0.operationFees })
+			if originalOps.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
+				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: originalOps, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
+				operationFeesToUse = originalOps.map({ $0.operationFees })
 				
 			} else {
 				lastOpFee = fees.last ?? OperationFees.zero()

@@ -25,7 +25,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		MockConstants.resetOperations()
 		
 		let expectation = XCTestExpectation(description: "Estimation service")
-		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, suggestedOpsAndFees: nil) { result in
+		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet) { result in
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
@@ -53,7 +53,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let suggestOperationsWithFees = [op1, op2]
 		
 		let expectation = XCTestExpectation(description: "Estimation service")
-		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, suggestedOpsAndFees: suggestOperationsWithFees) { result in
+		estimationService.estimate(operations: suggestOperationsWithFees, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet) { result in
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
