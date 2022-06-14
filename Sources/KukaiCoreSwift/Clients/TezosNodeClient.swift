@@ -113,7 +113,7 @@ public class TezosNodeClient {
 	- parameter wallet: The `Wallet` that will sign the operation
 	- parameter completion: A callback containing an updated array of `Operation`'s with fees set correctly, or an error.
 	*/
-	public func estimate(operations: [Operation], withWallet wallet: Wallet, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	public func estimate(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		
 		if let constants = self.networkConstants {
 			self.estimate(operations: operations, constants: constants, withWallet: wallet, completion: completion)
