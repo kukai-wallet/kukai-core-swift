@@ -75,25 +75,23 @@ public class FeeEstimatorService {
 	- parameter withWallet: The `Wallet` object used for signing the transaction.
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
-	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, receivedSuggestedGas: Bool, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		
 		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, withWallet: wallet)
 		
-		if !receivedSuggestedGas {
-			// Before estimating, set the maximum gas and storage to ensure the operation suceeds (excluding any errors such as invalid address, insufficnet funds etc)
-			let maxGasAndStorage = OperationFees(transactionFee: XTZAmount.zero(), gasLimit: constants.maxGasPerOperation(), storageLimit: constants.maxStoragePerOperation())
-			operationPayload.contents.forEach { $0.operationFees = maxGasAndStorage }
-		}
+		// Before estimating, set the maximum gas and storage to ensure the operation suceeds (excluding any errors such as invalid address, insufficnet funds etc)
+		let maxGasAndStorage = OperationFees(transactionFee: XTZAmount.zero(), gasLimit: constants.maxGasPerOperation(), storageLimit: constants.maxStoragePerOperation())
+		operationPayload.contents.forEach { $0.operationFees = maxGasAndStorage }
 		
 		switch self.config.forgingType {
 			case .local:
 				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, receivedSuggestedGas: receivedSuggestedGas, completion: completion)
+					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
 				}
 				
 			case .remote:
 				operationService.remoteForge(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, receivedSuggestedGas: receivedSuggestedGas, completion: completion)
+					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
 				}
 		}
 	}
@@ -104,23 +102,16 @@ public class FeeEstimatorService {
 							 operationMetadata: OperationMetadata,
 							 constants: NetworkConstants,
 							 wallet: Wallet,
-							 receivedSuggestedGas: Bool,
+							 suggestedOpsAndFees: [Operation]?,
 							 completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void))
 	{
 		switch forgeResult {
 			case .success(let hexString):
+				var mutablePayload = operationPayload
+				mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: wallet.privateKeyCurve())
+				let runOperationPayload = RunOperationPayload(chainID: operationMetadata.chainID, operation: mutablePayload)
 				
-				if receivedSuggestedGas {
-					self.estimateFeesOnly(operations: operationPayload.contents, constants: constants, forgedHex: hexString, completion: completion)
-					
-				} else {
-					// Add signature to operation payload and perform the /run_operation request
-					var mutablePayload = operationPayload
-					mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: wallet.privateKeyCurve())
-					let runOperationPayload = RunOperationPayload(chainID: operationMetadata.chainID, operation: mutablePayload)
-					
-					self.estimate(runOperationPayload: runOperationPayload, operations: mutablePayload.contents, constants: constants, forgedHex: hexString, completion: completion)
-				}
+				self.estimate(runOperationPayload: runOperationPayload, operations: mutablePayload.contents, constants: constants, forgedHex: hexString, suggestedOpsAndFees: suggestedOpsAndFees, completion: completion)
 			
 			case .failure(let error):
 				completion(Result.failure(error))
@@ -129,7 +120,7 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, suggestedOpsAndFees: [Operation]?, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
 		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create runOperation RPC, cancelling event")
 			completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
@@ -182,41 +173,44 @@ public class FeeEstimatorService {
 				return
 			}
 			
-			// Add the fee to the corresponding `Operation`
+			
+			var lastOpFee: OperationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
+			var operationFeesToUse: [OperationFees] = []
+			
+			// If there are suggested fees, and they contain a higher gasLimit, use those. Otherwise use the estimated values
+			if let suggestedOpsAndFees = suggestedOpsAndFees, suggestedOpsAndFees.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
+				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: suggestedOpsAndFees, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
+				operationFeesToUse = suggestedOpsAndFees.map({ $0.operationFees })
+				
+			} else {
+				lastOpFee = fees.last ?? OperationFees.zero()
+				operationFeesToUse = fees
+			}
+			
+			
+			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
+			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
 			for (index, op) in operations.enumerated() {
-				op.operationFees = fees[index]
+				op.operationFees = operationFeesToUse[index]
+				
+				if index == operations.count-1 {
+					op.operationFees.transactionFee = lastOpFee.transactionFee
+					op.operationFees.networkFees = lastOpFee.networkFees
+					
+				} else {
+					op.operationFees.transactionFee = .zero()
+				}
 			}
 			
 			completion(Result.success(operations))
 		}
 	}
 	
-	/// When we recieve a suggestion from Beacon, we don't need to perform a runOperation, instead just grab the suggestions and work out the fee
-	private func estimateFeesOnly(operations: [Operation], constants: NetworkConstants, forgedHex: String, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	private func calcFeeFromSuggestedOperations(operations: [Operation], constants: NetworkConstants, forgedHex: String) -> OperationFees {
 		let totalGas = operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
 		let totalStorage = operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
 		
-		
-		// Apply the full fee to the last operation so its only charged if the whole thing is successful
-		for (index, op) in operations.enumerated() {
-			if index == operations.count-1 {
-				let newFee = createLimitsAndTotalFeeObj(totalGas: totalGas,
-														opGas: op.operationFees.gasLimit,
-														totalStorage: totalStorage,
-														opStorage: op.operationFees.storageLimit,
-														forgedHash: forgedHex,
-														constants: constants,
-														allocationStorage: 0,
-														totalAllocationFee: .zero())
-				op.operationFees = newFee
-				
-			} else {
-				op.operationFees.transactionFee = .zero()
-				op.operationFees.networkFees = [[:]]
-			}
-		}
-		
-		completion(Result.success(operations))
+		return calcTransactionFee(totalGas: totalGas, totalStorage: totalStorage, forgedHash: forgedHex, constants: constants)
 	}
 	
 	/**
@@ -284,6 +278,16 @@ public class FeeEstimatorService {
 	/// Create an instance of `OperationFees` for a non-last operation, with no fee, but accurate gas + storage
 	private func createLimitsOnlyFeeObj(gas: Int, storage: Int, allocationStorage: Int) -> OperationFees {
 		return OperationFees(transactionFee: .zero(), gasLimit: gas, storageLimit: storage + allocationStorage)
+	}
+	
+	/// Create an instance of `OperationFees` in order to calculate a transaction fee. Used to calculate the overall transaction fee
+	private func calcTransactionFee(totalGas: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
+		let gasFee = feeForGas(totalGas)
+		let storageFee = feeForStorage(forgedHash)
+		let burnFee = feeForBurn(totalStorage, withConstants: constants)
+		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
+		
+		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: 0, storageLimit: 0)
 	}
 	
 	/// Create an instance of `OperationFees` for a last operation, with its corresponding gas + storage, but fees for the entire list of operations

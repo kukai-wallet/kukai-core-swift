@@ -54,7 +54,7 @@ class TezosNodeClientTests: XCTestCase {
 	
 	func testEstiamte() {
 		let expectation = XCTestExpectation(description: "tezos node client")
-		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, withWallet: MockConstants.defaultHdWallet, receivedSuggestedGas: false) { result in
+		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, withWallet: MockConstants.defaultHdWallet, suggestedOpsAndFees: nil) { result in
 			switch result {
 				case .success(let ops):
 					XCTAssert(ops.count == 2)

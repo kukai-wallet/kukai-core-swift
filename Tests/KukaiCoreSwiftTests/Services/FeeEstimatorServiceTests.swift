@@ -25,7 +25,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		MockConstants.resetOperations()
 		
 		let expectation = XCTestExpectation(description: "Estimation service")
-		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, receivedSuggestedGas: false) { result in
+		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, suggestedOpsAndFees: nil) { result in
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
@@ -45,13 +45,20 @@ class FeeEstimatorServiceTests: XCTestCase {
 	func testEstimation2() {
 		MockConstants.resetOperations()
 		
+		// Sample suggested operations = fees coming back from a dApp
+		let op1 = OperationReveal(wallet: MockConstants.defaultHdWallet)
+		let op2 = OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)
+		op2.operationFees.gasLimit = 140000
+		
+		let suggestOperationsWithFees = [op1, op2]
+		
 		let expectation = XCTestExpectation(description: "Estimation service")
-		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, receivedSuggestedGas: true) { result in
+		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, withWallet: MockConstants.defaultHdWallet, suggestedOpsAndFees: suggestOperationsWithFees) { result in
 			switch result {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
 					XCTAssert(operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees.allFees().description)
-					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000321), operations[1].operationFees.allFees().description)
+					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.014331), operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)
