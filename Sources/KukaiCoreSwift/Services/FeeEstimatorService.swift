@@ -218,7 +218,7 @@ public class FeeEstimatorService {
 		let totalGas = operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
 		let totalStorage = operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
 		
-		return calcTransactionFee(totalGas: totalGas, totalStorage: totalStorage, forgedHash: forgedHex, constants: constants)
+		return calcTransactionFee(totalGas: totalGas, opCount: operations.count, totalStorage: totalStorage, forgedHash: forgedHex, constants: constants)
 	}
 	
 	/**
@@ -273,7 +273,7 @@ public class FeeEstimatorService {
 			
 			// If last
 			if index == operationResponse.contents.count-1 {
-				opFees.append( createLimitsAndTotalFeeObj(totalGas: totalGas, opGas: opGas, totalStorage: totalStorage, opStorage: opStorage, forgedHash: forgedHash, constants: constants, allocationStorage: opAllocationStorage, totalAllocationFee: totalAllocationFee) )
+				opFees.append( createLimitsAndTotalFeeObj(totalGas: totalGas, opGas: opGas, opCount: operationResponse.contents.count, totalStorage: totalStorage, opStorage: opStorage, forgedHash: forgedHash, constants: constants, allocationStorage: opAllocationStorage, totalAllocationFee: totalAllocationFee) )
 				
 			} else {
 				opFees.append( createLimitsOnlyFeeObj(gas: opGas, storage: opStorage, allocationStorage: opAllocationStorage) )
@@ -289,9 +289,9 @@ public class FeeEstimatorService {
 	}
 	
 	/// Create an instance of `OperationFees` in order to calculate a transaction fee. Used to calculate the overall transaction fee
-	private func calcTransactionFee(totalGas: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
+	private func calcTransactionFee(totalGas: Int, opCount: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
 		let gasFee = feeForGas(totalGas)
-		let storageFee = feeForStorage(forgedHash)
+		let storageFee = feeForStorage(forgedHash, numberOfOperations: opCount)
 		let burnFee = feeForBurn(totalStorage, withConstants: constants)
 		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
 		
@@ -299,9 +299,9 @@ public class FeeEstimatorService {
 	}
 	
 	/// Create an instance of `OperationFees` for a last operation, with its corresponding gas + storage, but fees for the entire list of operations
-	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants, allocationStorage: Int, totalAllocationFee: XTZAmount) -> OperationFees {
+	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, opCount: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants, allocationStorage: Int, totalAllocationFee: XTZAmount) -> OperationFees {
 		let gasFee = feeForGas(totalGas)
-		let storageFee = feeForStorage(forgedHash)
+		let storageFee = feeForStorage(forgedHash, numberOfOperations: opCount)
 		let burnFee = feeForBurn(totalStorage, withConstants: constants)
 		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: totalAllocationFee]]
 		
@@ -332,9 +332,9 @@ public class FeeEstimatorService {
 	}
 	
 	/// Calculate the fee to add based on the size of the forged string
-	private func feeForStorage(_ forgedHexString: String) -> XTZAmount {
+	private func feeForStorage(_ forgedHexString: String, numberOfOperations: Int) -> XTZAmount {
 		let forgedHexWithSignature = (forgedHexString + FeeEstimatorService.defaultSignatureHex)
-		let nanoTez = ((forgedHexWithSignature.count/2) + 10) * FeeConstants.feePerStorageByte // Multiply bytes (2 characters per byte) by the fee perSotrageByteConstant. Add 10 bytes to account for any variations
+		let nanoTez = ((forgedHexWithSignature.count/2) + (10 * numberOfOperations)) * FeeConstants.feePerStorageByte // Multiply bytes (2 characters per byte) by the fee perSotrageByteConstant. Add 10 bytes per op to account for any variations
 		return nanoTeztoXTZ(nanoTez)
 	}
 	

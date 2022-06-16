@@ -102,8 +102,6 @@ public class NetworkService {
 			// Log request success
 			NetworkService.logRequestSucceded(loggingConfig: self?.loggingConfig, isPost: isPOST, fullURL: url, payload: body, responseData: data)
 			
-			// Because iOS 12 doesn't support allowFragments inside JSONDecoder, and because we have many object types expecting to use decode(fromDecoder)
-			// We first test can we decode the JSON the way we want to. If it fails because of a fragmetn error, we record the state and carry on. Other errors cause an early exit
 			do {
 				let parsedResponse = try JSONDecoder().decode(T.self, from: d)
 				
