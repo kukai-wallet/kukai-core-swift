@@ -138,4 +138,16 @@ class ErrorHandlingServiceTests: XCTestCase {
 		let containsErrors1 = ErrorHandlingService.extractMeaningfulErrors(fromRPCOperations: ops, withRequestURL: nil, requestPayload: nil, responsePayload: nil, httpStatusCode: nil)
 		XCTAssert(containsErrors1?.errorType == .insufficientFunds)
 	}
+	
+	func testTest() {
+		let errorData = MockConstants.jsonStub(fromFilename: "error_smart-contract_gas_exhausted")
+		
+		guard let opResponse = try? JSONDecoder().decode([OperationResponse].self, from: errorData) else {
+			XCTFail("Couldn't parse data as [OperationResponse]")
+			return
+		}
+		
+		let result = ErrorHandlingService.extractMeaningfulErrors(fromRPCOperations: opResponse, withRequestURL: nil, requestPayload: nil, responsePayload: nil, httpStatusCode: nil)
+		XCTAssert(result?.errorString == "", result?.errorString ?? "-")
+	}
 }

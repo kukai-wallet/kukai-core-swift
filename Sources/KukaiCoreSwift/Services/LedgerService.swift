@@ -685,7 +685,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			type = generalCode
 		}
 		
-		return ErrorResponse.lederError(code: code, type: type)
+		return ErrorResponse.ledgerError(code: code, type: type)
 	}
 	
 	/// A helper to take an error code , returned from an APDU, and fire it back into whichever publisher is currently being listened too

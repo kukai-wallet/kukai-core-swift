@@ -9,6 +9,174 @@
 import Foundation
 import os.log
 
+
+
+/*
+ Changes
+ 
+ - split into:
+	- RPC errors
+	- system errors
+		- e.g. no internet connection
+	- internal application errors
+		- e.g. another Error enum from somewhere else in the app
+ 
+ 
+ - if RPC
+	- Just denote it is RPC
+	- The error string
+	- Short hand for display (remove protocol)
+	- usual data for logging/debugging
+ 
+ - if system
+	- denote its system
+	- but also its sub type (no internet, request time out etc)
+	- need some readable string
+ - usual data for logging/debugging
+ 
+ - if internal application error
+	- denote its internal
+	- have a subtype for the actual error
+	- some way to get string
+	- usual data for logging/debugging
+ */
+
+
+public enum ErrorType: String {
+	case rpc
+	case system
+	case network(Int)
+	case internalApplication
+}
+
+public struct ErrorTest: CustomStringConvertible, Error {
+	
+	let errorType: ErrorType
+	
+	let subType: Error?
+	
+	let rpcErrorString: String?
+	
+	/// The requested URL that returned the error
+	public var requestURL: URL?
+	
+	/// The JSON that was sent as part of the request
+	public var requestJSON: String?
+	
+	/// The raw JSON that was returned
+	public var responseJSON: String?
+	
+	/// The HTTP status code returned
+	public var httpStatusCode: Int?
+	
+	
+	
+	// MARK: - Constructors
+	
+	public static func rpcError(rpcErrorString: String) -> ErrorTest {
+		return ErrorTest(errorType: .rpc, subType: nil, rpcErrorString: rpcErrorString, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
+	public static func systemError(subType: Error) -> ErrorTest {
+		return ErrorTest(errorType: .system, subType: subType, rpcErrorString: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
+	public static func networkError(statusCode: Int) -> ErrorTest {
+		return ErrorTest(errorType: .network(statusCode), subType: subType, rpcErrorString: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
+	public static func internalApplicationError(error: Error) -> ErrorTest {
+		return ErrorTest(errorType: .internalApplication, subType: error, rpcErrorString: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
+	public static func fromOperationError(_ opError: OperationResponseInternalResultError) -> ErrorTest {
+		let errorWithoutProtocol = opError.id.removeLeadingProtocolFromRPCError()
+		
+		if errorWithoutProtocol == "michelson_v1.runtime_error", let withError = opError.with {
+			
+			if let failwith = withError.int, let failwithInt = Int(failwith) {
+				// Smart contract failwith reached with an Int denoting an error code
+				// Liquidity baking error codes, need to consider how to incorporate: https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L85
+				return ErrorTest.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"int\": \(failwithInt)}")
+				
+			} else if let failwith = withError.string {
+				// Smart contract failwith reached with an String error message
+				return ErrorTest.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"string\": \(failwith)}")
+				
+			} else if let args = withError.args {
+				// Smart Contract failwith reached with a dictionary
+				return ErrorTest.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"args\": \(args)}")
+				
+			} else {
+				// Unknown smart contract error
+				return ErrorTest.rpcError(rpcErrorString: "michelson_v1.runtime_error")
+			}
+			
+		} else {
+			return ErrorTest(errorType: .rpc, subType: nil, rpcErrorString: errorWithoutProtocol, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		}
+	}
+	
+	public static func searchForSystemError(data: Data?, response: URLResponse?, networkError: Error?, requestURL: URL, requestData: Data?) -> ErrorTest {
+		
+		// Check if we got an error object (e.g. no internet connection)
+		if let networkError = networkError {
+			return ErrorTest.systemError(subType: networkError)
+		}
+		// Check if we didn't get an error object, but instead got a non http 200 (e.g. 404)
+		else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+			return ErrorTest.networkError(statusCode: httpResponse.statusCode)
+		}
+		
+		return nil
+	}
+	
+	
+	
+	// MARK: - Modifiers
+	
+	public mutating func addNetworkData(requestURL: URL?, requestJSON: String?, responseJSON: String?, httpStatusCode: Int?) {
+		self.requestURL = requestURL
+		self.requestJSON = requestJSON
+		self.responseJSON = responseJSON
+		self.httpStatusCode = httpStatusCode
+	}
+	
+	
+	
+	// MARK: - Display
+	
+	/// Prints the underlying error type with either an RPC string, or an underlying Error object contents
+	public var description: String {
+		get {
+			switch errorType {
+				case .rpc:
+					return "Error - RPC: \(rpcErrorString?.removeLeadingProtocolFromRPCError() ?? rpcErrorString)"
+					
+				case .system:
+					return "Error - System: \(subType)"
+					
+				case .network(let statusCode):
+					return "Error - Network: \(statusCode)"
+					
+				case .internalApplication:
+					return "Error - Internal Application: \(subType)"
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // MARK: - Types
 
 /// High level error types, used to quickly categoise Tezos or system errors, in order to display error messages to user
@@ -23,6 +191,9 @@ public enum ErrorResponseType: String, Codable {
 	case requestTimeOut
 	case tooManyRedirects
 	case atsUnsecureConnection
+	
+	case gasExhausted
+	case storageExhausted
 	
 	case exchangeDataOutOfSync
 	case exchangeHigherThanZero
@@ -42,7 +213,7 @@ public enum ErrorResponseType: String, Codable {
 	case dexterNotEnoughFA
 	case dexterNotEnoughTez
 	
-	case lederError
+	case ledgerError
 }
 
 
@@ -147,8 +318,8 @@ public struct ErrorResponse: CustomStringConvertible, Error {
 	- parameter type: the matching string type
 	- returns `ErrorResponse`
 	*/
-	public static func lederError(code: String, type: Error) -> ErrorResponse {
-		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: type, errorString: code, errorType: .lederError)
+	public static func ledgerError(code: String, type: Error) -> ErrorResponse {
+		return ErrorResponse(requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil, errorObject: type, errorString: code, errorType: .ledgerError)
 	}
 	
 	/**
@@ -224,8 +395,11 @@ public class ErrorHandlingService {
 		} else if string.contains("App Transport Security policy requires the use of a secure connection") {
 			errorResponse = ErrorResponse.error(string: string, errorType: .atsUnsecureConnection)
 			
-		} else if string.contains("gas_exhausted") || string.contains("storage_exhausted") {
-			errorResponse = ErrorResponse.error(string: string, errorType: .unknownError)
+		} else if string.contains("gas_exhausted") {
+			errorResponse = ErrorResponse.error(string: string, errorType: .gasExhausted)
+			
+		} else if string.contains("storage_exhausted") {
+			errorResponse = ErrorResponse.error(string: string, errorType: .storageExhausted)
 			
 		} else if string.contains("implicit.empty_implicit_contract") 	// No XTZ
 					|| string.contains("\"NotEnoughBalance\"") { 		// No FA1.2 for Dexter swap
@@ -428,7 +602,7 @@ public class ErrorHandlingService {
 				
 				// Error we are looking for could be inside the returned `.id` or optionally inside `.with.string`.
 				// Since we are just just check for string contents, add both together and search the full string
-				let fullErrorString = error.id + " " + (error.with?.string ?? "")
+				let fullErrorString = error.id + (error.with?.string ?? "")
 				parsedErrors.append( ErrorHandlingService.parse(string: fullErrorString, andLog: false) )
 			})
 		}

@@ -119,5 +119,6 @@ public struct OperationResponseInternalResultError: Codable, Equatable {
 /// The error string, or micheline error object returned inside `OperationResponseInternalResultError`
 public struct OperationResponseInternalResultErrorWith: Codable, Equatable {
 	public let string: String?
+	public let int: String?
 	public let args: [[String: String]]?
 }

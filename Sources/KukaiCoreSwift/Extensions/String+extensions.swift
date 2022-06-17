@@ -18,4 +18,29 @@ public extension String {
 			String(format: "%02hhx", $0)
 		}.joined()
 	}
+	
+	/// Return the starting indexes of each occurnace of the supplied string
+	func indexesOf(string: String) -> [String.Index] {
+		var searchRange = self.startIndex..<self.endIndex
+		var indices: [String.Index] = []
+		
+		while let range = self.range(of: string, options: .caseInsensitive, range: searchRange) {
+			searchRange = range.upperBound..<searchRange.upperBound
+			indices.append(range.lowerBound)
+		}
+		
+		return indices
+	}
+	
+	/// When an error is returned in the format `proto.012-Psithaca.gas_exhausted.operation`, in many cases we only care about the bit after the protocol. This function returns only that piece
+	func removeLeadingProtocolFromRPCError() -> String? {
+		let indexes = self.indexesOf(string: ".")
+		
+		if indexes.count > 2 {
+			return String(self[indexes[1]...])
+			
+		} else {
+			return nil
+		}
+	}
 }
