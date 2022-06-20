@@ -121,7 +121,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 	
 	func testExtractMeaningfulErrorsFromRPC() {
 		
-		let error = OperationResponseInternalResultError(kind: "", id: "", location: 41, with: OperationResponseInternalResultErrorWith(string: "balance_too_low", args: nil))
+		let error = OperationResponseInternalResultError(kind: "", id: "", location: 41, with: OperationResponseInternalResultErrorWith(string: "balance_too_low", int: nil, args: nil))
 		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
 		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
 		
@@ -149,5 +149,10 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let result = ErrorHandlingService.extractMeaningfulErrors(fromRPCOperations: opResponse, withRequestURL: nil, requestPayload: nil, responsePayload: nil, httpStatusCode: nil)
 		XCTAssert(result?.errorString == "", result?.errorString ?? "-")
+		
+		
+		let result2 = ErrorTest.searchOperationResponseForErrors(opResponse)
+		XCTAssert(result2?.rpcErrorString == "gas_exhausted.operation", result2?.rpcErrorString ?? "-")
+		XCTAssert(result2?.description == "Error - RPC: gas_exhausted.operation", result2?.description ?? "-")
 	}
 }

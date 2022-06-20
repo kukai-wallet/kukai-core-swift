@@ -113,11 +113,11 @@ public struct OperationResponseInternalResultError: Codable, Equatable {
 	public let kind: String
 	public let id: String
 	public let location: Int?
-	public let with: OperationResponseInternalResultErrorWith?
+	public let with: FailWith?
 }
 
-/// The error string, or micheline error object returned inside `OperationResponseInternalResultError`
-public struct OperationResponseInternalResultErrorWith: Codable, Equatable {
+/// The error string, error int (code), or micheline error object returned inside `FailWith`
+public struct FailWith: Codable, Equatable {
 	public let string: String?
 	public let int: String?
 	public let args: [[String: String]]?

@@ -37,7 +37,7 @@ public extension String {
 		let indexes = self.indexesOf(string: ".")
 		
 		if indexes.count > 2 {
-			return String(self[indexes[1]...])
+			return String(self[index(after: indexes[1])...])
 			
 		} else {
 			return nil
