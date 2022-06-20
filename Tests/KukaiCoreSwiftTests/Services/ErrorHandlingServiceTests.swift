@@ -19,54 +19,54 @@ class ErrorHandlingServiceTests: XCTestCase {
 	
 	func testClassMethods() {
 		
-		let error1 = ErrorResponse.error(string: "Blah", errorType: .counterError)
+		let error1 = KukaiError.error(string: "Blah", errorType: .counterError)
 		XCTAssert(error1.errorString == "Blah")
 		XCTAssert(error1.errorType == .counterError)
 		XCTAssert(error1.errorObject == nil)
 		XCTAssert(error1.httpStatusCode == nil)
 		
-		let error2 = ErrorResponse.internalApplicationError(error: TestError.example)
-		XCTAssert(error2.errorString == ErrorResponse.errorToString(TestError.example), "left: '\(error2.errorString ?? "")' != right: `\(ErrorResponse.errorToString(TestError.parseError))`")
+		let error2 = KukaiError.internalApplicationError(error: TestError.example)
+		XCTAssert(error2.errorString == KukaiError.errorToString(TestError.example), "left: '\(error2.errorString ?? "")' != right: `\(KukaiError.errorToString(TestError.parseError))`")
 		XCTAssert(error2.errorType == .internalApplicationError)
 		XCTAssert(error2.errorObject != nil)
 		XCTAssert(error2.httpStatusCode == nil)
 		
-		let error3 = ErrorResponse.unknownParseError(error: TestError.parseError)
-		XCTAssert(error3.errorString == ErrorResponse.errorToString(TestError.parseError))
+		let error3 = KukaiError.unknownParseError(error: TestError.parseError)
+		XCTAssert(error3.errorString == KukaiError.errorToString(TestError.parseError))
 		XCTAssert(error3.errorType == .unknownParseError)
 		XCTAssert(error3.errorObject == nil)
 		XCTAssert(error3.httpStatusCode == nil)
 		
-		let error4 = ErrorResponse.unknownError()
+		let error4 = KukaiError.unknown()
 		XCTAssert(error4.errorString == nil)
 		XCTAssert(error4.errorType == .unknownError)
 		XCTAssert(error4.errorObject == nil)
 		XCTAssert(error4.httpStatusCode == nil)
 		
-		let errorString = ErrorResponse.errorToString(TestError.parseError)
+		let errorString = KukaiError.errorToString(TestError.parseError)
 		XCTAssert(errorString == "parseError", errorString)
 	}
 	
 	func testParseString() {
 		let errorString1 = "balance_too_low"
-		let errorResponse1 = ErrorHandlingService.parse(string: errorString1)
-		XCTAssert(errorResponse1.errorType == .insufficientFunds)
+		let kukaiError1 = ErrorHandlingService.parse(string: errorString1)
+		XCTAssert(kukaiError1.errorType == .insufficientFunds)
 		
 		let errorString2 = "Counter 147222 already used for contract"
-		let errorResponse2 = ErrorHandlingService.parse(string: errorString2)
-		XCTAssert(errorResponse2.errorType == .counterError)
+		let kukaiError2 = ErrorHandlingService.parse(string: errorString2)
+		XCTAssert(kukaiError2.errorType == .counterError)
 		
 		let errorString3 = "The Internet connection appears to be offline."
-		let errorResponse3 = ErrorHandlingService.parse(string: errorString3)
-		XCTAssert(errorResponse3.errorType == .noInternetConnection)
+		let kukaiError3 = ErrorHandlingService.parse(string: errorString3)
+		XCTAssert(kukaiError3.errorType == .noInternetConnection)
 		
 		let errorString4 = "The request timed out."
-		let errorResponse4 = ErrorHandlingService.parse(string: errorString4)
-		XCTAssert(errorResponse4.errorType == .requestTimeOut)
+		let kukaiError4 = ErrorHandlingService.parse(string: errorString4)
+		XCTAssert(kukaiError4.errorType == .requestTimeOut)
 		
 		let errorString5 = "too many HTTP redirects"
-		let errorResponse5 = ErrorHandlingService.parse(string: errorString5)
-		XCTAssert(errorResponse5.errorType == .tooManyRedirects)
+		let kukaiError5 = ErrorHandlingService.parse(string: errorString5)
+		XCTAssert(kukaiError5.errorType == .tooManyRedirects)
 	}
 	
 	func testParseData() {

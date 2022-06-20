@@ -42,7 +42,7 @@ public class DAppHelperService {
 		/**
 		 Use TzKTClient's methods of storage and bigmap queries, to extract any recorded pending rewards the user might be due, for providing liquidity to a pool
 		 */
-		public static func getPendingRewards(fromExchange exchange: String, forAddress address: String, tzKTClient: TzKTClient, completion: @escaping ((Result<XTZAmount, ErrorResponse>) -> Void)) {
+		public static func getPendingRewards(fromExchange exchange: String, forAddress address: String, tzKTClient: TzKTClient, completion: @escaping ((Result<XTZAmount, KukaiError>) -> Void)) {
 			
 			tzKTClient.getStorage(forContract: exchange, ofType: QuipuswapExchangeStorageResponse.self) { result in
 				guard let storageResult = try? result.get() else {
@@ -127,8 +127,8 @@ public class DAppHelperService {
 		/**
 		 Wrapper around `getPendingRewards(..., completion: )` to make it easier to create bulk queries, through combine
 		 */
-		public static func getPendingRewards(fromExchange exchange: String, forAddress address: String, tzKTClient: TzKTClient) -> Future<(exchange: String, rewards: XTZAmount), ErrorResponse> {
-			return Future<(exchange: String, rewards: XTZAmount), ErrorResponse> { promise in
+		public static func getPendingRewards(fromExchange exchange: String, forAddress address: String, tzKTClient: TzKTClient) -> Future<(exchange: String, rewards: XTZAmount), KukaiError> {
+			return Future<(exchange: String, rewards: XTZAmount), KukaiError> { promise in
 				getPendingRewards(fromExchange: exchange, forAddress: address, tzKTClient: tzKTClient) { result in
 					guard let res = try? result.get() else {
 						promise(.failure(result.getFailure()))
@@ -143,8 +143,8 @@ public class DAppHelperService {
 		/**
 		 Use TzKTClient's methods of storage and bigmap queries, to extract any recorded pending rewards the user might be due, for providing liquidity to a pool
 		 */
-		public static func getBulkPendingRewards(fromExchanges exchanges: [String], forAddress address: String, tzKTClient: TzKTClient, completion: @escaping ((Result<[(exchange: String, rewards: XTZAmount)], ErrorResponse>) -> Void)) {
-			var futures: [Future<(exchange: String, rewards: XTZAmount), ErrorResponse>] = []
+		public static func getBulkPendingRewards(fromExchanges exchanges: [String], forAddress address: String, tzKTClient: TzKTClient, completion: @escaping ((Result<[(exchange: String, rewards: XTZAmount)], KukaiError>) -> Void)) {
+			var futures: [Future<(exchange: String, rewards: XTZAmount), KukaiError>] = []
 			
 			for exchange in exchanges {
 				futures.append(getPendingRewards(fromExchange: exchange, forAddress: address, tzKTClient: tzKTClient))

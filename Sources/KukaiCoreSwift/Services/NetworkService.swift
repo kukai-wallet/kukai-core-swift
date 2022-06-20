@@ -57,7 +57,7 @@ public class NetworkService {
 	- parameter completion: A completion callback that will be executed on the main thread.
 	- returns: Void
 	*/
-	public func send<T: Decodable>(rpc: RPC<T>, withBaseURL baseURL: URL, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+	public func send<T: Decodable>(rpc: RPC<T>, withBaseURL baseURL: URL, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
 		let fullURL = baseURL.appendingPathComponent(rpc.endpoint)
 		
 		self.request(url: fullURL, isPOST: rpc.isPost, withBody: rpc.payload, forReturnType: T.self, completion: completion)
@@ -72,7 +72,7 @@ public class NetworkService {
 	- parameter forReturnType: The Type to parse the response as.
 	- parameter completion: A completion block with a `Result<T, Error>` T being the supplied decoable type
 	*/
-	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
 		
 		var request = URLRequest(url: url)
 		request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -86,16 +86,15 @@ public class NetworkService {
 		
 		urlSession.dataTask(with: request) { [weak self] (data, response, error) in
 			
-			// Check for errors and non-standard errors, returning a custom ErrorResponse object if found
-			if let errorResponse = ErrorHandlingService.parse(data: data, response: response, networkError: error, requestURL: url, requestData: body) {
-				NetworkService.logRequestFailed(loggingConfig: self?.loggingConfig, isPost: isPOST, fullURL: url, payload: body, error: error, statusCode: errorResponse.httpStatusCode, responseData: data)
-				DispatchQueue.main.async { completion(Result.failure( errorResponse )) }
+			if let kukaiError = ErrorHandlingService.searchForSystemError(data: data, response: response, networkError: error, requestURL: url, requestData: body) {
+				NetworkService.logRequestFailed(loggingConfig: self?.loggingConfig, isPost: isPOST, fullURL: url, payload: body, error: error, statusCode: kukaiError.httpStatusCode, responseData: data)
+				DispatchQueue.main.async { completion(Result.failure( kukaiError )) }
 				return
 			}
 			
 			// If no errors found, check we have a valid data object
 			guard let d = data else {
-				DispatchQueue.main.async { completion(Result.failure( ErrorResponse.unknownError() )) }
+				DispatchQueue.main.async { completion(Result.failure( KukaiError.unknown() )) }
 				return
 			}
 			
@@ -114,7 +113,7 @@ public class NetworkService {
 				}
 				
 			} catch (let error) {
-				DispatchQueue.main.async { completion(Result.failure( ErrorResponse.unknownParseError(error: error) )) }
+				DispatchQueue.main.async { completion(Result.failure( KukaiError.internalApplicationError(error: error) )) }
 				return
 			}
 		}.resume()
@@ -130,11 +129,11 @@ public class NetworkService {
 	- parameter forReturnType: The Type to parse the response as.
 	- returns: A publisher of the supplied return type, or error response
 	*/
-	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type) -> AnyPublisher<T, ErrorResponse> {
-		return Future<T, ErrorResponse> { [weak self] promise in
+	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type) -> AnyPublisher<T, KukaiError> {
+		return Future<T, KukaiError> { [weak self] promise in
 			self?.request(url: url, isPOST: isPOST, withBody: body, forReturnType: forReturnType) { result in
 				guard let output = try? result.get() else {
-					let error = (try? result.getError()) ?? ErrorResponse.unknownError()
+					let error = (try? result.getError()) ?? KukaiError.unknown()
 					promise(.failure(error))
 					return
 				}
@@ -144,7 +143,7 @@ public class NetworkService {
 		}.eraseToAnyPublisher()
 	}
 	
-	func checkForRPCOperationErrors(parsedResponse: Any, withRequestURL: URL?, requestPayload: Data?, responsePayload: Data?, httpStatusCode: Int?) -> ErrorResponse? {
+	func checkForRPCOperationErrors(parsedResponse: Any, withRequestURL: URL?, requestPayload: Data?, responsePayload: Data?, httpStatusCode: Int?) -> KukaiError? {
 		var operations: [OperationResponse] = []
 		
 		if parsedResponse is OperationResponse, let asOperation = parsedResponse as? OperationResponse {
@@ -154,7 +153,10 @@ public class NetworkService {
 			operations = asOperations
 		}
 		
-		return ErrorHandlingService.extractMeaningfulErrors(fromRPCOperations: operations, withRequestURL: withRequestURL, requestPayload: requestPayload, responsePayload: responsePayload, httpStatusCode: httpStatusCode)
+		var error = ErrorHandlingService.searchOperationResponseForErrors(operations)
+		error?.addNetworkData(requestURL: withRequestURL, requestJSON: requestPayload, responseJSON: responsePayload, httpStatusCode: httpStatusCode)
+		
+		return error
 	}
 	
 	
@@ -165,14 +167,13 @@ public class NetworkService {
 	public static func logRequestFailed(loggingConfig: LoggingConfig?, isPost: Bool, fullURL: URL, payload: Data?, error: Error?, statusCode: Int?, responseData: Data?) {
 		if !(loggingConfig?.logNetworkFailures ?? false) { return }
 		
-		let errorString = ErrorResponse.errorToString(error)
 		let payloadString = String(data: payload ?? Data(), encoding: .utf8) ?? ""
 		let dataString = NetworkService.dataToStringStippingMichelsonContractCode(data: responseData)
 		
 		if isPost {
-			os_log(.error, log: .network, "Request Failed to: %@ \nRequest Body: %@ \nError: %@ \nStatusCode: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, errorString, "\(String(describing: statusCode))", dataString)
+			os_log(.error, log: .network, "Request Failed to: %@ \nRequest Body: %@ \nError: %@ \nStatusCode: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, String(describing: error), "\(String(describing: statusCode))", dataString)
 		} else {
-			os_log(.error, log: .network, "Request Failed to: %@ \nError: %@ \nResponse: %@ \n_", fullURL.absoluteString, errorString, dataString)
+			os_log(.error, log: .network, "Request Failed to: %@ \nError: %@ \nResponse: %@ \n_", fullURL.absoluteString, String(describing: error), dataString)
 		}
 	}
 	

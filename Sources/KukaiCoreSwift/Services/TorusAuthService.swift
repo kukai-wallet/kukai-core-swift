@@ -105,7 +105,7 @@ public class TorusAuthService: NSObject {
 	private var nodeDetails: AllNodeDetails? = nil
 	
 	/// Apple sign in requires a seperate workflow to rest of torus, need to grab the completion and hold onto it for later
-	private var createWalletCompletion: ((Result<TorusWallet, ErrorResponse>) -> Void) = {_ in}
+	private var createWalletCompletion: ((Result<TorusWallet, KukaiError>) -> Void) = {_ in}
 	
 	private let appleIDProvider = ASAuthorizationAppleIDProvider()
 	private var request: ASAuthorizationAppleIDRequest? = nil
@@ -139,9 +139,9 @@ public class TorusAuthService: NSObject {
 	- parameter mockedTorus: To avoid issues attempting to stub aspects of the Torus SDK, a mocked version of the SDK can be supplied instead
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
-	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: CustomAuth? = nil, completion: @escaping ((Result<TorusWallet, ErrorResponse>) -> Void)) {
+	public func createWallet(from authType: TorusAuthProvider, displayOver: UIViewController?, mockedTorus: CustomAuth? = nil, completion: @escaping ((Result<TorusWallet, KukaiError>) -> Void)) {
 		guard let verifierWrapper = verifiers[authType] else {
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
 		
@@ -174,7 +174,7 @@ public class TorusAuthService: NSObject {
 			request?.requestedScopes = [.fullName, .email]
 			
 			guard let req = request else {
-				createWalletCompletion(Result.failure(ErrorResponse.unknownError()))
+				createWalletCompletion(Result.failure(KukaiError.unknown()))
 				return
 			}
 			
@@ -224,14 +224,14 @@ public class TorusAuthService: NSObject {
 					
 				case .facebook:
 					print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
-					completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 			}
 			
 			
 			// Create wallet with details and return
 			guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
 				os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 				return
 			}
 			
@@ -239,7 +239,7 @@ public class TorusAuthService: NSObject {
 			
 		}.catch { error in
 			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 			return
 		}
 	}
@@ -250,9 +250,9 @@ public class TorusAuthService: NSObject {
 	- parameter for: The social media username to search for
 	- parameter completion: The callback returned when all the networking and cryptography is complete
 	*/
-	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	public func getAddress(from authType: TorusAuthProvider, for socialUsername: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		guard let verifierWrapper = verifiers[authType] else {
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			return
 		}
 		
@@ -261,7 +261,7 @@ public class TorusAuthService: NSObject {
 			self?.nodeDetails = allNodeDetails
 			
 			guard let nd = self?.nodeDetails else {
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
+				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
 				return
 			}
 			
@@ -280,20 +280,20 @@ public class TorusAuthService: NSObject {
 			}
 		}.catch { error in
 			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 			return
 		}
 	}
 	
 	/// Private wrapper to avoid duplication in the previous function
-	private func getPublicAddress(nodeDetails: AllNodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	private func getPublicAddress(nodeDetails: AllNodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { data in
 			guard let pubX = data["pub_key_X"],
 				  let pubY = data["pub_key_Y"],
 				  let bytesX = Sodium.shared.utils.hex2bin(pubX),
 				  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
 				os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 				return
 			}
 			
@@ -309,7 +309,7 @@ public class TorusAuthService: NSObject {
 			// Run Blake2b hashing on public key
 			guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
 				os_log("Finding address - generating hash failed", log: .torus, type: .error)
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.cryptoError)))
+				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.cryptoError)))
 				return
 			}
 			
@@ -319,7 +319,7 @@ public class TorusAuthService: NSObject {
 			
 		}.catch { error in
 			os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 			return
 		}
 	}
@@ -329,11 +329,11 @@ public class TorusAuthService: NSObject {
 	- parameter username: The users username. Can contain an `@` symbol, but will be stripped out by the code as its not required
 	- parameter completion: The callback fired when the userId has been found
 	*/
-	public func twitterLookup(username: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	public func twitterLookup(username: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		let sanitizedUsername = username.replacingOccurrences(of: "@", with: "")
 		
 		guard let url = URL(string: "https://api.tezos.help/twitter-lookup/") else {
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTwitterURL)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTwitterURL)))
 			return
 		}
 		
@@ -344,7 +344,7 @@ public class TorusAuthService: NSObject {
 					if let id = dict["id"] {
 						completion(Result.success(id))
 					} else {
-						completion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.noTwiiterUserIdFound)))
+						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.noTwiiterUserIdFound)))
 					}
 					
 				case .failure(let error):
@@ -365,7 +365,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 			return
 		}
 		
-		createWalletCompletion(Result.failure(ErrorResponse.error(string: "Request failed: \(error.code)", errorType: .unknownError)))
+		createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: error)))
 	}
 	
 	public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
@@ -373,12 +373,12 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 			case let appleIDCredential as ASAuthorizationAppleIDCredential:
 				
 				guard let verifierWrapper = verifiers[.apple] else {
-					createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.missingVerifier)))
+					createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 					return
 				}
 				
 				guard let identityToken = appleIDCredential.identityToken, let token = String(data: identityToken, encoding: .utf8), let JWT = try? JWTDecode.decode(jwt: token) else {
-					createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidAppleResponse)))
+					createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidAppleResponse)))
 					return
 				}
 				
@@ -396,14 +396,14 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
 						os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
-						self?.createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+						self?.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 						return
 					}
 					
 					self?.createWalletCompletion(Result.success(wallet))
 					
 				}.catch { [weak self] error in
-					self?.createWalletCompletion(Result.failure(ErrorResponse.internalApplicationError(error: error)))
+					self?.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: error)))
 				}
 				
 			default:

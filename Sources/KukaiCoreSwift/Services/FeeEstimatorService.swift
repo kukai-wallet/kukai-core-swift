@@ -77,11 +77,11 @@ public class FeeEstimatorService {
 	- parameter withWallet: The `Wallet` object used for signing the transaction.
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
-	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		
 		// Make a copy of the operations before they are modified
 		guard let opJson = try? JSONEncoder().encode(operations), let opsCopy = try? JSONDecoder().decode([Operation].self, from: opJson) else {
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.failedToCopyOperations)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.failedToCopyOperations)))
 			return
 		}
 		
@@ -106,13 +106,13 @@ public class FeeEstimatorService {
 	}
 	
 	/// Shared function to run whether forged locally or remote
-	private func handleForge(forgeResult: Result<String, ErrorResponse>,
+	private func handleForge(forgeResult: Result<String, KukaiError>,
 							 operationPayload: OperationPayload,
 							 operationMetadata: OperationMetadata,
 							 constants: NetworkConstants,
 							 wallet: Wallet,
 							 originalOps: [Operation],
-							 completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void))
+							 completion: @escaping ((Result<[Operation], KukaiError>) -> Void))
 	{
 		switch forgeResult {
 			case .success(let hexString):
@@ -129,16 +129,16 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, originalOps: [Operation], completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, originalOps: [Operation], completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create runOperation RPC, cancelling event")
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
 			return
 		}
 		
 		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { [weak self] (result) in
 			var operationResponseToProcess: OperationResponse? = nil
-			var errorToProcess: ErrorResponse? = nil
+			var errorToProcess: KukaiError? = nil
 			
 			switch result {
 				case .success(let operationResponse):
@@ -152,7 +152,7 @@ public class FeeEstimatorService {
 					// The error will return with the correct amount of gas and storage, but the error forces it into here.
 					// So in an attempt to prevent this affecting users, we are trying to solve this hueristically, by saying if we get an insufficent_funds error, and we are trying to send a non-zero amount of XTZ,
 					// ignore the error and attempt to parse. Returning the result to the client, where they must examine the fee and decide if an amount needs to be deducted from the sending amount
-					if error.errorType == .insufficientFunds,
+					if error.rpcErrorString == "contract.balance_too_low",
 					   operations.count <= 2,
 					   operations.last is OperationTransaction,
 					   (operations.last as? OperationTransaction)?.amount != "0",
@@ -166,19 +166,19 @@ public class FeeEstimatorService {
 			
 			guard let opToProcess = operationResponseToProcess else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to estimate: %@", "\(errorToProcess?.description ?? "-")")
-				completion(Result.failure(errorToProcess ?? ErrorResponse.unknownError()))
+				completion(Result.failure(errorToProcess ?? KukaiError.unknown()))
 				return
 			}
 			
 			// Extract gas, storage, burn, allocation etc, fees from the response body
 			guard let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
+				completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
 				return
 			}
 			
 			// Make sure we have created a `OperationFees` for each operation
 			if fees.count != operations.count {
-				completion(Result.failure(ErrorResponse.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
+				completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
 				return
 			}
 			

@@ -9,6 +9,11 @@ import UIKit
 import Kingfisher
 import SwiftUI
 
+public enum MediaProxyServiceError: String, Error {
+	case noMimeTypeFoundInsideFormats
+	case unableToParseContentType
+}
+
 /// A service class for interacting with the TC infrastructure to proxy NFT images, videos and audio files
 public class MediaProxyService: NSObject {
 	
@@ -41,7 +46,7 @@ public class MediaProxyService: NSObject {
 	}
 	
 	
-	private var getMediaTypeCompletion: ((Result<MediaType, ErrorResponse>) -> Void)? = nil
+	private var getMediaTypeCompletion: ((Result<MediaType, KukaiError>) -> Void)? = nil
 	private var getMediaTypeDownloadTask: URLSessionDownloadTask? = nil
 	
 	private static let videoFormats = ["mp4", "mov"]
@@ -123,7 +128,7 @@ public class MediaProxyService: NSObject {
 	 - parameter urlSession: If type can't be found via URL or metadata, download the first packet, examine the headers for `Content-Type` using this session. (HEAD requests aren't currently supported if the asset hasn't been already cached)
 	 - parameter completion: A block to run when a type can be found, or an error encountered
 	 */
-	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<MediaType, ErrorResponse>) -> Void)) {
+	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<MediaType, KukaiError>) -> Void)) {
 		
 		// Check if the metadata contains a format with a mimetype
 		// Gifs may be reencoded as videos, so ignore them
@@ -149,7 +154,7 @@ public class MediaProxyService: NSObject {
 		}
 		
 		guard let url = url else {
-			completion(Result.failure(ErrorResponse.error(string: "No mimetype found inside formats, no URL supplied", errorType: .unknownError)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: MediaProxyServiceError.noMimeTypeFoundInsideFormats)))
 			return
 		}
 		
@@ -278,7 +283,7 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 			return
 		}
 		
-		completion(Result.failure(ErrorResponse.internalApplicationError(error: e)))
+		completion(Result.failure(KukaiError.internalApplicationError(error: e)))
 	}
 	
 	public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
@@ -295,7 +300,7 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 		}
 		
 		guard let httpResponse = downloadTask.response as? HTTPURLResponse, let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type") else {
-			completion(Result.failure(ErrorResponse.error(string: "Unbale to parse Content Type", errorType: .internalApplicationError)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: MediaProxyServiceError.unableToParseContentType)))
 			return
 		}
 		

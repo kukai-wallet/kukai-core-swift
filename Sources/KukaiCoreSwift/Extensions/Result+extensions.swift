@@ -25,13 +25,13 @@ public extension Result {
 	}
 }
 
-public extension Result where Failure == ErrorResponse {
+public extension Result where Failure == KukaiError {
 	
-	/// Similar to `Result.get()`, getFailure returns the kukai-core-specific `ErrorResponse` case or throws
+	/// Similar to `Result.get()`, getFailure returns the kukai-core-specific `KukaiError` case or throws
 	func getFailure() -> Failure {
 		switch self {
 			case .success(_):
-				return ErrorResponse.unknownError()
+				return KukaiError.unknown()
 			
 			case .failure(let error):
 				return error

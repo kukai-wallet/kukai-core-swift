@@ -29,6 +29,9 @@ public struct KukaiError: CustomStringConvertible, Error {
 		
 		/// Internal application errors are errors from other services, components, libraiers etc, wrapped up so that they don't require extra parsing
 		case internalApplication
+		
+		/// Used as a fallback for strange edge cases where we can't easily idenitfiy the issue
+		case unknown
 	}
 	
 	/// The error category
@@ -79,15 +82,20 @@ public struct KukaiError: CustomStringConvertible, Error {
 		return KukaiError(errorType: .internalApplication, subType: error, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
+	/// Create an unknown KukaiError
+	public static func unknown(withString: String? = nil) -> KukaiError {
+		return KukaiError(errorType: .unknown, subType: nil, rpcErrorString: withString, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
 	
 	
 	// MARK: - Modifiers
 	
 	/// For network errors, attach all the necessary network data that may be needed in order to debug the issue, or log to a tool such as sentry
-	public mutating func addNetworkData(requestURL: URL?, requestJSON: String?, responseJSON: String?, httpStatusCode: Int?) {
+	public mutating func addNetworkData(requestURL: URL?, requestJSON: Data?, responseJSON: Data?, httpStatusCode: Int?) {
 		self.requestURL = requestURL
-		self.requestJSON = requestJSON
-		self.responseJSON = responseJSON
+		self.requestJSON = String(data: requestJSON ?? Data(), encoding: .utf8)
+		self.responseJSON = String(data: responseJSON ?? Data(), encoding: .utf8)
 		self.httpStatusCode = httpStatusCode
 	}
 	
@@ -119,6 +127,12 @@ public struct KukaiError: CustomStringConvertible, Error {
 						return "Error - Internal Application: \(subType)"
 					}
 					return "Error - Internal Application: Unknown"
+					
+				case .unknown:
+					if let rpcErrorString = rpcErrorString {
+						return "Error - Unknown: \(rpcErrorString)"
+					}
+					return "Error - Unknown"
 			}
 		}
 	}
@@ -205,14 +219,16 @@ public class ErrorHandlingService {
 		
 		// Check if we got an error object (e.g. no internet connection)
 		if let networkError = networkError {
-			let errorToReturn = KukaiError.systemError(subType: networkError)
+			var errorToReturn = KukaiError.systemError(subType: networkError)
+			errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: nil)
 			
 			if andLog { logAndCallback(withKukaiError: errorToReturn) }
 			return errorToReturn
 		}
 		// Check if we didn't get an error object, but instead got a non http 200 (e.g. 404)
 		else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-			let errorToReturn = KukaiError.networkError(statusCode: httpResponse.statusCode)
+			var errorToReturn = KukaiError.networkError(statusCode: httpResponse.statusCode)
+			errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: httpResponse.statusCode)
 			
 			if andLog { logAndCallback(withKukaiError: errorToReturn) }
 			return errorToReturn

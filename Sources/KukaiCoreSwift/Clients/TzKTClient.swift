@@ -71,7 +71,7 @@ public class TzKTClient {
 	 - parameter ofType: The Codable compliant model to parse the response as
 	 - parameter completion: A completion block called, returning a Swift Result type
 	 */
-	public func getStorage<T: Codable>(forContract contract: String, ofType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+	public func getStorage<T: Codable>(forContract contract: String, ofType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/contracts/\(contract)/storage")
 		
@@ -84,7 +84,7 @@ public class TzKTClient {
 	 - parameter ofType: The Codable compliant model to parse the response as
 	 - parameter completion: A completion block called, returning a Swift Result type
 	 */
-	public func getBigMap<T: Codable>(forId id: String, ofType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+	public func getBigMap<T: Codable>(forId id: String, ofType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/bigmaps/\(id)/keys")
 		
@@ -98,7 +98,7 @@ public class TzKTClient {
 	 - parameter ofType: The Codable compliant model to parse the response as
 	 - parameter completion: A completion block called, returning a Swift Result type
 	 */
-	public func getBigMapKey<T: Codable>(forId id: String, key: String, ofType: T.Type, completion: @escaping ((Result<T, ErrorResponse>) -> Void)) {
+	public func getBigMapKey<T: Codable>(forId id: String, key: String, ofType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/bigmaps/\(id)/keys")
 		url.appendQueryItem(name: "key", value: key)
@@ -117,7 +117,7 @@ public class TzKTClient {
 	- parameter byHash: The operation hash to query.
 	- parameter completion: A completion colsure called when the request is done.
 	*/
-	public func getOperation(byHash hash: String, completion: @escaping (([TzKTOperation]?, ErrorResponse?) -> Void)) {
+	public func getOperation(byHash hash: String, completion: @escaping (([TzKTOperation]?, KukaiError?) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/operations/" + hash)
 		
@@ -128,7 +128,7 @@ public class TzKTClient {
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error: %@", "\(error)")
-					completion(nil, ErrorResponse.unknownParseError(error: error))
+					completion(nil, KukaiError.internalApplicationError(error: error))
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class TzKTClient {
 				os_log("Failed to parse incoming websocket data: %@", log: .tzkt, type: .error, "\(error)")
 				self?.signalrConnection?.stop()
 				self?.isListening = false
-				//completion(false, error, ErrorResponse.unknownParseError(error: error))
+				//completion(false, error, KukaiError.internalApplicationError(error: error))
 			}
 		})
 		signalrConnection?.delegate = self
@@ -206,7 +206,7 @@ public class TzKTClient {
 	 - parameter forAddress: The tz address to search for
 	 - parameter completion: The completion block called with a `Result` containing the number or an error
 	 */
-	public func getBalanceCount(forAddress: String, completion: @escaping (Result<Int, ErrorResponse>) -> Void) {
+	public func getBalanceCount(forAddress: String, completion: @escaping (Result<Int, KukaiError>) -> Void) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/tokens/balances/count")
 		url.appendQueryItem(name: "account", value: forAddress)
@@ -223,7 +223,7 @@ public class TzKTClient {
 	 - parameter offset: The starting position
 	 - parameter completion: The completion block called with a `Result` containing an array of balances or an error
 	 */
-	public func getBalancePage(forAddress: String, offset: Int = 0, completion: @escaping ((Result<[TzKTBalance], ErrorResponse>) -> Void)) {
+	public func getBalancePage(forAddress: String, offset: Int = 0, completion: @escaping ((Result<[TzKTBalance], KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/tokens/balances")
 		url.appendQueryItem(name: "account", value: forAddress)
@@ -241,7 +241,7 @@ public class TzKTClient {
 	 - parameter forAddress: The tz address to search for
 	 - parameter completion: The completion block called with a `Result` containing an object or an error
 	 */
-	public func getAccount(forAddress: String, completion: @escaping ((Result<TzKTAccount, ErrorResponse>) -> Void)) {
+	public func getAccount(forAddress: String, completion: @escaping ((Result<TzKTAccount, KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/accounts/\(forAddress)")
 		
@@ -255,7 +255,7 @@ public class TzKTClient {
 	 - parameter forAddress: The tz address to search for
 	 - parameter completion: The completion block called with a `Result` containing an object or an error
 	 */
-	public func getAllBalances(forAddress address: String, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
+	public func getAllBalances(forAddress address: String, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		getBalanceCount(forAddress: address) { [weak self] result in
 			guard let tokenCount = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
@@ -273,12 +273,12 @@ public class TzKTClient {
 	}
 	
 	/// Private function to fetch all the balance pages and stich together
-	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, ErrorResponse>) -> Void)) {
+	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
 		var tzkTAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false))
 		var tokenBalances: [TzKTBalance] = []
-		var errorFound: ErrorResponse? = nil
+		var errorFound: KukaiError? = nil
 		var groupedData: (tokens: [Token], nftGroups: [Token]) = (tokens: [], nftGroups: [])
 		
 		

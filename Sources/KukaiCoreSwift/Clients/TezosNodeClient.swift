@@ -76,7 +76,7 @@ public class TezosNodeClient {
 	- parameter forAddress: A Tezos network address, starting with `"tz1"`, `"tz2"`, `"tz3"` or `"kt1"`
 	- parameter completion: A callback containing a new `Token` object matching the xtz standard, or an error.
 	*/
-	public func getBalance(forAddress address: String, completion: @escaping ((Result<XTZAmount, ErrorResponse>) -> Void)) {
+	public func getBalance(forAddress address: String, completion: @escaping ((Result<XTZAmount, KukaiError>) -> Void)) {
 		self.networkService.send(rpc: RPC.xtzBalance(forAddress: address), withBaseURL: config.primaryNodeURL) { (result) in
 			switch result {
 				case .success(let rpcAmount):
@@ -98,7 +98,7 @@ public class TezosNodeClient {
 	- parameter forAddress: A Tezos network address, starting with `"tz1"`, `"tz2"`, `"tz3"` or `"kt1"`
 	- parameter completion: A callback containing a String with the delegate/baker's address, or an error.
 	*/
-	public func getDelegate(forAddress address: String, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	public func getDelegate(forAddress address: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		self.networkService.send(rpc: RPC.getDelegate(forAddress: address), withBaseURL: config.primaryNodeURL, completion: completion)
 	}
 	
@@ -113,7 +113,7 @@ public class TezosNodeClient {
 	- parameter wallet: The `Wallet` that will sign the operation
 	- parameter completion: A callback containing an updated array of `Operation`'s with fees set correctly, or an error.
 	*/
-	public func estimate(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	public func estimate(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		
 		if let constants = self.networkConstants {
 			self.estimate(operations: operations, constants: constants, withWallet: wallet, completion: completion)
@@ -121,7 +121,7 @@ public class TezosNodeClient {
 		} else {
 			self.getNetworkInformation { [weak self] (success, error) in
 				guard let constants = self?.networkConstants else {
-					completion(Result.failure(error ?? ErrorResponse.unknownError()))
+					completion(Result.failure(error ?? KukaiError.unknown()))
 					return
 				}
 				
@@ -131,7 +131,7 @@ public class TezosNodeClient {
 	}
 	
 	/// Internal function to break up code and make it easier to read. Public function checks to see if the network constants are present, if not will query them and then estimate
-	private func estimate(operations: [Operation], constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], ErrorResponse>) -> Void)) {
+	private func estimate(operations: [Operation], constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		getOperationMetadata(forWallet: wallet) { [weak self] (result) in
 			switch result {
 				case .success(let metadata):
@@ -153,7 +153,7 @@ public class TezosNodeClient {
 	- parameter withWallet: The `Wallet` instance that will sign the transactions.
 	- parameter completion: A completion closure that will either return the opertionID of an injected operation, or an error.
 	*/
-	public func send(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	public func send(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		getOperationMetadata(forWallet: wallet) { [weak self] (result) in
 			
@@ -176,7 +176,7 @@ public class TezosNodeClient {
 	- parameter withWallet: The `Wallet` instance that will sign the transactions.
 	- parameter completion: A completion closure that will either return the opertionID of an injected operation, or an error.
 	*/
-	public func send(operationPayload: OperationPayload, operationMetadata: OperationMetadata, withWallet wallet: Wallet, completion: @escaping ((Result<String, ErrorResponse>) -> Void)) {
+	public func send(operationPayload: OperationPayload, operationMetadata: OperationMetadata, withWallet wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		switch self.config.forgingType {
 			case .local:
 				self.operationService.localForgeSignPreapplyInject(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet, completion: completion)
@@ -195,13 +195,13 @@ public class TezosNodeClient {
 	- parameter forWallet: The `Wallet` object that will be sending the operations.
 	- parameter completion: A callback that will be executed when the network requests finish.
 	*/
-	public func getOperationMetadata(forWallet wallet: Wallet, completion: @escaping ((Result<OperationMetadata, ErrorResponse>) -> Void)) {
+	public func getOperationMetadata(forWallet wallet: Wallet, completion: @escaping ((Result<OperationMetadata, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
 		var counter = 0
 		var managerKey: String? = nil
 		var blockchainHead = BlockchainHead(protocol: "", chainID: "", hash: "")
-		var error: ErrorResponse? = nil
+		var error: KukaiError? = nil
 		
 		
 		// Get manager key
@@ -220,7 +220,7 @@ public class TezosNodeClient {
 					dispatchGroup.leave()
 				}
 			} else {
-				error = ErrorResponse.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
+				error = KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
 				dispatchGroup.leave()
 			}
 		}
@@ -242,7 +242,7 @@ public class TezosNodeClient {
 					dispatchGroup.leave()
 				}
 			} else {
-				error = ErrorResponse.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
+				error = KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
 				dispatchGroup.leave()
 			}
 		}
@@ -264,7 +264,7 @@ public class TezosNodeClient {
 					dispatchGroup.leave()
 				}
 			} else {
-				error = ErrorResponse.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
+				error = KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
 				dispatchGroup.leave()
 			}
 		}
@@ -286,7 +286,7 @@ public class TezosNodeClient {
 	- parameter contractAddress: The address of the contract to query.
 	- parameter completion: A callback with a `Result` object, with either a `MichelsonPair` or an `Error`
 	*/
-	public func getContractStorage(contractAddress: String, completion: @escaping ((Result<MichelsonPair, ErrorResponse>) -> Void)) {
+	public func getContractStorage(contractAddress: String, completion: @escaping ((Result<MichelsonPair, KukaiError>) -> Void)) {
 		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withBaseURL: config.primaryNodeURL, completion: completion)
 	}
 	
@@ -295,7 +295,7 @@ public class TezosNodeClient {
 	 - parameter id: The big map id.
 	 - parameter completion: A callback with a `Result` object, with either a `MichelsonPair` or an `Error`
 	*/
-	public func getBigMap(id: String, completion: @escaping ((Result<MichelsonPair, ErrorResponse>) -> Void)) {
+	public func getBigMap(id: String, completion: @escaping ((Result<MichelsonPair, KukaiError>) -> Void)) {
 		self.networkService.send(rpc: RPC.bigMap(id: id), withBaseURL: config.primaryNodeURL, completion: completion)
 	}
 	
@@ -304,9 +304,9 @@ public class TezosNodeClient {
 	- parameter forContracts: An array of tuples `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
 	- parameter completion: An empty callback to alert that the balances, if avialable, have bene fetched
 	*/
-	public func getLiquidityBakingPoolData(forContracts contracts: [(address: String, decimalPlaces: Int)], completion: @escaping ((Result<[String: LiquidityBakingData], ErrorResponse>) -> Void)) {
+	public func getLiquidityBakingPoolData(forContracts contracts: [(address: String, decimalPlaces: Int)], completion: @escaping ((Result<[String: LiquidityBakingData], KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
-		var errors: [ErrorResponse] = []
+		var errors: [KukaiError] = []
 		
 		var poolDict: [String: LiquidityBakingData] = [:]
 		
@@ -342,7 +342,7 @@ public class TezosNodeClient {
 	- parameter forContract: Tuple of `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
 	- parameter completion: A callback with a `Result` object, with either a `TokenAmount` or an `Error`
 	*/
-	public func getLiquidityBakingData(forContract contract: (address: String, decimalPlaces: Int), completion: @escaping ((Result<LiquidityBakingData, ErrorResponse>) -> Void)) {
+	public func getLiquidityBakingData(forContract contract: (address: String, decimalPlaces: Int), completion: @escaping ((Result<LiquidityBakingData, KukaiError>) -> Void)) {
 		self.getContractStorage(contractAddress: contract.address) { (result) in
 			switch result {
 				case .success(let michelsonPair):
@@ -377,7 +377,7 @@ public class TezosNodeClient {
 						completion(Result.success(LiquidityBakingData(xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLiquidity, tokenContractAddress: tokenAddress, liquidityTokenContractAddress: liquidityAddress)))
 						
 					} else {
-						completion(Result.failure(ErrorResponse.internalApplicationError(error: TezosNodeClientError.michelsonParsing)))
+						completion(Result.failure(KukaiError.internalApplicationError(error: TezosNodeClientError.michelsonParsing)))
 					}
 					
 				case .failure(let error):
@@ -391,15 +391,15 @@ public class TezosNodeClient {
 	so they can be referred too by the application without having to constantly query t he server.
 	- parameter completion: A callback with a `Bool` indicating success and an optional `Error`
 	*/
-	public func getNetworkInformation(completion: @escaping ((Bool, ErrorResponse?) -> Void)) {
+	public func getNetworkInformation(completion: @escaping ((Bool, KukaiError?) -> Void)) {
 		let dispatchGroup = DispatchGroup()
-		var error: ErrorResponse? = nil
+		var error: KukaiError? = nil
 		
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
 			guard let url = self?.config.primaryNodeURL else {
 				os_log(.debug, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
-				completion(false, ErrorResponse.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
+				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
 			
@@ -420,7 +420,7 @@ public class TezosNodeClient {
 		dexterQueriesQueue.async { [weak self] in
 			guard let url = self?.config.primaryNodeURL else {
 				os_log(.debug, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
-				completion(false, ErrorResponse.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
+				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
 			

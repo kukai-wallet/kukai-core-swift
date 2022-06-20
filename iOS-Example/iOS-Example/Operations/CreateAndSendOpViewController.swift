@@ -67,7 +67,7 @@ class CreateAndSendOpViewController: UIViewController {
 								
 								// TODO: update
 								/*
-								ClientsAndData.shared.tzktClient.waitForInjection(ofHash: opHash, fromAddress: wallet.address) { success, systemError, errorResponse in
+								ClientsAndData.shared.tzktClient.waitForInjection(ofHash: opHash, fromAddress: wallet.address) { success, systemError, kukaiError in
 									if success {
 										let alert = UIAlertController(title: "Success", message: "Operation has been injected", preferredStyle: .alert)
 										alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
@@ -76,7 +76,7 @@ class CreateAndSendOpViewController: UIViewController {
 										self?.activityIndicator.isHidden = true
 										
 									} else {
-										let alert = UIAlertController(title: "Error", message: "an error occured searching for the operation: \(errorResponse?.description ?? "")", preferredStyle: .alert)
+										let alert = UIAlertController(title: "Error", message: "an error occured searching for the operation: \(kukaiError?.description ?? "")", preferredStyle: .alert)
 										alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 										self?.present(alert, animated: true, completion: nil)
 										self?.activityIndicator.stopAnimating()

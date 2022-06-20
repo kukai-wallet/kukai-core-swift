@@ -135,10 +135,10 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private var receivedAPDU_payload = PassthroughSubject<String, Never>()
 	
 	private var writeToLedgerSubject = PassthroughSubject<String, Never>()
-	private var deviceListPublisher = PassthroughSubject<[String: String], ErrorResponse>()
-	private var deviceConnectedPublisher = PassthroughSubject<Bool, ErrorResponse>()
-	private var addressPublisher = PassthroughSubject<(address: String, publicKey: String), ErrorResponse>()
-	private var signaturePublisher = PassthroughSubject<String, ErrorResponse>()
+	private var deviceListPublisher = PassthroughSubject<[String: String], KukaiError>()
+	private var deviceConnectedPublisher = PassthroughSubject<Bool, KukaiError>()
+	private var addressPublisher = PassthroughSubject<(address: String, publicKey: String), KukaiError>()
+	private var signaturePublisher = PassthroughSubject<String, KukaiError>()
 	
 	private var bag_connection = Set<AnyCancellable>()
 	private var bag_writer = Set<AnyCancellable>()
@@ -231,15 +231,15 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Start listening for ledger devices
-	 - returns: Publisher with a dictionary of `[UUID: deviceName]` or an `ErrorResponse`
+	 - returns: Publisher with a dictionary of `[UUID: deviceName]` or an `KukaiError`
 	*/
-	public func listenForDevices() -> AnyPublisher<[String: String], ErrorResponse> {
-		self.deviceListPublisher = PassthroughSubject<[String: String], ErrorResponse>()
+	public func listenForDevices() -> AnyPublisher<[String: String], KukaiError> {
+		self.deviceListPublisher = PassthroughSubject<[String: String], KukaiError>()
 		
 		self.setupBluetoothConnection()
 			.sink { [weak self] value in
 				if !value {
-					self?.deviceListPublisher.send(completion: .failure(ErrorResponse.unknownError()))
+					self?.deviceListPublisher.send(completion: .failure(KukaiError.unknown()))
 				}
 				
 				self?.centralManager?.scanForPeripherals(withServices: [LedgerNanoXConstant.serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
@@ -260,9 +260,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Connect to a ledger device by a given UUID
-	 - returns: Publisher which will indicate true / false, or return an `ErrorResponse` if it can't connect to bluetooth
+	 - returns: Publisher which will indicate true / false, or return an `KukaiError` if it can't connect to bluetooth
 	*/
-	public func connectTo(uuid: String) -> AnyPublisher<Bool, ErrorResponse> {
+	public func connectTo(uuid: String) -> AnyPublisher<Bool, KukaiError> {
 		if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid {
 			return AnyPublisher.just(true)
 		}
@@ -270,7 +270,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		self.setupBluetoothConnection()
 			.sink { [weak self] value in
 				if !value {
-					self?.deviceConnectedPublisher.send(completion: .failure(ErrorResponse.unknownError()))
+					self?.deviceConnectedPublisher.send(completion: .failure(KukaiError.unknown()))
 				}
 				
 				self?.requestedUUID = uuid
@@ -284,7 +284,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/**
 	Disconnect from the current Ledger device
-	 - returns: A Publisher with a boolean, or `ErrorResponse` if soemthing goes wrong
+	 - returns: A Publisher with a boolean, or `KukaiError` if soemthing goes wrong
 	*/
 	public func disconnectFromDevice() {
 		if let device = self.connectedDevice {
@@ -305,9 +305,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
 	- parameter curve: Optional. The `EllipticalCurve` to use to extract the address
 	- parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
-	- returns: A publisher which will return a tuple containing the address and publicKey, or an `ErrorResponse`
+	- returns: A publisher which will return a tuple containing the address and publicKey, or an `KukaiError`
 	*/
-	public func getAddress(forDerivationPath derivationPath: String = HD.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) -> AnyPublisher<(address: String, publicKey: String), ErrorResponse> {
+	public func getAddress(forDerivationPath derivationPath: String = HD.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) -> AnyPublisher<(address: String, publicKey: String), KukaiError> {
 		self.setupWriteSubject()
 		self.requestType = .address
 		
@@ -334,11 +334,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	- parameter hex: An operation converted to JSON, forged and watermarked, converted to a hex string. (Note: there are some issues with the ledger app signing batch transactions. May simply return no result at all. Can't run REVEAL and TRANSACTION together for example)
 	- parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
 	- parameter parse: Ledger can parse non-hashed (blake2b) hex data and display operation data to user (e.g. transfer 1 XTZ to TZ1abc, for fee: 0.001). There are many limitations around what can be parsed. Frequnetly it will require passing in false
-	- returns: A Publisher which will return a string containing the hex signature, or an `ErrorResponse`
+	- returns: A Publisher which will return a string containing the hex signature, or an `KukaiError`
 	*/
-	public func sign(hex: String, forDerivationPath derivationPath: String = HD.defaultDerivationPath, parse: Bool) -> AnyPublisher<String, ErrorResponse>  {
+	public func sign(hex: String, forDerivationPath derivationPath: String = HD.defaultDerivationPath, parse: Bool) -> AnyPublisher<String, KukaiError>  {
 		self.setupWriteSubject()
-		self.signaturePublisher = PassthroughSubject<String, ErrorResponse>()
+		self.signaturePublisher = PassthroughSubject<String, KukaiError>()
 		self.requestType = .signing
 		
 		let _ = jsContext.evaluateScript("tezosApp.signOperation(\"\(derivationPath)\", \"\(hex)\", \(parse))")
@@ -511,8 +511,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	/// Setup the listeners to the `writeToLedgerSubject` that will ultimately return results to the developers code
 	private func setupWriteSubject() {
 		self.writeToLedgerSubject = PassthroughSubject<String, Never>()
-		self.addressPublisher = PassthroughSubject<(address: String, publicKey: String), ErrorResponse>()
-		self.signaturePublisher = PassthroughSubject<String, ErrorResponse>()
+		self.addressPublisher = PassthroughSubject<(address: String, publicKey: String), KukaiError>()
+		self.signaturePublisher = PassthroughSubject<String, KukaiError>()
 		
 		// Tell write subject to wait for completion message
 		self.writeToLedgerSubject
@@ -526,7 +526,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				
 				
 				// go through APDU chunked strings and convert into Deferred Futures, that don't execute any code until subscribed too
-				var futures: [Deferred<Future<String?, ErrorResponse>>] = []
+				var futures: [Deferred<Future<String?, KukaiError>>] = []
 				for apdu in apdus {
 					futures.append(self.sendAPDU(apdu: apdu, writeCharacteristic: writeChar))
 				}
@@ -549,9 +549,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 					.sink { concatenatedResult in
 						
 						guard let res = try? concatenatedResult.get() else {
-							let error = (try? concatenatedResult.getError()) ?? ErrorResponse.unknownError()
+							let error = (try? concatenatedResult.getError()) ?? KukaiError.unknown()
 							os_log("setupWriteSubject - received error: %@", log: .ledger, type: .debug, "\(error)")
-							self.returnErrorResponseToPublisher(errorResponse: error)
+							self.returnKukaiErrorToPublisher(kukaiError: error)
 							return
 						}
 						
@@ -573,12 +573,12 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	}
 	
 	/// Create a Deferred Future to send a single APDU and respond with a success / failure based on the result of the notify characteristic
-	private func sendAPDU(apdu: String, writeCharacteristic: CBCharacteristic) -> Deferred<Future<String?, ErrorResponse>> {
+	private func sendAPDU(apdu: String, writeCharacteristic: CBCharacteristic) -> Deferred<Future<String?, KukaiError>> {
 		return Deferred {
-			Future<String?, ErrorResponse> { [weak self] promise in
+			Future<String?, KukaiError> { [weak self] promise in
 				guard let self = self else {
 					os_log("sendAPDU - couldn't find self", log: .ledger, type: .error)
-					promise(.failure(ErrorResponse.unknownError()))
+					promise(.failure(KukaiError.unknown()))
 					return
 				}
 				
@@ -602,7 +602,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 						
 					} else {
 						os_log("sendAPDU - received error statusCode: %@", log: .ledger, type: .error, statusCode)
-						promise(.failure( self.errorResponseFrom(statusCode: statusCode) ))
+						promise(.failure( self.kukaiErrorFrom(statusCode: statusCode) ))
 						
 					}
 				}
@@ -670,7 +670,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	}
 	
 	/// Create and error response from a statusCode
-	private func errorResponseFrom(statusCode: String) -> ErrorResponse {
+	private func kukaiErrorFrom(statusCode: String) -> KukaiError {
 		os_log("Error parsing data. statusCode: %@", log: .ledger, type: .error, statusCode)
 		
 		var code = GeneralErrorCodes.UNKNOWN.rawValue
@@ -685,26 +685,27 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			type = generalCode
 		}
 		
-		return ErrorResponse.ledgerError(code: code, type: type)
+		os_log("Ledger error code: %@", log: .ledger, type: .error, code)
+		return KukaiError.internalApplicationError(error: type)
 	}
 	
 	/// A helper to take an error code , returned from an APDU, and fire it back into whichever publisher is currently being listened too
 	private func returnErrorToPublisher(statusCode: String) {
-		let errorResponse = errorResponseFrom(statusCode: statusCode)
-		returnErrorResponseToPublisher(errorResponse: errorResponse)
+		let kukaiError = kukaiErrorFrom(statusCode: statusCode)
+		returnKukaiErrorToPublisher(kukaiError: kukaiError)
 	}
 	
 	/// Send the error into the appropriate publisher
-	private func returnErrorResponseToPublisher(errorResponse: ErrorResponse) {
+	private func returnKukaiErrorToPublisher(kukaiError: KukaiError) {
 		switch requestType {
 			case .address:
-				self.addressPublisher.send(completion: .failure(errorResponse))
+				self.addressPublisher.send(completion: .failure(kukaiError))
 			
 			case .signing:
-				self.signaturePublisher.send(completion: .failure(errorResponse))
+				self.signaturePublisher.send(completion: .failure(kukaiError))
 			
 			case .none:
-				os_log("Requesting error for unknown requestType: %@", log: .ledger, type: .error, "\(errorResponse)")
+				os_log("Requesting error for unknown requestType: %@", log: .ledger, type: .error, "\(kukaiError)")
 		}
 	}
 }

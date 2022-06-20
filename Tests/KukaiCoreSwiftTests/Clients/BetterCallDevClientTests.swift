@@ -13,7 +13,7 @@ class BetterCallDevClientTests: XCTestCase {
 	
 	func testMoreDetailedError() {
 		let expectation = XCTestExpectation(description: "bcd-testMoreDetailedError")
-		MockConstants.shared.betterCallDevClient.getMoreDetailedError(byHash: MockConstants.operationHashToSearch) { bcdError, errorResponse in
+		MockConstants.shared.betterCallDevClient.getMoreDetailedError(byHash: MockConstants.operationHashToSearch) { bcdError, kukaiError in
 			
 			XCTAssert(bcdError?.kind == "temporary", bcdError?.kind ?? "-")
 			XCTAssert(bcdError?.title == "Script failed", bcdError?.title ?? "-")

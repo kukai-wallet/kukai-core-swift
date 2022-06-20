@@ -54,7 +54,7 @@ public class BetterCallDevClient {
 	- parameter byHash: The hash String of the operation.
 	- parameter completion: Called with the result.
 	*/
-	public func getMoreDetailedError(byHash hash: String, completion: @escaping ((BetterCallDevOperationError?, ErrorResponse?) -> Void)) {
+	public func getMoreDetailedError(byHash hash: String, completion: @escaping ((BetterCallDevOperationError?, KukaiError?) -> Void)) {
 		var url = config.betterCallDevURL
 		url.appendPathComponent("v1/opg/" + hash)
 		
@@ -72,7 +72,7 @@ public class BetterCallDevClient {
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error: %@", "\(error)")
-					completion(nil, ErrorResponse.unknownParseError(error: error))
+					completion(nil, KukaiError.internalApplicationError(error: error))
 			}
 		}
 	}

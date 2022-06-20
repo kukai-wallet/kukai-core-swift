@@ -55,9 +55,9 @@ public class DipDupClient {
 	 Get a list of all the tokens available and on what excahnges (including their prices and pool data)
 	 - parameter limit: Int, How many results to reuturn 100 Max)
 	 - parameter offset: Int, How many positions to move the cursor
-	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
+	 - parameter completion: Block returning a GraphQL response or an KukaiError
 	 */
-	public func getExchangesAndTokens(limit: Int = DipDupClient.dexMaxQuerySize, offset: Int = 0, completion: @escaping ((Result<GraphQLResponse<DipDupExchangesAndTokensResponse>, ErrorResponse>) -> Void)) {
+	public func getExchangesAndTokens(limit: Int = DipDupClient.dexMaxQuerySize, offset: Int = 0, completion: @escaping ((Result<GraphQLResponse<DipDupExchangesAndTokensResponse>, KukaiError>) -> Void)) {
 		
 		var query = """
 		query {
@@ -96,7 +96,7 @@ public class DipDupClient {
 			}
 			
 			if res.containsErrors() {
-				completion(Result.failure(ErrorResponse.error(string: res.errors?.first?.message ?? "unknown", errorType: .unknownError)))
+				completion(Result.failure(KukaiError.unknown(withString: res.errors?.first?.message ?? "unknown")))
 			} else {
 				completion(Result.success(res))
 			}
@@ -105,9 +105,9 @@ public class DipDupClient {
 	
 	/**
 	 Recurrsively call `getExchangesAndTokens(...)` until we have found all the tokens
-	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
+	 - parameter completion: Block returning a GraphQL response or an KukaiError
 	 */
-	public func getAllExchangesAndTokens(completion: @escaping ((Result<[DipDupExchangesAndTokens], ErrorResponse>) -> Void)) {
+	public func getAllExchangesAndTokens(completion: @escaping ((Result<[DipDupExchangesAndTokens], KukaiError>) -> Void)) {
 		getExchangesAndTokens(limit: DipDupClient.dexMaxQuerySize, offset: exchangeQuery_currentOffset) { [weak self] result in
 			guard let res = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
@@ -130,9 +130,9 @@ public class DipDupClient {
 	/**
 	 Query a given addresses liquidity token balances
 	 - parameter address: The TZ address to query for
-	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
+	 - parameter completion: Block returning a GraphQL response or an KukaiError
 	 */
-	public func getLiquidityFor(address: String, completion: @escaping ((Result<GraphQLResponse<DipDupPosition>, ErrorResponse>) -> Void)) {
+	public func getLiquidityFor(address: String, completion: @escaping ((Result<GraphQLResponse<DipDupPosition>, KukaiError>) -> Void)) {
 		var query = """
 		query {
 			position(where: {traderId: {_eq: "\(address)"}, sharesQty: {_gt: "0"}, exchange: {name: {_in: ["lb", "quipuswap"]}}}) {
@@ -168,7 +168,7 @@ public class DipDupClient {
 			}
 			
 			if res.containsErrors() {
-				completion(Result.failure(ErrorResponse.error(string: res.errors?.first?.message ?? "unknown", errorType: .unknownError)))
+				completion(Result.failure(KukaiError.unknown(withString: res.errors?.first?.message ?? "unknown")))
 			} else {
 				completion(Result.success(res))
 			}
@@ -180,9 +180,9 @@ public class DipDupClient {
 	/**
 	 Query a given contract address for pricing data for the given token
 	 - parameter exchangeContract: The KT address of the dex contract to query data for
-	 - parameter completion: Block returning a GraphQL response or an ErrorResponse
+	 - parameter completion: Block returning a GraphQL response or an KukaiError
 	 */
-	public func getChartDataFor(exchangeContract: String, completion: @escaping ((Result<GraphQLResponse<DipDupChartData>, ErrorResponse>) -> Void)) {
+	public func getChartDataFor(exchangeContract: String, completion: @escaping ((Result<GraphQLResponse<DipDupChartData>, KukaiError>) -> Void)) {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		
@@ -238,7 +238,7 @@ public class DipDupClient {
 			}
 			
 			if res.containsErrors() {
-				completion(Result.failure(ErrorResponse.error(string: res.errors?.first?.message ?? "unknown", errorType: .unknownError)))
+				completion(Result.failure(KukaiError.unknown(withString: res.errors?.first?.message ?? "unknown")))
 			} else {
 				completion(Result.success(res))
 			}

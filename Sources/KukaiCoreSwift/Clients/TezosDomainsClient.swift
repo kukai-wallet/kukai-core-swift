@@ -46,7 +46,7 @@ public class TezosDomainsClient {
 	 - parameters address: A tezos address
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
-	public func getDomainFor(address: String) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, ErrorResponse> {
+	public func getDomainFor(address: String) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError> {
 		let queryDict = ["query": "query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
@@ -58,7 +58,7 @@ public class TezosDomainsClient {
 	 - parameters domain: A tezos domain owned by a tezos address
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
-	public func getAddressFor(domain: String) -> AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, ErrorResponse> {
+	public func getAddressFor(domain: String) -> AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError> {
 		let queryDict = ["query": "query {domain(name: \"\(domain)\") { name, address }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
@@ -70,14 +70,14 @@ public class TezosDomainsClient {
 	 - parameters addresses: An array of tezos addresses
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
-	public func getDomainsFor(addresses: [String]) -> Future<[String: GraphQLResponse<TezosDomainsDomainResponse>], ErrorResponse> {
+	public func getDomainsFor(addresses: [String]) -> Future<[String: GraphQLResponse<TezosDomainsDomainResponse>], KukaiError> {
 		var bag = Set<AnyCancellable>()
-		var publishers: [AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, ErrorResponse>] = []
+		var publishers: [AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>] = []
 		for address in addresses {
 			publishers.append(self.getDomainFor(address: address))
 		}
 		
-		return Future<[String: GraphQLResponse<TezosDomainsDomainResponse>], ErrorResponse> { promise in
+		return Future<[String: GraphQLResponse<TezosDomainsDomainResponse>], KukaiError> { promise in
 			Publishers.MergeMany(publishers)
 				.collect()
 				.sink { error in
@@ -105,14 +105,14 @@ public class TezosDomainsClient {
 	 - parameters domains: An array of tezos domain owned by a tezos addresses
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
-	public func getAddressesFor(domains: [String]) -> Future<[String: String], ErrorResponse> {
+	public func getAddressesFor(domains: [String]) -> Future<[String: String], KukaiError> {
 		var bag = Set<AnyCancellable>()
-		var publishers: [AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, ErrorResponse>] = []
+		var publishers: [AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError>] = []
 		for domain in domains {
 			publishers.append(self.getAddressFor(domain: domain))
 		}
 		
-		return Future<[String: String], ErrorResponse> { promise in
+		return Future<[String: String], KukaiError> { promise in
 			Publishers.MergeMany(publishers)
 				.collect()
 				.sink { error in
