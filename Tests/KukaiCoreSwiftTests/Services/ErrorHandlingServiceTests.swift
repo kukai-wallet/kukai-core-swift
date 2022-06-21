@@ -11,118 +11,48 @@ import XCTest
 
 class ErrorHandlingServiceTests: XCTestCase {
 	
-	/*
-	enum TestError: Error {
-		case example
-		case parseError
+	func testStaticConstrutors() {
+		let error1 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: nil)
+		XCTAssert(error1.rpcErrorString == "testing RPC string", error1.rpcErrorString ?? "-")
+		XCTAssert(error1.description == "Error - RPC: testing RPC string", error1.description)
+		
+		let error2 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: FailWith(string: nil, int: "1", args: nil))
+		XCTAssert(error2.rpcErrorString == "testing RPC string", error2.rpcErrorString ?? "-")
+		XCTAssert(error2.description == "Error - RPC: testing RPC string", error2.description)
+		
+		let error3 = KukaiError.unknown(withString: "test unknown string")
+		XCTAssert(error3.rpcErrorString == "test unknown string", error3.rpcErrorString ?? "-")
+		XCTAssert(error3.description == "Error - Unknown: test unknown string", error3.description)
+		
+		let error4 = KukaiError.internalApplicationError(error: URLError(URLError.unknown))
+		XCTAssert(error4.rpcErrorString == nil, error4.rpcErrorString ?? "-")
+		XCTAssert(error4.description == "Error - Internal Application: Error Domain=NSURLErrorDomain Code=-1 \"(null)\"", error4.description)
+		
+		let error5 = KukaiError.systemError(subType: URLError(URLError.unknown))
+		XCTAssert(error5.rpcErrorString == nil, error5.rpcErrorString ?? "-")
+		XCTAssert(error5.description == "Error - System: Error Domain=NSURLErrorDomain Code=-1 \"(null)\"", error5.description)
 	}
 	
-	
-	func testClassMethods() {
-		
-		let error1 = KukaiError.error(string: "Blah", errorType: .counterError)
-		XCTAssert(error1.errorString == "Blah")
-		XCTAssert(error1.errorType == .counterError)
-		XCTAssert(error1.errorObject == nil)
-		XCTAssert(error1.httpStatusCode == nil)
-		
-		let error2 = KukaiError.internalApplicationError(error: TestError.example)
-		XCTAssert(error2.errorString == KukaiError.errorToString(TestError.example), "left: '\(error2.errorString ?? "")' != right: `\(KukaiError.errorToString(TestError.parseError))`")
-		XCTAssert(error2.errorType == .internalApplicationError)
-		XCTAssert(error2.errorObject != nil)
-		XCTAssert(error2.httpStatusCode == nil)
-		
-		let error3 = KukaiError.unknownParseError(error: TestError.parseError)
-		XCTAssert(error3.errorString == KukaiError.errorToString(TestError.parseError))
-		XCTAssert(error3.errorType == .unknownParseError)
-		XCTAssert(error3.errorObject == nil)
-		XCTAssert(error3.httpStatusCode == nil)
-		
-		let error4 = KukaiError.unknown()
-		XCTAssert(error4.errorString == nil)
-		XCTAssert(error4.errorType == .unknownError)
-		XCTAssert(error4.errorObject == nil)
-		XCTAssert(error4.httpStatusCode == nil)
-		
-		let errorString = KukaiError.errorToString(TestError.parseError)
-		XCTAssert(errorString == "parseError", errorString)
-	}
-	
-	func testParseString() {
-		let errorString1 = "balance_too_low"
-		let kukaiError1 = ErrorHandlingService.parse(string: errorString1)
-		XCTAssert(kukaiError1.errorType == .insufficientFunds)
-		
-		let errorString2 = "Counter 147222 already used for contract"
-		let kukaiError2 = ErrorHandlingService.parse(string: errorString2)
-		XCTAssert(kukaiError2.errorType == .counterError)
-		
-		let errorString3 = "The Internet connection appears to be offline."
-		let kukaiError3 = ErrorHandlingService.parse(string: errorString3)
-		XCTAssert(kukaiError3.errorType == .noInternetConnection)
-		
-		let errorString4 = "The request timed out."
-		let kukaiError4 = ErrorHandlingService.parse(string: errorString4)
-		XCTAssert(kukaiError4.errorType == .requestTimeOut)
-		
-		let errorString5 = "too many HTTP redirects"
-		let kukaiError5 = ErrorHandlingService.parse(string: errorString5)
-		XCTAssert(kukaiError5.errorType == .tooManyRedirects)
-	}
-	
-	func testParseData() {
+	func testSystemParsers() {
 		let requestURL = URL(string: "http://google.com")!
 		
 		let successURLResponse = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 400, httpVersion: nil, headerFields: nil)
-		let error1 = ErrorHandlingService.parse(data: "The Internet connection appears to be offline.".data(using: .utf8) ?? Data(), response: successURLResponse, networkError: TestError.example, requestURL: requestURL, requestData: nil)
-		XCTAssert(error1?.errorType == .noInternetConnection)
-		XCTAssert(error1?.errorObject != nil)
+		let sameplData = "The Internet connection appears to be offline.".data(using: .utf8) ?? Data()
+		
+		let error1 = ErrorHandlingService.searchForSystemError(data: sameplData, response: successURLResponse, networkError: URLError(URLError.notConnectedToInternet), requestURL: requestURL, requestData: nil)
+		XCTAssert(error1?.errorType == .system)
+		XCTAssert(error1?.description == "Error - System: Error Domain=NSURLErrorDomain Code=-1009 \"(null)\"", error1?.description ?? "-")
 		XCTAssert(error1?.httpStatusCode == 400)
 		
-		let errorURLResponse = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-		let error2 = ErrorHandlingService.parse(data: nil, response: errorURLResponse, networkError: TestError.example, requestURL: requestURL, requestData: nil)
-		XCTAssert(error2?.errorObject is TestError)
-		XCTAssert((error2?.errorObject as? TestError) == TestError.example)
+		let errorURLResponse = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 400, httpVersion: nil, headerFields: nil)
+		let error2 = ErrorHandlingService.searchForSystemError(data: nil, response: errorURLResponse, networkError: URLError(URLError.notConnectedToInternet), requestURL: requestURL, requestData: nil)
+		XCTAssert(error2?.httpStatusCode == 400)
+		XCTAssert(error2?.subType is URLError)
+		XCTAssert((error2?.subType as? URLError)?.code == URLError.notConnectedToInternet)
 	}
 	
-	func testContainsError() {
-		let tzktOpsWithError = [
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: nil),
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: [
-				TzKTOperationError(type: "gas_exhausted")
-			]),
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: nil)
-		]
-		let containsErrors1 = ErrorHandlingService.containsErrors(tzktOperations: tzktOpsWithError)
-		XCTAssert(containsErrors1)
-		
-		let tzktOpsWithoutError = [
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: nil),
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: nil)
-		]
-		let containsErrors2 = ErrorHandlingService.containsErrors(tzktOperations: tzktOpsWithoutError)
-		XCTAssert(containsErrors2 == false)
-	}
-	
-	func testExtractMeaningfulErrorsFromTzKT() {
-		let tzktOpsWithError = [
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: nil),
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: [
-				TzKTOperationError(type: "blah"),
-				TzKTOperationError(type: "something weird")
-			]),
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: [
-				TzKTOperationError(type: "balance_too_low")
-			]),
-			TzKTOperation(type: "", id: 4, level: 4, timestamp: "", block: "", hash: "", counter: 4, status: "", errors: nil)
-		]
-		let containsErrors1 = ErrorHandlingService.extractMeaningfulErrors(fromTzKTOperations: tzktOpsWithError)
-		XCTAssert(containsErrors1?.errorType == .insufficientFunds)
-	}
-	
-	func testExtractMeaningfulErrorsFromRPC() {
-		
-		let error = OperationResponseInternalResultError(kind: "", id: "", location: 41, with: OperationResponseInternalResultErrorWith(string: "balance_too_low", int: nil, args: nil))
+	func testOperationResponseParserIDString() {
+		let error = OperationResponseInternalResultError(kind: "", id: "proto.012-Psithaca.gas_exhausted.operation", location: 41, with: FailWith(string: nil, int: nil, args: nil))
 		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
 		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
 		
@@ -136,25 +66,44 @@ class ErrorHandlingServiceTests: XCTestCase {
 			])
 		]
 		
-		let containsErrors1 = ErrorHandlingService.extractMeaningfulErrors(fromRPCOperations: ops, withRequestURL: nil, requestPayload: nil, responsePayload: nil, httpStatusCode: nil)
-		XCTAssert(containsErrors1?.errorType == .insufficientFunds)
+		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops)
+		XCTAssert(containsErrors1?.errorType == .rpc)
+		XCTAssert(containsErrors1?.rpcErrorString == "gas_exhausted.operation", containsErrors1?.rpcErrorString ?? "-")
+		XCTAssert(containsErrors1?.description == "Error - RPC: gas_exhausted.operation", containsErrors1?.description ?? "-")
 	}
 	
-	func testTest() {
-		let errorData = MockConstants.jsonStub(fromFilename: "error_smart-contract_gas_exhausted")
+	func testOperationResponseParserFailWith() {
+		let error = OperationResponseInternalResultError(kind: "", id: "proto.012-Psithaca.michelson_v1.runtime_error", location: 41, with: FailWith(string: nil, int: "14", args: nil))
+		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
+		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
 		
-		guard let opResponse = try? JSONDecoder().decode([OperationResponse].self, from: errorData) else {
-			XCTFail("Couldn't parse data as [OperationResponse]")
-			return
-		}
+		let operationMetadataWithError = OperationResponseMetadata(balanceUpdates: nil, operationResult: operationResponseResultWithError, internalOperationResults: nil)
+		let operationMetadataWithoutError = OperationResponseMetadata(balanceUpdates: nil, operationResult: operationResponseResultWithoutError, internalOperationResults: nil)
 		
-		let result = ErrorHandlingService.extractMeaningfulErrors(fromRPCOperations: opResponse, withRequestURL: nil, requestPayload: nil, responsePayload: nil, httpStatusCode: nil)
-		XCTAssert(result?.errorString == "", result?.errorString ?? "-")
+		let ops = [
+			OperationResponse(contents: [
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError),
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError)
+			])
+		]
 		
-		
-		let result2 = ErrorTest.searchOperationResponseForErrors(opResponse)
-		XCTAssert(result2?.rpcErrorString == "gas_exhausted.operation", result2?.rpcErrorString ?? "-")
-		XCTAssert(result2?.description == "Error - RPC: gas_exhausted.operation", result2?.description ?? "-")
+		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops)
+		XCTAssert(containsErrors1?.errorType == .rpc)
+		XCTAssert(containsErrors1?.rpcErrorString == "A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.rpcErrorString ?? "-")
+		XCTAssert(containsErrors1?.description == "Error - RPC: A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.description ?? "-")
 	}
-	*/
+	
+	func testFailWithParsers() {
+		let fw1 = FailWith(string: nil, int: "0", args: nil)
+		let errorMessage1 = fw1.convertToHumanReadableMessage(parser: FailWithParserLiquidityBaking())
+		XCTAssert(errorMessage1 == "token contract must have a transfer entrypoint", errorMessage1 ?? "-")
+		
+		let fw2 = FailWith(string: nil, int: "1", args: nil)
+		let errorMessage2 = fw2.convertToHumanReadableMessage(parser: FailWithParserLiquidityBaking())
+		XCTAssert(errorMessage2 == "unknown Liquidity Baking error code: 1", errorMessage2 ?? "-")
+		
+		let fw3 = FailWith(string: nil, int: "2", args: nil)
+		let errorMessage3 = fw3.convertToHumanReadableMessage(parser: FailWithParserLiquidityBaking())
+		XCTAssert(errorMessage3 == "self is updating token pool must be false", errorMessage3 ?? "-")
+	}
 }

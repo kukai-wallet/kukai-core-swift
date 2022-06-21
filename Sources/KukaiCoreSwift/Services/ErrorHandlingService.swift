@@ -220,7 +220,7 @@ public class ErrorHandlingService {
 		// Check if we got an error object (e.g. no internet connection)
 		if let networkError = networkError {
 			var errorToReturn = KukaiError.systemError(subType: networkError)
-			errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: nil)
+			errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: (response as? HTTPURLResponse)?.statusCode)
 			
 			if andLog { logAndCallback(withKukaiError: errorToReturn) }
 			return errorToReturn
