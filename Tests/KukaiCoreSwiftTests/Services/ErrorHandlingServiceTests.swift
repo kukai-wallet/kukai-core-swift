@@ -93,6 +93,20 @@ class ErrorHandlingServiceTests: XCTestCase {
 		XCTAssert(containsErrors1?.description == "Error - RPC: A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.description ?? "-")
 	}
 	
+	func testJsonResponse() {
+		let errorData = MockConstants.jsonStub(fromFilename: "error_smart-contract_gas_exhausted")
+		
+		guard let opResponse = try? JSONDecoder().decode([OperationResponse].self, from: errorData) else {
+			XCTFail("Couldn't parse data as [OperationResponse]")
+			return
+		}
+		
+		let result2 = ErrorHandlingService.searchOperationResponseForErrors(opResponse)
+		XCTAssert(result2?.rpcErrorString == "gas_exhausted.operation", result2?.rpcErrorString ?? "-")
+		XCTAssert(result2?.description == "Error - RPC: gas_exhausted.operation", result2?.description ?? "-")
+
+	}
+	
 	func testFailWithParsers() {
 		let fw1 = FailWith(string: nil, int: "0", args: nil)
 		let errorMessage1 = fw1.convertToHumanReadableMessage(parser: FailWithParserLiquidityBaking())
