@@ -15,7 +15,7 @@ class DAppHelperServiceTests: XCTestCase {
 		
 		DAppHelperService.Quipuswap.getPendingRewards(fromExchange: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc", forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs", tzKTClient: MockConstants.shared.tzktClient) { result in
 			guard let res = try? result.get() else {
-				XCTFail(result.getFailure().errorString ?? "")
+				XCTFail(result.getFailure().description)
 				expectation.fulfill()
 				return
 			}
@@ -34,7 +34,7 @@ class DAppHelperServiceTests: XCTestCase {
 														  forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
 														  tzKTClient: MockConstants.shared.tzktClient) { result in
 			guard let res = try? result.get() else {
-				XCTFail(result.getFailure().errorString ?? "")
+				XCTFail(result.getFailure().description)
 				expectation.fulfill()
 				return
 			}

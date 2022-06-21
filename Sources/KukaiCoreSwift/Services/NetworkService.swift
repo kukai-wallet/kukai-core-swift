@@ -105,7 +105,7 @@ public class NetworkService {
 				let parsedResponse = try JSONDecoder().decode(T.self, from: d)
 				
 				// Check for RPC errors, if none, return success
-				if let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode ) {
+				if let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode) {
 					DispatchQueue.main.async { completion(Result.failure(rpcOperationError)) }
 					
 				} else {
@@ -113,7 +113,34 @@ public class NetworkService {
 				}
 				
 			} catch (let error) {
-				DispatchQueue.main.async { completion(Result.failure( KukaiError.internalApplicationError(error: error) )) }
+				
+				/// RPC annoyingly returns multiple different types of responses for error situations. When requesting an `OperationResponse` it may sometimes return one with an error inside, or return a new object in an array `[OperationResponse]` with errors inside
+				/// We try to catch an issue where network client was expecting 1 object, but got back an array of objects with errors inside. We attempt to parse the new object looking for errors instead of unnecessariyl throwing DecodingError.typeMistach(...) errors
+				if error is DecodingError,
+				   let parsedResponse = try? JSONDecoder().decode([OperationResponse].self, from: d),
+				   let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode)
+				{
+					DispatchQueue.main.async { completion(Result.failure(rpcOperationError)) }
+					
+				}
+				
+				/// In extreme situations, where something completely incorrect is sent to the RPC (think i'll formed addresses or negative numbers). Instead of an object containing errors, you will just get a string containing something looking like a stacktrace
+				else if error is DecodingError,
+						  let parsedResponse = try? JSONDecoder().decode(String.self, from: d),
+						  parsedResponse.contains("Assert")
+				{
+					var errorToReturn = KukaiError.unknown(withString: parsedResponse)
+					errorToReturn.addNetworkData(requestURL: url, requestJSON: body, responseJSON: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode)
+					
+					DispatchQueue.main.async { completion(Result.failure( errorToReturn )) }
+				}
+				
+				/// If those don't work, just return the oringal error
+				else
+				{
+					DispatchQueue.main.async { completion(Result.failure( KukaiError.internalApplicationError(error: error) )) }
+				}
+				
 				return
 			}
 		}.resume()

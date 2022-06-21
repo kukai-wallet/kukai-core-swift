@@ -11,6 +11,7 @@ import XCTest
 
 class ErrorHandlingServiceTests: XCTestCase {
 	
+	/*
 	enum TestError: Error {
 		case example
 		case parseError
@@ -155,4 +156,5 @@ class ErrorHandlingServiceTests: XCTestCase {
 		XCTAssert(result2?.rpcErrorString == "gas_exhausted.operation", result2?.rpcErrorString ?? "-")
 		XCTAssert(result2?.description == "Error - RPC: gas_exhausted.operation", result2?.description ?? "-")
 	}
+	*/
 }

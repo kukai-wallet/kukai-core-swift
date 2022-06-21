@@ -16,7 +16,7 @@ import os.log
 public struct KukaiError: CustomStringConvertible, Error {
 	
 	/// Categories of errors that are possible
-	public enum ErrorType {
+	public enum ErrorType: Equatable {
 		
 		/// RPC errors come directly from the Tezos RPC, but with the massive JSON object filtered down to the most meraningful part
 		case rpc

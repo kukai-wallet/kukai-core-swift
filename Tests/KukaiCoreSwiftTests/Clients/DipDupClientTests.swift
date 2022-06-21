@@ -15,7 +15,7 @@ class DipDupClientTests: XCTestCase {
 		
 		MockConstants.shared.dipDupClient.getAllExchangesAndTokens { result in
 			guard let res = try? result.get() else {
-				XCTFail(result.getFailure().errorString ?? "")
+				XCTFail(result.getFailure().description)
 				expectation.fulfill()
 				return
 			}
@@ -47,7 +47,7 @@ class DipDupClientTests: XCTestCase {
 		
 		MockConstants.shared.dipDupClient.getLiquidityFor(address: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs") { result in
 			guard let res = try? result.get() else {
-				XCTFail(result.getFailure().errorString ?? "")
+				XCTFail(result.getFailure().description)
 				expectation.fulfill()
 				return
 			}
@@ -74,7 +74,7 @@ class DipDupClientTests: XCTestCase {
 		
 		MockConstants.shared.dipDupClient.getChartDataFor(exchangeContract: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc") { result in
 			guard let res = try? result.get() else {
-				XCTFail(result.getFailure().errorString ?? "")
+				XCTFail(result.getFailure().description)
 				expectation.fulfill()
 				return
 			}

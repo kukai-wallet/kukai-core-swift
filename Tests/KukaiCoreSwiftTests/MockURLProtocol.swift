@@ -153,11 +153,11 @@ class MockURLProtocol: URLProtocol {
 	
 	static func triggerGasExhaustedErrorOnRunOperation() {
 		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
-		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_gas"), response: MockConstants.http500)
+		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_gas"), response: MockConstants.http200)
 	}
 	
 	static func triggerAssertErrorOnRunOperation() {
 		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
-		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http500)
+		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
 }
