@@ -121,4 +121,9 @@ public struct FailWith: Codable, Equatable {
 	public let string: String?
 	public let int: String?
 	public let args: [[String: String]]?
+	
+	/// Pass in a dedicated FailWith parser (unique to each dApp) and have it convert the failWith data into an error message
+	func convertToHumanReadableMessage(parser: FailWithParser) -> String? {
+		return parser.parse(failWith: self)
+	}
 }
