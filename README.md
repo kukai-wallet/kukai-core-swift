@@ -17,6 +17,7 @@ Feature set includes:
 - Fetching and caching token metadata
 - Fetching transaction history
 - Remote forging using a second node or Local forging via [@taquito/local-forging](https://github.com/ecadlabs/taquito/tree/master/packages/taquito-local-forging)
+  - Using a fork with a webpack config to spit out a mobile friendly JS file. Can be found [here](https://github.com/simonmcl/taquito/tree/feature/mobile_friendly_webpack/packages/taquito-local-forging)
 - Estimating Gas, Storage and Fees for operations
 - Parsing Michelson JSON into a Swift object using Codable
 - Wait for an operation to be injected

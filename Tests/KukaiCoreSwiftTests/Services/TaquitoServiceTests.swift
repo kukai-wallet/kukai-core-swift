@@ -116,7 +116,7 @@ class TaquitoServiceTests: XCTestCase {
 					XCTFail()
 					
 				case .failure(let error):
-					XCTAssert(error.description.contains("Non-base58 character"))
+					XCTAssert(error.description == "Error - Unknown: InvalidBlockHashError: The block hash blah is invalid", error.description)
 			}
 			
 			expectation.fulfill()
