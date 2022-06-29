@@ -143,9 +143,9 @@ public struct MockConstants {
 		MockURLProtocol.mockPostURLs = [
 			
 			// Tezos domains
-			MockPostUrlKey(url: URL(string: "https://\(config.tezosChainName.rawValue)-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-domain_request")):
+			MockPostUrlKey(url: URL(string: "https://ithacanet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-domain_request")):
 				(MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
-			MockPostUrlKey(url: URL(string: "https://\(config.tezosChainName.rawValue)-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
+			MockPostUrlKey(url: URL(string: "https://ithacanet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
 				(MockConstants.jsonStub(fromFilename: "tezos_domains-domain"), MockConstants.http200),
 			
 			// DipDup

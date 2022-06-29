@@ -21,10 +21,10 @@ class TezosNodeClientConfigTests: XCTestCase {
 	
 	func testDefaults() {
 		let config1 = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
-		XCTAssert(config1.primaryNodeURL.absoluteString == "https://rpc.\(config1.tezosChainName.rawValue).teztnets.xyz", config1.primaryNodeURL.absoluteString)
-		XCTAssert(config1.parseNodeURL?.absoluteString == "https://rpc.\(config1.tezosChainName.rawValue).teztnets.xyz", config1.parseNodeURL?.absoluteString ?? "")
+		XCTAssert(config1.primaryNodeURL.absoluteString == "https://rpc.ghostnet.teztnets.xyz", config1.primaryNodeURL.absoluteString)
+		XCTAssert(config1.parseNodeURL?.absoluteString == "https://rpc.ghostnet.teztnets.xyz", config1.parseNodeURL?.absoluteString ?? "")
 		XCTAssert(config1.betterCallDevURL.absoluteString == "https://api.better-call.dev/", config1.betterCallDevURL.absoluteString)
-		XCTAssert(config1.tzktURL.absoluteString == "https://api.\(config1.tezosChainName.rawValue).tzkt.io/", config1.tzktURL.absoluteString)
+		XCTAssert(config1.tzktURL.absoluteString == "https://api.ghostnet.tzkt.io/", config1.tzktURL.absoluteString)
 		XCTAssert(config1.forgingType == .local, "\(config1.forgingType)")
 		
 		let config2 = TezosNodeClientConfig(withDefaultsForNetworkType: .mainnet)
