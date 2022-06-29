@@ -51,14 +51,15 @@ public struct TezosNodeClientConfig {
 	/// Preconfigured struct with all the URL's needed to work with Tezos testnet
 	public struct defaultTestnetURLs {
 		
-		/// The default testnet URL to use for `primaryNodeURL`, For more information on this service, see: https://tezos.giganode.io/
-		public static let primaryNodeURL = URL(string: "https://rpc.ithacanet.teztnets.xyz")! // Doesn't seem to be available on Giganode atm
+		/// The default mainnet URL to use for `primaryNodeURL`, For more information on Ghostnet, see: https://teztnets.xyz/ghostnet-about
+		public static let primaryNodeURL = URL(string: "https://rpc.ghostnet.teztnets.xyz")!
 		
-		/// The default testnet URL to use for `parseNodeURL`
-		public static let parseNodeURL = URL(string: "https://rpc.ithacanet.teztnets.xyz")!
+		/// The default testnet URL to use for `parseNodeURL`, For more information on Ghostnet, see: https://teztnets.xyz/ghostnet-about
+		/// When using remote forging on mainnet, you should use two seperate servers on seperate networks for security reasons
+		public static let parseNodeURL = URL(string: "https://rpc.ghostnet.teztnets.xyz")!
 		
 		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
-		public static let tzktURL = URL(string: "https://api.ithacanet.tzkt.io/")!
+		public static let tzktURL = URL(string: "https://api.ghostnet.tzkt.io/")!
 		
 		/// The default testnet URL to use for `betterCallDevURL`, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html
 		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
@@ -152,7 +153,7 @@ public struct TezosNodeClientConfig {
 				primaryNodeURL = TezosNodeClientConfig.defaultTestnetURLs.primaryNodeURL
 				parseNodeURL = TezosNodeClientConfig.defaultTestnetURLs.parseNodeURL
 				forgingType = .local
-				tezosChainName = .ithacanet
+				tezosChainName = .jakartanet
 				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultTestnetURLs.betterCallDevURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL
