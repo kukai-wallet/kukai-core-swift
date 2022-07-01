@@ -161,11 +161,13 @@ public class OperationFactory {
 			case .quipuswap:
 				let swapData = tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet)
 				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
 			case .lb:
 				let swapData = tokenToXtz_lb_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet, timeout: timeout)
 				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
 			case .unknown:
@@ -235,11 +237,13 @@ public class OperationFactory {
 			case .quipuswap:
 				let swapData = addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, isInitialLiquidity: isInitialLiquidity)
 				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
 			case .lb:
 				let swapData = addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, minLiquidtyMinted: minLiquidtyMinted, wallet: wallet, timeout: timeout)
 				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
 			case .unknown:

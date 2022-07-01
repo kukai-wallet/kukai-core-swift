@@ -111,6 +111,11 @@ extension RPC where T == BlockchainHead {
 	public static func blockchainHead() -> RPC<BlockchainHead> {
 		return RPC<BlockchainHead>(endpoint: "chains/main/blocks/head", payload: nil, responseType: BlockchainHead.self)
 	}
+	
+	/// Creates an RPC to fetch the HEAD of 3 blocks previous and parse it into an object to extract the pieces we are interested in.
+	public static func blockchainHeadMinus3() -> RPC<BlockchainHead> {
+		return RPC<BlockchainHead>(endpoint: "chains/main/blocks/head~3", payload: nil, responseType: BlockchainHead.self)
+	}
 }
 
 extension RPC where T == NetworkVersion {
