@@ -31,8 +31,8 @@ public struct DApp {
 
 public struct OfflineConstants {
 	
-	static let dApps: [TezosChainName: [DApp]] = [
-		.mainnet: [
+	static let dApps: [String: [DApp]] = [
+		NetworkVersion.chainName_mainnet: [
 			DApp(
 				name: "Hic et Nunc (HEN)",
 				symbol: "hen",
@@ -153,7 +153,7 @@ public struct OfflineConstants {
 		]
 	]
 	
-	static func dappDisplayName(forContractAddress address: String, onChain chain: TezosChainName) -> (name: String, thumbnail: URL?) {
+	static func dappDisplayName(forContractAddress address: String, onChain chain: String) -> (name: String, thumbnail: URL?) {
 		guard let networkList = dApps[chain] else {
 			return (name: address, thumbnail: nil)
 		}

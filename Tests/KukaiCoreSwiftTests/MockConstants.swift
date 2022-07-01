@@ -48,7 +48,7 @@ public struct MockConstants {
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
 		
-		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/\(config.tezosChainName.rawValue)/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
+		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/ithacanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
 		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
 		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 50)
 		bcdTokenBalanceURL.appendQueryItem(name: "hide_empty", value: "true")
@@ -188,7 +188,7 @@ public struct MockConstants {
 	}
 	
 	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {
-		return MockConstants.bcdURL(withPath: "v1/tokens/\(config.tezosChainName.rawValue)/metadata", queryParams: ["contract": contract], andConfig: config)
+		return MockConstants.bcdURL(withPath: "v1/tokens/ithacanet/metadata", queryParams: ["contract": contract], andConfig: config)
 	}
 	
 	

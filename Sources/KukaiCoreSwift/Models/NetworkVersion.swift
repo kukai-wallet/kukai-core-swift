@@ -8,25 +8,10 @@
 
 import Foundation
 
-/// A enum representing the chain name for Tezos nodes, denoting the protocol version being run or mainnet
-public enum TezosChainName: String {
-	case mainnet
-	case alphanet
-	case babylonnet
-	case carthagenet
-	case delphinet
-	case edonet = "edo2net"
-	case florencenet
-	case granadanet
-	case hangzhounet
-	case ithacanet
-	case jakartanet
-	case kathmandu
-	case unknwon
-}
-
 /// The version of the Tezos code being run by the given node
 public struct NetworkVersion: Codable {
+	
+	public static let chainName_mainnet = "mainnet"
 	
 	let network_version: network_version
 	
@@ -34,18 +19,17 @@ public struct NetworkVersion: Codable {
 		let chain_name: String
 	}
 	
-	public func chainName() -> TezosChainName {
+	public func chainName() -> String {
 		let chainComponents = self.network_version.chain_name.components(separatedBy: "_")
 		
 		guard chainComponents.count > 1 else {
-			return .unknwon
+			return "unknown"
 		}
 		
-		let netName = chainComponents[1].lowercased()
-		return TezosChainName(rawValue: netName) ?? .unknwon
+		return chainComponents[1].lowercased()
 	}
 	
 	public func isMainnet() -> Bool {
-		return chainName() == .mainnet
+		return chainName() == NetworkVersion.chainName_mainnet
 	}
 }
