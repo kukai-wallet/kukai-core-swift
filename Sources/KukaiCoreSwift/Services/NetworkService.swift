@@ -72,11 +72,18 @@ public class NetworkService {
 	- parameter forReturnType: The Type to parse the response as.
 	- parameter completion: A completion block with a `Result<T, Error>` T being the supplied decoable type
 	*/
-	public func request<T: Decodable>(url: URL, isPOST: Bool, withBody body: Data?, forReturnType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
+	public func request<T: Decodable>(url: URL, isPOST: Bool, headers: [String: String]? = nil, withBody body: Data?, forReturnType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
 		
 		var request = URLRequest(url: url)
 		request.addValue("application/json", forHTTPHeaderField: "Accept")
 		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+		
+		if let headers = headers {
+			headers.keys.forEach { key in
+				request.addValue(key, forHTTPHeaderField: headers[key])
+			}
+		}
+		
 		request.httpMethod = isPOST ? "POST" : "GET"
 		
 		if let payload = body {

@@ -34,4 +34,26 @@ extension URL {
 	mutating func appendQueryItem(name: String, value: Int) {
 		self.appendQueryItem(name: name, value: value.description)
 	}
+	
+	func queryParams() -> [String: Any] {
+		var dict: [String: Any] = [:]
+		
+		if let pairs = self.query?.components(separatedBy: "&") {
+			pairs.forEach { pair in
+				if let comps = pair.components(separatedBy: "="), comps.count == 2 {
+					dict[comps[0]] = comps[1]
+				}
+			}
+		}
+		
+		if let pairs = self.fragment?.components(separatedBy: "&") {
+			pairs.forEach { pair in
+				if let comps = pair.components(separatedBy: "="), comps.count == 2 {
+					dict[comps[0]] = comps[1]
+				}
+			}
+		}
+		
+		return dict
+	}
 }
