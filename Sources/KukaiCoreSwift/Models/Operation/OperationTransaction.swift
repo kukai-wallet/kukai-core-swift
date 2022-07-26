@@ -26,7 +26,12 @@ public class OperationTransaction: Operation {
 		case tokenToXtz
 		case addLiquidity
 		case removeLiquidity
+		
 		case use
+		case tezToTokenPayment
+		case tokenToTezPayment
+		case investLiquidity
+		case divestLiquidity
 		case withdrawProfit
 	}
 	
@@ -49,7 +54,7 @@ public class OperationTransaction: Operation {
 	public let destination: String
 	
 	/// Dictionary holding the `entrypoint` and `value` of the contract call
-	public let parameters: [String: Encodable]?
+	public let parameters: [String: Any]?
 	
 	
 	
@@ -73,26 +78,54 @@ public class OperationTransaction: Operation {
 	 Create an OperationTransaction, to invoke a smart contract call
 	 - parameter amount: The amount of XTZ to send. Use `TokenAmount().rpcRepresentation` to create this value.
 	 - parameter source: The address of the acocunt sending the operation.
-	 - parameter entrypoint: The name of the entrypoint to invoke on a smart contract
-	 - parameter value: Any Encodable, usually a dictionary or array of dictionaries, containing the Michelson JSON structure to send to the smart contract
+	 - parameter parameters: A dictionary containing the michlelson JSON representation needed to invoke a smart contract. Should contain a key `entrypoint` with a string and `value` which can either be a dictionary of anything, or an array of dicitonaries of anything
 	 - parameter destination: The destination address to recieve the funds.
 	 */
-	public init(amount: TokenAmount, source: String, destination: String, entrypoint: String, value: Encodable) {
+	public init(amount: TokenAmount, source: String, destination: String, parameters: [String: Any]) {
 		self.amount = amount.rpcRepresentation
 		self.destination = destination
-		
-		var tempDictionary: [String: Encodable] = [CodingKeys.entrypoint.rawValue: entrypoint]
-		tempDictionary[CodingKeys.value.rawValue] = value
-		
-		self.parameters = tempDictionary
+		self.parameters = parameters
 		
 		super.init(operationKind: .transaction, source: source)
 	}
 	
 	
 	
+	// MARK: - Codable
 	
+	public required init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		amount = try container.decode(String.self, forKey: .amount)
+		destination = try container.decode(String.self, forKey: .destination)
+		parameters = try container.decodeIfPresent([String: Any].self, forKey: .parameters)
+		
+		try super.init(from: decoder)
+	}
 	
+	public override func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(amount, forKey: .amount)
+		try container.encode(destination, forKey: .destination)
+		try container.encodeIfPresent(parameters, forKey: .parameters)
+		
+		try super.encode(to: encoder)
+	}
+	
+	/**
+	 A function to check if two operations are equal.
+	 - parameter _: An `Operation` to compare against
+	 - returns: A `Bool` indicating the result.
+	 */
+	public func isEqual(_ op: OperationTransaction) -> Bool {
+		let superResult = super.isEqual(self as Operation)
+		
+		return superResult &&
+		amount == op.amount &&
+		destination == op.destination &&
+		parameters?[CodingKeys.entrypoint.rawValue] as? String == op.parameters?[CodingKeys.entrypoint.rawValue] as? String &&
+		parameters?[CodingKeys.value.rawValue] as? [String: String] == op.parameters?[CodingKeys.value.rawValue] as? [String: String] &&
+		parameters?[CodingKeys.value.rawValue] as? [[String: String]] == op.parameters?[CodingKeys.value.rawValue] as? [[String: String]]
+	}
 	
 	
 	

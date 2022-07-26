@@ -373,151 +373,104 @@ public class OperationFactory {
 	}
 	
 	
-	
 	// MARK: - Private helpers
 	
 	
 	
 	// MARK: - xtzToToken
 	
-	private static func xtzToToken_lb_michelsonEntrypoint(minTokenAmount: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.xtzToToken.rawValue
+	private static func xtzToToken_lb_michelsonEntrypoint(minTokenAmount: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [String: Any] {
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
-		let timestampMichelson = MichelsonFactory.createString(dateString)
-		let minTokensToBuyMichelson = MichelsonFactory.createInt(minTokenAmount)
-		let destinationMichelson = MichelsonFactory.createString(wallet.address)
-		let michelson = MichelsonPair (args: [destinationMichelson, minTokensToBuyMichelson, timestampMichelson])
-		
-		return (michelson: michelson, entrypoint: entrypoint)
+		// TODO: XTZ needs to be set in transaction, amount
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.xtzToToken.rawValue,
+			"value": ["prim":"Pair", "args":[["string":wallet.address], ["prim":"Pair", "args":[["int":minTokenAmount.rpcRepresentation], ["string":dateString]]]]]
+		]
 	}
 	
-	private static func xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: TokenAmount, wallet: Wallet) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.use.rawValue
+	private static func xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: TokenAmount, wallet: Wallet) -> [String: Any] {
 		
-		let amount = MichelsonFactory.createInt(minTokenAmount)
-		let destination = MichelsonFactory.createString(wallet.address)
-		let amountAndDestination = MichelsonPair(args: [amount, destination])
-		
-		let outerPair1 = MichelsonPair(prim: .right, args: [amountAndDestination])
-		let outerPair2 = MichelsonPair(prim: .right, args: [outerPair1])
-		let outerPair3 = MichelsonPair(prim: .left, args: [outerPair2])
-		
-		return (michelson: outerPair3, entrypoint: entrypoint)
+		// TODO: XTZ needs to be set in transaction, amount
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.tezToTokenPayment.rawValue,
+			"value": ["prim": "Pair", "args": [["int": minTokenAmount.rpcRepresentation], ["string": wallet.address]]]
+		]
 	}
 	
 	
 	
 	// MARK: - tokenToXtz
 	
-	private static func tokenToXtz_lb_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, wallet: Wallet, timeout: TimeInterval) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.tokenToXtz.rawValue
+	private static func tokenToXtz_lb_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, wallet: Wallet, timeout: TimeInterval) -> [String: Any] {
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
-		
-		let timestampMichelson = MichelsonFactory.createString(dateString)
-		let minMutezToBuyMichelson = MichelsonFactory.createInt(minXTZAmount)
-		let tokensToSellMichelson = MichelsonFactory.createInt(tokenAmount)
-		let destinationMichelson = MichelsonFactory.createString(wallet.address)
-		let michelson = MichelsonPair(args: [destinationMichelson, tokensToSellMichelson, minMutezToBuyMichelson, timestampMichelson])
-		
-		return (michelson: michelson, entrypoint: entrypoint)
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.tokenToXtz.rawValue,
+			"value": ["prim":"Pair", "args": [["string": wallet.address], ["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation], ["prim": "Pair", "args":[["int":minXTZAmount.rpcRepresentation], ["string": dateString]]]]]]]
+		]
 	}
 	
-	private static func tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, wallet: Wallet) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.use.rawValue
-		
-		let tokenAmount = MichelsonFactory.createInt(tokenAmount)
-		let minXTZAmount = MichelsonFactory.createInt(minXTZAmount)
-		let destination = MichelsonFactory.createString(wallet.address)
-		
-		let amounts = MichelsonPair(args: [tokenAmount, minXTZAmount])
-		let amountsAndDestination = MichelsonPair(args: [amounts, destination])
-		
-		let outerPair1 = MichelsonPair(prim: .left, args: [amountsAndDestination])
-		let outerPair2 = MichelsonPair(prim: .left, args: [outerPair1])
-		let outerPair3 = MichelsonPair(prim: .right, args: [outerPair2])
-		
-		return (michelson: outerPair3, entrypoint: entrypoint)
+	private static func tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, wallet: Wallet) -> [String: Any] {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.tokenToTezPayment.rawValue,
+			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation], ["int": minXTZAmount.rpcRepresentation]]], ["string": wallet.address]]]
+		]
 	}
 	
 	
 	
 	// MARK: - Add liquidity
 	
-	private static func addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.addLiquidity.rawValue
+	private static func addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [String: Any] {
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
-		let timestampMichelson = MichelsonFactory.createString(dateString)
-		let token = MichelsonFactory.createInt(tokensToDeposit)
-		let lqt = MichelsonFactory.createInt(minLiquidtyMinted)
-		let owner = MichelsonFactory.createString(wallet.address)
-		let michelson = MichelsonPair (args: [owner, lqt, token, timestampMichelson])
-		
-		return (michelson: michelson, entrypoint: entrypoint)
+		// TODO: XTZ needs to be set in transaction, amount
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.addLiquidity.rawValue,
+			"value": ["prim": "Pair", "args": [["string":wallet.address], ["prim":"Pair", "args":[["int":minLiquidtyMinted.rpcRepresentation], ["prim":"Pair", "args":[["int":tokensToDeposit.rpcRepresentation], ["string":dateString]]]]]]]
+		]
 	}
 	
-	private static func addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, isInitialLiquidity: Bool) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.use.rawValue
+	private static func addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, isInitialLiquidity: Bool) -> [String: Any] {
 		
-		let tokenMichelson = MichelsonFactory.createInt(tokensToDeposit)
-		let xtzMichelson = MichelsonFactory.createInt(xtzToDeposit)
-		var valueMichelson = MichelsonPair(args: [])
-		
-		if isInitialLiquidity {
-			valueMichelson = MichelsonPair(args: [tokenMichelson, xtzMichelson])
-		} else {
-			valueMichelson = MichelsonPair(prim: .left, args: [tokenMichelson])
-		}
-		
-		let middlePair = MichelsonPair(prim: .right, args: [valueMichelson])
-		let topPair = MichelsonPair(prim: .left, args: [middlePair])
-		
-		return (michelson: topPair, entrypoint: entrypoint)
+		// TODO: XTZ needs to be set in transaction, amount
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.investLiquidity.rawValue,
+			"value": ["int": tokensToDeposit.rpcRepresentation]
+		]
 	}
 	
 	
 	
 	// MARK: - Remove liquidity
 	
-	private static func removeLiquidity_lb_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.removeLiquidity.rawValue
+	private static func removeLiquidity_lb_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [String: Any] {
+		let liq = liquidityToBurn.rpcRepresentation
+		let xtz = minXTZ.rpcRepresentation
+		let token = minToken.rpcRepresentation
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
-		let timestampMichelson = MichelsonFactory.createString(dateString)
-		let xtz = MichelsonFactory.createInt(minXTZ)
-		let token = MichelsonFactory.createInt(minToken)
-		let lqt = MichelsonFactory.createInt(liquidityToBurn)
-		let destination = MichelsonFactory.createString(wallet.address)
-		let michelson = MichelsonPair (args: [destination, lqt, xtz, token, timestampMichelson])
-		
-		return (michelson: michelson, entrypoint: entrypoint)
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.removeLiquidity.rawValue,
+			"value": ["prim":"Pair","args":[["string":wallet.address], ["prim":"Pair","args":[["int":liq], ["prim":"Pair","args":[["int":xtz], ["prim":"Pair","args":[["int":token], ["string":dateString]]]]]]]]]
+		]
 	}
 	
-	private static func removeLiquidity_quipu_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount) -> (michelson: AbstractMichelson, entrypoint: String) {
-		let entrypoint = OperationTransaction.StandardEntrypoint.use.rawValue
-		
-		let xtzMichelson = MichelsonFactory.createInt(minXTZ)
-		let tokenMichelson = MichelsonFactory.createInt(minToken)
-		let liquidityMichelson = MichelsonFactory.createInt(liquidityToBurn)
-		
-		let xtzTokenMichelson = MichelsonPair(args: [xtzMichelson, tokenMichelson])
-		let valuesMichelson = MichelsonPair(args: [xtzTokenMichelson, liquidityMichelson])
-		let bottomPair = MichelsonPair(prim: .left, args: [valuesMichelson])
-		let middlePair = MichelsonPair(prim: .left, args: [bottomPair])
-		let topPair = MichelsonPair(prim: .left, args: [middlePair])
-		
-		return (michelson: topPair, entrypoint: entrypoint)
+	private static func removeLiquidity_quipu_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount) -> [String: Any] {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.divestLiquidity.rawValue,
+			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": minXTZ.rpcRepresentation], ["int": minToken.rpcRepresentation]]], ["int": liquidityToBurn.rpcRepresentation]]]
+		]
 	}
 	
 	
 	
 	// MARK: - Withdraw
 	
-	private static func withdrawRewards_quipu_michelsonEntrypoint(wallet: Wallet) -> (michelson: AbstractMichelson, entrypoint: String)  {
-		let entrypoint = OperationTransaction.StandardEntrypoint.withdrawProfit.rawValue
-		let address = MichelsonFactory.createString(wallet.address)
-		
-		return (michelson: address, entrypoint: entrypoint)
+	private static func withdrawRewards_quipu_michelsonEntrypoint(wallet: Wallet) -> [String: Any]  {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.withdrawProfit.rawValue,
+			"value": ["string": wallet.address]
+		]
 	}
 }
