@@ -288,8 +288,8 @@ public class TezosNodeClient {
 	public func getContractStorage(contractAddress: String, completion: @escaping ((Result<[String: Any], KukaiError>) -> Void)) {
 		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withBaseURL: config.primaryNodeURL) { result in
 			switch result {
-				case .success(let str):
-					if let json = try? JSONSerialization.jsonObject(with: str.data(using: .utf8) ?? Data()) as? [String: Any] {
+				case .success(let d):
+					if let json = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
 						completion(Result.success(json))
 					} else {
 						completion(Result.failure(KukaiError.internalApplicationError(error: TezosNodeClientError.michelsonParsing)))
@@ -309,8 +309,8 @@ public class TezosNodeClient {
 	public func getBigMap(id: String, completion: @escaping ((Result<[String: Any], KukaiError>) -> Void)) {
 		self.networkService.send(rpc: RPC.bigMap(id: id), withBaseURL: config.primaryNodeURL) { result in
 			switch result {
-				case .success(let str):
-					if let json = try? JSONSerialization.jsonObject(with: str.data(using: .utf8) ?? Data()) as? [String: Any] {
+				case .success(let d):
+					if let json = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
 						completion(Result.success(json))
 					} else {
 						completion(Result.failure(KukaiError.internalApplicationError(error: TezosNodeClientError.michelsonParsing)))

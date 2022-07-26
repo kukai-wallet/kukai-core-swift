@@ -102,6 +102,13 @@ public class NetworkService {
 			NetworkService.logRequestSucceded(loggingConfig: self?.loggingConfig, isPost: isPOST, fullURL: url, payload: body, responseData: data)
 			
 			do {
+				// If the response type passed in is `Data`, just return the raw value without doing any parsing
+				if T.self == Data.self, let dt = d as? T {
+					DispatchQueue.main.async { completion(Result.success(dt)) }
+					return
+				}
+				
+				// Else try to parse the JSON
 				let parsedResponse = try JSONDecoder().decode(T.self, from: d)
 				
 				// Check for RPC errors, if none, return success

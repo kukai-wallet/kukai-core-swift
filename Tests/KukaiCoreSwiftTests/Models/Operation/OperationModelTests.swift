@@ -9,7 +9,7 @@ import XCTest
 @testable import KukaiCoreSwift
 
 class OperationModelTests: XCTestCase {
-	/*
+	
 	override func setUpWithError() throws {
 		
 	}
@@ -75,16 +75,13 @@ class OperationModelTests: XCTestCase {
 	}
 	
 	func testSmartContractInvocation() {
-		let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
+		let params: [String: Any] = [
+			"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
+			"value": ["prim":"Pair","args":[["string":MockConstants.defaultHdWallet.address], ["prim":"Pair","args":[["string":MockConstants.defaultLinearWallet.address], ["int":"1"]]]]]
+		]
 		
-		let tokenAmountMichelson = MichelsonFactory.createInt(TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 0))
-		let destinationMicheslon = MichelsonFactory.createString(MockConstants.defaultLinearWallet.address)
-		let innerPair = MichelsonPair(args: [destinationMicheslon, tokenAmountMichelson])
-		let sourceMichelson = MichelsonFactory.createString(MockConstants.defaultHdWallet.address)
-		let michelson = MichelsonPair(args: [sourceMichelson, innerPair])
-		
-		let op = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultHdWallet.address, destination: MockConstants.token3Decimals.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)
-		let op2 = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultLinearWallet.address, destination: MockConstants.token10Decimals.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)
+		let op = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultHdWallet.address, destination: MockConstants.token3Decimals.tokenContractAddress ?? "", parameters: params)
+		let op2 = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultLinearWallet.address, destination: MockConstants.token10Decimals.tokenContractAddress ?? "", parameters: params)
 		
 		XCTAssert(op.amount == "0", op.amount)
 		XCTAssert(op.destination == MockConstants.token3Decimals.tokenContractAddress, op.destination)
@@ -138,9 +135,17 @@ class OperationModelTests: XCTestCase {
 		XCTAssertNotNil(readResult)
 		XCTAssert(readResult?.isEqual(op) ?? false)
 		
-		if let parameters = readResult?.parameters?["value"] {
-			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]]}]"
-			XCTAssert("\(parameters)" == targetParameters, "\(parameters)")
+		if let parameters = readResult?.parameters?.michelsonValueArray()?[0] {
+			let address = parameters.michelsonArgsUnknownArray()?.michelsonString(atIndex: 0)
+			let destination = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let tokenId = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let amount = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(tokenId == "4", tokenId ?? "-")
+			XCTAssert(amount == "1", amount ?? "-")
+			
 		} else {
 			XCTFail("No parameters found")
 		}
@@ -302,5 +307,4 @@ class OperationModelTests: XCTestCase {
 		let defaultFees5 = OperationFees.defaultFees(operationKind: .activate_account).allFees()
 		XCTAssert(defaultFees5 == XTZAmount(fromNormalisedAmount: 0.001268), defaultFees5.normalisedRepresentation)
 	}
-	*/
 }

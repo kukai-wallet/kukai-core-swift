@@ -126,13 +126,12 @@ class TezosNodeClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
-	/*
 	func testGetContractStorage() {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.getContractStorage(contractAddress: MockConstants.token3Decimals.tokenContractAddress ?? "") { result in
 			switch result {
-				case .success(let michelson):
-					XCTAssert(michelson.args.count == 4, "\(michelson.args.count)")
+				case .success(let json):
+					XCTAssert(json.michelsonArgsArray()?.count == 4, "\(json.michelsonArgsArray()?.count ?? 0)")
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -143,7 +142,6 @@ class TezosNodeClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 3)
 	}
-	*/
 	
 	func testGetNetworkInformation() {
 		let expectation = XCTestExpectation(description: "tezos node client")
