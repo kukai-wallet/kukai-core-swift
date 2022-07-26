@@ -103,6 +103,16 @@ extension RPC where T == String {
 		
 		return RPC<String>(endpoint: "injection/operation", payload: payloadData, responseType: String.self)
 	}
+	
+	/// Creates an RPC to fetch a contracts Michelson storage
+	public static func contractStorage(contractAddress: String) -> RPC<String> {
+		return RPC<String>(endpoint: "chains/main/blocks/head/context/contracts/\(contractAddress)/storage", payload: nil, responseType: String.self)
+	}
+	
+	/// Creates an RPC to fetch the contents of the given big map
+	public static func bigMap(id: String) -> RPC<String> {
+		return RPC<String>(endpoint: "chains/main/blocks/head/context/big_maps/\(id)", payload: nil, responseType: String.self)
+	}
 }
 
 extension RPC where T == BlockchainHead {
@@ -182,18 +192,5 @@ extension RPC where T == OperationResponse {
 		}
 		
 		return RPC<OperationResponse>(endpoint: "chains/main/blocks/head/helpers/scripts/run_operation", payload: payloadData, responseType: OperationResponse.self)
-	}
-}
-
-extension RPC where T == MichelsonPair {
-	
-	/// Creates an RPC to fetch a contracts Michelson storage
-	public static func contractStorage(contractAddress: String) -> RPC<MichelsonPair> {
-		return RPC<MichelsonPair>(endpoint: "chains/main/blocks/head/context/contracts/\(contractAddress)/storage", payload: nil, responseType: MichelsonPair.self)
-	}
-	
-	/// Creates an RPC to fetch the contents of the given big map
-	public static func bigMap(id: String) -> RPC<MichelsonPair> {
-		return RPC<MichelsonPair>(endpoint: "chains/main/blocks/head/context/big_maps/\(id)", payload: nil, responseType: MichelsonPair.self)
 	}
 }

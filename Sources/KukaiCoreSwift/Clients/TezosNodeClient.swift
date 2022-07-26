@@ -9,7 +9,6 @@
 import Foundation
 import os.log
 
-
 /// The TezosNodeClient offers methods for interacting with the Tezos node to fetch balances, send transactions etc.
 /// The client will abstract away all the compelx tasks of remote forging, parsing, signing, preapply and injecting operations.
 /// It will also convert amounts from the network into `Token` objects to make common tasks easier.
@@ -284,104 +283,41 @@ public class TezosNodeClient {
 	/**
 	Get the Michelson storage of a given contract from the blockchain.
 	- parameter contractAddress: The address of the contract to query.
-	- parameter completion: A callback with a `Result` object, with either a `MichelsonPair` or an `Error`
+	- parameter completion: A callback with a `Result` object, with either a `[String: Any]` or an `Error`
 	*/
-	public func getContractStorage(contractAddress: String, completion: @escaping ((Result<MichelsonPair, KukaiError>) -> Void)) {
-		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withBaseURL: config.primaryNodeURL, completion: completion)
+	public func getContractStorage(contractAddress: String, completion: @escaping ((Result<[String: Any], KukaiError>) -> Void)) {
+		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withBaseURL: config.primaryNodeURL) { result in
+			switch result {
+				case .success(let str):
+					if let json = try? JSONSerialization.jsonObject(with: str.data(using: .utf8) ?? Data()) as? [String: Any] {
+						completion(Result.success(json))
+					} else {
+						completion(Result.failure(KukaiError.internalApplicationError(error: TezosNodeClientError.michelsonParsing)))
+					}
+				
+				case .failure(let err):
+					completion(Result.failure(err))
+			}
+		}
 	}
 	
 	/**
 	 Get the Michelson big map contents, from a given id
 	 - parameter id: The big map id.
-	 - parameter completion: A callback with a `Result` object, with either a `MichelsonPair` or an `Error`
+	 - parameter completion: A callback with a `Result` object, with either a `[String: Any]` or an `Error`
 	*/
-	public func getBigMap(id: String, completion: @escaping ((Result<MichelsonPair, KukaiError>) -> Void)) {
-		self.networkService.send(rpc: RPC.bigMap(id: id), withBaseURL: config.primaryNodeURL, completion: completion)
-	}
-	
-	/**
-	Get the Liquidity Baking pool data for each tuple passed in.
-	- parameter forContracts: An array of tuples `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
-	- parameter completion: An empty callback to alert that the balances, if avialable, have bene fetched
-	*/
-	public func getLiquidityBakingPoolData(forContracts contracts: [(address: String, decimalPlaces: Int)], completion: @escaping ((Result<[String: LiquidityBakingData], KukaiError>) -> Void)) {
-		let dispatchGroup = DispatchGroup()
-		var errors: [KukaiError] = []
-		
-		var poolDict: [String: LiquidityBakingData] = [:]
-		
-		for contract in contracts {
-			
-			dispatchGroup.enter()
-			os_log(.debug, log: .kukaiCoreSwift, "Fetching pool data for %@", contract.address)
-			
-			getLiquidityBakingData(forContract: contract) { result in
-				switch result {
-					case .success(let poolData):
-						poolDict[contract.address] = poolData
-						
-					case .failure(let error):
-						errors.append(error)
-				}
-				
-				dispatchGroup.leave()
-			}
-		}
-		
-		dispatchGroup.notify(queue: .main) {
-			if errors.count > 0 {
-				completion(Result.failure(errors[0]))
-			} else {
-				completion(Result.success(poolDict))
-			}
-		}
-	}
-	
-	/**
-	Get the tokenPool available for the given Liquidity Baking token/xtz pair
-	- parameter forContract: Tuple of `(address: String, decimalPlaces: Int)` denoting the address of the contract, and the number of decimalPlaces it has
-	- parameter completion: A callback with a `Result` object, with either a `TokenAmount` or an `Error`
-	*/
-	public func getLiquidityBakingData(forContract contract: (address: String, decimalPlaces: Int), completion: @escaping ((Result<LiquidityBakingData, KukaiError>) -> Void)) {
-		self.getContractStorage(contractAddress: contract.address) { (result) in
+	public func getBigMap(id: String, completion: @escaping ((Result<[String: Any], KukaiError>) -> Void)) {
+		self.networkService.send(rpc: RPC.bigMap(id: id), withBaseURL: config.primaryNodeURL) { result in
 			switch result {
-				case .success(let michelsonPair):
-					
-					if michelsonPair.args.count > 2,
-					   let tPool = michelsonPair.argIndexAsValue(0)?.value,
-					   let xPool = michelsonPair.argIndexAsValue(1)?.value,
-					   let lqtTotal = michelsonPair.argIndexAsValue(2)?.value,
-					   let tAddress = michelsonPair.argIndexAsValue(3)?.value,
-					   let lAddress = michelsonPair.argIndexAsValue(4)?.value {
-						
-						let xtzPool = XTZAmount(fromRpcAmount: xPool) ?? XTZAmount.zero()
-						let tokenPool = TokenAmount(fromRpcAmount: tPool, decimalPlaces: contract.decimalPlaces) ?? TokenAmount.zero()
-						let totalLiquidity = TokenAmount(fromRpcAmount: lqtTotal, decimalPlaces: 0) ?? TokenAmount.zero()
-						let tokenAddress = tAddress
-						let liquidityAddress = lAddress
-						
-						completion(Result.success(LiquidityBakingData(xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLiquidity, tokenContractAddress: tokenAddress, liquidityTokenContractAddress: liquidityAddress)))
-						
-					} else if let tPool = michelsonPair.argIndexAsValue(0)?.value,
-							  let xPool = michelsonPair.argIndexAsPair(1)?.argIndexAsValue(0)?.value,
-							  let lqtTotal = michelsonPair.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsValue(0)?.value,
-							  let tAddress = michelsonPair.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsValue(0)?.value,
-							  let lAddress = michelsonPair.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsPair(1)?.argIndexAsValue(0)?.value {
-						
-						let xtzPool = XTZAmount(fromRpcAmount: xPool) ?? XTZAmount.zero()
-						let tokenPool = TokenAmount(fromRpcAmount: tPool, decimalPlaces: contract.decimalPlaces) ?? TokenAmount.zero()
-						let totalLiquidity = TokenAmount(fromRpcAmount: lqtTotal, decimalPlaces: 0) ?? TokenAmount.zero()
-						let tokenAddress = tAddress
-						let liquidityAddress = lAddress
-						
-						completion(Result.success(LiquidityBakingData(xtzPool: xtzPool, tokenPool: tokenPool, totalLiquidity: totalLiquidity, tokenContractAddress: tokenAddress, liquidityTokenContractAddress: liquidityAddress)))
-						
+				case .success(let str):
+					if let json = try? JSONSerialization.jsonObject(with: str.data(using: .utf8) ?? Data()) as? [String: Any] {
+						completion(Result.success(json))
 					} else {
 						completion(Result.failure(KukaiError.internalApplicationError(error: TezosNodeClientError.michelsonParsing)))
 					}
 					
-				case .failure(let error):
-					completion(Result.failure(error))
+				case .failure(let err):
+					completion(Result.failure(err))
 			}
 		}
 	}
