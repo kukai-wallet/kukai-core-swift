@@ -126,6 +126,7 @@ class TezosNodeClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
+	/*
 	func testGetContractStorage() {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.getContractStorage(contractAddress: MockConstants.token3Decimals.tokenContractAddress ?? "") { result in
@@ -142,6 +143,7 @@ class TezosNodeClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 3)
 	}
+	*/
 	
 	func testGetNetworkInformation() {
 		let expectation = XCTestExpectation(description: "tezos node client")
@@ -150,28 +152,6 @@ class TezosNodeClientTests: XCTestCase {
 			XCTAssert(error == nil)
 			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.isMainnet() == false)
 			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.chainName() == "ithacanet", MockConstants.shared.tezosNodeClient.networkVersion?.chainName() ?? "-")
-			
-			expectation.fulfill()
-		})
-		
-		wait(for: [expectation], timeout: 3)
-	}
-	
-	func testGetLiquidityData() {
-		let expectation = XCTestExpectation(description: "tezos node client")
-		MockConstants.shared.tezosNodeClient.getLiquidityBakingPoolData(forContracts: [(address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", decimalPlaces: 8)], completion: { result in
-			switch result {
-				case .success(let poolData):
-					XCTAssert(poolData.count == 1)
-					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.xtzPool.normalisedRepresentation == "240862.069602", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.xtzPool.normalisedRepresentation ?? "-")
-					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenPool.normalisedRepresentation == "0.76232227", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenPool.normalisedRepresentation ?? "-")
-					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.totalLiquidity.normalisedRepresentation == "68617", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.totalLiquidity.normalisedRepresentation ?? "-")
-					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenContractAddress == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.tokenContractAddress ?? "-")
-					XCTAssert(poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.liquidityTokenContractAddress == "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo", poolData["KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5"]?.liquidityTokenContractAddress ?? "-")
-					
-				case .failure(let error):
-					XCTFail(error.description)
-			}
 			
 			expectation.fulfill()
 		})

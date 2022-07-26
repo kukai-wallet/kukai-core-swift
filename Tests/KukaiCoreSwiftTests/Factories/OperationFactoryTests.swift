@@ -25,6 +25,8 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(xtzOp[0].operationKind == .transaction)
 		XCTAssert(xtzOp[0] is OperationTransaction)
 		
+		
+		// Send FA1.2
 		let tokenOp = OperationFactory.sendOperation(MockConstants.token3Decimals_1, of: MockConstants.token3Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		XCTAssert(tokenOp.count == 1)
 		XCTAssert(tokenOp[0].source == MockConstants.defaultHdWallet.address)
@@ -32,15 +34,21 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp[0].operationKind == .transaction)
 		XCTAssert(tokenOp[0] is OperationTransaction)
 		
-		if let asTransaction = (tokenOp[0] as? OperationTransaction), let parameters = asTransaction.parameters?["value"] {
-			let targetParameters = "{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"int\": \"1000\"}]}]}"
-			XCTAssert("\(parameters)" == targetParameters, "\(parameters)")
+		if let asTransaction = (tokenOp[0] as? OperationTransaction), let parameters = asTransaction.parameters?.michelsonValue() {
+			let address = parameters.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let destination = parameters.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = parameters.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(amount == "1000", amount ?? "-")
+			
 		} else {
 			XCTFail("No parameters found")
 		}
 		
 		
-		
+		// Send FA2
 		let tokenOp2 = OperationFactory.sendOperation(MockConstants.token10Decimals_1, of: MockConstants.token10Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		XCTAssert(tokenOp2.count == 1)
 		XCTAssert(tokenOp2[0].source == MockConstants.defaultHdWallet.address)
@@ -48,14 +56,23 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp2[0].operationKind == .transaction)
 		XCTAssert(tokenOp2[0] is OperationTransaction)
 		
-		if let asTransaction2 = (tokenOp2[0] as? OperationTransaction), let parameters2 = asTransaction2.parameters?["value"] {
-			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"0\"},{\"int\": \"10000000000\"}]}]}]]}]"
-			XCTAssert("\(parameters2)" == targetParameters, "\(parameters2)")
+		if let asTransaction2 = (tokenOp2[0] as? OperationTransaction), let parameters2 = asTransaction2.parameters?.michelsonValueArray()?[0] {
+			let address = parameters2.michelsonArgsUnknownArray()?.michelsonString(atIndex: 0)
+			let destination = parameters2.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let tokenId = parameters2.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let amount = parameters2.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(tokenId == "0", tokenId ?? "-")
+			XCTAssert(amount == "10000000000", amount ?? "-")
+			
 		} else {
 			XCTFail("No parameters found")
 		}
 		
 		
+		// Send NFT
 		let tokenOp3 = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		XCTAssert(tokenOp3.count == 1)
 		XCTAssert(tokenOp3[0].source == MockConstants.defaultHdWallet.address)
@@ -63,9 +80,17 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(tokenOp3[0].operationKind == .transaction)
 		XCTAssert(tokenOp3[0] is OperationTransaction)
 		
-		if let asTransaction3 = (tokenOp3[0] as? OperationTransaction), let parameters3 = asTransaction3.parameters?["value"] {
-			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]]}]"
-			XCTAssert("\(parameters3)" == targetParameters, "\(parameters3)")
+		if let asTransaction3 = (tokenOp3[0] as? OperationTransaction), let parameters3 = asTransaction3.parameters?.michelsonValueArray()?[0] {
+			let address = parameters3.michelsonArgsUnknownArray()?.michelsonString(atIndex: 0)
+			let destination = parameters3.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let tokenId = parameters3.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let amount = parameters3.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(tokenId == "4", tokenId ?? "-")
+			XCTAssert(amount == "1", amount ?? "-")
+			
 		} else {
 			XCTFail("No parameters found")
 		}
@@ -115,9 +140,17 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(payload.contents[0] is OperationTransaction)
 		XCTAssert(payload.contents[0].counter == "143231", payload.contents[0].counter ?? "")
 		
-		if let asTransaction = (payload.contents[0] as? OperationTransaction), let parameters = asTransaction.parameters?["value"] {
-			let targetParameters = "[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF\"},[{\"prim\": \"Pair\", \"args\": [{\"string\": \"tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG\"},{\"prim\": \"Pair\", \"args\": [{\"int\": \"4\"},{\"int\": \"1\"}]}]}]]}]"
-			XCTAssert("\(parameters)" == targetParameters, "\(parameters)")
+		if let asTransaction = (payload.contents[0] as? OperationTransaction), let parameters = asTransaction.parameters?.michelsonValueArray()?[0] {
+			let address = parameters.michelsonArgsUnknownArray()?.michelsonString(atIndex: 0)
+			let destination = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let tokenId = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let amount = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(tokenId == "4", tokenId ?? "-")
+			XCTAssert(amount == "1", amount ?? "-")
+			
 		} else {
 			XCTFail("No parameters found")
 		}
@@ -137,9 +170,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
 			
 			let entrypoint = smartOp.parameters?["entrypoint"] as? String
-			let value = smartOp.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let amount = value?.argIndexAsValue(1)?.value
+			let value = smartOp.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "xtzToToken", entrypoint ?? "-")
 			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
@@ -172,9 +205,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
 			
 			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
-			let value = smartOp1.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let amount = value?.argIndexAsValue(1)?.value
+			let value = smartOp1.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
 			XCTAssert(entrypoint == "approve", entrypoint ?? "-")
 			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
@@ -191,9 +224,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
 			
 			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
-			let value = smartOp2.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let amount = value?.argIndexAsValue(1)?.value
+			let value = smartOp2.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
 			XCTAssert(entrypoint == "approve", entrypoint ?? "-")
 			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
@@ -210,10 +243,10 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
 			
 			let entrypoint = smartOp3.parameters?["entrypoint"] as? String
-			let value = smartOp3.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let amount = value?.argIndexAsValue(1)?.value
-			let minAmount = value?.argIndexAsValue(2)?.value
+			let value = smartOp3.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let minAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "tokenToXtz", entrypoint ?? "-")
 			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
@@ -247,9 +280,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
 			
 			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
-			let value = smartOp1.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let amount = value?.argIndexAsValue(1)?.value
+			let value = smartOp1.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
 			XCTAssert(entrypoint == "approve", entrypoint ?? "-")
 			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
@@ -266,9 +299,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
 			
 			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
-			let value = smartOp2.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let amount = value?.argIndexAsValue(1)?.value
+			let value = smartOp2.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
 			XCTAssert(entrypoint == "approve", entrypoint ?? "-")
 			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
@@ -285,14 +318,14 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
 			
 			let entrypoint = smartOp3.parameters?["entrypoint"] as? String
-			let value = smartOp3.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let xtzAmount = value?.argIndexAsValue(1)?.value
-			let minLqtAmount = value?.argIndexAsValue(2)?.value
+			let value = smartOp3.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let tokenAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let minLqtAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "addLiquidity", entrypoint ?? "-")
 			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
-			XCTAssert(xtzAmount == "150000000", xtzAmount ?? "-")
+			XCTAssert(tokenAmount == "150000000", tokenAmount ?? "-")
 			XCTAssert(minLqtAmount == "150000000", minLqtAmount ?? "-")
 			
 		} else {
@@ -314,11 +347,11 @@ class OperationFactoryTests: XCTestCase {
 			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
 			
 			let entrypoint = smartOp.parameters?["entrypoint"] as? String
-			let value = smartOp.parameters?["value"] as? MichelsonPair
-			let address = value?.argIndexAsValue(0)?.value
-			let lqtBurnAmount = value?.argIndexAsValue(1)?.value
-			let xtzAmount = value?.argIndexAsValue(2)?.value
-			let tokenAmount = value?.argIndexAsValue(3)?.value
+			let value = smartOp.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let lqtBurnAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let xtzAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let tokenAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "removeLiquidity", entrypoint ?? "-")
 			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
