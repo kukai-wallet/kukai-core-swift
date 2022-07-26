@@ -38,13 +38,13 @@ public class OperationFactory {
 				return [OperationTransaction(amount: tokenAmount, source: from, destination: to)]
 			
 			case .fungible:
-				let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
 				let michelson = sendTokenMichelson(forFaVersion: token.faVersion ?? .fa1_2, tokenAmount: tokenAmount, tokenId: token.tokenId ?? 0, to: to, from: from)
 				
 				if (token.faVersion ?? .fa1_2) == .fa1_2 {
-					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)]
+					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", parameters: michelson)]
+					
 				} else {
-					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: [michelson])]
+					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", parameters: michelson)]
 				}
 			
 			case .nonfungible:
@@ -71,10 +71,9 @@ public class OperationFactory {
 			return []
 		}
 		
-		let entrypoint = OperationTransaction.StandardEntrypoint.transfer.rawValue
 		let michelson = sendTokenMichelson(forFaVersion: nft.faVersion, tokenAmount: TokenAmount(fromNormalisedAmount: amount, decimalPlaces: nft.decimalPlaces), tokenId: nft.tokenId, to: to, from: from)
 		
-		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, entrypoint: entrypoint, value: [michelson])]
+		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, parameters: michelson)]
 	}
 	
 	/**
@@ -111,11 +110,11 @@ public class OperationFactory {
 		switch dexType {
 			case .quipuswap:
 				let swapData = xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: minTokenAmount, wallet: wallet)
-				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, parameters: swapData)]
 				
 			case .lb:
 				let swapData = xtzToToken_lb_michelsonEntrypoint(minTokenAmount: minTokenAmount, wallet: wallet, timeout: timeout)
-				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, parameters: swapData)]
 				
 			case .unknown:
 				return []
@@ -160,13 +159,13 @@ public class OperationFactory {
 		switch dexType {
 			case .quipuswap:
 				let swapData = tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet)
-				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData))
 				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
 			case .lb:
 				let swapData = tokenToXtz_lb_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet, timeout: timeout)
-				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData))
 				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
@@ -185,13 +184,12 @@ public class OperationFactory {
 	- returns: An array of `Operation` subclasses.
 	*/
 	public static func allowanceOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {
-		let entrypoint = OperationTransaction.StandardEntrypoint.approve.rawValue
+		let params: [String: Any] = [
+			"entrypoint": OperationTransaction.StandardEntrypoint.approve.rawValue,
+			"value": ["prim":"Pair", "args":[["string":spenderAddress], ["int":allowance.rpcRepresentation]]]
+		]
 		
-		let spenderMichelson = MichelsonFactory.createString(spenderAddress)
-		let allowanceMichelson = MichelsonFactory.createInt(allowance)
-		let michelson = MichelsonPair(args: [spenderMichelson, allowanceMichelson])
-		
-		return OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: tokenAddress, entrypoint: entrypoint, value: michelson)
+		return OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: tokenAddress, parameters: params)
 	}
 	
 	/**
@@ -236,13 +234,13 @@ public class OperationFactory {
 		switch dexType {
 			case .quipuswap:
 				let swapData = addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, isInitialLiquidity: isInitialLiquidity)
-				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, parameters: swapData))
 				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
 			case .lb:
 				let swapData = addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, minLiquidtyMinted: minLiquidtyMinted, wallet: wallet, timeout: timeout)
-				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson))
+				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, parameters: swapData))
 				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 				return operations
 				
@@ -266,14 +264,14 @@ public class OperationFactory {
 		switch dexType {
 			case .quipuswap:
 				let swapData = removeLiquidity_quipu_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn)
-				var removeAndWithdrawOperations: [Operation] = [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				var removeAndWithdrawOperations: [Operation] = [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData)]
 				removeAndWithdrawOperations.append(contentsOf: withdrawRewards(withDex: dexType, dexContract: dexContract, wallet: wallet))
 				
 				return removeAndWithdrawOperations
 				
 			case .lb:
 				let swapData = removeLiquidity_lb_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn, wallet: wallet, timeout: timeout)
-				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData)]
 				
 			case .unknown:
 				return []
@@ -291,7 +289,7 @@ public class OperationFactory {
 		switch dexType {
 			case .quipuswap:
 				let swapData = withdrawRewards_quipu_michelsonEntrypoint(wallet: wallet)
-				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, entrypoint: swapData.entrypoint, value: swapData.michelson)]
+				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData)]
 				
 			case .lb:
 				return []
@@ -349,26 +347,19 @@ public class OperationFactory {
 		return dateFormatter.string(from: Date().addingTimeInterval(nowPlusTimeInterval))
 	}
 	
-	public static func sendTokenMichelson(forFaVersion faVersion: FaVersion, tokenAmount: TokenAmount, tokenId: Decimal, to: String, from: String) -> AbstractMichelson {
+	public static func sendTokenMichelson(forFaVersion faVersion: FaVersion, tokenAmount: TokenAmount, tokenId: Decimal, to: String, from: String) -> [String: Any] {
 		switch faVersion {
 			case .fa1_2, .unknown:
-				let tokenAmountMichelson = MichelsonFactory.createInt(tokenAmount)
-				let destinationMicheslon = MichelsonFactory.createString(to)
-				let innerPair = MichelsonPair(args: [destinationMicheslon, tokenAmountMichelson])
-				let sourceMichelson = MichelsonFactory.createString(from)
-				return MichelsonPair(args: [sourceMichelson, innerPair])
+				return [
+					"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
+					"value": ["prim":"Pair","args":[["string":from], ["prim":"Pair","args":[["string":to], ["int":tokenAmount.rpcRepresentation]]]]]
+				]
 				
 			case .fa2:
-				let tokenAmountMichelson = MichelsonFactory.createInt(tokenAmount)
-				let idMichelson = MichelsonFactory.createInt(tokenId)
-				let destinationMicheslon = MichelsonFactory.createString(to)
-				let sourceMichelson = MichelsonFactory.createString(from)
-				
-				let amountId = MichelsonPair(args: [idMichelson, tokenAmountMichelson])
-				let destinationAmountId = MichelsonPair(args: [destinationMicheslon, amountId])
-				let destinationAmountIdArrayWrapper = MichelsonPairArray(args: [destinationAmountId])
-				
-				return MichelsonPair(args: [sourceMichelson, destinationAmountIdArrayWrapper])
+				return [
+					"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
+					"value": [["prim":"Pair","args":[["string":from], [["prim":"Pair","args":[["string":to], ["prim":"Pair","args":[["int":"\(tokenId)"], ["int":tokenAmount.rpcRepresentation]]]]]]]]]
+				]
 		}
 	}
 	
@@ -382,7 +373,6 @@ public class OperationFactory {
 	private static func xtzToToken_lb_michelsonEntrypoint(minTokenAmount: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [String: Any] {
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
-		// TODO: XTZ needs to be set in transaction, amount
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.xtzToToken.rawValue,
 			"value": ["prim":"Pair", "args":[["string":wallet.address], ["prim":"Pair", "args":[["int":minTokenAmount.rpcRepresentation], ["string":dateString]]]]]
@@ -391,7 +381,6 @@ public class OperationFactory {
 	
 	private static func xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: TokenAmount, wallet: Wallet) -> [String: Any] {
 		
-		// TODO: XTZ needs to be set in transaction, amount
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.tezToTokenPayment.rawValue,
 			"value": ["prim": "Pair", "args": [["int": minTokenAmount.rpcRepresentation], ["string": wallet.address]]]
@@ -424,7 +413,6 @@ public class OperationFactory {
 	private static func addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [String: Any] {
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		
-		// TODO: XTZ needs to be set in transaction, amount
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.addLiquidity.rawValue,
 			"value": ["prim": "Pair", "args": [["string":wallet.address], ["prim":"Pair", "args":[["int":minLiquidtyMinted.rpcRepresentation], ["prim":"Pair", "args":[["int":tokensToDeposit.rpcRepresentation], ["string":dateString]]]]]]]
@@ -432,8 +420,6 @@ public class OperationFactory {
 	}
 	
 	private static func addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, isInitialLiquidity: Bool) -> [String: Any] {
-		
-		// TODO: XTZ needs to be set in transaction, amount
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.investLiquidity.rawValue,
 			"value": ["int": tokensToDeposit.rpcRepresentation]
