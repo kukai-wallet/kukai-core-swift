@@ -7,6 +7,8 @@
 
 import UIKit
 import KukaiCoreSwift
+import KukaiCryptoSwift
+import CustomAuth
 import Combine
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -72,7 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
  let newWallet = LinearWallet(withMnemonic: "", passphrase: "")
  print("newWallet: \(newWallet?.address)")
  
- let operations = [OperationActivateAccount(wallet: newWallet!, andSecret: "ce496dc4e1d4a50402f9c02ef4e90c6bfbc4bc15")]
+ let operations = [OperationActivateAccount(wallet: newWallet!, andSecret: "")]
  ClientsAndData.shared.tezosNodeClient.send(operations: operations, withWallet: newWallet!) { (result) in
 	switch result {
 		case .success(let string):

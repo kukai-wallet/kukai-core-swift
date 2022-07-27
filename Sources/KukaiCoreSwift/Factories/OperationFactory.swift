@@ -130,15 +130,10 @@ public class OperationFactory {
 	- returns: An array of `Operation` subclasses.
 	*/
 	public static func swapTokenToXTZ(withDex dex: DipDupExchange, tokenAmount: TokenAmount, minXTZAmount: XTZAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
-		var operations: [Operation] = []
-		
-		// Add approval operations only if we are dealing with an FA1.2 standard token
-		if dex.token.standard == .fa12 {
-			operations = [
-				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: tokenAmount, wallet: wallet)
-			]
-		}
+		var operations: [Operation] = [
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: tokenAmount, wallet: wallet)
+		]
 		
 		// Create entrypoint and michelson data depening on type of dex
 		switch dex.name {
@@ -154,24 +149,26 @@ public class OperationFactory {
 				return []
 		}
 		
-		// Add a trailing approval operation only if we are dealing with an FA1.2 standard token
-		if dex.token.standard == .fa12 {
-			operations.append(allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
-		}
+		// Add a trailing approval operation
+		operations.append(allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 		
 		return operations
 	}
 	
+	
+	
+	// MARK: - Allowance (approve, update_operators)
+	
 	/**
-	Create the operations necessary to register an allowance, allowing another address to send FA tokens on your behalf.
+	Create an operation to call the entrypoint `approve`, to allow another address to spend some of your token (only FA1.2)
 	Used when interacting with smart contract applications like Dexter or QuipuSwap
 	- parameter tokenAddress: The address of the token contract
 	- parameter spenderAddress: The address that is being given permission to spend the users balance
 	- parameter allowance: The allowance to set for the given contract
 	- parameter wallet: The wallet signing the operation
-	- returns: An array of `Operation` subclasses.
+	 - returns: An `OperationTransaction` which will invoke a smart contract call
 	*/
-	public static func allowanceOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {
+	public static func approveOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {
 		let params: [String: Any] = [
 			"entrypoint": OperationTransaction.StandardEntrypoint.approve.rawValue,
 			"value": ["prim":"Pair", "args":[["string":spenderAddress], ["int":allowance.rpcRepresentation]]]
@@ -179,6 +176,52 @@ public class OperationFactory {
 		
 		return OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: tokenAddress, parameters: params)
 	}
+	
+	/**
+	 Create an operation to call the entrypoint `update_operators`, to allow another address to spend some of your token (only FA2)
+	 Used when interacting with smart contract applications like Dexter or QuipuSwap
+	 - parameter tokenAddress: The address of the token contract
+	 - parameter spenderAddress: The address that is being given permission to spend the users balance
+	 - parameter allowance: The allowance to set for the given contract
+	 - parameter wallet: The wallet signing the operation
+	 - returns: An `OperationTransaction` which will invoke a smart contract call
+	 */
+	public static func updateOperatorsOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {
+		let params: [String: Any] = [
+			"entrypoint": OperationTransaction.StandardEntrypoint.updateOperators.rawValue,
+			"value": [["prim": "Left","args": [["prim": "Pair","args": [["string": wallet.address], ["prim": "Pair","args": [["string": spenderAddress], ["int": allowance.rpcRepresentation]]]]]]]]
+		]
+		
+		return OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: tokenAddress, parameters: params)
+	}
+	
+	/**
+	 Return the operation necessary to register an allowance (either calling `apporve` or `update_operators`) depending on the token standard version. Removing the need to check manually
+	 Used when interacting with smart contract applications like Dexter or QuipuSwap
+	 - parameter standard: The FA standard that the token conforms too
+	 - parameter tokenAddress: The address of the token contract
+	 - parameter spenderAddress: The address that is being given permission to spend the users balance
+	 - parameter allowance: The allowance to set for the given contract
+	 - parameter wallet: The wallet signing the operation
+	 - returns: An `OperationTransaction` which will invoke a smart contract call
+	 */
+	public static func allowanceOperation(standard: DipDupTokenStandard, tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {
+		
+		switch standard {
+			case .fa12:
+				return approveOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, wallet: wallet)
+				
+			case .fa2:
+				return updateOperatorsOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, wallet: wallet)
+				
+			case .unknown:
+				return approveOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, wallet: wallet)
+		}
+	}
+	
+	
+	
+	// MARK: - Dex functions
 	
 	/**
 	Create the operations necessary to add liquidity to a dex contract. Use DexCalculationService to figure out the numbers required
@@ -192,15 +235,10 @@ public class OperationFactory {
 	- returns: An array of `Operation` subclasses.
 	*/
 	public static func addLiquidity(withDex dex: DipDupExchange, xtz: XTZAmount, token: TokenAmount, minLiquidty: TokenAmount, isInitialLiquidity: Bool, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
-		var operations: [Operation] = []
-		
-		// Add approval operations only if we are dealing with an FA1.2 standard token
-		if dex.token.standard == .fa12 {
-			operations = [
-				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: token, wallet: wallet)
-			]
-		}
+		var operations: [Operation] = [
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: token, wallet: wallet)
+		]
 		
 		// Create entrypoint and michelson data depening on type of dex
 		switch dex.name {
@@ -216,10 +254,8 @@ public class OperationFactory {
 				return []
 		}
 		
-		// Add a trailing approval operation only if we are dealing with an FA1.2 standard token
-		if dex.token.standard == .fa12 {
-			operations.append(allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
-		}
+		// Add a trailing approval operation
+		operations.append(allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
 		
 		return operations
 	}
@@ -334,6 +370,7 @@ public class OperationFactory {
 				]
 		}
 	}
+	
 	
 	
 	// MARK: - Private helpers

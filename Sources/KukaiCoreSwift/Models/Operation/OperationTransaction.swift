@@ -22,6 +22,7 @@ public class OperationTransaction: Operation {
 		case `default`
 		case transfer
 		case approve
+		case updateOperators = "update_operators"
 		case xtzToToken
 		case tokenToXtz
 		case addLiquidity

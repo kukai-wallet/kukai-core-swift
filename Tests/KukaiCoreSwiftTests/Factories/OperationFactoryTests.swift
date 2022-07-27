@@ -115,11 +115,17 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testAllowance() {
-		let op = OperationFactory.allowanceOperation(tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: MockConstants.defaultHdWallet.address, allowance: MockConstants.token3Decimals_1, wallet: MockConstants.defaultHdWallet)
+		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: MockConstants.defaultHdWallet.address, allowance: MockConstants.token3Decimals_1, wallet: MockConstants.defaultHdWallet)
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op.counter == "0")
 		XCTAssert(op.operationKind == .transaction)
 		XCTAssert(op is OperationTransaction)
+		
+		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: MockConstants.defaultHdWallet.address, allowance: MockConstants.token3Decimals_1, wallet: MockConstants.defaultHdWallet)
+		XCTAssert(op2.source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op2.counter == "0")
+		XCTAssert(op2.operationKind == .transaction)
+		XCTAssert(op2 is OperationTransaction)
 	}
 	
 	func testPayload() {
@@ -267,18 +273,60 @@ class OperationFactoryTests: XCTestCase {
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
 		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
-		XCTAssert(op.count == 1)
+		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[1].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[2].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[1].counter == "0")
+		XCTAssert(op[2].counter == "0")
 		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[1].operationKind == .transaction)
+		XCTAssert(op[2].operationKind == .transaction)
 		XCTAssert(op[0] is OperationTransaction)
+		XCTAssert(op[1] is OperationTransaction)
+		XCTAssert(op[2] is OperationTransaction)
 		
-		if let smartOp = op[0] as? OperationTransaction {
-			XCTAssert(smartOp.amount == "0", smartOp.amount)
-			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
+		if let smartOp1 = op[0] as? OperationTransaction {
+			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
+			XCTAssert(smartOp1.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp1.destination)
 			
-			let entrypoint = smartOp.parameters?["entrypoint"] as? String
-			let value = smartOp.parameters?.michelsonValue()
+			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
+			let value = smartOp1.parameters?.michelsonValueArray()?[0]
+			let address = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(entrypoint == "update_operators", entrypoint ?? "-")
+			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
+			XCTAssert(amount == "0", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+		
+		if let smartOp2 = op[1] as? OperationTransaction {
+			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
+			XCTAssert(smartOp2.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp2.destination)
+			
+			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
+			let value = smartOp2.parameters?.michelsonValueArray()?[0]
+			let address = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(entrypoint == "update_operators", entrypoint ?? "-")
+			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
+			XCTAssert(amount == "150000000", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+		
+		if let smartOp3 = op[2] as? OperationTransaction {
+			XCTAssert(smartOp3.amount == "0", smartOp3.amount)
+			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
+			
+			let entrypoint = smartOp3.parameters?["entrypoint"] as? String
+			let value = smartOp3.parameters?.michelsonValue()
 			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 1)
 			let amount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			let minAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
@@ -375,18 +423,60 @@ class OperationFactoryTests: XCTestCase {
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
 		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
-		XCTAssert(op.count == 1)
+		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[1].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[2].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[1].counter == "0")
+		XCTAssert(op[2].counter == "0")
 		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[1].operationKind == .transaction)
+		XCTAssert(op[2].operationKind == .transaction)
 		XCTAssert(op[0] is OperationTransaction)
+		XCTAssert(op[1] is OperationTransaction)
+		XCTAssert(op[2] is OperationTransaction)
 		
-		if let smartOp = op[0] as? OperationTransaction {
-			XCTAssert(smartOp.amount == "1000000", smartOp.amount)
-			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
+		if let smartOp1 = op[0] as? OperationTransaction {
+			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
+			XCTAssert(smartOp1.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp1.destination)
 			
-			let entrypoint = smartOp.parameters?["entrypoint"] as? String
-			let value = smartOp.parameters?.michelsonValue()
+			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
+			let value = smartOp1.parameters?.michelsonValueArray()?[0]
+			let address = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(entrypoint == "update_operators", entrypoint ?? "-")
+			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
+			XCTAssert(amount == "0", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+		
+		if let smartOp2 = op[1] as? OperationTransaction {
+			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
+			XCTAssert(smartOp2.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp2.destination)
+			
+			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
+			let value = smartOp2.parameters?.michelsonValueArray()?[0]
+			let address = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
+			let amount = value?.michelsonArgsUnknownArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(entrypoint == "update_operators", entrypoint ?? "-")
+			XCTAssert(address == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", address ?? "-")
+			XCTAssert(amount == "150000000", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+		
+		if let smartOp3 = op[2] as? OperationTransaction {
+			XCTAssert(smartOp3.amount == "1000000", smartOp3.amount)
+			XCTAssert(smartOp3.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp3.destination)
+			
+			let entrypoint = smartOp3.parameters?["entrypoint"] as? String
+			let value = smartOp3.parameters?.michelsonValue()
 			let token = value?.michelsonInt()
 			
 			XCTAssert(entrypoint == "investLiquidity", entrypoint ?? "-")
