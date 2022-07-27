@@ -25,6 +25,14 @@ public extension Dictionary where Key == String {
 	func michelsonArgsUnknownArray() -> [Any]? {
 		return self["args"] as? [Any]
 	}
+	
+	func michelsonInt() -> String? {
+		return self["int"] as? String
+	}
+	
+	func michelsonString() -> String? {
+		return self["string"] as? String
+	}
 }
 
 /// Helper methods for extracting data from Michelson JSON, to reduce the amount of `as? [String: Any]` extracting, and instead use some of the standarad naming

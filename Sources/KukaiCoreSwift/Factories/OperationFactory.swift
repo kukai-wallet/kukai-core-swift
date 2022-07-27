@@ -97,24 +97,23 @@ public class OperationFactory {
 	
 	/**
 	Create the operations necessary to perform an exchange of XTZ for a given FA token, using a given dex
-	- parameter withdex: Enum controling which dex to use to perform the swap
+	- parameter withDex: Enum controling which dex to use to perform the swap
 	- parameter xtzAmount: The amount of XTZ to be swaped
 	- parameter minTokenAmount: The minimum token amount you will accept
-	- parameter contract: The address of the swap contract
 	- parameter wallet: The wallet signing the operation
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func swapXtzToToken(withdex dexType: DipDupExchangeName, xtzAmount: XTZAmount, minTokenAmount: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func swapXtzToToken(withDex dex: DipDupExchange, xtzAmount: XTZAmount, minTokenAmount: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		
-		switch dexType {
+		switch dex.name {
 			case .quipuswap:
 				let swapData = xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: minTokenAmount, wallet: wallet)
-				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, parameters: swapData)]
+				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dex.address, parameters: swapData)]
 				
 			case .lb:
 				let swapData = xtzToToken_lb_michelsonEntrypoint(minTokenAmount: minTokenAmount, wallet: wallet, timeout: timeout)
-				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dexContract, parameters: swapData)]
+				return [OperationTransaction(amount: xtzAmount, source: wallet.address, destination: dex.address, parameters: swapData)]
 				
 			case .unknown:
 				return []
@@ -123,55 +122,44 @@ public class OperationFactory {
 	
 	/**
 	Create the operations necessary to perform an exchange of a given FA token for XTZ, using dex contracts
-	- parameter withdex: Enum controling which dex to use to perform the swap
+	- parameter withDex: `DipDupExchange` instance providing information about the exchange
 	- parameter tokenAmount: The amount of Token to be swapped
 	- parameter minXTZAmount: The minimum xtz amount you will accept
-	- parameter contract: The address of the swap contract
-	- parameter tokenContract: The address of the returned token
-	- parameter currentAllowance: The users current approved allowance to spend  (non zero number will trigger a safe reset operation first, followed by a new allowance. If unsure, set to non-zero number)
 	- parameter wallet: The wallet signing the operation
 	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func swapTokenToXTZ(withDex dexType: DipDupExchangeName,
-									  tokenAmount: TokenAmount,
-									  minXTZAmount: XTZAmount,
-									  dexContract: String,
-									  tokenContract: String,
-									  currentAllowance: TokenAmount = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 0),
-									  wallet: Wallet,
-									  timeout: TimeInterval) -> [Operation]
-	{
-		// If the current allowance is zero, set the allowance to the amount we are trying to send.
-		// Else, for secuirty, we must set the allowance to zero, then set the allwaonce to what we need.
+	public static func swapTokenToXTZ(withDex dex: DipDupExchange, tokenAmount: TokenAmount, minXTZAmount: XTZAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		var operations: [Operation] = []
-		if currentAllowance.toRpcDecimal() ?? 0 > 0 {
+		
+		// Add approval operations only if we are dealing with an FA1.2 standard token
+		if dex.token.standard == .fa12 {
 			operations = [
-				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokenAmount, wallet: wallet)
+				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: tokenAmount, wallet: wallet)
 			]
-			
-		} else {
-			operations = [ allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokenAmount, wallet: wallet) ]
 		}
 		
 		// Create entrypoint and michelson data depening on type of dex
-		switch dexType {
+		switch dex.name {
 			case .quipuswap:
 				let swapData = tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet)
-				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData))
-				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
-				return operations
+				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dex.address, parameters: swapData))
 				
 			case .lb:
 				let swapData = tokenToXtz_lb_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, wallet: wallet, timeout: timeout)
-				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData))
-				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
-				return operations
+				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: wallet.address, destination: dex.address, parameters: swapData))
 				
 			case .unknown:
 				return []
 		}
+		
+		// Add a trailing approval operation only if we are dealing with an FA1.2 standard token
+		if dex.token.standard == .fa12 {
+			operations.append(allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
+		}
+		
+		return operations
 	}
 	
 	/**
@@ -194,84 +182,69 @@ public class OperationFactory {
 	
 	/**
 	Create the operations necessary to add liquidity to a dex contract. Use DexCalculationService to figure out the numbers required
-	- parameter withDex: Enum controling which dex to use to perform the operation
-	- parameter xtzToDeposit: The amount of XTZ to deposit
-	- parameter tokensToDeposit: The amount of Token to deposit
-	- parameter minLiquidtyMinted: The minimum amount of liquidity tokens you will accept
-	- parameter tokenContract: The address of the token contract
-	- parameter dexContract: The address of the dex contract
-	- parameter currentAllowance: The current allowance set on `tokenContract` for `dexContract` (non zero number will trigger a safe reset operation first, followed by a new allowance. If unsure, set to non-zero number)
+	- parameter withDex: `DipDupExchange` instance providing information about the exchange
+	- parameter xtz: The amount of XTZ to deposit
+	- parameter token: The amount of Token to deposit
+	- parameter minLiquidty: The minimum amount of liquidity tokens you will accept
 	- parameter isInitialLiquidity: Is this the xtzPool and tokenPool empty? If so, the operation needs to set the exchange rate for the dex. Some dex's require extra logic here
 	- parameter wallet: The wallet that will sign the operation
 	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func addLiquidity(withDex dexType: DipDupExchangeName,
-									xtzToDeposit: XTZAmount,
-									tokensToDeposit: TokenAmount,
-									minLiquidtyMinted: TokenAmount,
-									tokenContract: String,
-									dexContract: String,
-									currentAllowance: TokenAmount = TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 0),
-									isInitialLiquidity: Bool,
-									wallet: Wallet,
-									timeout: TimeInterval) -> [Operation]
-	{
-		// If the current allowance is zero, set the allowance tot he amount we are trying to send.
-		// Else, for secuirty, we must set the allowance to zero, then set the allwaonce to what we need.
+	public static func addLiquidity(withDex dex: DipDupExchange, xtz: XTZAmount, token: TokenAmount, minLiquidty: TokenAmount, isInitialLiquidity: Bool, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
 		var operations: [Operation] = []
-		if currentAllowance.toRpcDecimal() ?? 0 > 0 {
+		
+		// Add approval operations only if we are dealing with an FA1.2 standard token
+		if dex.token.standard == .fa12 {
 			operations = [
-				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokensToDeposit, wallet: wallet)
+				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
+				allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: token, wallet: wallet)
 			]
-			
-		} else {
-			operations = [ allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: tokensToDeposit, wallet: wallet) ]
 		}
 		
 		// Create entrypoint and michelson data depening on type of dex
-		switch dexType {
+		switch dex.name {
 			case .quipuswap:
-				let swapData = addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, isInitialLiquidity: isInitialLiquidity)
-				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, parameters: swapData))
-				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
-				return operations
+				let swapData = addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: xtz, tokensToDeposit: token, isInitialLiquidity: isInitialLiquidity)
+				operations.append(OperationTransaction(amount: xtz, source: wallet.address, destination: dex.address, parameters: swapData))
 				
 			case .lb:
-				let swapData = addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: xtzToDeposit, tokensToDeposit: tokensToDeposit, minLiquidtyMinted: minLiquidtyMinted, wallet: wallet, timeout: timeout)
-				operations.append(OperationTransaction(amount: xtzToDeposit, source: wallet.address, destination: dexContract, parameters: swapData))
-				operations.append(allowanceOperation(tokenAddress: tokenContract, spenderAddress: dexContract, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
-				return operations
+				let swapData = addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: xtz, tokensToDeposit: token, minLiquidtyMinted: minLiquidty, wallet: wallet, timeout: timeout)
+				operations.append(OperationTransaction(amount: xtz, source: wallet.address, destination: dex.address, parameters: swapData))
 				
 			case .unknown:
 				return []
 		}
+		
+		// Add a trailing approval operation only if we are dealing with an FA1.2 standard token
+		if dex.token.standard == .fa12 {
+			operations.append(allowanceOperation(tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet))
+		}
+		
+		return operations
 	}
 	
 	/**
 	Create the operations necessary to remove liquidity from a dex contract, also withdraw pending rewards if applicable. Use DexCalculationService to figure out the numbers required
-	- parameter withDex: Enum controling which dex to use to perform the operation
+	- parameter withDex: `DipDupExchange` instance providing information about the exchange
 	- parameter minXTZ: The minimum XTZ to accept in return for the burned amount of Liquidity
 	- parameter minToken: The minimum Token to accept in return for the burned amount of Liquidity
 	- parameter liquidityToBurn: The amount of Liqudity to burn
-	- parameter dexContract: The address of the dex contract
 	- parameter wallet: The wallet that will sign the operation
 	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func removeLiquidity(withDex dexType: DipDupExchangeName, minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, dexContract: String, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
-		switch dexType {
+	public static func removeLiquidity(withDex dex: DipDupExchange, minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+		switch dex.name {
 			case .quipuswap:
 				let swapData = removeLiquidity_quipu_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn)
-				var removeAndWithdrawOperations: [Operation] = [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData)]
-				removeAndWithdrawOperations.append(contentsOf: withdrawRewards(withDex: dexType, dexContract: dexContract, wallet: wallet))
-				
+				var removeAndWithdrawOperations: [Operation] = [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dex.address, parameters: swapData)]
+				removeAndWithdrawOperations.append(contentsOf: withdrawRewards(withDex: dex, wallet: wallet))
 				return removeAndWithdrawOperations
 				
 			case .lb:
 				let swapData = removeLiquidity_lb_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn, wallet: wallet, timeout: timeout)
-				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData)]
+				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dex.address, parameters: swapData)]
 				
 			case .unknown:
 				return []
@@ -280,16 +253,15 @@ public class OperationFactory {
 	
 	/**
 	 Create the operations necessary to withdraw rewards from a dex contract. For example in quipuswap, XTZ provided as liquidity will earn baking rewards. This can been withdrawn at any time while leaving liquidity in palce
-	 - parameter withDex: Enum controling which dex to use to perform the operation
-	 - parameter dexContract: The address of the dex contract
+	 - parameter withDex: `DipDupExchange` instance providing information about the exchange
 	 - parameter wallet: The wallet that will sign the operation
 	 - returns: An array of `Operation` subclasses.
 	 */
-	public static func withdrawRewards(withDex dexType: DipDupExchangeName, dexContract: String, wallet: Wallet) -> [Operation] {
-		switch dexType {
+	public static func withdrawRewards(withDex dex: DipDupExchange, wallet: Wallet) -> [Operation] {
+		switch dex.name {
 			case .quipuswap:
 				let swapData = withdrawRewards_quipu_michelsonEntrypoint(wallet: wallet)
-				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dexContract, parameters: swapData)]
+				return [OperationTransaction(amount: XTZAmount.zero(), source: wallet.address, destination: dex.address, parameters: swapData)]
 				
 			case .lb:
 				return []

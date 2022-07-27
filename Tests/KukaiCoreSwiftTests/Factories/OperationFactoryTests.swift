@@ -157,7 +157,9 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testXtzToToken() {
-		let op = OperationFactory.swapXtzToToken(withdex: .lb, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
+		let op = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -183,8 +185,10 @@ class OperationFactoryTests: XCTestCase {
 		}
 	}
 	
-	func testTokenToXTZ() {
-		let op = OperationFactory.swapTokenToXTZ(withDex: .lb, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
+	func testTokenToXTZ_LB() {
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
+		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -202,7 +206,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		if let smartOp1 = op[0] as? OperationTransaction {
 			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
-			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
+			XCTAssert(smartOp1.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp1.destination)
 			
 			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
 			let value = smartOp1.parameters?.michelsonValue()
@@ -221,7 +225,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		if let smartOp2 = op[1] as? OperationTransaction {
 			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
-			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
+			XCTAssert(smartOp2.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp2.destination)
 			
 			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
 			let value = smartOp2.parameters?.michelsonValue()
@@ -258,8 +262,41 @@ class OperationFactoryTests: XCTestCase {
 		}
 	}
 	
-	func testAddLiquidity() {
-		let op = OperationFactory.addLiquidity(withDex: .lb, xtzToDeposit: XTZAmount(fromNormalisedAmount: 1), tokensToDeposit: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidtyMinted: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), tokenContract: "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", currentAllowance: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
+	func testTokenToXTZ_QUIPU() {
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
+		let dex = DipDupExchange(name: .quipuswap, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
+		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		
+		XCTAssert(op.count == 1)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[0] is OperationTransaction)
+		
+		if let smartOp = op[0] as? OperationTransaction {
+			XCTAssert(smartOp.amount == "0", smartOp.amount)
+			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
+			
+			let entrypoint = smartOp.parameters?["entrypoint"] as? String
+			let value = smartOp.parameters?.michelsonValue()
+			let address = value?.michelsonArgsArray()?.michelsonString(atIndex: 1)
+			let amount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+			let minAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+			
+			XCTAssert(entrypoint == "tokenToTezPayment", entrypoint ?? "-")
+			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(amount == "150000000", amount ?? "-")
+			XCTAssert(minAmount == "1000000", amount ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+	}
+	
+	func testAddLiquidity_LB() {
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
+		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -277,7 +314,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		if let smartOp1 = op[0] as? OperationTransaction {
 			XCTAssert(smartOp1.amount == "0", smartOp1.amount)
-			XCTAssert(smartOp1.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp1.destination)
+			XCTAssert(smartOp1.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp1.destination)
 			
 			let entrypoint = smartOp1.parameters?["entrypoint"] as? String
 			let value = smartOp1.parameters?.michelsonValue()
@@ -296,7 +333,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		if let smartOp2 = op[1] as? OperationTransaction {
 			XCTAssert(smartOp2.amount == "0", smartOp2.amount)
-			XCTAssert(smartOp2.destination == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", smartOp2.destination)
+			XCTAssert(smartOp2.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp2.destination)
 			
 			let entrypoint = smartOp2.parameters?["entrypoint"] as? String
 			let value = smartOp2.parameters?.michelsonValue()
@@ -333,8 +370,37 @@ class OperationFactoryTests: XCTestCase {
 		}
 	}
 	
+	func testAddLiquidity_QUIPU() {
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
+		let dex = DipDupExchange(name: .quipuswap, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
+		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
+		
+		XCTAssert(op.count == 1)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[0] is OperationTransaction)
+		
+		if let smartOp = op[0] as? OperationTransaction {
+			XCTAssert(smartOp.amount == "1000000", smartOp.amount)
+			XCTAssert(smartOp.destination == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", smartOp.destination)
+			
+			let entrypoint = smartOp.parameters?["entrypoint"] as? String
+			let value = smartOp.parameters?.michelsonValue()
+			let token = value?.michelsonInt()
+			
+			XCTAssert(entrypoint == "investLiquidity", entrypoint ?? "-")
+			XCTAssert(token == "150000000", token ?? "-")
+			
+		} else {
+			XCTFail("invalid op type")
+		}
+	}
+	
 	func testRemoveLiquidity() {
-		let op = OperationFactory.removeLiquidity(withDex: .lb, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), dexContract: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
+		let op = OperationFactory.removeLiquidity(withDex: dex, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
