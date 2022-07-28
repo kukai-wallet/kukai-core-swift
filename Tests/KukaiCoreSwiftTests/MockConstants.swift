@@ -79,10 +79,10 @@ public struct MockConstants {
 		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "micheline", value: 1)
 		
 		var tzktBigmapUserRewardsURL = tzktURL.appendingPathComponent("v1/bigmaps/1494/keys")
-		tzktBigmapUserRewardsURL.appendQueryItem(name: "key", value: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs")
+		tzktBigmapUserRewardsURL.appendQueryItem(name: "key", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
 		
 		var tzktBigmapLedgerURL = tzktURL.appendingPathComponent("v1/bigmaps/1493/keys")
-		tzktBigmapLedgerURL.appendQueryItem(name: "key", value: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs")
+		tzktBigmapLedgerURL.appendQueryItem(name: "key", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
 		
 		var tzktBalanceCountURL = tzktURL.appendingPathComponent("v1/tokens/balances/count")
 		tzktBalanceCountURL.appendQueryItem(name: "account", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
@@ -171,11 +171,11 @@ public struct MockConstants {
 		
 		let opService = OperationService(config: config, networkService: networkService)
 		tezosNodeClient.operationService = opService
+		dipDupClient = DipDupClient(networkService: networkService, config: config)
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
 		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
-		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient)
+		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient, dipDupClient: dipDupClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: networkService, config: config)
-		dipDupClient = DipDupClient(networkService: networkService, config: config)
 	}
 	
 	public static func bcdURL(withPath: String, queryParams: [String: String], andConfig config: TezosNodeClientConfig) -> URL {

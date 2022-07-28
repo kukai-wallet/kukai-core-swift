@@ -13,7 +13,7 @@ class DAppHelperServiceTests: XCTestCase {
 	func testPendingRewards() {
 		let expectation = XCTestExpectation(description: "dAppHelper-pending-rewards")
 		
-		DAppHelperService.Quipuswap.getPendingRewards(fromExchange: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc", forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs", tzKTClient: MockConstants.shared.tzktClient) { result in
+		DAppHelperService.Quipuswap.getPendingRewards(fromExchange: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc", forAddress: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", tzKTClient: MockConstants.shared.tzktClient) { result in
 			guard let res = try? result.get() else {
 				XCTFail(result.getFailure().description)
 				expectation.fulfill()
@@ -31,7 +31,7 @@ class DAppHelperServiceTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "dAppHelper-pending-rewards-bulk")
 		
 		DAppHelperService.Quipuswap.getBulkPendingRewards(fromExchanges: ["KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc", "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc"],
-														  forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+														  forAddress: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF",
 														  tzKTClient: MockConstants.shared.tzktClient) { result in
 			guard let res = try? result.get() else {
 				XCTFail(result.getFailure().description)

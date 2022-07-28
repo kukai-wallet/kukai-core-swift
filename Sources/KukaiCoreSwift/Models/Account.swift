@@ -24,6 +24,9 @@ public struct Account: Codable, Hashable {
 	/// All the wallets NFT's, grouped into parent FA2 objects so they can be displayed in groups or individaully
 	public let nfts: [Token]
 	
+	/// All the wallets Defi, Liquidity Tokens
+	public let liquidityTokens: [DipDupPositionData]
+	
 	/// The Tezos address of the delegated baker, nil if none selected
 	public let bakerAddress: String?
 	
@@ -36,16 +39,18 @@ public struct Account: Codable, Hashable {
 		self.xtzBalance = .zero()
 		self.tokens = []
 		self.nfts = []
+		self.liquidityTokens = []
 		self.bakerAddress = nil
 		self.bakerAlias = nil
 	}
 	
 	/// Full init
-	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], bakerAddress: String? = nil, bakerAlias: String? = nil) {
+	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], liquidityTokens: [DipDupPositionData], bakerAddress: String? = nil, bakerAlias: String? = nil) {
 		self.walletAddress = walletAddress
 		self.xtzBalance = xtzBalance
 		self.tokens = tokens
 		self.nfts = nfts
+		self.liquidityTokens = liquidityTokens
 		self.bakerAddress = bakerAddress
 		self.bakerAlias = bakerAlias
 	}

@@ -29,6 +29,7 @@ public class TzKTClient {
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
 	private let betterCallDevClient: BetterCallDevClient
+	private let dipDupClient: DipDupClient
 	
 	private var tempTransactions: [TzKTTransaction] = []
 	private var dispatchGroupTransactions = DispatchGroup()
@@ -51,12 +52,14 @@ public class TzKTClient {
 	- parameter networkService: `NetworkService` used to manage network communication.
 	- parameter config: `TezosNodeClientConfig` used to apss in settings.
 	- parameter betterCallDevClient: `BetterCallDevClient` used to fetch more detailed errors about operation failures involving smart contracts.
+	- parameter dipDupClient: `DipDupClient` used to fetch additional information about the tokens owned.
 	*/
-	public init(networkService: NetworkService, config: TezosNodeClientConfig, betterCallDevClient: BetterCallDevClient) {
+	public init(networkService: NetworkService, config: TezosNodeClientConfig, betterCallDevClient: BetterCallDevClient, dipDupClient: DipDupClient) {
 		self.networkService = networkService
 		self.config = config
 		self.betterCallDevClient = betterCallDevClient
 		self.tokenBalanceQueue = DispatchQueue(label: "TzKTClient.tokens", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
+		self.dipDupClient = dipDupClient
 	}
 	
 	
@@ -276,18 +279,34 @@ public class TzKTClient {
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var tzkTAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false))
+		var tzktAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false))
 		var tokenBalances: [TzKTBalance] = []
+		var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
 		var groupedData: (tokens: [Token], nftGroups: [Token]) = (tokens: [], nftGroups: [])
 		
 		
-		// Get XTZ balance from TzKT Account
 		dispatchGroup.enter()
+		dispatchGroup.enter()
+		
+		// Get XTZ balance from TzKT Account
 		self.getAccount(forAddress: address) { result in
 			switch result {
 				case .success(let account):
-					tzkTAccount = account
+					tzktAccount = account
+					
+				case .failure(let error):
+					errorFound = error
+			}
+			dispatchGroup.leave()
+		}
+		
+		
+		// Get Liquidity Tokens from DipDup
+		self.dipDupClient.getLiquidityFor(address: address) { result in
+			switch result {
+				case .success(let graphResponse):
+					liquidityTokens = graphResponse.data?.position ?? []
 					
 				case .failure(let error):
 					errorFound = error
@@ -320,8 +339,8 @@ public class TzKTClient {
 				completion(Result.failure(err))
 				
 			} else {
-				groupedData = self?.groupBalances(tokenBalances) ?? (tokens: [], nftGroups: [])
-				let account = Account(walletAddress: address, xtzBalance: tzkTAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, bakerAddress: tzkTAccount.delegate?.address, bakerAlias: tzkTAccount.delegate?.alias)
+				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: liquidityTokens) ?? (tokens: [], nftGroups: [])
+				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, liquidityTokens: liquidityTokens, bakerAddress: tzktAccount.delegate?.address, bakerAlias: tzktAccount.delegate?.alias)
 				
 				completion(Result.success(account))
 			}
@@ -329,12 +348,24 @@ public class TzKTClient {
 	}
 	
 	/// Private function to add balance pages together and group NFTs under their parent contracts
-	private func groupBalances(_ balances: [TzKTBalance]) -> (tokens: [Token], nftGroups: [Token]) {
+	private func groupBalances(_ balances: [TzKTBalance], filteringOutLiquidityTokens liquidityTokens: [DipDupPositionData]) -> (tokens: [Token], nftGroups: [Token]) {
 		var tokens: [Token] = []
 		var nftGroups: [Token] = []
 		var tempNFT: [String: [TzKTBalance]] = [:]
 		
 		for balance in balances {
+			
+			// Check if balance is a liquidityToken and ignore it
+			// Liquidity baking is a standalone contract address. Hardcoding address for now, revisit how to query if it ever migrates to another token
+			if balance.token.contract.address == "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo" {
+				continue
+			}
+			
+			// Quipuswap exchange contracts hold the token inside its storage, so check if the current balance, matches any of the exchange contracts
+			if liquidityTokens.contains(where: { $0.exchange.address == balance.token.contract.address }) {
+				continue
+			}
+			
 			
 			// If its an NFT, hold onto for later
 			if balance.isNFT() {
