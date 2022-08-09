@@ -2,6 +2,50 @@
     "data": {
         "token": [
             {
+                "symbol": "GIF",
+                "address": "KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "46303.722435",
+                        "tokenPool": "3251161.663796847000000000000000000000000000",
+                        "address": "KT1LuXT6jZPhUH1qCnSUqAzFedjoBwePLQnF",
+                        "sharesTotal": "45813835603",
+                        "midPrice": "0.014242",
+                        "token": {
+                            "address": "KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv",
+                            "decimals": 9,
+                            "symbol": "GIF",
+                            "tokenId": 0,
+                            "standard": "fa2"
+                        }
+                    }
+                ]
+            },
+            {
+                "symbol": "ctez",
+                "address": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4",
+                "tokenId": 0,
+                "exchanges": [
+                    {
+                        "name": "quipuswap",
+                        "tezPool": "138951.848878",
+                        "tokenPool": "131994.073569000000000000000000000000000000",
+                        "address": "KT1FbYwEWU8BTfrvNoL5xDEC5owsDxv9nqKT",
+                        "sharesTotal": "127404376417",
+                        "midPrice": "1.052713",
+                        "token": {
+                            "address": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4",
+                            "decimals": 6,
+                            "symbol": "ctez",
+                            "tokenId": 0,
+                            "standard": "fa12"
+                        }
+                    }
+                ]
+            },
+            {
                 "symbol": "tzBTC",
                 "address": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
                 "tokenId": 0,
@@ -32,28 +76,6 @@
                             "address": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
                             "decimals": 8,
                             "symbol": "tzBTC",
-                            "tokenId": 0,
-                            "standard": "fa12"
-                        }
-                    }
-                ]
-            },
-            {
-                "symbol": "ctez",
-                "address": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4",
-                "tokenId": 0,
-                "exchanges": [
-                    {
-                        "name": "quipuswap",
-                        "tezPool": "138951.848878",
-                        "tokenPool": "131994.073569000000000000000000000000000000",
-                        "address": "KT1FbYwEWU8BTfrvNoL5xDEC5owsDxv9nqKT",
-                        "sharesTotal": "127404376417",
-                        "midPrice": "1.052713",
-                        "token": {
-                            "address": "KT1SjXiUX63QvdNMcM2m492f7kuf8JxXRLp4",
-                            "decimals": 6,
-                            "symbol": "ctez",
                             "tokenId": 0,
                             "standard": "fa12"
                         }
@@ -100,28 +122,6 @@
                             "symbol": "kUSD",
                             "tokenId": 0,
                             "standard": "fa12"
-                        }
-                    }
-                ]
-            },
-            {
-                "symbol": "GIF",
-                "address": "KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv",
-                "tokenId": 0,
-                "exchanges": [
-                    {
-                        "name": "quipuswap",
-                        "tezPool": "46303.722435",
-                        "tokenPool": "3251161.663796847000000000000000000000000000",
-                        "address": "KT1LuXT6jZPhUH1qCnSUqAzFedjoBwePLQnF",
-                        "sharesTotal": "45813835603",
-                        "midPrice": "0.014242",
-                        "token": {
-                            "address": "KT1XTxpQvo7oRCqp85LikEZgAZ22uDxhbWJv",
-                            "decimals": 9,
-                            "symbol": "GIF",
-                            "tokenId": 0,
-                            "standard": "fa2"
                         }
                     }
                 ]

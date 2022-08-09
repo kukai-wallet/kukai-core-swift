@@ -20,6 +20,11 @@ public struct DipDupExchangesAndTokens: Codable {
 	public let address: String
 	public let tokenId: Decimal
 	public let exchanges: [DipDupExchange]
+	
+	/// Get the total XTZ pool amount from all the exchanges, useful for sorting
+	public func totalExchangeXtzPool() -> XTZAmount {
+		return exchanges.map({ $0.xtzPoolAmount() }).reduce(.zero(), +)
+	}
 }
 
 /// A DipDup Exchange object with all the necessary pieces for checking liquidity and performing Swaps

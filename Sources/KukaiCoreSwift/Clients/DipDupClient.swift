@@ -61,7 +61,7 @@ public class DipDupClient {
 		
 		var query = """
 		query {
-			token(limit: \(limit), offset: \(offset), order_by: { exchanges_aggregate: {avg: {tezPool: desc}} }, where: {exchanges: {name: {_in: ["lb", "quipuswap"]}}}) {
+			token(limit: \(limit), offset: \(offset), where: {exchanges: {name: {_in: ["lb", "quipuswap"]}}}) {
 				symbol,
 				address,
 				tokenId,
@@ -121,8 +121,15 @@ public class DipDupClient {
 				self?.getAllExchangesAndTokens(completion: completion)
 				
 			} else {
-				completion(Result.success(self?.exchangeQuery_tokens ?? []))
+				let sorted = self?.sortByTezPool(exchangeQueryTokens: self?.exchangeQuery_tokens ?? []) ?? []
+				completion(Result.success(sorted))
 			}
+		}
+	}
+	
+	private func sortByTezPool(exchangeQueryTokens: [DipDupExchangesAndTokens]) -> [DipDupExchangesAndTokens] {
+		return exchangeQueryTokens.sorted { lhs, rhs in
+			lhs.totalExchangeXtzPool() > rhs.totalExchangeXtzPool()
 		}
 	}
 	
