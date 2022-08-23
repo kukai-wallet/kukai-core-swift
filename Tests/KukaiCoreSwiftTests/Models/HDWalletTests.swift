@@ -53,8 +53,14 @@ class HDWalletTests: XCTestCase {
 	
 	func testSigning() {
 		let messageHex = MockConstants.messageToSign.data(using: .utf8)?.toHexString() ?? "-"
-		let signedData = MockConstants.defaultHdWallet.sign(messageHex)
-		XCTAssert(signedData?.toHexString() == MockConstants.hdWallet.signedData, signedData?.toHexString() ?? "-")
+		MockConstants.defaultHdWallet.sign(messageHex) { result in
+			guard let signedData = try? result.get() else {
+				XCTFail("No signature: \(result.getFailure())")
+				return
+			}
+			
+			XCTAssert(signedData.toHexString() == MockConstants.hdWallet.signedData, signedData.toHexString())
+		}
 	}
 	
 	func testBase58Encoding() {

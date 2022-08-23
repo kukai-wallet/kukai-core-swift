@@ -19,6 +19,13 @@ public enum WalletType: String, Codable {
 	case ledger
 }
 
+/**
+ Possible error types that can occur when using the LedgerWallet
+ */
+public enum WalletError: Error {
+	case signatureError
+}
+
 
 
 // MARK: - Protocols
@@ -37,8 +44,12 @@ public protocol Wallet: Codable {
 	
 	
 	
-	/// Take in a forged operation hex string, and sign it with the private key
-	func sign(_ hex: String) -> [UInt8]?
+	/**
+	 Sign a hex string with the wallets private key
+	 - parameter hex: A hex encoded string, representing a forged operation payload.
+	 - parameter completion: A completion block to run with the resulting signature, needs to be done async in order to support usecases such as signing with an external ledger.
+	 */
+	func sign(_ hex: String, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void))
 	
 	/// Query which curve the given wallet is using
 	func privateKeyCurve() -> EllipticalCurve

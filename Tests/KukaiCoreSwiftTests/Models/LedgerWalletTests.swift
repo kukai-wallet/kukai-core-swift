@@ -41,14 +41,6 @@ class LedgerWalletTests: XCTestCase {
 		XCTAssert(wallet2?.ledgerUUID == "blah2", wallet2?.ledgerUUID ?? "")
 	}
 	
-	func testSigning() {
-		let wallet1 = LedgerWallet(address: MockConstants.hdWallet.address, publicKey: "03" + MockConstants.hdWallet.publicKey, derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah")
-		
-		let messageHex = MockConstants.messageToSign.data(using: .utf8)?.toHexString() ?? "-"
-		let signedData = wallet1?.sign(messageHex)
-		XCTAssert(signedData == nil, signedData?.toHexString() ?? "")
-	}
-	
 	func testBase58Encoding() {
 		let wallet1 = LedgerWallet(address: MockConstants.hdWallet.address, publicKey: "03" + MockConstants.hdWallet.publicKey, derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah")
 		let encoded = wallet1?.publicKeyBase58encoded()

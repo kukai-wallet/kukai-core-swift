@@ -7,7 +7,9 @@
 
 import Foundation
 import KukaiCryptoSwift
+import Combine
 import os.log
+
 
 /**
 A Tezos wallet class, used to cache infomration regarding the paired ledger device used to sign the payload.
@@ -39,6 +41,10 @@ public class LedgerWallet: Wallet {
 	/// The unique ledger UUID, that corresponds to this wallet address
 	public var ledgerUUID: String
 	
+	/// Combine bag for holding cancellables
+	private lazy var bag = Set<AnyCancellable>()
+	
+	
 	
 	/**
 	Create an instance of a LedgerWallet. Can return nil if invalid public key supplied
@@ -66,11 +72,25 @@ public class LedgerWallet: Wallet {
 	}
 	
 	/**
-	DON"T USE. This function only exists in order to satisfy a protocol constraint. You must use LedgerService in order to sign a payload
+	 Sign a hex string.
+	 If the string starts with "03" and is not 32 characters long, it will be treated as a watermarked operation and Ledger will be asked to parse + display the operation details.
+	 Else it will be treated as an unknown operation and will simply display the Blake2b hash.
+	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
 	*/
-	public func sign(_ hex: String) -> [UInt8]? {
-		os_log("Must use LedgerService to sign, can't be done in sync code", log: .kukaiCoreSwift, type: .error)
-		return nil
+	public func sign(_ hex: String, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
+		let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
+		
+		LedgerService.shared.connectTo(uuid: ledgerUUID)
+			.flatMap { _ -> AnyPublisher<String, KukaiError> in
+				return LedgerService.shared.sign(hex: hex, parse: isWatermarkedOperation)
+			}
+			.sink(onError: { error in
+				completion(Result.failure(error))
+				
+			}, onSuccess: { signature in
+				completion(Result.success(signature.bytes))
+			})
+			.store(in: &bag)
 	}
 	
 	/**

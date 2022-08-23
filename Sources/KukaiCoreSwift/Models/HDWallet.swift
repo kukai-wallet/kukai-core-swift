@@ -111,8 +111,13 @@ public class HDWallet: Wallet {
 	/**
 	 Sign a hex payload with the private key
 	 */
-	public func sign(_ hex: String) -> [UInt8]? {
-		return privateKey.sign(hex: hex)
+	public func sign(_ hex: String, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
+		guard let signature = privateKey.sign(hex: hex) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+			return
+		}
+		
+		completion(Result.success(signature))
 	}
 	
 	/**
