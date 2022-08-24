@@ -114,6 +114,11 @@ class OperationModelTests: XCTestCase {
 		XCTAssertNotNil(readResult)
 		XCTAssert(readResult?.isEqual(op) ?? false)
 		
+		let rawReadResult = DiskService.readData(fromFileName: "OperationTransaction.txt")
+		let rawReadResultString = String(data: rawReadResult ?? Data(), encoding: .utf8)
+		let containsNullParameter = rawReadResultString?.contains("\"parameters\":null")
+		XCTAssert(containsNullParameter != true)
+		
 		let _ = DiskService.delete(fileName: "OperationTransaction.txt")
 	}
 	

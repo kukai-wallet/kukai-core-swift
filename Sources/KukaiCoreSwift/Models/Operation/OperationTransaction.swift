@@ -107,7 +107,11 @@ public class OperationTransaction: Operation {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		try container.encode(amount, forKey: .amount)
 		try container.encode(destination, forKey: .destination)
-		try container.encodeIfPresent(parameters, forKey: .parameters)
+		
+		// encodeIfPresent still printing "parameters: null". Not sure if apple bug or mistake
+		if let params = parameters {
+			try container.encodeIfPresent(params, forKey: .parameters)
+		}
 		
 		try super.encode(to: encoder)
 	}
