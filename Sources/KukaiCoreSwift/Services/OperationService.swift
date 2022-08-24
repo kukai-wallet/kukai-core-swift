@@ -38,12 +38,6 @@ public class OperationService {
 	
 	
 	
-	// MARK: - Private Properties
-	
-	private let forgeQueue: DispatchQueue
-	
-	
-	
 	// MARK: - Public Properties
 	
 	/// The configuration object containing all the necessary settings to connect and communicate with the Tezos node
@@ -61,7 +55,6 @@ public class OperationService {
 	- parameter config: A configuration object containing all the necessary settings to connect and communicate with the Tezos node.
 	*/
 	public init(config: TezosNodeClientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .mainnet), networkService: NetworkService) {
-		self.forgeQueue = DispatchQueue(label: "OperationService.forge", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 		self.config = config
 		self.networkService = networkService
 	}
@@ -81,31 +74,25 @@ public class OperationService {
 	- parameter completion: Completion block either returning a String containing an OperationHash of the injected Operation, or an Error
 	*/
 	public func remoteForgeParseSignPreapplyInject(operationMetadata: OperationMetadata, operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		var forgedHash = ""
 		
-		// Forge the operations remotely
-		forgeQueue.async { [weak self] in
+		// Perform a remote forge of the oepration with the metadata
+		remoteForge(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet, completion: { [weak self] (result) in
 			
-			// Perform a remote forge of the oepration with the metadata
-			self?.remoteForge(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet, completion: { [weak self] (result) in
-				
-				// Parse remotely against a different server to verify hash is correct before continuing
-				self?.remoteParse(forgeResult: result, operationMetadata: operationMetadata, operationPayload: operationPayload) { (innerResult) in
-					switch innerResult {
-						case .success(let hash):
-							os_log(.debug, log: .kukaiCoreSwift, "Remote parse successful")
-							forgedHash = hash
-							
-						case .failure(let parseError):
-							completion(Result.failure(parseError))
-							return
-					}
-					
-					// With a successful Parse, we can continue on to Sign, Preapply (to check for errors) and if no errors, inject the operation
-					self?.signPreapplyAndInject(wallet: wallet, forgedHash: forgedHash, operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
+			// Parse remotely against a different server to verify hash is correct before continuing
+			self?.remoteParse(forgeResult: result, operationMetadata: operationMetadata, operationPayload: operationPayload) { (innerResult) in
+				switch innerResult {
+					case .success(let hash):
+						
+						// With a successful Parse, we can continue on to Sign, Preapply (to check for errors) and if no errors, inject the operation
+						os_log(.debug, log: .kukaiCoreSwift, "Remote parse successful")
+						self?.signPreapplyAndInject(wallet: wallet, forgedHash: hash, operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
+						
+					case .failure(let parseError):
+						completion(Result.failure(parseError))
+						return
 				}
-			})
-		}
+			}
+		})
 	}
 	
 	/**
