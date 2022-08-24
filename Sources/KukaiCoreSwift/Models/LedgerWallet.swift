@@ -8,6 +8,7 @@
 import Foundation
 import KukaiCryptoSwift
 import Combine
+import Sodium
 import os.log
 
 
@@ -88,7 +89,12 @@ public class LedgerWallet: Wallet {
 				completion(Result.failure(error))
 				
 			}, onSuccess: { signature in
-				completion(Result.success(signature.bytes))
+				guard let binarySignature = Sodium.shared.utils.hex2bin(signature) else {
+					completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+					return
+				}
+				
+				completion(Result.success(binarySignature))
 			})
 			.store(in: &bag)
 	}
