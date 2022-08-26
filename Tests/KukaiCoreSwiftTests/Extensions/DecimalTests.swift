@@ -33,4 +33,15 @@ class DecimalTests: XCTestCase {
 		XCTAssert(test3.rounded(scale: 7, roundingMode: .up).description == "1.4176933", test3.rounded(scale: 7, roundingMode: .up).description)
 		XCTAssert(test3.rounded(scale: 7, roundingMode: .bankers).description == "1.4176932", test3.rounded(scale: 7, roundingMode: .bankers).description)
 	}
+	
+	func testIntValue() {
+		let test1: Decimal = 1.4176932
+		XCTAssert(test1.intValue() == 1, test1.intValue().description)
+		
+		let test2: Decimal = 11936782.417693223423
+		XCTAssert(test2.intValue() == 11936782, test2.intValue().description)
+		
+		let test3: Decimal = 3.41769323453453
+		XCTAssert(test3.intValue() == 3, test3.intValue().description)
+	}
 }
