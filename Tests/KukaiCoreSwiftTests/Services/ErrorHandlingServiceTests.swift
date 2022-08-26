@@ -107,6 +107,19 @@ class ErrorHandlingServiceTests: XCTestCase {
 
 	}
 	
+	func testJsonDappResponse() {
+		let errorData = MockConstants.jsonStub(fromFilename: "rpc_error_dapp-with-string")
+		
+		guard let opResponse = try? JSONDecoder().decode(OperationResponse.self, from: errorData) else {
+			XCTFail("Couldn't parse data as [OperationResponse]")
+			return
+		}
+		
+		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse)
+		XCTAssert(result?.rpcErrorString == "A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.rpcErrorString ?? "-")
+		XCTAssert(result?.description == "Error - RPC: A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.description ?? "-")
+	}
+	
 	func testFailWithParsers() {
 		let fw1 = FailWith(string: nil, int: "0", args: nil)
 		let errorMessage1 = fw1.convertToHumanReadableMessage(parser: FailWithParserLiquidityBaking())

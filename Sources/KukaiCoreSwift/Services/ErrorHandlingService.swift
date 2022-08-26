@@ -165,7 +165,7 @@ public class ErrorHandlingService {
 		let errorWithoutProtocol = opError.id.removeLeadingProtocolFromRPCError()
 		var errorToReturn = KukaiError(errorType: .rpc, subType: nil, rpcErrorString: errorWithoutProtocol, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 		
-		if errorWithoutProtocol == "michelson_v1.runtime_error", let withError = opError.with {
+		if (errorWithoutProtocol == "michelson_v1.runtime_error" || errorWithoutProtocol == "michelson_v1.script_rejected"), let withError = opError.with {
 			
 			if let failwith = withError.int, let failwithInt = Int(failwith) {
 				// Smart contract failwith reached with an Int denoting an error code
