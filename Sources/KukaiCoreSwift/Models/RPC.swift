@@ -169,7 +169,7 @@ extension RPC where T == [OperationResponse] {
 			return nil
 		}
 		
-		return RPC<[OperationResponse]>(endpoint: "chains/main/blocks/\(metadata.branch)/helpers/preapply/operations", payload: payloadData, responseType: [OperationResponse].self)
+		return RPC<[OperationResponse]>(endpoint: "chains/main/blocks/head/helpers/preapply/operations", payload: payloadData, responseType: [OperationResponse].self)
 	}
 }
 

@@ -104,10 +104,7 @@ public class OperationService {
 	- parameter completion: Completion block either returning a String containing an OperationHash of the injected Operation, or an Error
 	*/
 	public func localForgeSignPreapplyInject(operationMetadata: OperationMetadata, operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		var operationPayloadMinus3 = operationPayload
-		operationPayloadMinus3.branch = operationMetadata.branchMinus3
-		
-		TaquitoService.shared.forge(operationPayload: operationPayloadMinus3) { [weak self] forgeResult in
+		TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgeResult in
 			switch forgeResult {
 				case .success(let forgedString):
 					self?.signPreapplyAndInject(wallet: wallet, forgedHash: forgedString, operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)

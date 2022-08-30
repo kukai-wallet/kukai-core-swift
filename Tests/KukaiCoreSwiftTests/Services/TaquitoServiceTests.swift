@@ -105,7 +105,7 @@ class TaquitoServiceTests: XCTestCase {
 	}
 	
 	func testForgeError() {
-		let errorMetaData = OperationMetadata(managerKey: nil, counter: 1, blockchainHead: BlockchainHead(protocol: "blah", chainID: "blah", hash: "blah"), blockchainHeadMinus3: BlockchainHead(protocol: "blah", chainID: "blah", hash: "blah"))
+		let errorMetaData = OperationMetadata(managerKey: nil, counter: 1, blockchainHead: BlockchainHead(protocol: "blah", chainID: "blah", hash: "blah")/*, blockchainHeadMinus3: BlockchainHead(protocol: "blah", chainID: "blah", hash: "blah")*/)
 		let payload = OperationFactory.operationPayload(fromMetadata: errorMetaData, andOperations: [], withWallet: MockConstants.defaultLinearWallet)
 		
 		let expectation = XCTestExpectation(description: "Forge payload Error")
