@@ -179,7 +179,7 @@ public class OperationService {
 		
 		// Add the signature and protocol to the payload
 		var signedPayload = operationPayload
-		signedPayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: signatureCurve)
+		signedPayload.addSignature(signature, signingCurve: signatureCurve)
 		signedPayload.addProtcol(fromMetadata: operationMetadata)
 		
 		
