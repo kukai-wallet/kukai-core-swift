@@ -240,7 +240,7 @@ public class TezosNodeClient {
 		// Get blockchain head
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.blockchainHead(), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.blockchainHeadMinus3(), withBaseURL: url) { (result) in
 				switch result {
 					case .success(let value):
 						blockchainHead = value
