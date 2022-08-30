@@ -178,9 +178,9 @@ public class OperationService {
 	public func preapplyAndInject(forgedOperation: String, signature: [UInt8], signatureCurve: EllipticalCurve, operationPayload: OperationPayload, operationMetadata: OperationMetadata, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		// Add the signature and protocol to the payload
-		//var signedPayload = operationPayload
-		//signedPayload.addSignature(signature, signingCurve: signatureCurve)
-		//signedPayload.addProtcol(fromMetadata: operationMetadata)
+		var signedPayload = operationPayload
+		signedPayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: signatureCurve)
+		signedPayload.addProtcol(fromMetadata: operationMetadata)
 		
 		
 		// Perform the preapply to check for errors, otherwise attempt to inject the operation onto the blockchain
