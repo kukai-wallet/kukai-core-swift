@@ -153,9 +153,7 @@ public class TezosNodeClient {
 	- parameter completion: A completion closure that will either return the opertionID of an injected operation, or an error.
 	*/
 	public func send(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		
 		getOperationMetadata(forWallet: wallet) { [weak self] (result) in
-			
 			switch result {
 				case .success(let metadata):
 					let operationPayload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: wallet)
@@ -196,30 +194,27 @@ public class TezosNodeClient {
 	*/
 	public func getOperationMetadata(forWallet wallet: Wallet, completion: @escaping ((Result<OperationMetadata, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
+		let url = self.config.primaryNodeURL
 		
 		var counter = 0
 		var managerKey: String? = nil
 		var blockchainHead = BlockchainHead(protocol: "", chainID: "", hash: "")
+		var blockchainHeadMinus3 = BlockchainHead(protocol: "", chainID: "", hash: "")
 		var error: KukaiError? = nil
 		
 		
 		// Get manager key
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			if let url = self?.config.primaryNodeURL {
-				self?.networkService.send(rpc: RPC.managerKey(forAddress: wallet.address), withBaseURL: url) { (result) in
-					switch result {
-						case .success(let value):
-							managerKey = value
-						
-						case .failure(let err):
-							error = err
-					}
+			self?.networkService.send(rpc: RPC.managerKey(forAddress: wallet.address), withBaseURL: url) { (result) in
+				switch result {
+					case .success(let value):
+						managerKey = value
 					
-					dispatchGroup.leave()
+					case .failure(let err):
+						error = err
 				}
-			} else {
-				error = KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
+				
 				dispatchGroup.leave()
 			}
 		}
@@ -228,20 +223,15 @@ public class TezosNodeClient {
 		// Get counter
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			if let url = self?.config.primaryNodeURL {
-				self?.networkService.send(rpc: RPC.counter(forAddress: wallet.address), withBaseURL: url) { (result) in
-					switch result {
-						case .success(let value):
-							counter = Int(value) ?? 0
-						
-						case .failure(let err):
-							error = err
-					}
+			self?.networkService.send(rpc: RPC.counter(forAddress: wallet.address), withBaseURL: url) { (result) in
+				switch result {
+					case .success(let value):
+						counter = Int(value) ?? 0
 					
-					dispatchGroup.leave()
+					case .failure(let err):
+						error = err
 				}
-			} else {
-				error = KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
+				
 				dispatchGroup.leave()
 			}
 		}
@@ -250,20 +240,32 @@ public class TezosNodeClient {
 		// Get blockchain head
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			if let url = self?.config.primaryNodeURL {
-				self?.networkService.send(rpc: RPC.blockchainHeadMinus3(), withBaseURL: url) { (result) in
-					switch result {
-						case .success(let value):
-							blockchainHead = value
-						
-						case .failure(let err):
-							error = err
-					}
+			self?.networkService.send(rpc: RPC.blockchainHead(), withBaseURL: url) { (result) in
+				switch result {
+					case .success(let value):
+						blockchainHead = value
 					
-					dispatchGroup.leave()
+					case .failure(let err):
+						error = err
 				}
-			} else {
-				error = KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL)
+				
+				dispatchGroup.leave()
+			}
+		}
+		
+		
+		// Get blockchain head minus 3
+		dispatchGroup.enter()
+		metadataQueue.async { [weak self] in
+			self?.networkService.send(rpc: RPC.blockchainHeadMinus3(), withBaseURL: url) { (result) in
+				switch result {
+					case .success(let value):
+						blockchainHeadMinus3 = value
+						
+					case .failure(let err):
+						error = err
+				}
+				
 				dispatchGroup.leave()
 			}
 		}
@@ -275,7 +277,7 @@ public class TezosNodeClient {
 				completion(Result.failure(err))
 				
 			} else {
-				completion(Result.success(OperationMetadata(managerKey: managerKey, counter: counter, blockchainHead: blockchainHead)))
+				completion(Result.success(OperationMetadata(managerKey: managerKey, counter: counter, blockchainHead: blockchainHead, blockchainHeadMinus3: blockchainHeadMinus3)))
 			}
 		}
 	}

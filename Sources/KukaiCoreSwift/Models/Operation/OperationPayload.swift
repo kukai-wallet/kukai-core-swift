@@ -14,7 +14,7 @@ import os.log
 public struct OperationPayload: Codable, Equatable {
 	
 	/// The bracnh to use when sending
-	public let branch: String
+	public var branch: String
 	
 	/// An array of `Operation`'s to be sent together in 1 request.
 	public var contents: [Operation]

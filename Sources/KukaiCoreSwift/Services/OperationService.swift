@@ -104,7 +104,10 @@ public class OperationService {
 	- parameter completion: Completion block either returning a String containing an OperationHash of the injected Operation, or an Error
 	*/
 	public func localForgeSignPreapplyInject(operationMetadata: OperationMetadata, operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgeResult in
+		var operationPayloadMinus3 = operationPayload
+		operationPayloadMinus3.branch = operationMetadata.branchMinus3
+		
+		TaquitoService.shared.forge(operationPayload: operationPayloadMinus3) { [weak self] forgeResult in
 			switch forgeResult {
 				case .success(let forgedString):
 					self?.signPreapplyAndInject(wallet: wallet, forgedHash: forgedString, operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
@@ -175,13 +178,13 @@ public class OperationService {
 	public func preapplyAndInject(forgedOperation: String, signature: [UInt8], signatureCurve: EllipticalCurve, operationPayload: OperationPayload, operationMetadata: OperationMetadata, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		// Add the signature and protocol to the payload
-		var signedPayload = operationPayload
-		signedPayload.addSignature(signature, signingCurve: signatureCurve)
-		signedPayload.addProtcol(fromMetadata: operationMetadata)
+		//var signedPayload = operationPayload
+		//signedPayload.addSignature(signature, signingCurve: signatureCurve)
+		//signedPayload.addProtcol(fromMetadata: operationMetadata)
 		
 		
 		// Perform the preapply to check for errors, otherwise attempt to inject the operation onto the blockchain
-		self.preapply(operationMetadata: operationMetadata, operationPayload: signedPayload) { [weak self] (preapplyResult) in
+		self.preapply(operationMetadata: operationMetadata, operationPayload: operationPayload) { [weak self] (preapplyResult) in
 			self?.inject(signedBytes: forgedOperation+signature.toHexString(), handlePreapplyResult: preapplyResult) { (injectResult) in
 				completion(injectResult)
 			}
