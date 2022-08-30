@@ -160,4 +160,9 @@ class MockURLProtocol: URLProtocol {
 		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
+	
+	static func triggerCounterInFutureError(forBlock: String) {
+		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/\(forBlock)/helpers/preapply/operations")
+		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_counter-in-future"), response: MockConstants.http500)
+	}
 }

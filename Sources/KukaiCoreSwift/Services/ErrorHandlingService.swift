@@ -227,8 +227,19 @@ public class ErrorHandlingService {
 		}
 		// Check if we didn't get an error object, but instead got a non http 200 (e.g. 404)
 		else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+			
+			// HTTP 500's can also be sent by the RPC for specific RPC errors, such as counter in the future. So first check if we can parse the response to an RPC error
+			// If not, then return a generic HTTP != 200 error
 			var errorToReturn = KukaiError.networkError(statusCode: httpResponse.statusCode)
-			errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: httpResponse.statusCode)
+			if let d = data,
+				let errorArray = try? JSONDecoder().decode([OperationResponseInternalResultError].self, from: d),
+				let lastError = errorArray.last,
+				let errorString = lastError.id.removeLeadingProtocolFromRPCError()
+			{
+				errorToReturn = KukaiError.rpcError(rpcErrorString: errorString, andFailWith: lastError.with)
+			} else {
+				errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: httpResponse.statusCode)
+			}
 			
 			if andLog { logAndCallback(withKukaiError: errorToReturn) }
 			return errorToReturn

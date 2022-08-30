@@ -112,6 +112,9 @@ public struct OperationResponseInternalOperation: Codable {
 public struct OperationResponseInternalResultError: Codable, Equatable {
 	public let kind: String
 	public let id: String
+	public let contract: String?
+	public let expected: String?
+	public let found: String?
 	public let location: Int?
 	public let with: FailWith?
 }
@@ -149,7 +152,7 @@ public struct FailWith: Codable, Equatable {
 		// "args" is capable of being another complex Michelson type JSON object which would actually require "[String: Any]", but this opens up so many issues
 		// Currently i've only ever seen something not compliant with `[String: String]`, when it was supplying additional data. The error message was still String: String
 		// e.g. [string: "not enough balance", [args: ["147", "14"]]]
-		// In this case, telling the user that they have insufficnet token balance, is sufficient until a better solution can be found
+		// In this case, telling the user that they have insufficnet token balance without the amounts, is sufficient until a better solution can be found
 		if container.allKeys.contains(.args) {
 			var argsArray = try? container.nestedUnkeyedContainer(forKey: .args)
 			var tempArgs: [[String: String]] = []

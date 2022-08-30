@@ -88,6 +88,25 @@ class TezosNodeClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 3)
 	}
 	
+	func testSendOperationsError() {
+		MockURLProtocol.triggerCounterInFutureError(forBlock: "BMLWVn1nEWeEzf6pxn3VYx7YcQ3zPay7HQtQ3rBMxuc7bXCG8BB")
+		
+		let expectation = XCTestExpectation(description: "tezos node client")
+		MockConstants.shared.tezosNodeClient.send(operations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet) { result in
+			switch result {
+				case .success(_):
+					XCTFail("Should have failed, got opHash instead")
+					
+				case .failure(let error):
+					XCTAssert(error.description == "Error - RPC: contract.counter_in_the_future", error.description)
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 3)
+	}
+	
 	func testSendPayload() {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.send(operationPayload: MockConstants.sendOperationPayload, operationMetadata: MockConstants.operationMetadata, withWallet: MockConstants.defaultHdWallet) { result in
