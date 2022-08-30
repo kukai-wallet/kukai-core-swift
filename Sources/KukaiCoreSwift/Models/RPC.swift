@@ -161,7 +161,7 @@ extension RPC where T == [OperationResponse] {
 	/// Creates an RPC to preapply an operation. This `OperationPayload` must have had its signature and protocol set
 	public static func preapply(operationPayload: OperationPayload, withMetadata metadata: OperationMetadata) -> RPC<[OperationResponse]>? {
 		if operationPayload.signature == nil || operationPayload.protocol == nil {
-			os_log(.error, log: .kukaiCoreSwift, "RPC preapply was passed and operationPayload without a signature and/or protocol")
+			os_log(.error, log: .kukaiCoreSwift, "RPC preapply was passed an operationPayload without a signature and/or protocol")
 			return nil
 		}
 		

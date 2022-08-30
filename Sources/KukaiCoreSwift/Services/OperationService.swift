@@ -184,7 +184,7 @@ public class OperationService {
 		
 		
 		// Perform the preapply to check for errors, otherwise attempt to inject the operation onto the blockchain
-		self.preapply(operationMetadata: operationMetadata, operationPayload: operationPayload) { [weak self] (preapplyResult) in
+		self.preapply(operationMetadata: operationMetadata, operationPayload: signedPayload) { [weak self] (preapplyResult) in
 			self?.inject(signedBytes: forgedOperation+signature.toHexString(), handlePreapplyResult: preapplyResult) { (injectResult) in
 				completion(injectResult)
 			}
