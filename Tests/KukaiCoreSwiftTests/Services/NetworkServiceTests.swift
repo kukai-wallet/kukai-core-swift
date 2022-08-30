@@ -40,7 +40,7 @@ class NetworkServiceTests: XCTestCase {
 	func testPost() {
 		let expectation = XCTestExpectation(description: "network service POST")
 		
-		if let rpc = RPC.forge(operationPayload: MockConstants.sendOperationPayload, withMetadata: MockConstants.operationMetadata) {
+		if let rpc = RPC.forge(operationPayload: MockConstants.sendOperationPayload) {
 			MockConstants.shared.networkService.send(rpc: rpc, withBaseURL: MockConstants.shared.config.primaryNodeURL) { result in
 				
 				switch result {

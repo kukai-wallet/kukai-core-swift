@@ -87,12 +87,12 @@ extension RPC where T == String {
 	}
 	
 	/// Creates an RPC to remotely forge an operation
-	public static func forge(operationPayload: OperationPayload, withMetadata metadata: OperationMetadata) -> RPC<String>? {
+	public static func forge(operationPayload: OperationPayload) -> RPC<String>? {
 		guard let payloadData = RPC.encodableToData(encodable: operationPayload) else {
 			return nil
 		}
 		
-		return RPC<String>(endpoint: "chains/main/blocks/\(metadata.branch)/helpers/forge/operations", payload: payloadData, responseType: String.self)
+		return RPC<String>(endpoint: "chains/main/blocks/head/helpers/forge/operations", payload: payloadData, responseType: String.self)
 	}
 	
 	/// Creates an RPC to inject an operation
@@ -152,14 +152,14 @@ extension RPC where T == [OperationPayload] {
 			return nil
 		}
 		
-		return RPC<[OperationPayload]>(endpoint: "chains/main/blocks/\(metadata.branch)/helpers/parse/operations", payload: payloadData, responseType: [OperationPayload].self)
+		return RPC<[OperationPayload]>(endpoint: "chains/main/blocks/head/helpers/parse/operations", payload: payloadData, responseType: [OperationPayload].self)
 	}
 }
 
 extension RPC where T == [OperationResponse] {
 	
 	/// Creates an RPC to preapply an operation. This `OperationPayload` must have had its signature and protocol set
-	public static func preapply(operationPayload: OperationPayload, withMetadata metadata: OperationMetadata) -> RPC<[OperationResponse]>? {
+	public static func preapply(operationPayload: OperationPayload) -> RPC<[OperationResponse]>? {
 		if operationPayload.signature == nil || operationPayload.protocol == nil {
 			os_log(.error, log: .kukaiCoreSwift, "RPC preapply was passed an operationPayload without a signature and/or protocol")
 			return nil

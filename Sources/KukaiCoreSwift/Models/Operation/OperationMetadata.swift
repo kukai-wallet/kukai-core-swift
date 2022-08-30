@@ -23,9 +23,6 @@ public struct OperationMetadata: Codable {
 	/// The current branch used by the head block, used for estiamting and running preapply, to ensure the latest state information is available
 	public let branch: String
 	
-	/// The branch used 3 blocks ago, used for injecting to avoid orphan block issues and reduce the risk of reorgs
-	//public let branchMinus3: String
-	
 	/// The current Tezos network protocol to use for `Operation`'s
 	public let `protocol`: String
 	
@@ -35,12 +32,11 @@ public struct OperationMetadata: Codable {
 	- parameter counter: The current counter used by this account on the network. All future `Operation`'s need to be 1 higher
 	- parameter blockchainHead: Decoded response of the blockchainHead, containing only the pieces we need
 	*/
-	public init(managerKey: String?, counter: Int, blockchainHead: BlockchainHead/*, blockchainHeadMinus3: BlockchainHead*/) {
+	public init(managerKey: String?, counter: Int, blockchainHead: BlockchainHead) {
 		self.managerKey = managerKey
 		self.counter = counter
 		self.chainID = blockchainHead.chainID
 		self.branch = blockchainHead.hash
-		//self.branchMinus3 = blockchainHeadMinus3.hash
 		self.protocol = blockchainHead.protocol
 	}
 }

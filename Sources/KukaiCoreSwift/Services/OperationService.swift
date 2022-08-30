@@ -76,7 +76,7 @@ public class OperationService {
 	public func remoteForgeParseSignPreapplyInject(operationMetadata: OperationMetadata, operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		// Perform a remote forge of the oepration with the metadata
-		remoteForge(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet, completion: { [weak self] (result) in
+		remoteForge(operationPayload: operationPayload, wallet: wallet, completion: { [weak self] (result) in
 			
 			// Parse remotely against a different server to verify hash is correct before continuing
 			self?.remoteParse(forgeResult: result, operationMetadata: operationMetadata, operationPayload: operationPayload) { (innerResult) in
@@ -181,7 +181,7 @@ public class OperationService {
 		
 		
 		// Perform the preapply to check for errors, otherwise attempt to inject the operation onto the blockchain
-		self.preapply(operationMetadata: operationMetadata, operationPayload: signedPayload) { [weak self] (preapplyResult) in
+		self.preapply(operationPayload: signedPayload) { [weak self] (preapplyResult) in
 			self?.inject(signedBytes: forgedOperation+signature.toHexString(), handlePreapplyResult: preapplyResult) { (injectResult) in
 				completion(injectResult)
 			}
@@ -190,14 +190,13 @@ public class OperationService {
 	
 	/**
 	Forge an `OperationPayload` remotely, so it can be sent to the RPC.
-	- parameter operationMetadata: fetched from `getOperationMetadata(...)`.
 	- parameter operationPayload: created from `OperationFactory.operationPayload()`.
 	- parameter wallet: The `Wallet` object that will sign the operations.
 	- parameter completion: callback with a forged hash or an error.
 	*/
-	public func remoteForge(operationMetadata: OperationMetadata, operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
+	public func remoteForge(operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
-		guard let rpc = RPC.forge(operationPayload: operationPayload, withMetadata: operationMetadata) else {
+		guard let rpc = RPC.forge(operationPayload: operationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create forge RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.unableToSetupForge)))
 			return
@@ -272,9 +271,9 @@ public class OperationService {
 	- parameter operationPayload: An `OperationPayload`that has had a signature and a protcol added to it.
 	- parameter completion: Callback which just returns success or failure with an error.
 	*/
-	public func preapply(operationMetadata: OperationMetadata, operationPayload: OperationPayload, completion: @escaping ((Result<[OperationResponse], KukaiError>) -> Void)) {
+	public func preapply(operationPayload: OperationPayload, completion: @escaping ((Result<[OperationResponse], KukaiError>) -> Void)) {
 		
-		guard let rpc = RPC.preapply(operationPayload: operationPayload, withMetadata: operationMetadata) else {
+		guard let rpc = RPC.preapply(operationPayload: operationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create preapply RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.unableToSetupPreapply)))
 			return

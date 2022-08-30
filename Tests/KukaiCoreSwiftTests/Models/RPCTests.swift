@@ -26,8 +26,8 @@ class RPCTests: XCTestCase {
 		XCTAssert(rpcBalance.payload == nil)
 		XCTAssert(rpcBalance.responseType == String.self)
 		
-		let rpcForge = RPC.forge(operationPayload: MockConstants.sendOperationPayload, withMetadata: MockConstants.operationMetadata)
-		XCTAssert(rpcForge?.endpoint == "chains/main/blocks/BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK/helpers/forge/operations", rpcForge?.endpoint ?? "-")
+		let rpcForge = RPC.forge(operationPayload: MockConstants.sendOperationPayload)
+		XCTAssert(rpcForge?.endpoint == "chains/main/blocks/head/helpers/forge/operations", rpcForge?.endpoint ?? "-")
 		XCTAssert(rpcForge?.isPost == true)
 		XCTAssert(rpcForge?.responseType == String.self)
 		

@@ -99,7 +99,7 @@ public class FeeEstimatorService {
 				}
 				
 			case .remote:
-				operationService.remoteForge(operationMetadata: operationMetadata, operationPayload: operationPayload, wallet: wallet) { [weak self] forgedResult in
+				operationService.remoteForge(operationPayload: operationPayload, wallet: wallet) { [weak self] forgedResult in
 					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, originalOps: opsCopy, completion: completion)
 				}
 		}

@@ -106,10 +106,9 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head~3"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
-			baseURL.appendingPathComponent("chains/main/blocks/BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK/helpers/forge/operations"): (MockConstants.jsonStub(fromFilename: "forge"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations"): (MockConstants.jsonStub(fromFilename: "forge"), MockConstants.http200),
 			// Parse is handled inside MockURLProtocol due to its special requirements
-			baseURL.appendingPathComponent("chains/main/blocks/BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
-			baseURL.appendingPathComponent("chains/main/blocks/BMLWVn1nEWeEzf6pxn3VYx7YcQ3zPay7HQtQ3rBMxuc7bXCG8BB/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
 			baseURL.appendingPathComponent("injection/operation"): (MockConstants.jsonStub(fromFilename: "inject"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/balance"): (MockConstants.jsonStub(fromFilename: "balance"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/delegate"): (MockConstants.jsonStub(fromFilename: "delegate"), MockConstants.http200),
@@ -291,8 +290,8 @@ public struct MockConstants {
 	
 	public static let blockchainHead = BlockchainHead(protocol: "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i", chainID: "NetXxkAx4woPLyu", hash: "BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK")
 	public static let blockchainHeadMinus3 = BlockchainHead(protocol: "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i", chainID: "NetXxkAx4woPLyu", hash: "BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mKMinus3")
-	public static let operationMetadata = OperationMetadata(managerKey: "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E", counter: 143230, blockchainHead: MockConstants.blockchainHead/*, blockchainHeadMinus3: MockConstants.blockchainHeadMinus3*/)
-	public static let operationMetadataNoManager = OperationMetadata(managerKey: nil, counter: 143230, blockchainHead: MockConstants.blockchainHead/*, blockchainHeadMinus3: MockConstants.blockchainHeadMinus3*/)
+	public static let operationMetadata = OperationMetadata(managerKey: "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E", counter: 143230, blockchainHead: MockConstants.blockchainHead)
+	public static let operationMetadataNoManager = OperationMetadata(managerKey: nil, counter: 143230, blockchainHead: MockConstants.blockchainHead)
 	public static let networkConstants = NetworkConstants(minimal_block_delay: "30", hard_gas_limit_per_operation: "10400000", hard_gas_limit_per_block: "10400000", origination_size: 257, cost_per_byte: "250", hard_storage_limit_per_operation: "60000")
 	public static var sendOperations = OperationFactory.sendOperation(MockConstants.xtz_1, of: MockConstants.tokenXTZ, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 	public static var sendOperationWithReveal = [OperationReveal(wallet: MockConstants.defaultHdWallet), OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)]

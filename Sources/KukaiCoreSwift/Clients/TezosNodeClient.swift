@@ -199,7 +199,6 @@ public class TezosNodeClient {
 		var counter = 0
 		var managerKey: String? = nil
 		var blockchainHead = BlockchainHead(protocol: "", chainID: "", hash: "")
-		//var blockchainHeadMinus3 = BlockchainHead(protocol: "", chainID: "", hash: "")
 		var error: KukaiError? = nil
 		
 		
@@ -253,31 +252,13 @@ public class TezosNodeClient {
 			}
 		}
 		
-		/*
-		// Get blockchain head minus 3
-		dispatchGroup.enter()
-		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.blockchainHeadMinus3(), withBaseURL: url) { (result) in
-				switch result {
-					case .success(let value):
-						blockchainHeadMinus3 = value
-						
-					case .failure(let err):
-						error = err
-				}
-				
-				dispatchGroup.leave()
-			}
-		}
-		*/
-		
 		// When all requests finished, return on main thread
 		dispatchGroup.notify(queue: .main) {
 			if let err = error {
 				completion(Result.failure(err))
 				
 			} else {
-				completion(Result.success(OperationMetadata(managerKey: managerKey, counter: counter, blockchainHead: blockchainHead/*, blockchainHeadMinus3: blockchainHeadMinus3*/)))
+				completion(Result.success(OperationMetadata(managerKey: managerKey, counter: counter, blockchainHead: blockchainHead)))
 			}
 		}
 	}

@@ -17,8 +17,8 @@ struct MockPostUrlKey: Hashable {
 class MockURLProtocol: URLProtocol {
 	
 	private static var lastForgeRequest: Data? = nil
-	private let forgeURL = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK/helpers/forge/operations")
-	private let parseURL = MockConstants.shared.config.parseNodeURL!.appendingPathComponent("chains/main/blocks/BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK/helpers/parse/operations")
+	private let forgeURL = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations")
+	private let parseURL = MockConstants.shared.config.parseNodeURL!.appendingPathComponent("chains/main/blocks/head/helpers/parse/operations")
 	
 	
 	/// Dictionary maps URLs to tuples of data, and response
@@ -161,8 +161,8 @@ class MockURLProtocol: URLProtocol {
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
 	
-	static func triggerCounterInFutureError(forBlock: String) {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/\(forBlock)/helpers/preapply/operations")
+	static func triggerCounterInFutureError() {
+		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_counter-in-future"), response: MockConstants.http500)
 	}
 }
