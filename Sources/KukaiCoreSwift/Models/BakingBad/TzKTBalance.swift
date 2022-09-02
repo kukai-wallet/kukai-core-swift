@@ -31,7 +31,7 @@ public struct TzKTBalance: Codable {
 public struct TzKTBalanceToken: Codable {
 	
 	/// Details of the contract (e.g. address)
-	public let contract: TzKTBalanceContract
+	public let contract: TzKTAddress
 	
 	/// The FA2 token ID of the token
 	public let tokenId: String
@@ -57,16 +57,6 @@ public struct TzKTBalanceToken: Codable {
 			return ((metadata?.symbol ?? metadata?.name) ?? "")
 		}
 	}
-}
-
-/// Details about a given contract
-public struct TzKTBalanceContract: Codable {
-	
-	/// Contract addresses may have an alias (human readbale) name, to denote a person or service
-	public let alias: String?
-	
-	/// The KT1 address of the contract
-	public let address: String
 }
 
 /// Metadata object for the token

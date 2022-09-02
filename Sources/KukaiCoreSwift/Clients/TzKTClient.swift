@@ -111,6 +111,118 @@ public class TzKTClient {
 	
 	
 	
+	// MARK: Search
+	
+	/**
+	 Call https://api.tzkt.io/v1/suggest/accounts/ appending the supplied string, in an attempt to search for an account with a known alias
+	 */
+	public func suggestAccount(forString: String, completion: @escaping ((Result<TzKTAddress?, KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/suggest/accounts/\(forString)")
+		url.appendQueryItem(name: "limit", value: 1)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTAddress].self) { result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
+			}
+			
+			for obj in res {
+				
+				// TzKT may suggest something similar, we are only looking for exact matches
+				if obj.alias == forString {
+					completion(Result.success(obj))
+					return
+				}
+			}
+			
+			// Only return error for a network failure, its likely this API will return no results
+			completion(Result.success(nil))
+		}
+	}
+	
+	
+	// MARK: Baking and Rewards
+	
+	/**
+	 Call https://api.baking-bad.org/v2/bakers/ for a list of public bakers if on mainnet, else search for all accounts self delegating on testnet
+	 */
+	public func bakers(completion: @escaping ((Result<[TzKTBaker], KukaiError>) -> Void)) {
+		
+		// TzKT still relies on the baking bad API to deliver the public baker info on mainnet
+		if config.networkType == .mainnet, let url = URL(string: "https://api.baking-bad.org/v2/bakers/") {
+			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBaker].self) { result in
+				guard let res = try? result.get() else {
+					completion(Result.failure(result.getFailure()))
+					return
+				}
+				
+				completion(Result.success(res))
+			}
+			
+		} else {
+			let url = config.tzktURL
+			url.appendPathComponent("v1/delegates")
+			url.appendQueryItem(name: "select.values", value: "address,balance,stakingBalance")
+			url.appendQueryItem(name: "active", value: "true")
+			url.appendQueryItem(name: "sort.desc", value: "stakingBalance")
+			url.appendQueryItem(name: "limit", value: "10")
+			
+			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: Data.self) { result in
+				guard let res = try? result.get() else {
+					completion(Result.failure(result.getFailure()))
+					return
+				}
+				
+				if let json = try? JSONSerialization.jsonObject(with: res) as? [[Any]] {
+					var tempArray: [TzKTBaker] = []
+					for j in json {
+						if let baker = TzKTBaker.fromTestnetArray(j) {
+							tempArray.append(baker)
+						}
+					}
+					
+					completion(Result.success(tempArray))
+					
+				} else {
+					completion(Result.failure(KukaiError.unknown(withString: "Unable to parse testnet baker array")))
+				}
+			}
+		}
+	}
+	
+	public func bakerConfig(forAddress: String) {
+		// https://api.baking-bad.org/v2/bakers/<address>?configs=true
+	}
+	
+	public func delegatorRewards(forAddress: String) {
+		// https://staging.api.mainnet.tzkt.io/v1/rewards/delegators/<address>?limit=10
+	}
+	
+	public func getLastReward(forAddress: String, bakerAddress: String, bakerPayoutAddress: String?) {
+		// https://api.tzkt.io/v1/accounts/<address>/operations?limit=5&sender.in=<bakerAddress>,<bakerPayoutAddress>
+	}
+	
+	public func estimateLastReward() {
+		
+	}
+	
+	public func estimateNextReward() {
+		
+	}
+	
+	
+	
+	// MARK: Network
+	
+	public func head() {
+		// https://api.tzkt.io/v1/head
+	}
+	
+	public func cycles(limit: Int = 10) {
+		// https://staging.api.mainnet.tzkt.io/v1/cycles?limit=10
+	}
+	
 	
 	
 	// MARK: - Block checker
