@@ -16,6 +16,7 @@ class CreateAndSendOpViewController: UIViewController {
 	@IBOutlet weak var opHashLabel: UILabel!
 	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	
+	/*
 	override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -108,4 +109,5 @@ class CreateAndSendOpViewController: UIViewController {
 			}
 		}
 	}
+	*/
 }

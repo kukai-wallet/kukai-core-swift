@@ -11,17 +11,17 @@ public struct TzKTCycle: Codable {
 	
 	private static let dateFormat = DateFormatter(withFormat: "yyyy-MM-dd'T'HH:mm:ssZ")
 	
-	let index: Int
-	let startTime: String
-	let endTime: String
+	public let index: Int
+	public let startTime: String
+	public let endTime: String
 	
-	var stateDate: Date? {
+	public var stateDate: Date? {
 		get {
 			return TzKTCycle.dateFormat.date(from: startTime)
 		}
 	}
 	
-	var endDate: Date? {
+	public var endDate: Date? {
 		get {
 			return TzKTCycle.dateFormat.date(from: endTime)
 		}

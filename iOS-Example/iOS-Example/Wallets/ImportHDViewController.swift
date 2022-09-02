@@ -15,6 +15,7 @@ class ImportHDViewController: UIViewController {
 	@IBOutlet weak var textfield: UITextField!
 	@IBOutlet weak var importedAddressLabel: UILabel!
 	
+	/*
 	override func viewDidLoad() {
         super.viewDidLoad()
 		
@@ -40,4 +41,5 @@ class ImportHDViewController: UIViewController {
 			self.present(alert, animated: true, completion: nil)
 		}
 	}
+	*/
 }

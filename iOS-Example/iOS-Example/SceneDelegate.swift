@@ -63,6 +63,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func experiment() {
 		
+		print("Processing ...")
+		
+		ClientsAndData.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs", baker: TzKTAddress(alias: "Bake Nug", address: "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")) { result in
+			print("Result: \(result)")
+			
+			switch result {
+				case .success(let obj):
+					print("Success: \(obj)")
+					
+				case .failure(let error):
+					print("Error: \(error)")
+			}
+		}
 	}
 }
 

@@ -15,9 +15,11 @@ class NewWalletViewController: UIViewController {
 	@IBOutlet weak var derivationPathLabel: UILabel!
 	@IBOutlet weak var mnemonicLabel: UILabel!
 	
+	/*
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+	 
 	@IBAction func createButtonTapped(_ sender: Any) {
 		
 		// We can create HD Wallets or linear wallets in a single line of code, creating a new Mnemonic and using the default derivation path (for HD)
@@ -43,4 +45,5 @@ class NewWalletViewController: UIViewController {
 		let saveResult = cacheService.cache(wallet: w)
 		print("Wallet saved to encrypted file: \(saveResult)")
 	}
+	*/
 }

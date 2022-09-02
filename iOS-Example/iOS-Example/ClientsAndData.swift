@@ -31,20 +31,20 @@ public class ClientsAndData {
 	private init() {
 		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .mainnet)
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
+		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
+		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient, dipDupClient: dipDupClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		torusAuthService = TorusAuthService(networkService: tezosNodeClient.networkService, verifiers: [:])
-		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 	}
 	
 	public func updateNetwork(network: TezosNodeClientConfig.NetworkType) {
 		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: network)
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
+		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
+		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient, dipDupClient: dipDupClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		torusAuthService = TorusAuthService(networkService: tezosNodeClient.networkService, verifiers: [:])
-		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 	}
 }

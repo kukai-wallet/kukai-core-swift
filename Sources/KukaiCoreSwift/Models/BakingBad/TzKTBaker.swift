@@ -29,24 +29,24 @@ public enum TzKTBakerTiming: String, Codable {
 
 public struct TzKTBaker: Codable {
 	
-	let address: String
-	let name: String?
-	let logo: String?
-	let balance: Decimal
-	let stakingBalance: Decimal
-	let stakingCapacity: Decimal
-	let maxStakingBalance: Decimal
-	let freeSpace: Decimal
-	let fee: Double
-	let minDelegation: Decimal
-	let payoutDelay: Int
-	let payoutPeriod: Int
-	let openForDelegation: Bool
-	let estimatedRoi: Decimal
-	let serviceHealth: TzKTBakerHealth
-	let payoutTiming: TzKTBakerTiming
-	let payoutAccuracy: TzKTBakerAccuracy
-	let config: TzKTBakerConfig?
+	public let address: String
+	public let name: String?
+	public let logo: String?
+	public let balance: Decimal
+	public let stakingBalance: Decimal
+	public let stakingCapacity: Decimal
+	public let maxStakingBalance: Decimal
+	public let freeSpace: Decimal
+	public let fee: Double
+	public let minDelegation: Decimal
+	public let payoutDelay: Int
+	public let payoutPeriod: Int
+	public let openForDelegation: Bool
+	public let estimatedRoi: Decimal
+	public let serviceHealth: TzKTBakerHealth
+	public let payoutTiming: TzKTBakerTiming
+	public let payoutAccuracy: TzKTBakerAccuracy
+	public let config: TzKTBakerConfig?
 	
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
 		guard data.count == 3, let address = data[0] as? String, let balance = data[1] as? Decimal, let stakingBalance = data[2] as? Decimal else {
@@ -59,10 +59,10 @@ public struct TzKTBaker: Codable {
 
 public struct TzKTBakerConfig: Codable {
 
-	let address: String
-	let fee: [TzKTBakerConfigDoubleValue]
-	let minDelegation: [TzKTBakerConfigDoubleValue]
-	let payoutDelay: [TzKTBakerConfigIntValue]
+	public let address: String
+	public let fee: [TzKTBakerConfigDoubleValue]
+	public let minDelegation: [TzKTBakerConfigDoubleValue]
+	public let payoutDelay: [TzKTBakerConfigIntValue]
 	
 	public func latesetFee() -> Double {
 		return fee.first?.value ?? 0
@@ -94,11 +94,11 @@ public struct TzKTBakerConfig: Codable {
 }
 
 public struct TzKTBakerConfigDoubleValue: Codable {
-	let cycle: Int
-	let value: Double
+	public let cycle: Int
+	public let value: Double
 }
 
 public struct TzKTBakerConfigIntValue: Codable {
-	let cycle: Int
-	let value: Int
+	public let cycle: Int
+	public let value: Int
 }

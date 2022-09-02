@@ -14,6 +14,7 @@ class ImportNonHDViewController: UIViewController {
 	@IBOutlet weak var textview: UITextView!
 	@IBOutlet weak var importedAddressLabel: UILabel!
 	
+	/*
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -37,4 +38,5 @@ class ImportNonHDViewController: UIViewController {
 			self.present(alert, animated: true, completion: nil)
 		}
 	}
+	*/
 }
