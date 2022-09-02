@@ -114,7 +114,7 @@ public class TzKTClient {
 	// MARK: Search
 	
 	/**
-	 Call https://api.tzkt.io/v1/suggest/accounts/ appending the supplied string, in an attempt to search for an account with a known alias
+	 Call https://api.tzkt.io/v1/suggest/accounts/... appending the supplied string, in an attempt to search for an account with a known alias
 	 */
 	public func suggestAccount(forString: String, completion: @escaping ((Result<TzKTAddress?, KukaiError>) -> Void)) {
 		var url = config.tzktURL
@@ -151,22 +151,15 @@ public class TzKTClient {
 		
 		// TzKT still relies on the baking bad API to deliver the public baker info on mainnet
 		if config.networkType == .mainnet, let url = URL(string: "https://api.baking-bad.org/v2/bakers/") {
-			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBaker].self) { result in
-				guard let res = try? result.get() else {
-					completion(Result.failure(result.getFailure()))
-					return
-				}
-				
-				completion(Result.success(res))
-			}
+			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBaker].self, completion: completion)
 			
 		} else {
-			let url = config.tzktURL
+			var url = config.tzktURL
 			url.appendPathComponent("v1/delegates")
 			url.appendQueryItem(name: "select.values", value: "address,balance,stakingBalance")
 			url.appendQueryItem(name: "active", value: "true")
 			url.appendQueryItem(name: "sort.desc", value: "stakingBalance")
-			url.appendQueryItem(name: "limit", value: "10")
+			url.appendQueryItem(name: "limit", value: 10)
 			
 			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: Data.self) { result in
 				guard let res = try? result.get() else {
@@ -191,36 +184,62 @@ public class TzKTClient {
 		}
 	}
 	
-	public func bakerConfig(forAddress: String) {
-		// https://api.baking-bad.org/v2/bakers/<address>?configs=true
-	}
-	
-	public func delegatorRewards(forAddress: String) {
-		// https://staging.api.mainnet.tzkt.io/v1/rewards/delegators/<address>?limit=10
-	}
-	
-	public func getLastReward(forAddress: String, bakerAddress: String, bakerPayoutAddress: String?) {
-		// https://api.tzkt.io/v1/accounts/<address>/operations?limit=5&sender.in=<bakerAddress>,<bakerPayoutAddress>
-	}
-	
-	public func estimateLastReward() {
+	/**
+	 Call https://api.baking-bad.org/v2/bakers/...?configs=true to get the config settings for the given baker
+	 */
+	public func bakerConfig(forAddress: String, completion: @escaping ((Result<TzKTBaker, KukaiError>) -> Void)) {
+		guard let url = URL(string: "https://api.baking-bad.org/v2/bakers/\(forAddress)") else {
+			completion(Result.failure(KukaiError.unknown()))
+			return
+		}
 		
+		var tempURL = url
+		tempURL.appendQueryItem(name: "configs", value: "true")
+		
+		networkService.request(url: tempURL, isPOST: false, withBody: nil, forReturnType: TzKTBaker.self, completion: completion)
 	}
 	
-	public func estimateNextReward() {
+	/**
+	 Call https://api.tzkt.io/v1/rewards/delegators/...?limit=10 to get the config settings for the given baker
+	 */
+	public func delegatorRewards(forAddress: String, completion: @escaping ((Result<[TzKTDelegatorReward], KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/rewards/delegators/\(forAddress)")
+		url.appendQueryItem(name: "limit", value: 10)
 		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTDelegatorReward].self, completion: completion)
+	}
+	
+	/**
+	 Call https://api.tzkt.io/v1/accounts/.../operations?limit=1&sender.in=... with the baker and optional payout address to attempt to find the last time you received a payment
+	 */
+	public func getLastReward(forAddress: String, bakerAddress: String, bakerPayoutAddress: String?, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
+		url.appendQueryItem(name: "limit", value: 1)
+		
+		if let payoutAddress = bakerPayoutAddress {
+			url.appendQueryItem(name: "sender.in", value: "\(bakerAddress),\(payoutAddress)")
+		} else {
+			url.appendQueryItem(name: "sender.in", value: bakerAddress)
+		}
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self, completion: completion)
 	}
 	
 	
 	
 	// MARK: Network
 	
-	public func head() {
-		// https://api.tzkt.io/v1/head
-	}
-	
+	/**
+	 Call https://api.tzkt.io/v1/cycles?limit=... to get the 10 most recent cycles
+	 */
 	public func cycles(limit: Int = 10) {
-		// https://staging.api.mainnet.tzkt.io/v1/cycles?limit=10
+		var url = config.tzktURL
+		url.appendPathComponent("v1/cycles")
+		url.appendQueryItem(name: "limit", value: limit)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTCycle].self, completion: completion)
 	}
 	
 	
