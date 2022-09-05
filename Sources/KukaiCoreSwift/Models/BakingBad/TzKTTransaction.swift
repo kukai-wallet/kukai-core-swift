@@ -43,11 +43,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - Properties
 	
 	public let type: TransactionType
-	public let id: Int
-	public let level: Int
+	public let id: Decimal
+	public let level: Decimal
 	public let timestamp: String
 	public let hash: String
-	public let counter: Int
+	public let counter: Decimal
 	public let initiater: TransactionLocation?
 	public let sender: TransactionLocation
 	public var bakerFee: XTZAmount
@@ -90,7 +90,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status
 	}
 	
-	public init(type: TransactionType, id: Int, level: Int, timestamp: String, hash: String, counter: Int, initiater: TransactionLocation?, sender: TransactionLocation, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TransactionLocation?, prevDelegate: TransactionLocation?, newDelegate: TransactionLocation?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
+	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TransactionLocation?, sender: TransactionLocation, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TransactionLocation?, prevDelegate: TransactionLocation?, newDelegate: TransactionLocation?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
 		
 		self.type = type
 		self.id = id
@@ -121,11 +121,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		let typeString = try container.decode(String.self, forKey: .type)
 		type = TransactionType(rawValue: typeString) ?? .unknown
 		
-		id = try container.decode(Int.self, forKey: .id)
-		level = try container.decode(Int.self, forKey: .level)
+		id = try container.decode(Decimal.self, forKey: .id)
+		level = try container.decode(Decimal.self, forKey: .level)
 		timestamp = try container.decode(String.self, forKey: .timestamp)
 		hash = try container.decode(String.self, forKey: .hash)
-		counter = try container.decode(Int.self, forKey: .counter)
+		counter = try container.decode(Decimal.self, forKey: .counter)
 		initiater = try? container.decode(TransactionLocation.self, forKey: .initiater)
 		sender = try container.decode(TransactionLocation.self, forKey: .sender)
 		target = try? container.decode(TransactionLocation.self, forKey: .target)

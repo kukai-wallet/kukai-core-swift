@@ -64,9 +64,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func experiment() {
 		
 		print("Processing ...")
-		
-		ClientsAndData.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs", baker: TzKTAddress(alias: "Bake Nug", address: "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")) { result in
-			print("Result: \(result)")
+		ClientsAndData.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+																   delegationLevel: 1941612,
+																   delegate: TzKTAccountDelegate(alias: "Bake Nug", address: "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa", active: true))
+		{ result in
 			
 			switch result {
 				case .success(let obj):

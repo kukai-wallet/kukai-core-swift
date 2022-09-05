@@ -47,7 +47,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 	public var secondaryToken: TokenDetails? = nil
 	public var entrypointCalled: String? = nil
 	
-	public var id: Int {
+	public var id: Decimal {
 		get {
 			return transactions.map({ $0.id }).reduce(0, +)
 		}

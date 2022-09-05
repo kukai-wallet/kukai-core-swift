@@ -26,6 +26,8 @@ public class TzKTClient {
 		public static let tokenBalanceQuerySize = 10000
 	}
 	
+	static let numberOfFutureCyclesReturned = 5
+	
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
 	private let betterCallDevClient: BetterCallDevClient
@@ -200,30 +202,24 @@ public class TzKTClient {
 	}
 	
 	/**
-	 Call https://api.tzkt.io/v1/rewards/delegators/...?limit=10 to get the config settings for the given baker
+	 Call https://api.tzkt.io/v1/rewards/delegators/...?limit=... to get the config settings for the given baker
 	 */
-	public func delegatorRewards(forAddress: String, completion: @escaping ((Result<[TzKTDelegatorReward], KukaiError>) -> Void)) {
+	public func delegatorRewards(forAddress: String, limit: Int = 25, completion: @escaping ((Result<[TzKTDelegatorReward], KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/rewards/delegators/\(forAddress)")
-		url.appendQueryItem(name: "limit", value: 10)
+		url.appendQueryItem(name: "limit", value: limit)
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTDelegatorReward].self, completion: completion)
 	}
 	
-	public func currentAndPreviousDelegationRewards(from rewards: [TzKTDelegatorReward], previousCycle: TzKTCycle, currentCycle: TzKTCycle) -> (current: TzKTDelegatorReward, previous: TzKTDelegatorReward)? {
-		var previous: TzKTDelegatorReward? = nil
-		var current: TzKTDelegatorReward? = nil
-		
-		for reward in rewards {
-			if reward.cycle == previousCycle.index {
-				previous = reward
-			} else if reward.cycle == currentCycle.index {
-				current = reward
-			}
+	public func delegatorRewardForCycle(rewards: [TzKTDelegatorReward], cycleIndex: Int) -> TzKTDelegatorReward? {
+		guard rewards.count > 0, let first = rewards.first else {
+			return nil
 		}
 		
-		if let p = previous, let c = current {
-			return (current: c, previous: p)
+		let difference = first.cycle - cycleIndex
+		if difference > 0 && difference < rewards.count-1 {
+			return rewards[difference]
 		}
 		
 		return nil
@@ -246,131 +242,198 @@ public class TzKTClient {
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self, completion: completion)
 	}
 	
-	// TODO: bug not taking into account baker payout delay
-	public func estimateLastAndNextReward(forAddress: String, baker: TzKTAddress, completion: @escaping ((Result<TzKTCustomReward, KukaiError>) -> Void)) {
+	
+	public func estimateLastAndNextReward(forAddress: String, delegationLevel: Decimal, delegate: TzKTAccountDelegate, completion: @escaping ((Result<AggregateRewardInformation, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
 		var lastPaymentTransaction: [TzKTTransaction] = []
-		
-		var lastCycle: TzKTCycle? = nil
-		var lastCycleBakerWithConfig: TzKTBaker? = nil
-		var lastDelegatorReward: TzKTDelegatorReward? = nil
-		
-		var currentCycle: TzKTCycle? = nil
-		var currentCycleBakerWithConfig: TzKTBaker? = nil
-		var currentDelegatorReward: TzKTDelegatorReward? = nil
+		var currentCycles: [TzKTCycle] = []
+		var currentDelegatorRewards: [TzKTDelegatorReward] = []
+		var cyclesAgoUserDelegated = 0
+		var bakerConfigs: [String: TzKTBaker] = [:]
 		
 		
 		// If we have an alias, search for a payput address and then transactions, else just search for transactions
 		dispatchGroup.enter()
-		if let alias = baker.alias {
-			suggestAccount(forString: "\(alias) Payouts") { [weak self] result in
-				guard let res = try? result.get() else {
-					completion(Result.failure(KukaiError.unknown(withString: "failed to get suggested address")))
-					return
-				}
-				print("got suggested address")
-				
-				self?.getLastReward(forAddress: forAddress, bakerAddress: baker.address, bakerPayoutAddress: res.address, completion: { resultTxs in
-					guard let resTxs = try? resultTxs.get() else {
-						completion(Result.failure(KukaiError.unknown(withString: "failed to get txs")))
-						return
-					}
-					print("got txs")
-					
-					lastPaymentTransaction = resTxs
-					dispatchGroup.leave()
-				})
+		getLastBakerRewardTransaction(forAddress: forAddress, delegate: delegate) { result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
 			}
-		} else {
-			getLastReward(forAddress: forAddress, bakerAddress: baker.address, bakerPayoutAddress: nil, completion: { resultTxs in
-				guard let resTxs = try? resultTxs.get() else {
-					completion(Result.failure(KukaiError.unknown(withString: "failed to get txs 2")))
-					return
-				}
-				print("got txs 2")
-				
-				lastPaymentTransaction = resTxs
-				dispatchGroup.leave()
-			})
+			
+			lastPaymentTransaction = res
+			dispatchGroup.leave()
 		}
 		
 		
 		// Get cycles, find the current and preivous
 		dispatchGroup.enter()
-		cycles { [weak self] result in
-			guard let res = try? result.get(), let chosenCycles = self?.currentAndPreviousCycle(from: res) else {
+		dispatchGroup.enter()
+		getCyclesAndRewards(forAddress: forAddress) { [weak self] result in
+			guard let res = try? result.get() else {
 				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles")))
 				return
 			}
-			print("got cycles")
 			
-			lastCycle = chosenCycles.previous
-			currentCycle = chosenCycles.current
+			currentCycles = res.cycles
+			currentDelegatorRewards = res.rewards
+			
+			if let selectedCycle = self?.cycleForLevel(cycles: currentCycles, level: delegationLevel) {
+				cyclesAgoUserDelegated = currentCycles[0].index - selectedCycle.index
+				
+			} else {
+				cyclesAgoUserDelegated = 0
+			}
 			
 			
-			// Then use those to find current and previous delegationReward objects
-			self?.delegatorRewards(forAddress: forAddress, completion: { [weak self] resultRewards in
-				guard let resRewards = try? resultRewards.get(), let chosenRewards = self?.currentAndPreviousDelegationRewards(from: resRewards, previousCycle: chosenCycles.previous, currentCycle: chosenCycles.current) else {
-					completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
-					return
-				}
-				print("got rewards")
-				
-				lastDelegatorReward = chosenRewards.previous
-				currentDelegatorReward = chosenRewards.current
-				
-				
-				// Then use the chosen reward objects to find baker config objects (may need 2 seperate requests)
-				if lastDelegatorReward?.baker.address != currentDelegatorReward?.baker.address {
-					dispatchGroup.enter()
-					self?.bakerConfig(forAddress: chosenRewards.current.baker.address, completion: { bakerResult2 in
-						guard let resB2 = try? bakerResult2.get() else {
-							completion(Result.failure(KukaiError.unknown(withString: "failed to get baker 2")))
-							return
-						}
-						print("got baker 2")
-						
-						currentCycleBakerWithConfig = resB2
-						dispatchGroup.leave()
-					})
-				}
-				
-				
-				self?.bakerConfig(forAddress: chosenRewards.previous.baker.address, completion: { bakerResult1 in
-					guard let resB1 = try? bakerResult1.get() else {
-						completion(Result.failure(KukaiError.unknown(withString: "failed to get baker 1")))
+			// Get config object for each unique baker in the list (max 2)
+			var uniqueBakers = Array(Set(currentDelegatorRewards.map({ $0.baker.address })))
+			if uniqueBakers.count > 2 {
+				uniqueBakers = Array(uniqueBakers[0...1])
+			}
+			
+			// fetch bakers in a loop
+			for bakerAddress in uniqueBakers {
+				dispatchGroup.enter()
+				self?.bakerConfig(forAddress: bakerAddress, completion: { bakerResult in
+					guard let bakerRes = try? bakerResult.get() else {
+						completion(Result.failure(KukaiError.unknown(withString: "failed to get baker config")))
 						return
 					}
-					print("got baker 1")
 					
-					lastCycleBakerWithConfig = resB1
+					bakerConfigs[bakerAddress] = bakerRes
 					dispatchGroup.leave()
 				})
-			})
+			}
+			
+			dispatchGroup.leave()
+			dispatchGroup.leave()
 		}
 		
 		
-		// Try to build a TzKTCustomReward from all the data
-		dispatchGroup.notify(queue: .main) {
-			guard let previousReward = lastDelegatorReward,
-				let previousCycle = lastCycle,
-				let currentReward = currentDelegatorReward,
-				let currentCycle = currentCycle,
-				let previousBakerConfig = lastCycleBakerWithConfig else {
-					completion(Result.failure(KukaiError.unknown(withString: "Unable to get all the shit we need")))
-					return
-			}
+		// Gather all data and process into something meaningful
+		dispatchGroup.notify(queue: .global(qos: .background)) { [weak self] in
 			
-			var pReward: TzKTRewardDetails? = nil
+			// If we have the last transaction received. Use the list of cycles, delegatorRewards and baker configs, to see can we get the additional data
+			var pReward: RewardDetails? = nil
 			if let tx = lastPaymentTransaction.first {
-				pReward = TzKTRewardDetails(amount: (tx.amount as? XTZAmount) ?? .zero(), cycle: nil, date: tx.date ?? Date())
+				let cycleIndexPaymentReceived = self?.cycleForLevel(cycles: currentCycles, level: tx.level)?.index ?? 0
+				let amount = (tx.amount as? XTZAmount) ?? .zero()
+				
+				var alias = tx.sender.alias
+				var avatarURL = self?.avatarURL(forToken: tx.sender.address)
+				var fee = 0.05
+				var indexOfCyclePaymentIsFor = cycleIndexPaymentReceived
+				
+				if let config = bakerConfigs[delegate.address] {
+					alias = config.name
+					avatarURL = self?.avatarURL(forToken: config.address)
+					fee = config.fee
+					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+				}
+				
+				pReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date())
 			}
 			
-			let estimatedPreviousReward = TzKTRewardDetails(amount: previousReward.estimatedReward(withFee: previousBakerConfig.fee), cycle: previousCycle.index, date: previousCycle.endDate ?? Date())
-			let estimatedNextReward = TzKTRewardDetails(amount: currentReward.estimatedReward(withFee: currentCycleBakerWithConfig?.fee ?? previousBakerConfig.fee), cycle: currentCycle.index, date: currentCycle.endDate ?? Date())
 			
-			completion(Result.success(TzKTCustomReward(previousReward: pReward, estimatedPreviousReward: estimatedPreviousReward, estimatedNextReward: estimatedNextReward)))
+			// TODO: take into account minPayout and minDelegation
+			// TODO: check if another baker would have a sooner reward
+			// TODO: not using the second baker config for checking last payment
+			
+			var estimatedPreviousReward: RewardDetails? = nil
+			var estimatedNextReward: RewardDetails? = nil
+			
+			let mostRecentBakerAddress = currentDelegatorRewards[0].baker.address
+			let mostRecentBakerConfig = bakerConfigs[mostRecentBakerAddress]
+			let numberOfCyclesAgoForLastReward = TzKTClient.numberOfFutureCyclesReturned + (mostRecentBakerConfig?.payoutDelay ?? 1)
+			let currentInProgressCycle = currentCycles[TzKTClient.numberOfFutureCyclesReturned]
+			let lastCompleteCycle = currentCycles[TzKTClient.numberOfFutureCyclesReturned + 1]
+			
+			if numberOfCyclesAgoForLastReward < cyclesAgoUserDelegated {
+				let previousDelegatorReward = currentDelegatorRewards[numberOfCyclesAgoForLastReward]
+				let fee = mostRecentBakerConfig?.fee ?? 0.05
+				let cycle = currentCycles[numberOfCyclesAgoForLastReward]
+				let alias = mostRecentBakerConfig?.name
+				let address = mostRecentBakerConfig?.address ?? ""
+				let logo = self?.avatarURL(forToken: address)
+				
+				estimatedPreviousReward = RewardDetails(bakerAlias: alias, bakerLogo: logo, paymentAddress: address, amount: previousDelegatorReward.estimatedReward(withFee: fee), cycle: cycle.index, fee: fee, date: lastCompleteCycle.endDate ?? Date())
+			}
+			
+			if delegate.active {
+				let nextDelegatorReward = currentDelegatorRewards[numberOfCyclesAgoForLastReward - 1]
+				let fee = mostRecentBakerConfig?.fee ?? 0.05
+				let cycle = currentCycles[numberOfCyclesAgoForLastReward - 1]
+				let alias = mostRecentBakerConfig?.name
+				let address = mostRecentBakerConfig?.address ?? ""
+				let logo = self?.avatarURL(forToken: address)
+				
+				estimatedNextReward = RewardDetails(bakerAlias: alias, bakerLogo: logo, paymentAddress: address, amount: nextDelegatorReward.estimatedReward(withFee: fee), cycle: cycle.index, fee: fee, date: currentInProgressCycle.endDate ?? Date())
+			}
+			
+			completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: estimatedPreviousReward, estimatedNextReward: estimatedNextReward)))
+		}
+	}
+	
+	private func getLastBakerRewardTransaction(forAddress: String, delegate: TzKTAccountDelegate, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
+		if let alias = delegate.alias {
+			suggestAccount(forString: "\(alias) Payouts") { [weak self] result in
+				guard let res = try? result.get() else {
+					completion(Result.failure(KukaiError.unknown(withString: "failed to get suggested address")))
+					return
+				}
+				
+				self?.getLastReward(forAddress: forAddress, bakerAddress: delegate.address, bakerPayoutAddress: res.address, completion: { resultTxs in
+					guard let resTxs = try? resultTxs.get() else {
+						completion(Result.failure(KukaiError.unknown(withString: "failed to get txs")))
+						return
+					}
+					
+					completion(Result.success(resTxs))
+				})
+			}
+		} else {
+			getLastReward(forAddress: forAddress, bakerAddress: delegate.address, bakerPayoutAddress: nil, completion: { resultTxs in
+				guard let resTxs = try? resultTxs.get() else {
+					completion(Result.failure(KukaiError.unknown(withString: "failed to get txs 2")))
+					return
+				}
+				
+				completion(Result.success(resTxs))
+			})
+		}
+	}
+	
+	private func getCyclesAndRewards(forAddress: String, completion: @escaping ((Result<(cycles: [TzKTCycle], rewards: [TzKTDelegatorReward]), KukaiError>) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		
+		var currentCycles: [TzKTCycle] = []
+		var currentRewards: [TzKTDelegatorReward] = []
+		
+		dispatchGroup.enter()
+		cycles { result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles")))
+				return
+			}
+			
+			currentCycles = res
+			dispatchGroup.leave()
+		}
+		
+		dispatchGroup.enter()
+		delegatorRewards(forAddress: forAddress, completion: { result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
+				return
+			}
+			
+			currentRewards = res
+			dispatchGroup.leave()
+		})
+		
+		dispatchGroup.notify(queue: .global(qos: .background)) {
+			completion(Result.success((cycles: currentCycles, rewards: currentRewards)))
 		}
 	}
 	
@@ -381,7 +444,7 @@ public class TzKTClient {
 	/**
 	 Call https://api.tzkt.io/v1/cycles?limit=... to get the 10 most recent cycles
 	 */
-	public func cycles(limit: Int = 10, completion: @escaping ((Result<[TzKTCycle], KukaiError>) -> Void)) {
+	public func cycles(limit: Int = 25, completion: @escaping ((Result<[TzKTCycle], KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/cycles")
 		url.appendQueryItem(name: "limit", value: limit)
@@ -389,6 +452,35 @@ public class TzKTClient {
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTCycle].self, completion: completion)
 	}
 	
+	/**
+	 Given a list of cycles, search through them to find what cycle a given block level appeared in
+	 If leveled supplied is less than the firstLevel of the last cycle, return the last
+	 */
+	public func cycleForLevel(cycles: [TzKTCycle], level: Decimal) -> TzKTCycle? {
+		guard cycles.count > 0 else {
+			return nil
+		}
+		
+		if let last = cycles.last, last.firstLevel > level {
+			// Level is in the past, return last cycle we have
+			return last
+			
+		} else if let first = cycles.first, first.lastLevel < level {
+			// Delegation level is in the future, return nil
+			return nil
+			
+		} else {
+			for cycle in cycles {
+				if cycle.lastLevel < level {
+					return cycle
+				}
+			}
+		}
+		
+		return nil
+	}
+	
+	/*
 	public func currentAndPreviousCycle(from cycles: [TzKTCycle]) -> (current: TzKTCycle, previous: TzKTCycle)? {
 		let now = Date()
 		for (index, cycle) in cycles.enumerated() {
@@ -407,7 +499,7 @@ public class TzKTClient {
 		
 		return nil
 	}
-	
+	*/
 	
 	
 	// MARK: - Block checker
@@ -576,7 +668,7 @@ public class TzKTClient {
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var tzktAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false))
+		var tzktAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0)
 		var tokenBalances: [TzKTBalance] = []
 		var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
@@ -637,7 +729,7 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: liquidityTokens) ?? (tokens: [], nftGroups: [])
-				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, liquidityTokens: liquidityTokens, bakerAddress: tzktAccount.delegate?.address, bakerAlias: tzktAccount.delegate?.alias)
+				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, liquidityTokens: liquidityTokens, delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
 				
 				completion(Result.success(account))
 			}
@@ -776,7 +868,7 @@ public class TzKTClient {
 		}
 	}
 	
-	private func queryFaTokenReceives(forAddress address: String, lastId: Int?) {
+	private func queryFaTokenReceives(forAddress address: String, lastId: Decimal?) {
 		guard let id = lastId else {
 			self.dispatchGroupTransactions.leave()
 			self.dispatchGroupTransactions.leave()
@@ -790,7 +882,7 @@ public class TzKTClient {
 		url1.appendQueryItem(name: "initiator.ne", value: address)
 		url1.appendQueryItem(name: "entrypoint", value: "transfer")
 		url1.appendQueryItem(name: "parameter.to", value: address)
-		url1.appendQueryItem(name: "id.gt", value: id)
+		url1.appendQueryItem(name: "id.gt", value: id.description)
 		url1.appendQueryItem(name: "status", value: "applied")
 		url1.appendQueryItem(name: "micheline", value: 1)
 		
@@ -801,7 +893,7 @@ public class TzKTClient {
 		url2.appendQueryItem(name: "initiator.ne", value: address)
 		url2.appendQueryItem(name: "entrypoint", value: "transfer")
 		url2.appendQueryItem(name: "parameter.[*].txs.[*].to_", value: address)
-		url2.appendQueryItem(name: "id.gt", value: id)
+		url2.appendQueryItem(name: "id.gt", value: id.description)
 		url2.appendQueryItem(name: "status", value: "applied")
 		url2.appendQueryItem(name: "micheline", value: 1)
 		

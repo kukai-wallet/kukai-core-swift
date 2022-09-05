@@ -13,7 +13,9 @@ public struct TzKTCycle: Codable {
 	
 	public let index: Int
 	public let startTime: String
+	public let firstLevel: Decimal
 	public let endTime: String
+	public let lastLevel: Decimal
 	
 	public var stateDate: Date? {
 		get {

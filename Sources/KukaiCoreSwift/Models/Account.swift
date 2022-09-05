@@ -27,11 +27,12 @@ public struct Account: Codable, Hashable {
 	/// All the wallets Defi, Liquidity Tokens
 	public let liquidityTokens: [DipDupPositionData]
 	
-	/// The Tezos address of the delegated baker, nil if none selected
-	public let bakerAddress: String?
+	/// TzKT object containing baker details + status
+	public let delegate: TzKTAccountDelegate?
 	
-	/// If the baker has an alias (human friendly name) on the blockchain
-	public let bakerAlias: String?
+	/// The block level that the delegate was set
+	public let delegationLevel: Decimal?
+	
 	
 	/// Basic init to default properties to zero / empty, so that optionals can be avoided on a key model throughout an app
 	public init(walletAddress: String) {
@@ -40,19 +41,24 @@ public struct Account: Codable, Hashable {
 		self.tokens = []
 		self.nfts = []
 		self.liquidityTokens = []
-		self.bakerAddress = nil
-		self.bakerAlias = nil
+		self.delegate = nil
+		self.delegationLevel = 0
 	}
 	
 	/// Full init
-	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], liquidityTokens: [DipDupPositionData], bakerAddress: String? = nil, bakerAlias: String? = nil) {
+	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
 		self.walletAddress = walletAddress
 		self.xtzBalance = xtzBalance
 		self.tokens = tokens
 		self.nfts = nfts
 		self.liquidityTokens = liquidityTokens
-		self.bakerAddress = bakerAddress
-		self.bakerAlias = bakerAlias
+		self.delegate = delegate
+		self.delegationLevel = delegationLevel
+	}
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(walletAddress)
 	}
 }
 
