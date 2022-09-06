@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// The blockchain is broken down into cycles that last 2.7 days. Baker payment logic resolves around cycles instead of blocks
 public struct TzKTCycle: Codable {
 	
 	private static let dateFormat = DateFormatter(withFormat: "yyyy-MM-dd'T'HH:mm:ssZ")

@@ -7,12 +7,14 @@
 
 import Foundation
 
+/// The stability of the bakers server
 public enum TzKTBakerHealth: String, Codable {
 	case active
 	case closed
 	case dead
 }
 
+/// The accuracy of the bakers payments
 public enum TzKTBakerAccuracy: String, Codable {
 	case precise
 	case inaccurate
@@ -20,6 +22,7 @@ public enum TzKTBakerAccuracy: String, Codable {
 	case no_data
 }
 
+/// The reliability of the bakers payouts
 public enum TzKTBakerTiming: String, Codable {
 	case stable
 	case unstable
@@ -27,6 +30,7 @@ public enum TzKTBakerTiming: String, Codable {
 	case no_data
 }
 
+/// Data representing a baker from TzKT or Baking-Bad
 public struct TzKTBaker: Codable {
 	
 	public let address: String
@@ -57,6 +61,7 @@ public struct TzKTBaker: Codable {
 	}
 }
 
+/// The bakers config file for details on when fees, min delegation etc change
 public struct TzKTBakerConfig: Codable {
 
 	public let address: String
