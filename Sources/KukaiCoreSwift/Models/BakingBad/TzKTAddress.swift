@@ -16,7 +16,7 @@ public struct TzKTAddress: Codable {
 	/// The KT1 address of the contract
 	public let address: String
 	
-	public init(alias: String, address: String) {
+	public init(alias: String?, address: String) {
 		self.alias = alias
 		self.address = address
 	}

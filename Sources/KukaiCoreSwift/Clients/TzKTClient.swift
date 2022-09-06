@@ -225,45 +225,15 @@ public class TzKTClient {
 		return nil
 	}
 	
-	/**
-	 Call https://api.tzkt.io/v1/accounts/.../operations?limit=1&sender.in=... with the baker and optional payout address to attempt to find the last time you received a payment
-	 */
-	public func getLastReward(forAddress: String, bakerAddress: String, bakerPayoutAddress: String?, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
-		var url = config.tzktURL
-		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
-		url.appendQueryItem(name: "limit", value: 1)
-		
-		if let payoutAddress = bakerPayoutAddress {
-			url.appendQueryItem(name: "sender.in", value: "\(bakerAddress),\(payoutAddress)")
-		} else {
-			url.appendQueryItem(name: "sender.in", value: bakerAddress)
-		}
-		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self, completion: completion)
-	}
-	
-	
 	public func estimateLastAndNextReward(forAddress: String, delegationLevel: Decimal, delegate: TzKTAccountDelegate, completion: @escaping ((Result<AggregateRewardInformation, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var lastPaymentTransaction: [TzKTTransaction] = []
 		var currentCycles: [TzKTCycle] = []
 		var currentDelegatorRewards: [TzKTDelegatorReward] = []
 		var cyclesAgoUserDelegated = 0
 		var bakerConfigs: [String: TzKTBaker] = [:]
-		
-		
-		// If we have an alias, search for a payput address and then transactions, else just search for transactions
-		dispatchGroup.enter()
-		getLastBakerRewardTransaction(forAddress: forAddress, delegate: delegate) { result in
-			guard let res = try? result.get() else {
-				completion(Result.failure(result.getFailure()))
-				return
-			}
-			
-			lastPaymentTransaction = res
-			dispatchGroup.leave()
-		}
+		var bakerPayoutAddresses: [String: TzKTAddress] = [:]
+		var mostRecentTransaction: TzKTTransaction? = nil
 		
 		
 		// Get cycles, find the current and preivous
@@ -275,8 +245,11 @@ public class TzKTClient {
 				return
 			}
 			
+			// Store data about the fetched state
 			currentCycles = res.cycles
 			currentDelegatorRewards = res.rewards
+			let tempUniqueBakers = self?.mostRecentUniqueBakers(fromDelegatorRewards: currentDelegatorRewards) ?? []
+			let uniqueBakers = self?.uniqueAddresses(from: delegate, and: tempUniqueBakers) ?? []
 			
 			if let selectedCycle = self?.cycleForLevel(cycles: currentCycles, level: delegationLevel) {
 				cyclesAgoUserDelegated = currentCycles[0].index - selectedCycle.index
@@ -286,25 +259,33 @@ public class TzKTClient {
 			}
 			
 			
-			// Get config object for each unique baker in the list (max 2)
-			var uniqueBakers = Array(Set(currentDelegatorRewards.map({ $0.baker.address })))
-			if uniqueBakers.count > 2 {
-				uniqueBakers = Array(uniqueBakers[0...1])
-			}
-			
-			// fetch bakers in a loop
+			// fetch baker configs in a loop
 			for bakerAddress in uniqueBakers {
 				dispatchGroup.enter()
-				self?.bakerConfig(forAddress: bakerAddress, completion: { bakerResult in
+				self?.bakerConfig(forAddress: bakerAddress.address, completion: { bakerResult in
 					guard let bakerRes = try? bakerResult.get() else {
 						completion(Result.failure(KukaiError.unknown(withString: "failed to get baker config")))
 						return
 					}
 					
-					bakerConfigs[bakerAddress] = bakerRes
+					bakerConfigs[bakerAddress.address] = bakerRes
 					dispatchGroup.leave()
 				})
 			}
+			
+			
+			// Search for last tx received from any baker/payout-address in the list
+			dispatchGroup.enter()
+			self?.getLastBakerRewardTransaction(forAddress: forAddress, uniqueBakers: uniqueBakers, completion: { resultTx in
+				guard let resTx = try? resultTx.get() else {
+					completion(Result.failure(result.getFailure()))
+					return
+				}
+				
+				bakerPayoutAddresses = resTx.paymentAddresses
+				mostRecentTransaction = resTx.transaction
+				dispatchGroup.leave()
+			})
 			
 			dispatchGroup.leave()
 			dispatchGroup.leave()
@@ -316,30 +297,48 @@ public class TzKTClient {
 			
 			// If we have the last transaction received. Use the list of cycles, delegatorRewards and baker configs, to see can we get the additional data
 			var pReward: RewardDetails? = nil
-			if let tx = lastPaymentTransaction.first {
+			if let tx = mostRecentTransaction {
 				let cycleIndexPaymentReceived = self?.cycleForLevel(cycles: currentCycles, level: tx.level)?.index ?? 0
 				let amount = (tx.amount as? XTZAmount) ?? .zero()
 				
 				var alias = tx.sender.alias
 				var avatarURL = self?.avatarURL(forToken: tx.sender.address)
-				var fee = 0.05
+				var fee = 0.0
 				var indexOfCyclePaymentIsFor = cycleIndexPaymentReceived
 				
-				if let config = bakerConfigs[delegate.address] {
+				// If the tx came from the baker directly, grab the config and apply
+				if let config = bakerConfigs[tx.sender.address] {
 					alias = config.name
 					avatarURL = self?.avatarURL(forToken: config.address)
 					fee = config.fee
 					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+					
+				}
+				// If the tx came from a known payout address, match it to the baker address and grab the config
+				else {
+					for pair in bakerPayoutAddresses {
+						if pair.value.address == tx.sender.address, let config = bakerConfigs[pair.key] {
+							alias = config.name
+							avatarURL = self?.avatarURL(forToken: config.address)
+							fee = config.fee
+							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+						}
+					}
 				}
 				
+				// Group up data into something usuable
 				pReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date())
 			}
+			
+			completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: nil)))
+			
 			
 			
 			// TODO: take into account minPayout and minDelegation
 			// TODO: check if another baker would have a sooner reward
 			// TODO: not using the second baker config for checking last payment
-			
+			// TODO: next reward may be futher in the future than then next cycle (think the logic is accurate, I just have to check the index bounds of "currentDelegatorRewards" to make sure it has a valid object)
+			/*
 			var estimatedPreviousReward: RewardDetails? = nil
 			var estimatedNextReward: RewardDetails? = nil
 			
@@ -372,38 +371,132 @@ public class TzKTClient {
 			}
 			
 			completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: estimatedPreviousReward, estimatedNextReward: estimatedNextReward)))
+			*/
 		}
 	}
 	
-	private func getLastBakerRewardTransaction(forAddress: String, delegate: TzKTAccountDelegate, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
-		if let alias = delegate.alias {
-			suggestAccount(forString: "\(alias) Payouts") { [weak self] result in
+	/// Filter list of `TzKTDelegatorReward` and return the most recent unqiue bakers from the list (max 2, going no further back than 25 cycles)
+	private func mostRecentUniqueBakers(fromDelegatorRewards: [TzKTDelegatorReward]) -> [TzKTAddress] {
+		guard fromDelegatorRewards.count > 0 else {
+			return []
+		}
+		
+		var unique: [TzKTAddress] = []
+		for (index, dReward) in fromDelegatorRewards.enumerated() {
+			if unique.count == 0 {
+				unique.append(dReward.baker)
+				
+			} else if !unique.contains(where: { $0.address == dReward.baker.address }) {
+				unique.append(dReward.baker)
+			}
+			
+			// Only searching for first 2
+			if unique.count == 2 {
+				break
+			}
+			
+			// 25 cycles is more than enough to search back
+			if index > 25 {
+				break
+			}
+		}
+		
+		return unique
+	}
+	
+	/// Combine the `Account`'s `TzKTAccountDelegate` and the uniqueBakers from `mostRecentUniqueBakers(...)` into a more manageable array of the same type
+	private func uniqueAddresses(from delegate: TzKTAccountDelegate, and uniqueBakers: [TzKTAddress]) -> [TzKTAddress] {
+		let delegateAddress = TzKTAddress(alias: delegate.alias, address: delegate.address)
+		var unique: [TzKTAddress] = [delegateAddress]
+		
+		for address in uniqueBakers {
+			if !unique.contains(where: { $0.address == address.address }) {
+				unique.append(address)
+			}
+		}
+		
+		print("\n\n\nActive Debug - uniqueAddress: \(unique)\n\n\n")
+		return unique
+	}
+	
+	/// Get the last transaction received from any of the baker addresses directly, or any of the payment addresses. Also return the payment addresses so we can get the matching baker config for the transaction
+	private func getLastBakerRewardTransaction(forAddress: String, uniqueBakers: [TzKTAddress], completion: @escaping ((Result<(paymentAddresses: [String: TzKTAddress], transaction: TzKTTransaction?), KukaiError>) -> Void)) {
+		
+		findPaymentAddresses(from: uniqueBakers) { [weak self] result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(KukaiError.unknown(withString: "failed to get suggested address")))
+				return
+			}
+			
+			self?.getLastReward(forAddress: forAddress, uniqueBakers: uniqueBakers, payoutAddresses: res, completion: { resultTxs in
+				guard let resTxs = try? resultTxs.get() else {
+					completion(Result.failure(KukaiError.unknown(withString: "failed to get txs")))
+					return
+				}
+				
+				completion(Result.success( (paymentAddresses: res, transaction: resTxs.first) ))
+			})
+		}
+	}
+	
+	/// Loop through list of addresses and use tzkt suggest API to try find matching payout addresses
+	private func findPaymentAddresses(from addresses: [TzKTAddress], completion: @escaping ((Result<[String: TzKTAddress], KukaiError>) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		var paymentAddresses: [String: TzKTAddress] = [:]
+		
+		dispatchGroup.enter()
+		for address in addresses {
+			guard let alias = address.alias else {
+				continue
+			}
+			
+			dispatchGroup.enter()
+			suggestAccount(forString: "\(alias) Payouts") { result in
 				guard let res = try? result.get() else {
 					completion(Result.failure(KukaiError.unknown(withString: "failed to get suggested address")))
 					return
 				}
 				
-				self?.getLastReward(forAddress: forAddress, bakerAddress: delegate.address, bakerPayoutAddress: res.address, completion: { resultTxs in
-					guard let resTxs = try? resultTxs.get() else {
-						completion(Result.failure(KukaiError.unknown(withString: "failed to get txs")))
-						return
-					}
-					
-					completion(Result.success(resTxs))
-				})
+				paymentAddresses[address.address] = res
+				dispatchGroup.leave()
 			}
-		} else {
-			getLastReward(forAddress: forAddress, bakerAddress: delegate.address, bakerPayoutAddress: nil, completion: { resultTxs in
-				guard let resTxs = try? resultTxs.get() else {
-					completion(Result.failure(KukaiError.unknown(withString: "failed to get txs 2")))
-					return
-				}
-				
-				completion(Result.success(resTxs))
-			})
+		}
+		dispatchGroup.leave()
+		
+		dispatchGroup.notify(queue: .global(qos: .background)) {
+			
+			print("\n\n\nActive Debug - paymentAddresses: \(paymentAddresses)\n\n\n")
+			completion(Result.success(paymentAddresses))
 		}
 	}
 	
+	/// Take all the baker addresses and payout addresses and find the last transaction (if any) received from any of them
+	public func getLastReward(forAddress: String, uniqueBakers: [TzKTAddress], payoutAddresses: [String: TzKTAddress], completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
+		var addressString = ""
+		for baker in uniqueBakers {
+			addressString += baker.address
+			addressString += ","
+		}
+		
+		for payoutAddress in payoutAddresses.values {
+			addressString += payoutAddress.address
+			addressString += ","
+		}
+		
+		let _ = addressString.removeLast()
+		
+		print("\n\n\nActive Debug - addressString: \(addressString)\n\n\n")
+		
+		var url = config.tzktURL
+		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
+		url.appendQueryItem(name: "limit", value: 1)
+		url.appendQueryItem(name: "type", value: "transaction")
+		url.appendQueryItem(name: "sender.in", value: addressString)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self, completion: completion)
+	}
+	
+	/// Combine fetching cycles and rewards into one function to simplify logic
 	private func getCyclesAndRewards(forAddress: String, completion: @escaping ((Result<(cycles: [TzKTCycle], rewards: [TzKTDelegatorReward]), KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
