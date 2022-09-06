@@ -59,6 +59,14 @@ public struct TzKTBaker: Codable {
 		
 		return TzKTBaker(address: address, name: nil, logo: nil, balance: balance, stakingBalance: stakingBalance, stakingCapacity: stakingBalance * 2, maxStakingBalance: stakingBalance * 2, freeSpace: stakingBalance, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
 	}
+	
+	public func rewardStruct() -> TzKTBakerConfigRewardStruct? {
+		guard let config = config, let rewardStructInt = config.latestRewardStruct() else {
+			return nil
+		}
+		
+		return TzKTBakerConfigRewardStruct.fromConfigInt(rewardStructInt)
+	}
 }
 
 /// The bakers config file for details on when fees, min delegation etc change
@@ -68,6 +76,7 @@ public struct TzKTBakerConfig: Codable {
 	public let fee: [TzKTBakerConfigDoubleValue]
 	public let minDelegation: [TzKTBakerConfigDoubleValue]
 	public let payoutDelay: [TzKTBakerConfigIntValue]
+	public let rewardStruct: [TzKTBakerConfigIntValue]
 	
 	public func latesetFee() -> Double {
 		return fee.first?.value ?? 0
@@ -96,6 +105,10 @@ public struct TzKTBakerConfig: Codable {
 		
 		return 0
 	}
+	
+	public func latestRewardStruct() -> Int? {
+		return rewardStruct.first?.value
+	}
 }
 
 public struct TzKTBakerConfigDoubleValue: Codable {
@@ -106,4 +119,43 @@ public struct TzKTBakerConfigDoubleValue: Codable {
 public struct TzKTBakerConfigIntValue: Codable {
 	public let cycle: Int
 	public let value: Int
+}
+
+/// Baker config payout flags
+public struct TzKTBakerConfigRewardStruct: Codable {
+	public let blocks: Bool
+	public let missedBlocks: Bool
+	public let endorsements: Bool
+	public let missedEndorsements: Bool
+	public let fees: Bool
+	public let missedFees: Bool
+	public let accusationRewards: Bool
+	public let accusationLosses: Bool
+	public let revelationRewards: Bool
+	public let revelationLosses: Bool
+	
+	/// Convert the 14-bit number in the baker config, to the equivalent set of flags
+	public static func fromConfigInt(_ config: Int) -> TzKTBakerConfigRewardStruct {
+		let blocks = (config & 1) > 0
+		let missedBlocks = (config & 2) > 0
+		let endorsements = (config & 4) > 0
+		let missedEndorsements = (config & 8) > 0
+		let fees = (config & 16) > 0
+		let missedFees = (config & 32) > 0
+		let accusationRewards = (config & 64) > 0
+		let accusationLosses = (config & 128) > 0
+		let revelationRewards = (config & 256) > 0
+		let revelationLosses = (config & 512) > 0
+		
+		return TzKTBakerConfigRewardStruct(blocks: blocks,
+										   missedBlocks: missedBlocks,
+										   endorsements: endorsements,
+										   missedEndorsements: missedEndorsements,
+										   fees: fees,
+										   missedFees: missedFees,
+										   accusationRewards: accusationRewards,
+										   accusationLosses: accusationLosses,
+										   revelationRewards: revelationRewards,
+										   revelationLosses: revelationLosses)
+	}
 }

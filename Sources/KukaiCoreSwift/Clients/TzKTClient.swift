@@ -309,7 +309,7 @@ public class TzKTClient {
 				}
 				
 				// Group up data into something usuable
-				pReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date())
+				pReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date(), meetsMinDelegation: true)
 			}
 			
 			
@@ -385,7 +385,7 @@ public class TzKTClient {
 		let address = config.address
 		let logo = avatarURL(forToken: address)
 		let reward = rewards[selectedIndex]
-		let amount = reward.estimatedReward(withFee: fee)
+		let amount = reward.estimatedReward(withFee: fee, andRewardStruct: config.rewardStruct())
 		
 		return RewardDetails(bakerAlias: alias, bakerLogo: logo, paymentAddress: address, amount: amount, cycle: cycle.index, fee: fee, date: dateForDisplay, meetsMinDelegation: (reward.balance >= config.minDelegation))
 	}

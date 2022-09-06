@@ -184,4 +184,36 @@ class TzKTClientTests: XCTestCase {
 		
 		XCTAssert(url?.absoluteString == "https://services.tzkt.io/v1/avatars/KT1abc123", url?.absoluteString ?? "-")
 	}
+	
+	func testEstimateRewards() {
+		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewards")
+		let delegate = TzKTAccountDelegate(alias: "The Shire", address: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv", active: true)
+		
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegationLevel: 2686402, delegate: delegate) { result in
+			switch result {
+				case .success(let rewards):
+					XCTAssert(rewards.previousReward?.amount.description == "0.207106", rewards.previousReward?.amount.description ?? "")
+					XCTAssert(rewards.previousReward?.fee.description == "0.05", rewards.previousReward?.fee.description ?? "")
+					XCTAssert(rewards.previousReward?.cycle.description == "515", rewards.previousReward?.cycle.description ?? "")
+					XCTAssert(rewards.previousReward?.bakerAlias == "Bake Nug", rewards.previousReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.estimatedPreviousReward?.amount.description == "197861.368356", rewards.estimatedPreviousReward?.amount.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.05", rewards.estimatedPreviousReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "516", rewards.estimatedPreviousReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Bake Nug", rewards.estimatedPreviousReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.estimatedNextReward?.amount.description == "34051.865037", rewards.estimatedNextReward?.amount.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.05", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "517", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Bake Nug", rewards.estimatedNextReward?.bakerAlias ?? "")
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 10)
+	}
 }

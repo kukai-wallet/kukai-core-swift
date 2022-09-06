@@ -23,6 +23,16 @@ public struct AggregateRewardInformation: Codable {
 		
 		return endDate < Date()
 	}
+	
+	/// When `previousReward` is present, it is possible that due to a delay in payment being received, that we may cache an object before the last payment was received
+	/// In this case, if we only relied on `isOutOfDate()` we would not update again for ~3 days. Both checks will be needed
+	public func moreThan1CycleBetweenPreiousAndNext() -> Bool {
+		guard let previous = previousReward, let next = estimatedNextReward else {
+			return false
+		}
+		
+		return (next.cycle - previous.cycle) > 1
+	}
 }
 
 /// An individual payment record denoting some payment in the past or future

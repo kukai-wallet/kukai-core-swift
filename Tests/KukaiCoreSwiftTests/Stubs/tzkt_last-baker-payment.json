@@ -1,0 +1,28 @@
+[
+    {
+        "type": "transaction",
+        "id": 332364851,
+        "level": 2679161,
+        "timestamp": "2022-09-03T20:09:59Z",
+        "block": "BLvKmxJTYD6cvHP1nsZLQyJkF6tmySEzxAdwfGrEzQ9o5LWFHSA",
+        "hash": "opa95Jf4pVWyuRMBjErrM6DTcnVKq3petFi25Jb93t4DWMXwKX9",
+        "counter": 12218931,
+        "sender": {
+            "alias": "Bake Nug Payouts",
+            "address": "tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi"
+        },
+        "gasLimit": 1451,
+        "gasUsed": 1451,
+        "storageLimit": 0,
+        "storageUsed": 0,
+        "bakerFee": 298,
+        "storageFee": 0,
+        "allocationFee": 0,
+        "target": {
+            "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
+        },
+        "amount": 207106,
+        "status": "applied",
+        "hasInternals": false
+    }
+]

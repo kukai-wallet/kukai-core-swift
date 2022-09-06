@@ -47,6 +47,7 @@ public struct MockConstants {
 		let baseURL = config.primaryNodeURL
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
+		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
 		
 		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/ithacanet/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/token_balances")
 		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
@@ -94,6 +95,34 @@ public struct MockConstants {
 		tzktBalancePageURL.appendQueryItem(name: "offset", value: 0)
 		tzktBalancePageURL.appendQueryItem(name: "limit", value: 10000)
 		
+		var tzktCyclesURL = tzktURL.appendingPathComponent("v1/cycles")
+		tzktCyclesURL.appendQueryItem(name: "limit", value: 25)
+		
+		var tzktDelegatorRewardsURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
+		tzktDelegatorRewardsURL.appendQueryItem(name: "limit", value: 25)
+		
+		var bakingBadConfigURL1 = bakingBadURL.appendingPathComponent("v2/bakers/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")
+		bakingBadConfigURL1.appendQueryItem(name: "configs", value: "true")
+		
+		var bakingBadConfigURL2 = bakingBadURL.appendingPathComponent("v2/bakers/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
+		bakingBadConfigURL2.appendQueryItem(name: "configs", value: "true")
+		
+		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")
+		tzktsuggestURL1.appendQueryItem(name: "limit", value: 1)
+		
+		var tzktsuggestURL2 = tzktURL.appendingPathComponent("v1/suggest/accounts/The Shire Payouts")
+		tzktsuggestURL2.appendQueryItem(name: "limit", value: 1)
+		
+		var tzktLastBakerRewardURL = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
+		tzktLastBakerRewardURL.appendQueryItem(name: "limit", value: 1)
+		tzktLastBakerRewardURL.appendQueryItem(name: "type", value: "transaction")
+		tzktLastBakerRewardURL.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC")
+		
+		var tzktLastBakerRewardURL2 = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
+		tzktLastBakerRewardURL2.appendQueryItem(name: "limit", value: 1)
+		tzktLastBakerRewardURL2.appendQueryItem(name: "type", value: "transaction")
+		tzktLastBakerRewardURL2.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi")
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -132,6 +161,14 @@ public struct MockConstants {
 			tzktBalanceCountURL: (MockConstants.jsonStub(fromFilename: "tzkt_balance-count"), MockConstants.http200),
 			tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"): (MockConstants.jsonStub(fromFilename: "tzkt_account"), MockConstants.http200),
 			tzktBalancePageURL: (MockConstants.jsonStub(fromFilename: "tzkt_balance-page"), MockConstants.http200),
+			tzktCyclesURL: (MockConstants.jsonStub(fromFilename: "tzkt_cycles"), MockConstants.http200),
+			tzktDelegatorRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards"), MockConstants.http200),
+			bakingBadConfigURL1: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa"), MockConstants.http200),
+			bakingBadConfigURL2: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv"), MockConstants.http200),
+			tzktsuggestURL1: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-bake-nug"), MockConstants.http200),
+			tzktsuggestURL2: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire"), MockConstants.http200),
+			tzktLastBakerRewardURL: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
+			tzktLastBakerRewardURL2: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			
 			// Media proxy
 			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.ipfsResponseWithHeaders),
