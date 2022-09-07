@@ -189,7 +189,7 @@ class TzKTClientTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewards")
 		let delegate = TzKTAccountDelegate(alias: "The Shire", address: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv", active: true)
 		
-		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegationLevel: 2686402, delegate: delegate) { result in
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate) { result in
 			switch result {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward?.amount.description == "0.207106", rewards.previousReward?.amount.description ?? "")

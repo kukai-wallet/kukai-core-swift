@@ -215,7 +215,7 @@ public class TzKTClient {
 	/**
 	 Make many different calls to attempt to figure out the previous reward the user should have received, and the next potential reward
 	 */
-	public func estimateLastAndNextReward(forAddress: String, delegationLevel: Decimal, delegate: TzKTAccountDelegate, completion: @escaping ((Result<AggregateRewardInformation, KukaiError>) -> Void)) {
+	public func estimateLastAndNextReward(forAddress: String, delegate: TzKTAccountDelegate, completion: @escaping ((Result<AggregateRewardInformation, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
 		var currentCycles: [TzKTCycle] = []
