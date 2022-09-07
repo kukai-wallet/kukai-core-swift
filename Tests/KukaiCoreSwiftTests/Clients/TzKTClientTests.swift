@@ -207,6 +207,8 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(rewards.estimatedNextReward?.cycle.description == "517", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Bake Nug", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
+					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == true)
+					
 				case .failure(let error):
 					XCTFail("Error: \(error)")
 			}
