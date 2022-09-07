@@ -52,9 +52,9 @@ public struct TzKTDelegatorReward: Codable {
 			}
 		}
 		
-		let paymentEstimate = totalRewards * delegatorPercentage
-		let minusFee = paymentEstimate * Decimal(1 - fee)
+		let paymentEstimate = (totalRewards * delegatorPercentage).rounded(scale: 0, roundingMode: .down)
+		let minusFee = (paymentEstimate * Decimal(1 - fee)).rounded(scale: 0, roundingMode: .down)
 			
-		return XTZAmount(fromNormalisedAmount: minusFee.rounded(scale: 6, roundingMode: .bankers))
+		return XTZAmount(fromRpcAmount: minusFee) ?? .zero()
 	}
 }
