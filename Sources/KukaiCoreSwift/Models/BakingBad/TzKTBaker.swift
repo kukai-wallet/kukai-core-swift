@@ -52,6 +52,28 @@ public struct TzKTBaker: Codable {
 	public let payoutAccuracy: TzKTBakerAccuracy
 	public let config: TzKTBakerConfig?
 	
+	/// Helper to create a TzKTBaker from the data available from the `Account` object
+	public init(address: String, name: String?, logo: String?) {
+		self.address = address
+		self.name = name
+		self.logo = logo
+		
+		self.balance = 0
+		self.stakingBalance = 0
+		self.stakingCapacity = 0
+		self.maxStakingBalance = 0
+		self.freeSpace = 0
+		self.fee = 0
+		self.minDelegation = 0
+		self.payoutDelay = 0
+		self.payoutPeriod = 0
+		self.openForDelegation = false
+		self.estimatedRoi = 0
+		self.serviceHealth = .dead
+		self.payoutTiming = .no_data
+		self.payoutAccuracy = .no_data
+	}
+	
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
 		guard data.count == 3, let address = data[0] as? String, let balance = data[1] as? Decimal, let stakingBalance = data[2] as? Decimal else {
 			return nil
