@@ -31,7 +31,7 @@ public enum TzKTBakerTiming: String, Codable {
 }
 
 /// Data representing a baker from TzKT or Baking-Bad
-public struct TzKTBaker: Codable {
+public struct TzKTBaker: Codable, Hashable {
 	
 	public let address: String
 	public let name: String?
@@ -72,6 +72,29 @@ public struct TzKTBaker: Codable {
 		self.serviceHealth = .dead
 		self.payoutTiming = .no_data
 		self.payoutAccuracy = .no_data
+		self.config = nil
+	}
+	
+	public init(address: String, name: String?, logo: String?, balance: Decimal, stakingBalance: Decimal, stakingCapacity: Decimal, maxStakingBalance: Decimal, freeSpace: Decimal, fee: Double, minDelegation: Decimal, payoutDelay: Int, payoutPeriod: Int, openForDelegation: Bool, estimatedRoi: Decimal, serviceHealth: TzKTBakerHealth, payoutTiming: TzKTBakerTiming, payoutAccuracy: TzKTBakerAccuracy, config: TzKTBakerConfig?) {
+		
+		self.address = address
+		self.name = name
+		self.logo = logo
+		self.balance = balance
+		self.stakingBalance = stakingBalance
+		self.stakingCapacity = stakingCapacity
+		self.maxStakingBalance = maxStakingBalance
+		self.freeSpace = freeSpace
+		self.fee = fee
+		self.minDelegation = minDelegation
+		self.payoutDelay = payoutDelay
+		self.payoutPeriod = payoutPeriod
+		self.openForDelegation = openForDelegation
+		self.estimatedRoi = estimatedRoi
+		self.serviceHealth = serviceHealth
+		self.payoutTiming = payoutTiming
+		self.payoutAccuracy = payoutAccuracy
+		self.config = config
 	}
 	
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
@@ -88,6 +111,14 @@ public struct TzKTBaker: Codable {
 		}
 		
 		return TzKTBakerConfigRewardStruct.fromConfigInt(rewardStructInt)
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(address)
+	}
+	
+	public static func == (lhs: TzKTBaker, rhs: TzKTBaker) -> Bool {
+		return lhs.address == rhs.address
 	}
 }
 
