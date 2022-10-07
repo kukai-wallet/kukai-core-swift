@@ -80,7 +80,7 @@ public struct BalanceUpdate: Codable {
 public struct OperationResponseResult: Codable {
 	let status: String
 	let balanceUpdates: [BalanceUpdate]?
-	let consumedGas: String?
+	let consumedMilligas: String?
 	let storageSize: String?
 	let paidStorageSizeDiff: String?
 	let allocatedDestinationContract: Bool?
@@ -89,7 +89,7 @@ public struct OperationResponseResult: Codable {
 	private enum CodingKeys: String, CodingKey {
 		case status
 		case balanceUpdates = "balance_updates"
-		case consumedGas = "consumed_gas"
+		case consumedMilligas = "consumed_milligas"
 		case storageSize = "storage_size"
 		case paidStorageSizeDiff = "paid_storage_size_diff"
 		case allocatedDestinationContract = "allocated_destination_contract"

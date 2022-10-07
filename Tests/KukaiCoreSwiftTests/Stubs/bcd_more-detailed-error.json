@@ -83,7 +83,7 @@
         "gas_limit": 210000,
         "storage_limit": 257,
         "content_index": 0,
-        "consumed_gas": 42967,
+        "consumed_milligas": 42967000,
         "storage_size": 33945,
         "parameters": [
             {

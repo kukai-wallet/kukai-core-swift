@@ -314,7 +314,8 @@ public class FeeEstimatorService {
 			return (consumedGas: 0, storageBytesUsed: 0, allocationFee: XTZAmount.zero())
 		}
 		
-		let consumedGas = Int(result.consumedGas ?? "0") ?? 0
+		var consumedGas = Decimal(string: result.consumedMilligas ?? "0") ?? 0
+		consumedGas = (consumedGas / 1000).rounded(scale: 0, roundingMode: .bankers)
 		let paidStorageSizeDiff = Int(result.paidStorageSizeDiff ?? "0") ?? 0
 		var allocationFee = XTZAmount.zero()
 		
@@ -322,7 +323,7 @@ public class FeeEstimatorService {
 			allocationFee = constants.xtzForReveal()
 		}
 		
-		return (consumedGas: consumedGas, storageBytesUsed: paidStorageSizeDiff, allocationFee: allocationFee)
+		return (consumedGas: consumedGas.intValue(), storageBytesUsed: paidStorageSizeDiff, allocationFee: allocationFee)
 	}
 	
 	/// Calculate the fee to add for the given amount of gas

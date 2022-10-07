@@ -434,7 +434,6 @@
 							"prim": "False"
 						}
 					],
-					"consumed_gas": "3472",
 					"consumed_milligas": "3471406",
 					"storage_size": "215587",
 					"lazy_storage_diff": [
@@ -894,7 +893,6 @@
 							"prim": "False"
 						}
 					],
-					"consumed_gas": "3481",
 					"consumed_milligas": "3480969",
 					"storage_size": "215619",
 					"lazy_storage_diff": [
@@ -1113,7 +1111,6 @@
 							"origin": "block"
 						}
 					],
-					"consumed_gas": "8319",
 					"consumed_milligas": "8318704",
 					"storage_size": "83635",
 					"lazy_storage_diff": [

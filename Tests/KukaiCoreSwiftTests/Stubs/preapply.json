@@ -28,7 +28,6 @@
                     ],
                     "operation_result": {
                         "status": "applied",
-                        "consumed_gas": "1000",
                         "consumed_milligas": "1000000"
                     }
                 }
@@ -75,7 +74,6 @@
                                 "origin": "block"
                             }
                         ],
-                        "consumed_gas": "1427",
                         "consumed_milligas": "1427000"
                     }
                 }

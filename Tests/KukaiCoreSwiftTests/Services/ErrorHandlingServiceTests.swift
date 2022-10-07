@@ -53,8 +53,8 @@ class ErrorHandlingServiceTests: XCTestCase {
 	
 	func testOperationResponseParserIDString() {
 		let error = OperationResponseInternalResultError(kind: "", id: "proto.012-Psithaca.gas_exhausted.operation", contract: nil, expected: nil, found: nil, location: 41, with: FailWith(string: nil, int: nil, args: nil))
-		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
-		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
+		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedMilligas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
+		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedMilligas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
 		
 		let operationMetadataWithError = OperationResponseMetadata(balanceUpdates: nil, operationResult: operationResponseResultWithError, internalOperationResults: nil)
 		let operationMetadataWithoutError = OperationResponseMetadata(balanceUpdates: nil, operationResult: operationResponseResultWithoutError, internalOperationResults: nil)
@@ -74,8 +74,8 @@ class ErrorHandlingServiceTests: XCTestCase {
 	
 	func testOperationResponseParserFailWith() {
 		let error = OperationResponseInternalResultError(kind: "", id: "proto.012-Psithaca.michelson_v1.runtime_error", contract: nil, expected: nil, found: nil, location: 41, with: FailWith(string: nil, int: "14", args: nil))
-		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
-		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedGas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
+		let operationResponseResultWithError = OperationResponseResult(status: "", balanceUpdates: nil, consumedMilligas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: [error])
+		let operationResponseResultWithoutError = OperationResponseResult(status: "", balanceUpdates: nil, consumedMilligas: "", storageSize: "", paidStorageSizeDiff: "", allocatedDestinationContract: nil, errors: nil)
 		
 		let operationMetadataWithError = OperationResponseMetadata(balanceUpdates: nil, operationResult: operationResponseResultWithError, internalOperationResults: nil)
 		let operationMetadataWithoutError = OperationResponseMetadata(balanceUpdates: nil, operationResult: operationResponseResultWithoutError, internalOperationResults: nil)
