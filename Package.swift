@@ -21,7 +21,7 @@ let package = Package(
 		.package(name: "FetchNodeDetails", url: "https://github.com/torusresearch/fetch-node-details-swift", .exact("1.3.0")),
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", .exact("2.1.0")),
 		
-		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.1"),
+		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.2"),
 		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
 		.package(name: "JWTDecode", url: "https://github.com/auth0/JWTDecode.swift.git", from: "2.6.3")
 	],
