@@ -13,7 +13,7 @@ let package = Package(
 		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
 	],
 	dependencies: [
-		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.1"),
+		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.2"),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
 		
 		// Can't upgrade to the latest 2.4.0 of CustomAuth, because it uses a newer version of FetchNodeDetails which has many issues.
