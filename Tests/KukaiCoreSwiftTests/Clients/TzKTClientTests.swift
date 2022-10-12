@@ -145,25 +145,49 @@ class TzKTClientTests: XCTestCase {
 			switch result {
 				case .success(let account):
 					XCTAssert(account.xtzBalance.normalisedRepresentation == "1.843617", account.xtzBalance.normalisedRepresentation)
-					XCTAssert(account.tokens.count == 11, "\(account.tokens.count)")
-					XCTAssert(account.tokens[0].symbol == "tzBTC", account.tokens[0].symbol)
-					XCTAssert(account.tokens[0].name == "tzBTC", account.tokens[0].name ?? "")
-					XCTAssert(account.tokens[0].balance.normalisedRepresentation == "0.00038055", account.tokens[0].balance.normalisedRepresentation)
-					XCTAssert(account.tokens[1].symbol == "WHEAT", account.tokens[1].symbol)
-					XCTAssert(account.tokens[1].name == "Wheat", account.tokens[1].name ?? "")
-					XCTAssert(account.tokens[1].balance.normalisedRepresentation == "880562.72985", account.tokens[1].balance.normalisedRepresentation)
-					XCTAssert(account.tokens[2].symbol == "RICE", account.tokens[2].symbol)
-					XCTAssert(account.tokens[2].name == "Rice", account.tokens[2].name ?? "")
-					XCTAssert(account.tokens[2].balance.normalisedRepresentation == "8861668.19", account.tokens[2].balance.normalisedRepresentation)
+					XCTAssert(account.tokens.count == 20, "\(account.tokens.count)")
+					XCTAssert(account.tokens[0].symbol == "kUSD", account.tokens[0].symbol)
+					XCTAssert(account.tokens[0].name == "Kolibri USD", account.tokens[0].name ?? "")
+					XCTAssert(account.tokens[0].balance.normalisedRepresentation == "1.122564894578671941", account.tokens[0].balance.normalisedRepresentation)
+					XCTAssert(account.tokens[1].symbol == "USDtz", account.tokens[1].symbol)
+					XCTAssert(account.tokens[1].name == "USDtez", account.tokens[1].name ?? "")
+					XCTAssert(account.tokens[1].balance.normalisedRepresentation == "0.004337", account.tokens[1].balance.normalisedRepresentation)
+					XCTAssert(account.tokens[2].symbol == "crDAO", account.tokens[2].symbol)
+					XCTAssert(account.tokens[2].name == "Crunchy DAO", account.tokens[2].name ?? "")
+					XCTAssert(account.tokens[2].balance.normalisedRepresentation == "0.12810553", account.tokens[2].balance.normalisedRepresentation)
 					
 					XCTAssert(account.nfts.count == 6, "\(account.nfts.count)")
-					XCTAssert(account.nfts[0].nfts?.count == 3, "\(account.nfts[0].nfts?.count ?? -1)")
-					XCTAssert(account.nfts[0].nfts?[0].name == "Donald J. Trump (C)", account.nfts[0].nfts?[0].name ?? "")
-					XCTAssert(account.nfts[0].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmS1DhwQ8jfadjAK1kWHH22FPmgL33FNNHfM74cpXyTp7R/full/1045.png", account.nfts[0].nfts?[0].artifactURL?.absoluteString ?? "")
-					XCTAssert(account.nfts[1].nfts?[0].name == "The Nine #0 (Steve Ellis Cover) - Free NFT", account.nfts[1].nfts?[0].name ?? "")
-					XCTAssert(account.nfts[1].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/bafybeihhlrzfelp3rhz4dcz5ydvui5ntfh3j4luyrc2pbwgkjyhqca4ap4", account.nfts[1].nfts?[0].artifactURL?.absoluteString ?? "")
-					XCTAssert(account.nfts[2].nfts?[0].name == "Tez Swords: #5. Excalibur", account.nfts[2].nfts?[0].name ?? "")
-					XCTAssert(account.nfts[2].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmdoYC76e1R9J3fYWCEsktYimAdYSNMSv6avtxmVt9LQrE", account.nfts[2].nfts?[0].artifactURL?.absoluteString ?? "")
+					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
+					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[0].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURL?.absoluteString ?? "")
+					let keyValueAttributes1 = account.nfts[0].nfts?[0].metadata?.getKeyValueTuplesFromAttributes() ?? []
+					XCTAssert(keyValueAttributes1.count == 5, "\(keyValueAttributes1.count)")
+					XCTAssert(keyValueAttributes1[0].key == "Mood", keyValueAttributes1[0].key)
+					XCTAssert(keyValueAttributes1[0].value == "Taco Tuesday", keyValueAttributes1[0].value)
+					XCTAssert(keyValueAttributes1[1].key == "Artist", keyValueAttributes1[1].key)
+					XCTAssert(keyValueAttributes1[1].value == "Taco", keyValueAttributes1[1].value)
+					XCTAssert(keyValueAttributes1[2].key == "Thought", keyValueAttributes1[2].key)
+					XCTAssert(keyValueAttributes1[2].value == "This is my kind of dessert", keyValueAttributes1[2].value)
+					
+					
+					XCTAssert(account.nfts[1].nfts?[0].name == "Zachary Taylor (C)", account.nfts[1].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[1].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/full/1012.png", account.nfts[1].nfts?[0].artifactURL?.absoluteString ?? "")
+					let keyValueAttributes2 = account.nfts[1].nfts?[0].metadata?.getKeyValueTuplesFromAttributes() ?? []
+					XCTAssert(keyValueAttributes2.count == 0, "\(keyValueAttributes2.count)")
+					
+					
+					XCTAssert(account.nfts[2].nfts?[0].name == "Press Your Buttons - Fragment 3", account.nfts[2].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[2].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmQ1gVgmE3pfXYH5bL9n1NXA5n9g4XW1mihcrRe4pa2StG", account.nfts[2].nfts?[0].artifactURL?.absoluteString ?? "")
+					let keyValueAttributes3 = account.nfts[2].nfts?[0].metadata?.getKeyValueTuplesFromAttributes() ?? []
+					XCTAssert(keyValueAttributes3.count == 4, "\(keyValueAttributes3.count)")
+					XCTAssert(keyValueAttributes3[0].key == "Cost", keyValueAttributes3[0].key)
+					XCTAssert(keyValueAttributes3[0].value == "3", keyValueAttributes3[0].value)
+					XCTAssert(keyValueAttributes3[1].key == "Strength", keyValueAttributes3[1].key)
+					XCTAssert(keyValueAttributes3[1].value == "5", keyValueAttributes3[1].value)
+					XCTAssert(keyValueAttributes3[2].key == "Abilities", keyValueAttributes3[2].key)
+					XCTAssert(keyValueAttributes3[2].value == "Reversible: Opponents arguments cost 1 more.", keyValueAttributes3[2].value)
+					
+					
 					
 					XCTAssert(account.liquidityTokens.count == 2, "\(account.liquidityTokens.count)")
 					XCTAssert(account.liquidityTokens[0].sharesQty == "91", account.liquidityTokens[0].sharesQty)

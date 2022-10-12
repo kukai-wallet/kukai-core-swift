@@ -104,8 +104,14 @@ public struct TzKTBalanceMetadata: Codable {
 	/// Whether or not the symbol or the name is prefered when displaying the token / NFT in a list
 	public let shouldPreferSymbol: Bool?
 	
+	/// A collection of attributes about the token/NFT. Although TZIP-16 intended for this to be filled with info such as license, version, possible error messages etc,
+	/// It has been adopted by NFT creators as a more free-form dictionary. An example would be for gaming NFT's, this might be a list of attack/defensive moves the character is able to use
+	/// It is extremely likely that the actual type will be `[[String: String]]`, however due to various issues and complexities of using a strongly typed language like Swift,
+	/// the easiest solution was to use `[Any]` with a custom decoder
+	public let attributes: [Any]?
 	
-	// TODO: remove when API fixed
+	
+	/// Need to define coding keys as many tokens have incorrectly set their metadata to have booleans inside strings, inside of just booleans
 	enum CodingKeys: String, CodingKey {
 		case name
 		case symbol
@@ -118,8 +124,8 @@ public struct TzKTBalanceMetadata: Codable {
 		case tags
 		case minter
 		case shouldPreferSymbol
+		case attributes
 	}
-	
 	
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -144,11 +150,25 @@ public struct TzKTBalanceMetadata: Codable {
 		} else {
 			shouldPreferSymbol = nil
 		}
+		
+		attributes = try container.decodeIfPresent([Any].self, forKey: .attributes)
 	}
 	
-	
-	
-	
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(name, forKey: .name)
+		try container.encode(symbol, forKey: .symbol)
+		try container.encode(decimals, forKey: .decimals)
+		try container.encode(formats, forKey: .formats)
+		try container.encode(displayUri, forKey: .displayUri)
+		try container.encode(artifactUri, forKey: .artifactUri)
+		try container.encode(thumbnailUri, forKey: .thumbnailUri)
+		try container.encode(description, forKey: .description)
+		try container.encode(tags, forKey: .tags)
+		try container.encode(minter, forKey: .minter)
+		try container.encode(shouldPreferSymbol, forKey: .shouldPreferSymbol)
+		try container.encode(attributes, forKey: .attributes)
+	}
 	
 	/// Helper to run the URI through the `MediaProxyService` to generate a useable URL for the thumbnail (if available)
 	public var thumbnailURL: URL? {
@@ -158,6 +178,36 @@ public struct TzKTBalanceMetadata: Codable {
 	/// Helper to run the URI through the `MediaProxyService` to generate a useable URL for the display image (if available)
 	public var displayURL: URL? {
 		return MediaProxyService.url(fromUriString: displayUri, ofFormat: .small)
+	}
+	
+	/// Attributes is a complex free-form object. In a lot of cases when NFT's are games / collectibles,  it should be possible to convert most if not all the elements into more simple String: String key value pairs, which will be easier to manage in table / collection views
+	public func getKeyValueTuplesFromAttributes() -> [(key: String, value: String)] {
+		guard let attributes else {
+			return []
+		}
+		
+		var tempArray: [(key: String, value: String)] = []
+		for item in attributes {
+			if let stringDict = item as? [String: String] {
+				
+				// If it is already in the format of `{"key": "foo", "value": "bar"}`, return it in a typed tuple
+				if let key = stringDict["key"], let value = stringDict["value"] {
+					tempArray.append((key: key, value: value))
+				}
+				
+				// Else if it is in the format of `{"name": "foo", "value": "bar"}`, grab the name and the value and return it as a typed tuple
+				else if let key = stringDict["name"], let value = stringDict["value"] {
+					tempArray.append((key: key, value: value))
+				}
+				
+				// Else if it is in the format of `{"foo": "bar"}`, grab the key and the value and return it as a typed tuple
+				else if let key = stringDict.keys.first, let value = stringDict.values.first {
+					tempArray.append((key: key, value: value))
+				}
+			}
+		}
+		
+		return tempArray
 	}
 }
 
