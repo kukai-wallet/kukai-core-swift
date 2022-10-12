@@ -39,7 +39,7 @@ class DipDupClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetLiquidity() {
@@ -65,7 +65,7 @@ class DipDupClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	/*
@@ -96,7 +96,7 @@ class DipDupClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	*/
 }

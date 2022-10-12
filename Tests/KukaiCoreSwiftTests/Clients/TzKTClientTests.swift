@@ -32,7 +32,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetOperationError() {
@@ -50,7 +50,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testTransactionHistory() {

@@ -34,7 +34,7 @@ class OperationServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testLocalForgeSignPreapplyInject() {
@@ -51,7 +51,7 @@ class OperationServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testLedgerWithoutReveal() {

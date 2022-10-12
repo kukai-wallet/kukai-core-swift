@@ -33,7 +33,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 			.store(in: &bag)
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetAddress() {
@@ -49,7 +49,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 			.store(in: &bag)
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetDomains() {
@@ -65,7 +65,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 			.store(in: &bag)
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetAddresses() {
@@ -81,6 +81,6 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 			.store(in: &bag)
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 }
