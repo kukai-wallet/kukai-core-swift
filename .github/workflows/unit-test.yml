@@ -20,11 +20,11 @@ jobs:
         platform:
           - iOS
         xcode:
-          - ^13
+          - ^14
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3.1.0
 
-      - uses: mxcl/xcodebuild@v1.9.2
+      - uses: mxcl/xcodebuild@v1.11.0
         with:
           platform: ${{ matrix.platform }}
           xcode: ${{ matrix.xcode }}
