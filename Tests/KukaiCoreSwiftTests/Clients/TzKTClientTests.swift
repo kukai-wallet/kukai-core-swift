@@ -160,7 +160,7 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
 					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
 					XCTAssert(account.nfts[0].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURL?.absoluteString ?? "")
-					let keyValueAttributes1 = account.nfts[0].nfts?[0].metadata?.getKeyValueTuplesFromAttributes() ?? []
+					let keyValueAttributes1 = account.nfts[0].nfts?[0].metadata?.getKeyValuesFromAttributes() ?? []
 					XCTAssert(keyValueAttributes1.count == 5, "\(keyValueAttributes1.count)")
 					XCTAssert(keyValueAttributes1[0].key == "Mood", keyValueAttributes1[0].key)
 					XCTAssert(keyValueAttributes1[0].value == "Taco Tuesday", keyValueAttributes1[0].value)
@@ -172,13 +172,13 @@ class TzKTClientTests: XCTestCase {
 					
 					XCTAssert(account.nfts[1].nfts?[0].name == "Zachary Taylor (C)", account.nfts[1].nfts?[0].name ?? "")
 					XCTAssert(account.nfts[1].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/full/1012.png", account.nfts[1].nfts?[0].artifactURL?.absoluteString ?? "")
-					let keyValueAttributes2 = account.nfts[1].nfts?[0].metadata?.getKeyValueTuplesFromAttributes() ?? []
+					let keyValueAttributes2 = account.nfts[1].nfts?[0].metadata?.getKeyValuesFromAttributes() ?? []
 					XCTAssert(keyValueAttributes2.count == 0, "\(keyValueAttributes2.count)")
 					
 					
 					XCTAssert(account.nfts[2].nfts?[0].name == "Press Your Buttons - Fragment 3", account.nfts[2].nfts?[0].name ?? "")
 					XCTAssert(account.nfts[2].nfts?[0].artifactURL?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/QmQ1gVgmE3pfXYH5bL9n1NXA5n9g4XW1mihcrRe4pa2StG", account.nfts[2].nfts?[0].artifactURL?.absoluteString ?? "")
-					let keyValueAttributes3 = account.nfts[2].nfts?[0].metadata?.getKeyValueTuplesFromAttributes() ?? []
+					let keyValueAttributes3 = account.nfts[2].nfts?[0].metadata?.getKeyValuesFromAttributes() ?? []
 					XCTAssert(keyValueAttributes3.count == 4, "\(keyValueAttributes3.count)")
 					XCTAssert(keyValueAttributes3[0].key == "Cost", keyValueAttributes3[0].key)
 					XCTAssert(keyValueAttributes3[0].value == "3", keyValueAttributes3[0].value)

@@ -181,34 +181,40 @@ public struct TzKTBalanceMetadata: Codable {
 	}
 	
 	/// Attributes is a complex free-form object. In a lot of cases when NFT's are games / collectibles,  it should be possible to convert most if not all the elements into more simple String: String key value pairs, which will be easier to manage in table / collection views
-	public func getKeyValueTuplesFromAttributes() -> [(key: String, value: String)] {
+	public func getKeyValuesFromAttributes() -> [TzKTBalanceMetadataAttributeKeyValue] {
 		guard let attributes else {
 			return []
 		}
 		
-		var tempArray: [(key: String, value: String)] = []
+		var tempArray: [TzKTBalanceMetadataAttributeKeyValue] = []
 		for item in attributes {
 			if let stringDict = item as? [String: String] {
 				
 				// If it is already in the format of `{"key": "foo", "value": "bar"}`, return it in a typed tuple
 				if let key = stringDict["key"], let value = stringDict["value"] {
-					tempArray.append((key: key, value: value))
+					tempArray.append(TzKTBalanceMetadataAttributeKeyValue(key: key, value: value))
 				}
 				
 				// Else if it is in the format of `{"name": "foo", "value": "bar"}`, grab the name and the value and return it as a typed tuple
 				else if let key = stringDict["name"], let value = stringDict["value"] {
-					tempArray.append((key: key, value: value))
+					tempArray.append(TzKTBalanceMetadataAttributeKeyValue(key: key, value: value))
 				}
 				
 				// Else if it is in the format of `{"foo": "bar"}`, grab the key and the value and return it as a typed tuple
 				else if let key = stringDict.keys.first, let value = stringDict.values.first {
-					tempArray.append((key: key, value: value))
+					tempArray.append(TzKTBalanceMetadataAttributeKeyValue(key: key, value: value))
 				}
 			}
 		}
 		
 		return tempArray
 	}
+}
+
+/// Wrapper / Helper to extract metadata attribute content
+public struct TzKTBalanceMetadataAttributeKeyValue: Codable, Hashable {
+	public let key: String
+	public let value: String
 }
 
 /// Object containing information about the various formats the media is available in
