@@ -85,7 +85,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 5)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testSendOperationsError() {
@@ -105,7 +105,7 @@ class TezosNodeClientTests: XCTestCase {
 			
 		}
 		
-		wait(for: [expectation], timeout: 5)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testSendPayload() {
@@ -122,7 +122,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 5)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetMetadata() {
@@ -143,7 +143,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 5)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetContractStorage() {
@@ -160,7 +160,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 5)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetNetworkInformation() {
@@ -174,6 +174,6 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		})
 		
-		wait(for: [expectation], timeout: 5)
+		wait(for: [expectation], timeout: 10)
 	}
 }
