@@ -233,8 +233,9 @@ public class MediaProxyService: NSObject {
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter fallback: If an error occurs and an image can't be downloaded/loaded in, display this image instead
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
+	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?) {
+	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?, completion: @escaping ((CGSize?) -> Void)) {
 		guard let url = url else {
 			imageView.image = fallback
 			return
@@ -261,12 +262,12 @@ public class MediaProxyService: NSObject {
 		
 		imageView.kf.indicatorType = .activity
 		imageView.kf.setImage(with: url, options: processors) { result in
-			guard let _ = try? result.getError() else {
+			guard let res = try? result.get() else {
+				imageView.image = fallback
 				return
 			}
 			
-			// If image downloading fails, display fallback image
-			imageView.image = fallback
+			completion(res.image.size)
 		}
 	}
 }
