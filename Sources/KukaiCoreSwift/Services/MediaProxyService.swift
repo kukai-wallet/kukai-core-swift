@@ -235,7 +235,7 @@ public class MediaProxyService: NSObject {
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?, completion: @escaping ((CGSize?) -> Void)) {
+	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			imageView.image = fallback
 			return
@@ -267,7 +267,9 @@ public class MediaProxyService: NSObject {
 				return
 			}
 			
-			completion(res.image.size)
+			if let completion = completion {
+				completion(res.image.size)
+			}
 		}
 	}
 }
