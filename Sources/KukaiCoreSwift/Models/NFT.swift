@@ -76,7 +76,7 @@ public struct NFT: Codable, Hashable {
 		thumbnailURI = URL(string: tzkt.token.metadata?.thumbnailUri ?? "")
 		metadata = tzkt.token.metadata
 		
-		artifactURL = MediaProxyService.url(fromUri: artifactURI, ofFormat: .small)
+		artifactURL = MediaProxyService.url(fromUri: artifactURI, ofFormat: .raw)
 		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
 		thumbnailURL = MediaProxyService.url(fromUri: thumbnailURI, ofFormat: .icon)
 	}

@@ -238,6 +238,7 @@ public class MediaProxyService: NSObject {
 	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			imageView.image = fallback
+			if let comp = completion { comp(nil) }
 			return
 		}
 		
@@ -264,11 +265,65 @@ public class MediaProxyService: NSObject {
 		imageView.kf.setImage(with: url, options: processors) { result in
 			guard let res = try? result.get() else {
 				imageView.image = fallback
+				if let comp = completion { comp(nil) }
 				return
 			}
 			
 			if let completion = completion {
 				completion(res.image.size)
+			}
+		}
+	}
+	
+	/**
+	 Attempt to use KingFisher library to load an image from a URL, and store it directly in the cache for later usage. Also optional return the downloaded size via a completion block, useful for preparing table/collection view
+	 - parameter url: Media proxy URL pointing to an image
+	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
+	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
+	 */
+	public static func cacheImage(url: URL?, fromCache cache: ImageCache, completion: ((CGSize?) -> Void)? = nil) {
+		guard let url = url else {
+			if let comp = completion { comp(nil) }
+			return
+		}
+		
+		
+		// Don't donwload real images during unit tests. Investigate mocking kingfisher
+		if Thread.current.isRunningXCTest { return }
+		
+		
+		let downloader = ImageDownloader.default
+		downloader.downloadImage(with: url) { result in
+			switch result {
+				case .success(let value):
+					cache.store(value.image, forKey: url.absoluteString)
+					if let comp = completion { comp(value.image.size) }
+					
+				case .failure(_):
+					if let comp = completion { comp(nil) }
+			}
+		}
+	}
+	
+	/**
+	 Check if an image is cached, and return its size if so. Useful for preparing table/collection view
+	 - parameter url: Media proxy URL pointing to an image
+	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
+	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
+	 */
+	public static func sizeForImageIfCached(url: URL?, fromCache cache: ImageCache, completion: @escaping ((CGSize?) -> Void) ) {
+		guard let url = url else {
+			completion(nil)
+			return
+		}
+		
+		cache.retrieveImage(forKey: url.absoluteString) { result in
+			switch result {
+				case .success(let value):
+					completion(value.image?.size)
+					
+				case .failure(_):
+					completion(nil)
 			}
 		}
 	}
