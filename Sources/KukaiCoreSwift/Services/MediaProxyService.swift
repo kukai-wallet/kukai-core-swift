@@ -7,7 +7,7 @@
 
 import UIKit
 import Kingfisher
-import SwiftUI
+import OSLog
 
 public enum MediaProxyServiceError: String, Error {
 	case noMimeTypeFoundInsideFormats
@@ -281,7 +281,7 @@ public class MediaProxyService: NSObject {
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func cacheImage(url: URL?, fromCache cache: ImageCache, completion: ((CGSize?) -> Void)? = nil) {
+	public static func cacheImage(url: URL?, cache: ImageCache, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			if let comp = completion { comp(nil) }
 			return
@@ -296,10 +296,12 @@ public class MediaProxyService: NSObject {
 		downloader.downloadImage(with: url) { result in
 			switch result {
 				case .success(let value):
-					cache.store(value.image, forKey: url.absoluteString)
-					if let comp = completion { comp(value.image.size) }
+					cache.store(value.image, forKey: url.absoluteString) { result2 in
+						if let comp = completion { comp(value.image.size) }
+					}
 					
-				case .failure(_):
+				case .failure(let error):
+					os_log("Error downloading + caching image: %@", log: .kukaiCoreSwift, type: .default, "\(error)")
 					if let comp = completion { comp(nil) }
 			}
 		}
@@ -322,7 +324,8 @@ public class MediaProxyService: NSObject {
 				case .success(let value):
 					completion(value.image?.size)
 					
-				case .failure(_):
+				case .failure(let error):
+					os_log("Error fetching from cache: %@", log: .kukaiCoreSwift, type: .default, "\(error)")
 					completion(nil)
 			}
 		}
