@@ -17,6 +17,9 @@ public struct NFT: Codable, Hashable {
 	/// The address of the FA2 contract that created this NFT
 	public let parentContract: String
 	
+	/// The human readable alias of the parent contract (e.g. "Mooncakes")
+	public let parentAlias: String?
+	
 	/// The FaVersion of the token contrac
 	public let faVersion: FaVersion
 	
@@ -65,6 +68,7 @@ public struct NFT: Codable, Hashable {
 	public init(fromTzKTBalance tzkt: TzKTBalance) {
 		tokenId = Decimal(string: tzkt.token.tokenId) ?? 0
 		parentContract = tzkt.token.contract.address
+		parentAlias = tzkt.token.contract.alias
 		faVersion = tzkt.token.standard
 		decimalPlaces = tzkt.token.metadata?.decimalsInt ?? 0
 		balance = Decimal(string: tzkt.balance) ?? 1
