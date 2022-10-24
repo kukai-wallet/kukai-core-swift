@@ -215,6 +215,11 @@ public struct TzKTBalanceMetadata: Codable {
 public struct TzKTBalanceMetadataAttributeKeyValue: Codable, Hashable {
 	public let key: String
 	public let value: String
+	
+	public init(key: String, value: String) {
+		self.key = key
+		self.value = value
+	}
 }
 
 /// Object containing information about the various formats the media is available in
