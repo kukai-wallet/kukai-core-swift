@@ -246,10 +246,10 @@ public struct TzKTBalanceMetadataFormat: Codable {
 public struct TzKTBalanceMetadataDimensions: Codable {
 	
 	/// The unit of measurement (e.g. px for pixels)
-	public let unit: String
+	public let unit: String?
 	
 	/// String containing the resolution or size (e.g. 1024x787)
-	public let value: String
+	public let value: String?
 	
 	/// Init to manaually create an instance, mostly for testing
 	public init(unit: String, value: String) {
