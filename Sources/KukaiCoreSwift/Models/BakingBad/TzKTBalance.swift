@@ -151,7 +151,11 @@ public struct TzKTBalanceMetadata: Codable {
 			shouldPreferSymbol = nil
 		}
 		
-		attributes = try container.decodeIfPresent([Any].self, forKey: .attributes)
+		if let attributes = try? container.decodeIfPresent([Any].self, forKey: .attributes) {
+			self.attributes = attributes
+		} else {
+			attributes = []
+		}
 	}
 	
 	public func encode(to encoder: Encoder) throws {
