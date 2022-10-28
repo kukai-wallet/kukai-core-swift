@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 /// Model mapping to the Balance object returned from the new TzKT API, resulting from the merge of BCD and TzKT
 public struct TzKTBalance: Codable {
@@ -65,13 +66,13 @@ public struct TzKTBalanceMetadata: Codable {
 	// Common
 	
 	/// A human readbale name
-	public let name: String?
+	public var name: String?
 	
 	/// The tokens symbol
-	public let symbol: String?
+	public var symbol: String?
 	
 	/// The number of decimals the token has
-	public let decimals: String
+	public var decimals: String
 	
 	/// Helper to convert the decimals to an Int
 	public var decimalsInt: Int {
@@ -81,34 +82,34 @@ public struct TzKTBalanceMetadata: Codable {
 	// Likely NFT related
 	
 	/// Details of the available formats that the media is available in
-	public let formats: [TzKTBalanceMetadataFormat]?
+	public var formats: [TzKTBalanceMetadataFormat]?
 	
 	/// URI to an medium/large image owned by the contract
-	public let displayUri: String?
+	public var displayUri: String?
 	
 	/// URI to the raw media artifact owned by the token
-	public let artifactUri: String?
+	public var artifactUri: String?
 	
 	/// URI to an small image for the token, ususally used as an icon when displayed in lists
-	public let thumbnailUri: String?
+	public var thumbnailUri: String?
 	
 	/// Description of the token or NFT
-	public let description: String?
+	public var description: String?
 	
 	/// A list of tags to categorize the token / NFT
-	public let tags: [String]?
+	public var tags: [String]?
 	
 	/// The address responsible for creating the token / NFT
-	public let minter: String?
+	public var minter: String?
 	
 	/// Whether or not the symbol or the name is prefered when displaying the token / NFT in a list
-	public let shouldPreferSymbol: Bool?
+	public var shouldPreferSymbol: Bool?
 	
 	/// A collection of attributes about the token/NFT. Although TZIP-16 intended for this to be filled with info such as license, version, possible error messages etc,
 	/// It has been adopted by NFT creators as a more free-form dictionary. An example would be for gaming NFT's, this might be a list of attack/defensive moves the character is able to use
 	/// It is extremely likely that the actual type will be `[[String: String]]`, however due to various issues and complexities of using a strongly typed language like Swift,
 	/// the easiest solution was to use `[Any]` with a custom decoder
-	public let attributes: [Any]?
+	public var attributes: [Any]?
 	
 	
 	/// Need to define coding keys as many tokens have incorrectly set their metadata to have booleans inside strings, inside of just booleans
@@ -128,33 +129,52 @@ public struct TzKTBalanceMetadata: Codable {
 	}
 	
 	public init(from decoder: Decoder) throws {
-		let container = try decoder.container(keyedBy: CodingKeys.self)
-		name = try container.decodeIfPresent(String.self, forKey: .name)
-		symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
-		decimals = try container.decode(String.self, forKey: .decimals)
-		
-		formats = try container.decodeIfPresent([TzKTBalanceMetadataFormat].self, forKey: .formats)
-		displayUri = try container.decodeIfPresent(String.self, forKey: .displayUri)
-		artifactUri = try container.decodeIfPresent(String.self, forKey: .artifactUri)
-		thumbnailUri = try container.decodeIfPresent(String.self, forKey: .thumbnailUri)
-		description = try container.decodeIfPresent(String.self, forKey: .description)
-		tags = try container.decodeIfPresent([String].self, forKey: .tags)
-		minter = try container.decodeIfPresent(String.self, forKey: .minter)
-		
-		if let tempString = try? container.decodeIfPresent(String.self, forKey: .shouldPreferSymbol) {
-			shouldPreferSymbol = (tempString == "true")
+		do {
+			let container = try decoder.container(keyedBy: CodingKeys.self)
+			name = try container.decodeIfPresent(String.self, forKey: .name)
+			symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
+			decimals = try container.decode(String.self, forKey: .decimals)
 			
-		} else if let tempBool = try? container.decodeIfPresent(Bool.self, forKey: .shouldPreferSymbol) {
-			shouldPreferSymbol = tempBool
+			formats = try container.decodeIfPresent([TzKTBalanceMetadataFormat].self, forKey: .formats)
+			displayUri = try container.decodeIfPresent(String.self, forKey: .displayUri)
+			artifactUri = try container.decodeIfPresent(String.self, forKey: .artifactUri)
+			thumbnailUri = try container.decodeIfPresent(String.self, forKey: .thumbnailUri)
+			description = try container.decodeIfPresent(String.self, forKey: .description)
+			tags = try container.decodeIfPresent([String].self, forKey: .tags)
+			minter = try container.decodeIfPresent(String.self, forKey: .minter)
 			
-		} else {
+			if let tempString = try? container.decodeIfPresent(String.self, forKey: .shouldPreferSymbol) {
+				shouldPreferSymbol = (tempString == "true")
+				
+			} else if let tempBool = try? container.decodeIfPresent(Bool.self, forKey: .shouldPreferSymbol) {
+				shouldPreferSymbol = tempBool
+				
+			} else {
+				shouldPreferSymbol = nil
+			}
+			
+			if let attributes = try? container.decodeIfPresent([Any].self, forKey: .attributes) {
+				self.attributes = attributes
+			} else {
+				attributes = nil
+			}
+		} catch (let error) {
+			os_log("Error parsing metadata: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
+			
+			// metadata can be tempermental due to creators putting strange content inside, return nil if can't parse
+			name = nil
+			symbol = nil
+			decimals = "0"
+			
+			formats = nil
+			displayUri = nil
+			artifactUri = nil
+			thumbnailUri = nil
+			description = nil
+			tags = nil
+			minter = nil
 			shouldPreferSymbol = nil
-		}
-		
-		if let attributes = try? container.decodeIfPresent([Any].self, forKey: .attributes) {
-			self.attributes = attributes
-		} else {
-			attributes = []
+			attributes = nil
 		}
 	}
 	
