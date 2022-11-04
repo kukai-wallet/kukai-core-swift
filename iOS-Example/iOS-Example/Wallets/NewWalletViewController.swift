@@ -15,7 +15,6 @@ class NewWalletViewController: UIViewController {
 	@IBOutlet weak var derivationPathLabel: UILabel!
 	@IBOutlet weak var mnemonicLabel: UILabel!
 	
-	/*
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -28,7 +27,7 @@ class NewWalletViewController: UIViewController {
 		
 		addressLabel.text = wallet?.address
 		derivationPathLabel.text = wallet?.derivationPath
-		mnemonicLabel.text = wallet?.mnemonic
+		mnemonicLabel.text = wallet?.mnemonic.words.description
 		
 		
 		// You should never keep a wallet object in memory any long than absolutely necessary, for security reasons
@@ -45,5 +44,4 @@ class NewWalletViewController: UIViewController {
 		let saveResult = cacheService.cache(wallet: w)
 		print("Wallet saved to encrypted file: \(saveResult)")
 	}
-	*/
 }
