@@ -102,7 +102,7 @@ public class TorusAuthService: NSObject {
 	private var fetchNodeDetails: FetchNodeDetails
 	
 	/// Stored copy of the Torus NodeDetails object. The fetching of this is forced onto the main thread, blocking the UI. Need to push it onto a background thread and store it for other code to access
-	private var nodeDetails: AllNodeDetails? = nil
+	private var nodeDetails: AllNodeDetailsModel? = nil
 	
 	/// Apple sign in requires a seperate workflow to rest of torus, need to grab the completion and hold onto it for later
 	private var createWalletCompletion: ((Result<TorusWallet, KukaiError>) -> Void) = {_ in}
@@ -125,7 +125,7 @@ public class TorusAuthService: NSObject {
 		self.verifiers = verifiers
 		
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: .MAINNET, urlSession: networkService.urlSession)
-		self.torusUtils = TorusUtils(nodePubKeys: [], loglevel: .info, urlSession: networkService.urlSession)
+		self.torusUtils = TorusUtils(loglevel: .info, urlSession: networkService.urlSession)
 	}
 	
 	
@@ -256,9 +256,10 @@ public class TorusAuthService: NSObject {
 			return
 		}
 		
-		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET), urlSession: networkService.urlSession)
-		self.fetchNodeDetails.getAllNodeDetails().done { [weak self] allNodeDetails in
-			self?.nodeDetails = allNodeDetails
+		let isTestnet = (verifierWrapper.networkType == .testnet)
+		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .ROPSTEN : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
+		self.fetchNodeDetails.getNodeDetails(verifier: verifierWrapper.subverifier.subVerifierId, verifierID: verifierWrapper.subverifier.subVerifierId).done { [weak self] remoteNodeDetails in
+			self?.nodeDetails = remoteNodeDetails
 			
 			guard let nd = self?.nodeDetails else {
 				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
@@ -286,10 +287,10 @@ public class TorusAuthService: NSObject {
 	}
 	
 	/// Private wrapper to avoid duplication in the previous function
-	private func getPublicAddress(nodeDetails: AllNodeDetails, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
+	private func getPublicAddress(nodeDetails: AllNodeDetailsModel, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { data in
-			guard let pubX = data["pub_key_X"],
-				  let pubY = data["pub_key_Y"],
+			guard let pubX = data.x,
+				  let pubY = data.y,
 				  let bytesX = Sodium.shared.utils.hex2bin(pubX),
 				  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
 				os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
