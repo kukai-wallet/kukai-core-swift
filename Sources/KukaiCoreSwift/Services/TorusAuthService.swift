@@ -258,7 +258,7 @@ public class TorusAuthService: NSObject {
 		
 		let isTestnet = (verifierWrapper.networkType == .testnet)
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .ROPSTEN : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
-		self.fetchNodeDetails.getNodeDetails(verifier: verifierWrapper.subverifier.subVerifierId, verifierID: verifierWrapper.subverifier.subVerifierId).done { [weak self] remoteNodeDetails in
+		self.fetchNodeDetails.getNodeDetails(verifier: verifierWrapper.subverifier.subVerifierId, verifierID: socialUsername).done { [weak self] remoteNodeDetails in // TODO: socialUsername only works for non-twitter
 			self?.nodeDetails = remoteNodeDetails
 			
 			guard let nd = self?.nodeDetails else {
