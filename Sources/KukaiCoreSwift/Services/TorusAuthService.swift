@@ -394,7 +394,8 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 									   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
 									   subVerifierDetails: [],
 									   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
-									   loglevel: .info)
+									   loglevel: .info,
+									   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
 					
 					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
