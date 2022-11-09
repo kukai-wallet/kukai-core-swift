@@ -154,7 +154,8 @@ public class TorusAuthService: NSObject {
 							   subVerifierDetails: [verifierWrapper.subverifier],
 							   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
 							   loglevel: .info,
-							   urlSession: self.networkService.urlSession)
+							   urlSession: self.networkService.urlSession,
+							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 			
 		} else {
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
@@ -162,7 +163,8 @@ public class TorusAuthService: NSObject {
 							   subVerifierDetails: [verifierWrapper.subverifier],
 							   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
 							   loglevel: .info,
-							   urlSession: self.networkService.urlSession)
+							   urlSession: self.networkService.urlSession,
+							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 		}
 		
 		
