@@ -258,9 +258,27 @@ public class TorusAuthService: NSObject {
 			return
 		}
 		
+		if authType == .twitter {
+			twitterLookup(username: socialUsername) { [weak self] twitterResult in
+				switch twitterResult {
+					case .success(let twitterUserId):
+						self?.getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.subVerifierId, verifierWrapper: verifierWrapper, socialUserId: "twitter|\(twitterUserId)", completion: completion)
+						
+					case .failure(let twitterError):
+						completion(Result.failure(twitterError))
+				}
+			}
+		} else {
+			getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.subVerifierId, verifierWrapper: verifierWrapper, socialUserId: socialUsername, completion: completion)
+		}
+	}
+	
+	/// Private wrapper to avoid duplication in the previous function
+	private func getPublicAddress(verifierName: String, verifierWrapper: SubverifierWrapper, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
+		
 		let isTestnet = (verifierWrapper.networkType == .testnet)
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .ROPSTEN : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
-		self.fetchNodeDetails.getNodeDetails(verifier: verifierWrapper.subverifier.subVerifierId, verifierID: socialUsername).done { [weak self] remoteNodeDetails in // TODO: socialUsername only works for non-twitter
+		self.fetchNodeDetails.getNodeDetails(verifier: verifierName, verifierID: socialUserId).done { [weak self] remoteNodeDetails in
 			self?.nodeDetails = remoteNodeDetails
 			
 			guard let nd = self?.nodeDetails else {
@@ -268,19 +286,42 @@ public class TorusAuthService: NSObject {
 				return
 			}
 			
-			if authType == .twitter {
-				self?.twitterLookup(username: socialUsername) { [weak self] twitterResult in
-					switch twitterResult {
-						case .success(let twitterUserId):
-							self?.getPublicAddress(nodeDetails: nd, verifierName: verifierWrapper.subverifier.subVerifierId, socialUserId: "twitter|\(twitterUserId)", completion: completion)
-							
-						case .failure(let twitterError):
-							completion(Result.failure(twitterError))
-					}
+			self?.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { data in
+				guard let pubX = data.x,
+					  let pubY = data.y,
+					  let bytesX = Sodium.shared.utils.hex2bin(pubX),
+					  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
+					os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
+					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					return
 				}
-			} else {
-				self?.getPublicAddress(nodeDetails: nd, verifierName: verifierWrapper.subverifier.subVerifierId, socialUserId: socialUsername, completion: completion)
+				
+				// Compute prefix and pad data to ensure always 32 bytes
+				let prefixVal: UInt8 = ((bytesY[bytesY.count - 1] % 2) != 0) ? 3 : 2;
+				var pad = [UInt8](repeating: 0, count: 32)
+				pad.append(contentsOf: bytesX)
+				
+				var publicKey = [prefixVal]
+				publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
+				
+				
+				// Run Blake2b hashing on public key
+				guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
+					os_log("Finding address - generating hash failed", log: .torus, type: .error)
+					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.cryptoError)))
+					return
+				}
+				
+				// Create tz2 address and return
+				let tz2Address = Base58Check.encode(message: hash, prefix: Prefix.Address.tz2)
+				completion(Result.success(tz2Address))
+				
+			}.catch { error in
+				os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
+				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
+				return
 			}
+			
 		}.catch { error in
 			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
 			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
@@ -288,44 +329,6 @@ public class TorusAuthService: NSObject {
 		}
 	}
 	
-	/// Private wrapper to avoid duplication in the previous function
-	private func getPublicAddress(nodeDetails: AllNodeDetailsModel, verifierName: String, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		self.torusUtils.getPublicAddress(endpoints: nodeDetails.getTorusNodeEndpoints(), torusNodePubs: nodeDetails.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { data in
-			guard let pubX = data.x,
-				  let pubY = data.y,
-				  let bytesX = Sodium.shared.utils.hex2bin(pubX),
-				  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
-				os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
-				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
-				return
-			}
-			
-			// Compute prefix and pad data to ensure always 32 bytes
-			let prefixVal: UInt8 = ((bytesY[bytesY.count - 1] % 2) != 0) ? 3 : 2;
-			var pad = [UInt8](repeating: 0, count: 32)
-			pad.append(contentsOf: bytesX)
-			
-			var publicKey = [prefixVal]
-			publicKey.append(contentsOf: pad[pad.count-32..<pad.count])
-			
-			
-			// Run Blake2b hashing on public key
-			guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
-				os_log("Finding address - generating hash failed", log: .torus, type: .error)
-				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.cryptoError)))
-				return
-			}
-			
-			// Create tz2 address and return
-			let tz2Address = Base58Check.encode(message: hash, prefix: Prefix.Address.tz2)
-			completion(Result.success(tz2Address))
-			
-		}.catch { error in
-			os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
-			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
-			return
-		}
-	}
 	
 	/**
 	Take in a Twitter username and fetch the Twitter userId instead.
