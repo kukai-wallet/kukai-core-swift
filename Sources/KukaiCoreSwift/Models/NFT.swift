@@ -14,6 +14,10 @@ public struct NFT: Codable, Hashable {
 	/// Each NFT of a token has a unique ID
 	public let tokenId: Decimal
 	
+	/// In order to display in a tablview, the element must be hashable. But in cases where you want to show duplciates (e.g. recents), the computed hash needs to be slightly different
+	/// This property can be used as a quick hack a copy of the NFT struct slightly different, without affecting the data
+	public var duplicateID: Int = 0
+	
 	/// The address of the FA2 contract that created this NFT
 	public let parentContract: String
 	
