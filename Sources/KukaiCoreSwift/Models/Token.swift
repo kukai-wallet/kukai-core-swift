@@ -87,7 +87,7 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter tokenId: The token id if the token is an FA2 token, nil otherwise.
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(name: String, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?) {
+	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
@@ -100,7 +100,7 @@ public class Token: Codable, CustomStringConvertible {
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
-			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name)
+			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name ?? tokenContractAddress ?? "")
 		}
 	}
 	
