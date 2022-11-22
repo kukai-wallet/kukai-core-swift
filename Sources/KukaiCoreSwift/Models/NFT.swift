@@ -63,6 +63,15 @@ public struct NFT: Codable, Hashable {
 	/// Metadata object containing useful information about the nft and its contents
 	public var metadata: TzKTBalanceMetadata? = nil
 	
+	/// Recording if the user has marked the token as hidden
+	public var isHidden: Bool = false
+	
+	/// Recording if the user has marked the token as a favourite
+	public var isFavourite: Bool = false
+	
+	/// Recording if the position the index the user chose for the favourite token to appear
+	public var favouriteSortIndex: Int = 0
+	
 	
 	
 	/**

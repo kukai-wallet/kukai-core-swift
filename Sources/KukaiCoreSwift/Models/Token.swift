@@ -68,6 +68,15 @@ public class Token: Codable, CustomStringConvertible {
 	/// Each token type on a contract will have a unique token_id
 	public var tokenId: Decimal?
 	
+	/// Recording if the user has marked the token as hidden
+	public var isHidden: Bool = false
+	
+	/// Recording if the user has marked the token as a favourite
+	public var isFavourite: Bool = false
+	
+	/// Recording if the position the index the user chose for the favourite token to appear
+	public var favouriteSortIndex: Int = 0
+	
 	/// The individual NFT's owned of this token type
 	public var nfts: [NFT]?
 	
