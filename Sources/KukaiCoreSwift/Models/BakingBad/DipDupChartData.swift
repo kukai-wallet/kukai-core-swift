@@ -42,7 +42,7 @@ public struct DipDupChartObject: Codable {
 	public let low: String
 	
 	/// Convert the `bucket` string into a `Date` object
-	func date() -> Date? {
+	public func date() -> Date? {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		
