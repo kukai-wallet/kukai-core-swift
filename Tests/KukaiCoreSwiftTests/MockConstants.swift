@@ -107,11 +107,11 @@ public struct MockConstants {
 		var bakingBadConfigURL2 = bakingBadURL.appendingPathComponent("v2/bakers/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
 		bakingBadConfigURL2.appendQueryItem(name: "configs", value: "true")
 		
-		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug")
-		tzktsuggestURL1.appendQueryItem(name: "limit", value: 5)
+		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")
+		tzktsuggestURL1.appendQueryItem(name: "limit", value: 1)
 		
-		var tzktsuggestURL2 = tzktURL.appendingPathComponent("v1/suggest/accounts/The Shire")
-		tzktsuggestURL2.appendQueryItem(name: "limit", value: 5)
+		var tzktsuggestURL2 = tzktURL.appendingPathComponent("v1/suggest/accounts/The Shire Payouts")
+		tzktsuggestURL2.appendQueryItem(name: "limit", value: 1)
 		
 		var tzktLastBakerRewardURL = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
 		tzktLastBakerRewardURL.appendQueryItem(name: "limit", value: 1)
