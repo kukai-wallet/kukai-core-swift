@@ -126,6 +126,11 @@ public struct MockConstants {
 		tzktLastBakerRewardURL2.appendQueryItem(name: "type", value: "transaction")
 		tzktLastBakerRewardURL2.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi")
 		
+		var tzktLastBakerRewardURL3 = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
+		tzktLastBakerRewardURL3.appendQueryItem(name: "limit", value: 1)
+		tzktLastBakerRewardURL3.appendQueryItem(name: "type", value: "transaction")
+		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi")
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -173,6 +178,7 @@ public struct MockConstants {
 			tzktsuggestURL3: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire_updated"), MockConstants.http200),
 			tzktLastBakerRewardURL: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL2: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
+			tzktLastBakerRewardURL3: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			
 			// Media proxy
 			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.ipfsResponseWithHeaders),

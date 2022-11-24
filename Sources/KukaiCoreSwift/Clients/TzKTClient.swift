@@ -469,7 +469,7 @@ public class TzKTClient {
 			dispatchGroup.enter()
 			suggestAccount(forString: "\(alias) Payouts") { result in
 				guard let res = try? result.get() else {
-					completion(Result.failure(KukaiError.unknown(withString: "failed to get suggested address")))
+					dispatchGroup.leave()
 					return
 				}
 				
