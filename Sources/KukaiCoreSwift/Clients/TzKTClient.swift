@@ -260,7 +260,9 @@ public class TzKTClient {
 			dispatchGroup.enter()
 			self?.getLastBakerRewardTransaction(forAddress: forAddress, uniqueBakers: uniqueBakers, completion: { resultTx in
 				guard let resTx = try? resultTx.get() else {
-					DispatchQueue.main.async { completion(Result.failure(result.getFailure())) }
+					bakerPayoutAddresses = [:]
+					mostRecentTransaction = nil
+					dispatchGroup.leave()
 					return
 				}
 				

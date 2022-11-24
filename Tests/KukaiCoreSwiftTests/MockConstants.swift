@@ -113,6 +113,9 @@ public struct MockConstants {
 		var tzktsuggestURL2 = tzktURL.appendingPathComponent("v1/suggest/accounts/The Shire Payouts")
 		tzktsuggestURL2.appendQueryItem(name: "limit", value: 1)
 		
+		var tzktsuggestURL3 = tzktURL.appendingPathComponent("v1/suggest/accounts/The Payouts")
+		tzktsuggestURL3.appendQueryItem(name: "limit", value: 1)
+		
 		var tzktLastBakerRewardURL = tzktURL.appendingPathComponent("v1/accounts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/operations")
 		tzktLastBakerRewardURL.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL.appendQueryItem(name: "type", value: "transaction")
@@ -167,6 +170,7 @@ public struct MockConstants {
 			bakingBadConfigURL2: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv"), MockConstants.http200),
 			tzktsuggestURL1: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-bake-nug"), MockConstants.http200),
 			tzktsuggestURL2: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire"), MockConstants.http200),
+			tzktsuggestURL3: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire_updated"), MockConstants.http200),
 			tzktLastBakerRewardURL: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL2: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			
