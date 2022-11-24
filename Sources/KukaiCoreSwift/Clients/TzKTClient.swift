@@ -121,7 +121,7 @@ public class TzKTClient {
 	public func suggestAccount(forString: String, completion: @escaping ((Result<TzKTAddress?, KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/suggest/accounts/\(forString)")
-		url.appendQueryItem(name: "limit", value: 1)
+		url.appendQueryItem(name: "limit", value: 5)
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTAddress].self) { result in
 			guard let res = try? result.get() else {
@@ -132,7 +132,7 @@ public class TzKTClient {
 			for obj in res {
 				
 				// TzKT may suggest something similar, we are only looking for exact matches
-				if obj.alias == forString {
+				if obj.alias == forString + " Payouts" || obj.alias == forString + " ᵖᵃʸᵒᵘᵗˢ" {
 					completion(Result.success(obj))
 					return
 				}
@@ -465,7 +465,7 @@ public class TzKTClient {
 			}
 			
 			dispatchGroup.enter()
-			suggestAccount(forString: "\(alias) Payouts") { result in
+			suggestAccount(forString: alias) { result in
 				guard let res = try? result.get() else {
 					completion(Result.failure(KukaiError.unknown(withString: "failed to get suggested address")))
 					return
