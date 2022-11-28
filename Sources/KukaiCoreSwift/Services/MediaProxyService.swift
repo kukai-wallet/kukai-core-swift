@@ -307,6 +307,15 @@ public class MediaProxyService: NSObject {
 		}
 	}
 	
+	/// Check if a given url is already cached
+	public static func isCached(url: URL?, cache: ImageCache) -> Bool {
+		guard let url = url else {
+			return false
+		}
+		
+		return cache.isCached(forKey: url.absoluteString)
+	}
+	
 	/**
 	 Check if an image is cached, and return its size if so. Useful for preparing table/collection view
 	 - parameter url: Media proxy URL pointing to an image
