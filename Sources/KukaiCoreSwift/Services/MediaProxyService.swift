@@ -39,6 +39,14 @@ public class MediaProxyService: NSObject {
 		case video
 	}
 	
+	/// Helper to parse a collection of media types to understand its contents
+	public enum AggregatedMediaType: String, Codable {
+		case imageOnly
+		case audioOnly
+		case videoOnly
+		case imageAndAudio
+	}
+	
 	/// Constants useful for dealing with the service and its storage / caching
 	public struct Constants {
 		public static let permanentImageCacheName = "kukai-mediaproxy-permanent"
@@ -46,7 +54,7 @@ public class MediaProxyService: NSObject {
 	}
 	
 	
-	private var getMediaTypeCompletion: ((Result<MediaType, KukaiError>) -> Void)? = nil
+	private var getMediaTypeCompletion: ((Result<[MediaType], KukaiError>) -> Void)? = nil
 	private var getMediaTypeDownloadTask: URLSessionDownloadTask? = nil
 	
 	private static let videoFormats = ["mp4", "mov"]
@@ -128,39 +136,43 @@ public class MediaProxyService: NSObject {
 	 - parameter urlSession: If type can't be found via URL or metadata, download the first packet, examine the headers for `Content-Type` using this session. (HEAD requests aren't currently supported if the asset hasn't been already cached)
 	 - parameter completion: A block to run when a type can be found, or an error encountered
 	 */
-	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<MediaType, KukaiError>) -> Void)) {
+	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<[MediaType], KukaiError>) -> Void)) {
+		
+		var types: [MediaType] = []
 		
 		// Check if the metadata contains a format with a mimetype
 		// Gifs may be reencoded as videos, so ignore them
 		for format in formats {
 			if format.mimeType.starts(with: "video/") {
-				completion(Result.success(.video))
-				return
+				types.append(.video)
 				
 			} else if format.mimeType.starts(with: "audio/") {
-				completion(Result.success(.audio))
-				return
+				types.append(.audio)
 				
 			} else if (format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/")) && format.mimeType != "image/gif" {
-				completion(Result.success(.image))
-				return
+				types.append(.image)
 				
 			} else if !format.mimeType.contains("/"), let type = checkFileExtension(fileExtension: format.mimeType) {
 				
 				// Some tokens have a mimetype that doesn't conform to standard, and only includes the file format
-				completion(Result.success(type))
-				return
+				types.append(type)
 			}
 		}
 		
+		if types.count > 0 {
+			completion(Result.success(types))
+			return
+		}
+		
+		
+		// Check if we can get the type from a file extension in the URL
 		guard let url = url else {
 			completion(Result.failure(KukaiError.internalApplicationError(error: MediaProxyServiceError.noMimeTypeFoundInsideFormats)))
 			return
 		}
 		
-		// Check if we can get the type from a file extension in the URL
 		if url.pathExtension != "", url.pathExtension != "gif", let type = checkFileExtension(fileExtension: url.pathExtension) {
-			completion(Result.success(type))
+			completion(Result.success([type]))
 			return
 		}
 		
@@ -170,6 +182,27 @@ public class MediaProxyService: NSObject {
 		self.getMediaTypeDownloadTask = urlSession.downloadTask(with: url)
 		self.getMediaTypeDownloadTask?.delegate = self
 		self.getMediaTypeDownloadTask?.resume()
+	}
+	
+	/// Helper method to parse an array of `MediaType` to quickly determine its content type so UI can be easily arraged
+	public static func typesContents(_ types: [MediaType]) -> AggregatedMediaType? {
+		guard types.count > 0 else {
+			return nil
+		}
+		
+		var duplicatesRemoved = Array(Set(types))
+		if duplicatesRemoved.contains(where: { $0 == .audio }) &&  duplicatesRemoved.contains(where: { $0 == .image }) {
+			return .imageAndAudio
+			
+		} else if duplicatesRemoved[0] == .video {
+			return .videoOnly
+			
+		} else if duplicatesRemoved[0] == .audio {
+			return .audioOnly
+			
+		} else {
+			return .imageOnly
+		}
 	}
 	
 	private func checkFileExtension(fileExtension: String) -> MediaType? {
@@ -375,13 +408,13 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 		}
 		
 		if contentType.contains("video/") {
-			completion(Result.success(.video))
+			completion(Result.success([.video]))
 			
 		} else if contentType.contains("audio/") {
-			completion(Result.success(.audio))
+			completion(Result.success([.audio]))
 			
 		} else {
-			completion(Result.success(.image))
+			completion(Result.success([.image]))
 		}
 	}
 }
