@@ -141,15 +141,15 @@ public class MediaProxyService: NSObject {
 		var types: [MediaType] = []
 		
 		// Check if the metadata contains a format with a mimetype
-		// Gifs may be reencoded as videos, so ignore them
+		// Gifs will be re-encoded as videos (have requested .icon remain gif's to avoid dozens of AVPlayer's in table/collection view)
 		for format in formats {
-			if format.mimeType.starts(with: "video/") {
+			if format.mimeType.starts(with: "video/") || format.mimeType.lowercased() == "image/gif" {
 				types.append(.video)
 				
 			} else if format.mimeType.starts(with: "audio/") {
 				types.append(.audio)
 				
-			} else if (format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/")) && format.mimeType != "image/gif" {
+			} else if format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/") {
 				types.append(.image)
 				
 			} else if !format.mimeType.contains("/"), let type = checkFileExtension(fileExtension: format.mimeType) {
