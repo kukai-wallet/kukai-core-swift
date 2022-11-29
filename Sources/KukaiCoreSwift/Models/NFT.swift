@@ -95,7 +95,7 @@ public struct NFT: Codable, Hashable {
 		
 		artifactURL = MediaProxyService.url(fromUri: artifactURI, ofFormat: .raw)
 		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
-		thumbnailURL = MediaProxyService.url(fromUri: thumbnailURI, ofFormat: .icon)
+		thumbnailURL = MediaProxyService.url(fromUri: displayURI ?? thumbnailURI, ofFormat: .icon) // Prioritise a scaled down displayURI because thumbnails can be a black circle in some cases when its a video
 	}
 	
 	/// Confomring to Equatable
