@@ -287,7 +287,7 @@ public class MediaProxyService: NSObject {
 			
 		} else if fileExtension == "gif" {
 			// Do nothing, all handled by default
-			processors = []
+			processors = [.processor(DefaultImageProcessor.default)]
 			
 		} else if let size = downSampleSize {
 			// Only possible on non SVG's and non gifs, like jpeg, png etc
