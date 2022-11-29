@@ -67,7 +67,7 @@ class MediaProxySerivceTests: XCTestCase {
 			
 			switch result {
 				case .success(let mediaType):
-					XCTAssert(mediaType == .image, mediaType.rawValue)
+					XCTAssert(mediaType[0] == .image, mediaType[0].rawValue)
 					
 				case .failure(let error):
 					XCTFail("Error: \(error)")
@@ -81,7 +81,7 @@ class MediaProxySerivceTests: XCTestCase {
 			
 			switch result {
 				case .success(let mediaType):
-					XCTAssert(mediaType == .video, mediaType.rawValue)
+					XCTAssert(mediaType[0] == .video, mediaType[0].rawValue)
 					
 				case .failure(let error):
 					XCTFail("Error: \(error)")
@@ -95,7 +95,7 @@ class MediaProxySerivceTests: XCTestCase {
 			
 			switch result {
 				case .success(let mediaType):
-					XCTAssert(mediaType == .audio, mediaType.rawValue)
+					XCTAssert(mediaType[0] == .audio, mediaType[0].rawValue)
 					
 				case .failure(let error):
 					XCTFail("Error: \(error)")
@@ -113,7 +113,7 @@ class MediaProxySerivceTests: XCTestCase {
 			
 			switch result {
 				case .success(let mediaType):
-					XCTAssert(mediaType == .image, mediaType.rawValue)
+					XCTAssert(mediaType[0] == .image, mediaType[0].rawValue)
 					
 				case .failure(let error):
 					XCTFail("Error: \(error)")
@@ -131,7 +131,7 @@ class MediaProxySerivceTests: XCTestCase {
 			
 			switch result {
 				case .success(let mediaType):
-					XCTAssert(mediaType == .image, mediaType.rawValue)
+					XCTAssert(mediaType[0] == .image, mediaType[0].rawValue)
 					
 				case .failure(let error):
 					XCTFail("Error: \(error)")

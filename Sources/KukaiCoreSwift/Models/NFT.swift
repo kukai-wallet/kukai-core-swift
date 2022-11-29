@@ -51,15 +51,6 @@ public struct NFT: Codable, Hashable {
 	/// A smaller thumbnail used to display meda of the artifact
 	public let thumbnailURI: URL?
 	
-	/// The URL to a cached version of the asset
-	public var displayURL: URL? = nil
-	
-	/// The URL to the cached version of the asset
-	public var thumbnailURL: URL? = nil
-	
-	/// The URL to the cached version of the asset
-	public var artifactURL: URL? = nil
-	
 	/// Metadata object containing useful information about the nft and its contents
 	public var metadata: TzKTBalanceMetadata? = nil
 	
@@ -92,10 +83,6 @@ public struct NFT: Codable, Hashable {
 		displayURI = URL(string: tzkt.token.metadata?.displayUri ?? "")
 		thumbnailURI = URL(string: tzkt.token.metadata?.thumbnailUri ?? "")
 		metadata = tzkt.token.metadata
-		
-		artifactURL = MediaProxyService.url(fromUri: artifactURI, ofFormat: .raw)
-		displayURL = MediaProxyService.url(fromUri: displayURI, ofFormat: .small)
-		thumbnailURL = MediaProxyService.url(fromUri: displayURI ?? thumbnailURI, ofFormat: .icon) // Prioritise a scaled down displayURI because thumbnails can be a black circle in some cases when its a video
 	}
 	
 	/// Confomring to Equatable

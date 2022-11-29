@@ -37,6 +37,7 @@ public class MediaProxyService: NSObject {
 		case image
 		case audio
 		case video
+		case gif // needs to be sperate from "image" because sometimes its re-encoded as a video depending on which `Format` you choose
 	}
 	
 	/// Helper to parse a collection of media types to understand its contents
@@ -44,6 +45,7 @@ public class MediaProxyService: NSObject {
 		case imageOnly
 		case audioOnly
 		case videoOnly
+		case gifOnly
 		case imageAndAudio
 	}
 	
@@ -141,13 +143,15 @@ public class MediaProxyService: NSObject {
 		var types: [MediaType] = []
 		
 		// Check if the metadata contains a format with a mimetype
-		// Gifs will be re-encoded as videos (have requested .icon remain gif's to avoid dozens of AVPlayer's in table/collection view)
 		for format in formats {
-			if format.mimeType.starts(with: "video/") || format.mimeType.lowercased() == "image/gif" {
+			if format.mimeType.starts(with: "video/") {
 				types.append(.video)
 				
 			} else if format.mimeType.starts(with: "audio/") {
 				types.append(.audio)
+				
+			} else if format.mimeType.lowercased() == "image/gif" || format.mimeType.lowercased() == "gif" {
+				types.append(.gif)
 				
 			} else if format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/") {
 				types.append(.image)
@@ -190,8 +194,8 @@ public class MediaProxyService: NSObject {
 			return nil
 		}
 		
-		var duplicatesRemoved = Array(Set(types))
-		if duplicatesRemoved.contains(where: { $0 == .audio }) &&  duplicatesRemoved.contains(where: { $0 == .image }) {
+		let duplicatesRemoved = Array(Set(types))
+		if duplicatesRemoved.contains(where: { $0 == .audio }) && duplicatesRemoved.contains(where: { $0 == .image }) {
 			return .imageAndAudio
 			
 		} else if duplicatesRemoved[0] == .video {
@@ -200,14 +204,20 @@ public class MediaProxyService: NSObject {
 		} else if duplicatesRemoved[0] == .audio {
 			return .audioOnly
 			
+		} else if duplicatesRemoved[0] == .gif {
+			return .gifOnly
+			
 		} else {
 			return .imageOnly
 		}
 	}
 	
 	private func checkFileExtension(fileExtension: String) -> MediaType? {
-		if fileExtension != "", fileExtension != "gif" {
-			if MediaProxyService.imageFormats.contains(fileExtension) {
+		if fileExtension != "" {
+			if fileExtension == "gif" {
+				return.gif
+				
+			} else if MediaProxyService.imageFormats.contains(fileExtension) {
 				return .image
 				
 			} else if MediaProxyService.audioFormats.contains(fileExtension) {
