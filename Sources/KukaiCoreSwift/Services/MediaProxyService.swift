@@ -110,21 +110,27 @@ public class MediaProxyService: NSObject {
 	}
 	
 	/**
-	 Helper method to return a standard thumbnail URL from a URI
-	 - parameter fromUri: URL object containing a URI (supports IPFS URIs)
+	 Helper method to return a standard thumbnail URL for a NFT, taking into account some custom logic / known workarounds
+	 - parameter fromNFT: `NFT` object
 	 - returns: An optional URL
 	 */
-	public static func thumbnailURL(uri: URL) -> URL? {
-		return MediaProxyService.url(fromUri: uri, ofFormat: .icon)
+	public static func thumbnailURL(forNFT nft: NFT) -> URL? {
+		
+		if nft.metadata?.symbol == "OBJKT" {
+			return MediaProxyService.url(fromUri: nft.displayURI, ofFormat: .icon)
+			
+		} else {
+			return MediaProxyService.url(fromUri: nft.thumbnailURI ?? nft.displayURI, ofFormat: .icon)
+		}
 	}
 	
 	/**
-	 Helper method to return a standard larger display URL from a URI
-	 - parameter fromUri: URL object containing a URI (supports IPFS URIs)
+	 Helper method to return a standard larger display URL for a NFT
+	 - parameter fromNFT: `NFT` object
 	 - returns: An optional URL
 	 */
-	public static func displayURL(uri: URL) -> URL? {
-		return MediaProxyService.url(fromUri: uri, ofFormat: .small)
+	public static func displayURL(forNFT nft: NFT) -> URL? {
+		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: .small)
 	}
 	
 	
@@ -230,7 +236,6 @@ public class MediaProxyService: NSObject {
 		
 		return nil
 	}
-	
 	
 	
 	

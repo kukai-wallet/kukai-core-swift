@@ -43,18 +43,6 @@ class MediaProxySerivceTests: XCTestCase {
 		XCTAssert(url5?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url5?.absoluteString ?? "")
 		XCTAssert(url6?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url6?.absoluteString ?? "")
 		XCTAssert(url7?.absoluteString == "https://static.tcinfra.net/media/medium/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url7?.absoluteString ?? "")
-		
-		let url8 = MediaProxyService.thumbnailURL(uri: URL(string: MediaProxySerivceTests.ipfsURIWithoutExtension)!)
-		let url9 = MediaProxyService.thumbnailURL(uri: URL(string: MediaProxySerivceTests.httpsURI)!)
-		
-		XCTAssert(url8?.absoluteString == "https://static.tcinfra.net/media/icon/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url8?.absoluteString ?? "")
-		XCTAssert(url9?.absoluteString == "https://static.tcinfra.net/media/icon/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url9?.absoluteString ?? "")
-		
-		let url10 = MediaProxyService.displayURL(uri: URL(string: MediaProxySerivceTests.ipfsURIWithoutExtension)!)
-		let url11 = MediaProxyService.displayURL(uri: URL(string: MediaProxySerivceTests.httpsURI)!)
-		
-		XCTAssert(url10?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url10?.absoluteString ?? "")
-		XCTAssert(url11?.absoluteString == "https://static.tcinfra.net/media/small/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url11?.absoluteString ?? "")
 	}
 	
 	func testMediaTypeCheckerFromFormat() {
