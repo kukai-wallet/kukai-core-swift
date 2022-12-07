@@ -8,11 +8,20 @@
 import Foundation
 
 /// Object ot abstract away a significatn amount of logic involved in computing  estimated reward payments from a baker
-public struct AggregateRewardInformation: Codable {
+public struct AggregateRewardInformation: Codable, Hashable, Equatable {
+	
+	private let id: UUID
 	
 	public let previousReward: RewardDetails?
 	public let estimatedPreviousReward: RewardDetails?
 	public let estimatedNextReward: RewardDetails?
+	
+	public init(previousReward: RewardDetails?, estimatedPreviousReward: RewardDetails?, estimatedNextReward: RewardDetails?) {
+		self.id = UUID()
+		self.previousReward = previousReward
+		self.estimatedPreviousReward = estimatedPreviousReward
+		self.estimatedNextReward = estimatedNextReward
+	}
 	
 	/// Creating this object involves many expensive requests, but produces a result that is valid for up to ~3 days.
 	/// This function can be used to determine if its ok to read a previous object from a cache, or if it needs to be refreshed
@@ -32,6 +41,14 @@ public struct AggregateRewardInformation: Codable {
 		}
 		
 		return (next.cycle - previous.cycle) > 1
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
+	}
+	
+	public static func == (lhs: AggregateRewardInformation, rhs: AggregateRewardInformation) -> Bool {
+		return lhs.id == rhs.id
 	}
 }
 
