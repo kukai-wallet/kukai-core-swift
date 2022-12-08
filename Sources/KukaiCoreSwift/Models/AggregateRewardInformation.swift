@@ -63,7 +63,6 @@ public struct RewardDetails: Codable {
 	public let cycle: Int
 	public let fee: Double
 	public let dateOfPayment: Date
-	public let timeString: String
 	public let meetsMinDelegation: Bool
 	
 	public init(bakerAlias: String?, bakerLogo: URL?, paymentAddress: String, amount: XTZAmount, cycle: Int, fee: Double, date: Date, meetsMinDelegation: Bool) {
@@ -74,7 +73,6 @@ public struct RewardDetails: Codable {
 		self.cycle = cycle
 		self.fee = fee
 		self.dateOfPayment = date
-		self.timeString = date.timeAgoDisplay()
 		self.meetsMinDelegation = meetsMinDelegation
 	}
 }
