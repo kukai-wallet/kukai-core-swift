@@ -11,7 +11,7 @@ import LocalAuthentication
 
 
 /// Enum used to get details about the current device's capabilities
-enum CurrentDevice {
+public enum CurrentDevice {
 	
 	/// Does the current device have a secure enclave
 	public static var hasSecureEnclave: Bool {
