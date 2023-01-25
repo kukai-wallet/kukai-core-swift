@@ -13,7 +13,7 @@ let package = Package(
 		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
 	],
 	dependencies: [
-		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.2"),
+		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.3"),
 		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", from: "4.1.1"),
 		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.2"),

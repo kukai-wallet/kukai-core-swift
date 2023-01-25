@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import KukaiCryptoSwift
 import os.log
 
 /// An object allowing developers to automatically estimate the necessary fee per Operation to ensure it will be accpeted by a Baker.
@@ -77,7 +78,7 @@ public class FeeEstimatorService {
 	- parameter withWallet: The `Wallet` object used for signing the transaction.
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
-	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
+	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		
 		// Make a copy of the operations before they are modified
 		guard let opJson = try? JSONEncoder().encode(operations), let opsCopy = try? JSONDecoder().decode([Operation].self, from: opJson) else {
@@ -85,8 +86,7 @@ public class FeeEstimatorService {
 			return
 		}
 		
-		
-		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, withWallet: wallet)
+		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey)
 		
 		// Before estimating, set the maximum gas and storage to ensure the operation suceeds (excluding any errors such as invalid address, insufficnet funds etc)
 		let maxGasAndStorage = OperationFees(transactionFee: XTZAmount.zero(), gasLimit: constants.maxGasPerOperation(), storageLimit: constants.maxStoragePerOperation())
@@ -95,12 +95,12 @@ public class FeeEstimatorService {
 		switch self.config.forgingType {
 			case .local:
 				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, originalOps: opsCopy, completion: completion)
+					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, signingCurve: EllipticalCurve.fromAddress(walletAddress), originalOps: opsCopy, completion: completion)
 				}
 				
 			case .remote:
-				operationService.remoteForge(operationPayload: operationPayload, wallet: wallet) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, wallet: wallet, originalOps: opsCopy, completion: completion)
+				operationService.remoteForge(operationPayload: operationPayload) { [weak self] forgedResult in
+					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, signingCurve: EllipticalCurve.fromAddress(walletAddress), originalOps: opsCopy, completion: completion)
 				}
 		}
 	}
@@ -110,14 +110,14 @@ public class FeeEstimatorService {
 							 operationPayload: OperationPayload,
 							 operationMetadata: OperationMetadata,
 							 constants: NetworkConstants,
-							 wallet: Wallet,
+							 signingCurve: EllipticalCurve,
 							 originalOps: [Operation],
 							 completion: @escaping ((Result<[Operation], KukaiError>) -> Void))
 	{
 		switch forgeResult {
 			case .success(let hexString):
 				var mutablePayload = operationPayload
-				mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: wallet.privateKeyCurve())
+				mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: signingCurve)
 				let runOperationPayload = RunOperationPayload(chainID: operationMetadata.chainID, operation: mutablePayload)
 				
 				self.estimate(runOperationPayload: runOperationPayload, operations: mutablePayload.contents, constants: constants, forgedHex: hexString, originalOps: originalOps, completion: completion)

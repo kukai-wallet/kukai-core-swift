@@ -112,10 +112,10 @@ public class TezosNodeClient {
 	- parameter wallet: The `Wallet` that will sign the operation
 	- parameter completion: A callback containing an updated array of `Operation`'s with fees set correctly, or an error.
 	*/
-	public func estimate(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
+	public func estimate(operations: [Operation], walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		
 		if let constants = self.networkConstants {
-			self.estimate(operations: operations, constants: constants, withWallet: wallet, completion: completion)
+			self.estimate(operations: operations, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
 			
 		} else {
 			self.getNetworkInformation { [weak self] (success, error) in
@@ -124,17 +124,17 @@ public class TezosNodeClient {
 					return
 				}
 				
-				self?.estimate(operations: operations, constants: constants, withWallet: wallet, completion: completion)
+				self?.estimate(operations: operations, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
 			}
 		}
 	}
 	
 	/// Internal function to break up code and make it easier to read. Public function checks to see if the network constants are present, if not will query them and then estimate
-	private func estimate(operations: [Operation], constants: NetworkConstants, withWallet wallet: Wallet, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
-		getOperationMetadata(forWallet: wallet) { [weak self] (result) in
+	private func estimate(operations: [Operation], constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
+		getOperationMetadata(forWalletAddress: walletAddress) { [weak self] (result) in
 			switch result {
 				case .success(let metadata):
-					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, withWallet: wallet, completion: completion)
+					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Unable to fetch metadata: %@", "\(error)")
@@ -153,10 +153,10 @@ public class TezosNodeClient {
 	- parameter completion: A completion closure that will either return the opertionID of an injected operation, or an error.
 	*/
 	public func send(operations: [Operation], withWallet wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		getOperationMetadata(forWallet: wallet) { [weak self] (result) in
+		getOperationMetadata(forWalletAddress: wallet.address) { [weak self] (result) in
 			switch result {
 				case .success(let metadata):
-					let operationPayload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, withWallet: wallet)
+					let operationPayload = OperationFactory.operationPayload(fromMetadata: metadata, andOperations: operations, walletAddress: wallet.address, base58EncodedPublicKey: wallet.publicKeyBase58encoded())
 					self?.send(operationPayload: operationPayload, operationMetadata: metadata, withWallet: wallet, completion: completion)
 				
 				case .failure(let error):
@@ -192,7 +192,7 @@ public class TezosNodeClient {
 	- parameter forWallet: The `Wallet` object that will be sending the operations.
 	- parameter completion: A callback that will be executed when the network requests finish.
 	*/
-	public func getOperationMetadata(forWallet wallet: Wallet, completion: @escaping ((Result<OperationMetadata, KukaiError>) -> Void)) {
+	public func getOperationMetadata(forWalletAddress: String, completion: @escaping ((Result<OperationMetadata, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		let url = self.config.primaryNodeURL
 		
@@ -205,7 +205,7 @@ public class TezosNodeClient {
 		// Get manager key
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.managerKey(forAddress: wallet.address), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.managerKey(forAddress: forWalletAddress), withBaseURL: url) { (result) in
 				switch result {
 					case .success(let value):
 						managerKey = value
@@ -222,7 +222,7 @@ public class TezosNodeClient {
 		// Get counter
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.counter(forAddress: wallet.address), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.counter(forAddress: forWalletAddress), withBaseURL: url) { (result) in
 				switch result {
 					case .success(let value):
 						counter = Int(value) ?? 0

@@ -26,9 +26,9 @@ class TaquitoServiceTests: XCTestCase {
 	
 	
 	override func setUpWithError() throws {
-		payload1 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops1, withWallet: MockConstants.defaultLinearWallet)
-		payload2 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops2, withWallet: MockConstants.defaultLinearWallet)
-		payload3 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops3, withWallet: MockConstants.defaultLinearWallet)
+		payload1 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops1, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
+		payload2 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops2, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
+		payload3 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops3, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
 	}
 
 	override func tearDownWithError() throws {
@@ -106,7 +106,9 @@ class TaquitoServiceTests: XCTestCase {
 	
 	func testForgeError() {
 		let errorMetaData = OperationMetadata(managerKey: nil, counter: 1, blockchainHead: BlockchainHead(protocol: "blah", chainID: "blah", hash: "blah"))
-		let payload = OperationFactory.operationPayload(fromMetadata: errorMetaData, andOperations: [], withWallet: MockConstants.defaultLinearWallet)
+		let address = MockConstants.defaultLinearWallet.address
+		let key = MockConstants.defaultLinearWallet.publicKeyBase58encoded()
+		let payload = OperationFactory.operationPayload(fromMetadata: errorMetaData, andOperations: [], walletAddress: address, base58EncodedPublicKey: key)
 		
 		let expectation = XCTestExpectation(description: "Forge payload Error")
 		TaquitoService.shared.forge(operationPayload: payload) { forgeResult in

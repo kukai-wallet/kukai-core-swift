@@ -76,7 +76,7 @@ public class OperationService {
 	public func remoteForgeParseSignPreapplyInject(operationMetadata: OperationMetadata, operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		// Perform a remote forge of the oepration with the metadata
-		remoteForge(operationPayload: operationPayload, wallet: wallet, completion: { [weak self] (result) in
+		remoteForge(operationPayload: operationPayload, completion: { [weak self] (result) in
 			
 			// Parse remotely against a different server to verify hash is correct before continuing
 			self?.remoteParse(forgeResult: result, operationMetadata: operationMetadata, operationPayload: operationPayload) { (innerResult) in
@@ -194,7 +194,7 @@ public class OperationService {
 	- parameter wallet: The `Wallet` object that will sign the operations.
 	- parameter completion: callback with a forged hash or an error.
 	*/
-	public func remoteForge(operationPayload: OperationPayload, wallet: Wallet, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
+	public func remoteForge(operationPayload: OperationPayload, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		guard let rpc = RPC.forge(operationPayload: operationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create forge RPC, cancelling event")

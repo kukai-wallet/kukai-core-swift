@@ -28,6 +28,17 @@ public class OperationReveal: Operation {
 	}
 	
 	/**
+	 Create an OperationReveal.
+	 - parameter base58EncodedPublicKey: The `Wallet` object, whose publicKey needs to be revealed.
+	 - parameter walletAddress: The `Wallet` object, whose publicKey needs to be revealed.
+	 */
+	public init(base58EncodedPublicKey: String, walletAddress: String) {
+		self.publicKey = base58EncodedPublicKey
+		
+		super.init(operationKind: .reveal, source: walletAddress)
+	}
+	
+	/**
 	Create a base operation.
 	- parameter from: A decoder used to convert a data fromat (such as JSON) into the model object.
 	*/

@@ -342,8 +342,8 @@ public struct MockConstants {
 	public static let networkConstants = NetworkConstants(minimal_block_delay: "30", hard_gas_limit_per_operation: "10400000", hard_gas_limit_per_block: "10400000", origination_size: 257, cost_per_byte: "250", hard_storage_limit_per_operation: "60000")
 	public static var sendOperations = OperationFactory.sendOperation(MockConstants.xtz_1, of: MockConstants.tokenXTZ, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 	public static var sendOperationWithReveal = [OperationReveal(wallet: MockConstants.defaultHdWallet), OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)]
-	public static let sendOperationPayload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet)
-	public static let sendOperationWithRevealPayload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperationWithReveal, withWallet: MockConstants.defaultHdWallet)
+	public static let sendOperationPayload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperations, walletAddress: MockConstants.defaultHdWallet.address, base58EncodedPublicKey: MockConstants.defaultHdWallet.publicKeyBase58encoded())
+	public static let sendOperationWithRevealPayload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperationWithReveal, walletAddress: MockConstants.defaultHdWallet.address, base58EncodedPublicKey: MockConstants.defaultHdWallet.publicKeyBase58encoded())
 	public static let sendOperationForged = "43f597d84037e88354ed041cc6356f737cc6638691979bb64415451b58b4af2c6c00ad00bb6cbcfc497bffbaf54c23511c74dbeafb2d00bdac1a80bd3fe0d403e80700005134b25890279835eb946e6369a3d719bc0d617700"
 	public static let operationHashToSearch = "ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"
 	

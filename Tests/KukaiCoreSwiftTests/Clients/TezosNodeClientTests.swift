@@ -54,7 +54,9 @@ class TezosNodeClientTests: XCTestCase {
 	
 	func testEstiamte() {
 		let expectation = XCTestExpectation(description: "tezos node client")
-		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, withWallet: MockConstants.defaultHdWallet) { result in
+		let address = MockConstants.defaultHdWallet.address
+		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
+		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, walletAddress: address, base58EncodedPublicKey: key) { result in
 			switch result {
 				case .success(let ops):
 					XCTAssert(ops.count == 2)
@@ -127,7 +129,8 @@ class TezosNodeClientTests: XCTestCase {
 	
 	func testGetMetadata() {
 		let expectation = XCTestExpectation(description: "tezos node client")
-		MockConstants.shared.tezosNodeClient.getOperationMetadata(forWallet: MockConstants.defaultHdWallet) { result in
+		let address = MockConstants.defaultHdWallet.address
+		MockConstants.shared.tezosNodeClient.getOperationMetadata(forWalletAddress: address) { result in
 			switch result {
 				case .success(let metadata):
 					XCTAssert(metadata.branch == "BMLWVn1nEWeEzf6pxn3VYx7YcQ3zPay7HQtQ3rBMxuc7bXCG8BB", metadata.branch)
