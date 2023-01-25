@@ -28,11 +28,11 @@ enum WalletCacheError: Error {
 
 /// Object to store Ui related info about wallets, seperated from the wallet object itself to avoid issues merging together
 public struct WalletMetadata: Codable, Hashable {
-	var address: String
-	var displayName: String
-	var type: WalletType
-	var children: [WalletMetadata]
-	var isChild: Bool
+	public var address: String
+	public var displayName: String
+	public var type: WalletType
+	public var children: [WalletMetadata]
+	public var isChild: Bool
 }
 
 
