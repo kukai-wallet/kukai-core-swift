@@ -72,13 +72,13 @@ class HDWalletTests: XCTestCase {
 		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")
 		XCTAssert(wallet?.address == MockConstants.hdWallet.address, wallet?.address ?? "-")
 		
-		XCTAssert(wallet?.addNextChildWallet() ?? false)
-		XCTAssert(wallet?.childWallets[0].address == MockConstants.hdWallet.childWalletAddresses[0], wallet?.childWallets[0].address ?? "-")
+		let child1 = wallet?.createChild(accountIndex: 1)
+		XCTAssert(child1?.address == MockConstants.hdWallet.childWalletAddresses[0], child1?.address ?? "-")
 		
-		XCTAssert(wallet?.addNextChildWallet() ?? false)
-		XCTAssert(wallet?.childWallets[1].address == MockConstants.hdWallet.childWalletAddresses[1], wallet?.childWallets[1].address ?? "-")
+		let child2 = wallet?.createChild(accountIndex: 2)
+		XCTAssert(child2?.address == MockConstants.hdWallet.childWalletAddresses[1], child2?.address ?? "-")
 		
-		XCTAssert(wallet?.addNextChildWallet() ?? false)
-		XCTAssert(wallet?.childWallets[2].address == MockConstants.hdWallet.childWalletAddresses[2], wallet?.childWallets[2].address ?? "-")
+		let child3 = wallet?.createChild(accountIndex: 3)
+		XCTAssert(child3?.address == MockConstants.hdWallet.childWalletAddresses[2], child3?.address ?? "-")
 	}
 }

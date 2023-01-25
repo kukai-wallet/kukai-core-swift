@@ -91,7 +91,7 @@ public class WalletCacheService {
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
 	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt(), existingWallets[wallet.address] == nil, let existingMetadata = readNonsensitive(), (childOfIndex ?? 0) >= 0, (childOfIndex ?? -1) < existingMetadata.count else {
+		guard let existingWallets = readFromDiskAndDecrypt(), existingWallets[wallet.address] == nil else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets or wallet already exists in cache")
 			return false
 		}
@@ -99,8 +99,13 @@ public class WalletCacheService {
 		var newWallets = existingWallets
 		newWallets[wallet.address] = wallet
 		
-		var newMetadata = existingMetadata
+		var newMetadata = readNonsensitive()
 		if let index = childOfIndex {
+			if index >= newMetadata.count {
+				os_log(.error, log: .kukaiCoreSwift, "WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"%@\", when there are currently only \"%@\" items", index, newMetadata.count)
+				return false
+			}
+			
 			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true))
 		} else {
 			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: false))
@@ -116,7 +121,7 @@ public class WalletCacheService {
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
 	public func deleteWallet(withAddress: String, parentIndex: Int?) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt(), let existingMetadata = readNonsensitive() else {
+		guard let existingWallets = readFromDiskAndDecrypt() else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to fetch wallets")
 			return false
 		}
@@ -124,9 +129,9 @@ public class WalletCacheService {
 		var newWallets = existingWallets
 		newWallets.removeValue(forKey: withAddress)
 		
-		var newMetadata = existingMetadata
+		var newMetadata = readNonsensitive()
 		if let hdWalletIndex = parentIndex {
-			guard let childIndex = newMetadata[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
+			guard hdWalletIndex < newMetadata.count, let childIndex = newMetadata[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
 				return false
 			}
@@ -143,6 +148,36 @@ public class WalletCacheService {
 		}
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
+	}
+	
+	/**
+	 Find and return the secure object for a given address
+	 - Returns: Optional object confirming to `Wallet` protocol
+	 */
+	public func fetchWallet(forAddress address: String) -> Wallet? {
+		guard let cacheItems = readFromDiskAndDecrypt() else {
+			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items")
+			return nil
+		}
+		
+		return cacheItems[address]
+	}
+	
+	/**
+	 Delete the cached files and the assoicate keys used to encrypt it
+	 - Returns: Bool, indicating if the process was successful or not
+	 */
+	public func deleteAllCacheAndKeys() -> Bool {
+		
+		if Thread.current.isRunningXCTest {
+			self.publicKey = nil
+			self.privateKey = nil
+			
+		} else {
+			try? deleteKey()
+		}
+		
+		return DiskService.delete(fileName: WalletCacheService.sensitiveCacheFileName) && DiskService.delete(fileName: WalletCacheService.nonsensitiveCacheFileName)
 	}
 	
 	
@@ -281,8 +316,8 @@ public class WalletCacheService {
 	/**
 	 Return an ordered array of `WalletMetadata` if present on disk
 	 */
-	public func readNonsensitive() -> [WalletMetadata]? {
-		return DiskService.read(type: [WalletMetadata].self, fromFileName: WalletCacheService.nonsensitiveCacheFileName)
+	public func readNonsensitive() -> [WalletMetadata] {
+		return DiskService.read(type: [WalletMetadata].self, fromFileName: WalletCacheService.nonsensitiveCacheFileName) ?? []
 	}
 }
 

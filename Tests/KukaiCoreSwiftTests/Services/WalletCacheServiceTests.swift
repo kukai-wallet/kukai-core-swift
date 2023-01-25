@@ -25,173 +25,137 @@ class WalletCacheServiceTests: XCTestCase {
 	
 	// Can't run these tests without a host application, which SPM doesn't support. Need to investigate a workaround
 	func testCache() {
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 		
 		// Check its empty to begin with
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil))
 		
 		// Check it fails if we try add the same wallet a second time
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet) == false)
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil) == false)
 		
 		// Check they have been stored
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 2)
 		
 		// Check they can be parsed
-		let wallets = walletCacheService.fetchWallets()
+		let wallet1 = walletCacheService.fetchWallet(forAddress: MockConstants.defaultLinearWallet.address)
+		let wallet2 = walletCacheService.fetchWallet(forAddress: MockConstants.defaultHdWallet.address)
 		
-		XCTAssert(wallets != nil)
-		XCTAssert(wallets?.first?.address == MockConstants.defaultLinearWallet.address, wallets?.first?.address ?? "-")
-		XCTAssert(wallets?.last?.address == MockConstants.defaultHdWallet.address, wallets?.first?.address ?? "-")
+		XCTAssert(wallet1 != nil)
+		XCTAssert(wallet1?.address == MockConstants.defaultLinearWallet.address, wallet1?.address ?? "-")
+		XCTAssert(wallet2 != nil)
+		XCTAssert(wallet2?.address == MockConstants.defaultHdWallet.address, wallet2?.address ?? "-")
 		
 		// Check that the underlying keys were reconstructed correctly
-		let linear = (wallets?.first as? RegularWallet)
-		let hd = (wallets?.last as? HDWallet)
+		let regular = wallet1 as? RegularWallet
+		let hd = wallet2 as? HDWallet
 		
-		XCTAssert(linear?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, linear?.privateKey.bytes.toHexString() ?? "-")
-		XCTAssert(linear?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, linear?.publicKey.bytes.toHexString() ?? "-")
+		XCTAssert(regular?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, regular?.privateKey.bytes.toHexString() ?? "-")
+		XCTAssert(regular?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, regular?.publicKey.bytes.toHexString() ?? "-")
 		XCTAssert(hd?.privateKey.bytes.hexString == MockConstants.hdWallet.privateKey, hd?.privateKey.bytes.hexString ?? "-")
 		XCTAssert(hd?.publicKey.bytes.hexString == MockConstants.hdWallet.publicKey, hd?.publicKey.bytes.hexString ?? "-")
 		
 		
 		// Check they are deleted
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 		
 		// Check its empty again
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 	}
 	
 	func testFetch() {
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 		
 		// Check its empty to begin with
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil))
 		
 		// Check they have been stored
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 2)
 		
 		// Check they can be parsed
-		let wallet = walletCacheService.fetchWallet(address: MockConstants.defaultLinearWallet.address)
+		let wallet = walletCacheService.fetchWallet(forAddress: MockConstants.defaultLinearWallet.address)
 		
 		XCTAssert(wallet != nil)
 		XCTAssert(wallet?.address == MockConstants.defaultLinearWallet.address, wallet?.address ?? "-")
 		
-		let wallet2 = walletCacheService.fetchWallet(address: MockConstants.defaultHdWallet.address)
+		let wallet2 = walletCacheService.fetchWallet(forAddress: MockConstants.defaultHdWallet.address)
 		
 		XCTAssert(wallet2 != nil)
 		XCTAssert(wallet2?.address == MockConstants.defaultHdWallet.address, wallet2?.address ?? "-")
 		
 		// Clean up
-		MockConstants.defaultHdWallet.childWallets = []
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 	}
 	
 	func testRemove() {
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 		
 		// Check its empty to begin with
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil))
 		
 		// Rmeove Linear
-		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.defaultLinearWallet.address, parentHDWallet: nil))
+		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.defaultLinearWallet.address, parentIndex: nil))
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 1)
 		
 		// Rmeove HD
-		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.defaultHdWallet.address, parentHDWallet: nil))
+		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.defaultHdWallet.address, parentIndex: nil))
 		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
 		
-		// Add 2 children to the HDWallet and then store
-		let _ = MockConstants.defaultHdWallet.addNextChildWallet()
-		let _ = MockConstants.defaultHdWallet.addNextChildWallet()
-		
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
+		// Add 2 children to the HDWallet
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet.createChild(accountIndex: 1) ?? MockConstants.defaultHdWallet, childOfIndex: 0))
+		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet.createChild(accountIndex: 2) ?? MockConstants.defaultHdWallet, childOfIndex: 0))
 		
 		// Delete the first child
-		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.hdWallet.childWalletAddresses[0], parentHDWallet: MockConstants.defaultHdWallet.address))
+		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.hdWallet.childWalletAddresses[0], parentIndex: 0))
 		
-		let cachedWallet = (walletCacheService.fetchPrimaryWallet() as? HDWallet)
-		XCTAssert(cachedWallet?.childWallets.count == 1)
-		XCTAssert(cachedWallet?.childWallets[0].address == MockConstants.hdWallet.childWalletAddresses[1])
-		
-		// Clean up
-		MockConstants.defaultHdWallet.childWallets = []
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
-	}
-	
-	func testUpdate() {
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
-		
-		// Check its empty to begin with
-		XCTAssert(walletCacheService.readFromDiskAndDecrypt()?.count == 0)
-		
-		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet))
-		
-		// Check what was stored
-		let cachedWallet = (walletCacheService.fetchPrimaryWallet() as? HDWallet)
-		XCTAssert(cachedWallet?.childWallets.count == 0)
-		
-		// Update and check again
-		if let hdWallet = cachedWallet {
-			XCTAssert(hdWallet.addNextChildWallet())
-			XCTAssert(walletCacheService.update(hdWallet: hdWallet, atIndex: 0))
-		} else {
-			XCTFail("Failed to unwrap HDWallet")
-		}
-		
-		let cachedWallet2 = (walletCacheService.fetchPrimaryWallet() as? HDWallet)
-		XCTAssert(cachedWallet2?.childWallets.count == 1)
+		let walletMetadata = walletCacheService.readNonsensitive()
+		XCTAssert(walletMetadata[0].children.count == 1)
+		XCTAssert(walletMetadata[0].children[0].address == MockConstants.hdWallet.childWalletAddresses[1])
 		
 		// Clean up
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 	}
 	
 	func testCurves() {
 		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
+		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil))
 		
-		XCTAssert(walletCacheService.cache(wallet: wallet))
-		
-		
-		let wallets = walletCacheService.fetchWallets()
-		XCTAssert(wallets != nil)
-		XCTAssert(wallets?.first?.address == MockConstants.linearWalletSecp256k1.address, wallets?.first?.address ?? "-")
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address)
+		XCTAssert(wallet1 != nil)
+		XCTAssert(wallet1?.address == MockConstants.linearWalletSecp256k1.address, wallet1?.address ?? "-")
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 	}
 	
 	func testDerivationPaths() {
 		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase, derivationPath: MockConstants.hdWallet_hardened_change.derivationPath)!
+		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil))
 		
-		XCTAssert(walletCacheService.cache(wallet: wallet))
-		
-		let wallets = walletCacheService.fetchWallets()
-		let hdWallet = (wallets?.first as? HDWallet)
-		
-		XCTAssert(wallets != nil)
-		XCTAssert(hdWallet?.address == MockConstants.hdWallet_hardened_change.address, hdWallet?.address ?? "-")
-		XCTAssert(hdWallet?.derivationPath == MockConstants.hdWallet_hardened_change.derivationPath, hdWallet?.derivationPath ?? "-")
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address) as? HDWallet
+		XCTAssert(wallet1 != nil)
+		XCTAssert(wallet1?.address == MockConstants.hdWallet_hardened_change.address, wallet1?.address ?? "-")
+		XCTAssert(wallet1?.derivationPath == MockConstants.hdWallet_hardened_change.derivationPath, wallet1?.derivationPath ?? "-")
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 	}
 	
 	func testPassphrase() {
 		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)!
+		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil))
 		
-		XCTAssert(walletCacheService.cache(wallet: wallet))
-		
-		
-		let wallets = walletCacheService.fetchWallets()
-		XCTAssert(wallets != nil)
-		XCTAssert(wallets?.first?.address == MockConstants.linearWalletEd255519_withPassphrase.address, wallets?.first?.address ?? "-")
-		XCTAssert(walletCacheService.deleteCacheAndKeys())
+		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address)
+		XCTAssert(wallet1 != nil)
+		XCTAssert(wallet1?.address == MockConstants.linearWalletEd255519_withPassphrase.address, wallet1?.address ?? "-")
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 	}
 }
