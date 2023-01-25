@@ -39,9 +39,6 @@ public protocol Wallet: Codable {
 	/// The public TZ1 or TZ2 address of the wallet
 	var address: String { get }
 	
-	/// Used to control the order wallets are stored on disk. This can be important to avoid confusing users
-	var sortIndex: Int { get set }
-	
 	
 	
 	/**

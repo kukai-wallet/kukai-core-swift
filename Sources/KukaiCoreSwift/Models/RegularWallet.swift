@@ -25,9 +25,6 @@ public class RegularWallet: Wallet {
 	/// The TZ1 or TZ2 address of the wallet
 	public let address: String
 	
-	/// USed by `WalletCacheService` to control the order wallets are returned
-	public var sortIndex: Int
-	
 	/// An object representing the PrivateKey used to generate the wallet
 	public var privateKey: PrivateKey
 	
@@ -60,7 +57,6 @@ public class RegularWallet: Wallet {
 		self.privateKey = privateKey
 		self.publicKey = pubKey
 		self.mnemonic = nil
-		self.sortIndex = 0
 	}
 	
 	/**
@@ -79,7 +75,6 @@ public class RegularWallet: Wallet {
 		self.privateKey = keyPair.privateKey
 		self.publicKey = keyPair.publicKey
 		self.mnemonic = mnemonic
-		self.sortIndex = 0
 	}
 	
 	/**

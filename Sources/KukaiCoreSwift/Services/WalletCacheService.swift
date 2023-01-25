@@ -5,7 +5,7 @@
 //  Created by Simon Mcloughlin on 21/01/2021.
 //  Copyright © 2021 Kukai AB. All rights reserved.
 //
-// Based off: https://github.com/VivoPay/VivoPayEncryption , with some design changes and lowering iOS requirement to iOS 12
+//	Based off: https://github.com/VivoPay/VivoPayEncryption , with extra functionality and some design changes
 
 import Foundation
 import LocalAuthentication
@@ -26,12 +26,20 @@ enum WalletCacheError: Error {
 	case unableToDecrypt
 }
 
+/// Object to store Ui related info about wallets, seperated from the wallet object itself to avoid issues merging together
+public struct WalletMetadata: Codable, Hashable {
+	var address: String
+	var displayName: String
+	var type: WalletType
+	var children: [WalletMetadata]
+	var isChild: Bool
+}
 
 
 /**
-A service class used to store and retrieve `Wallet` objects such as `LinearWallet`, `HDWallet` and `TorusWallet` from the devices disk.
-This class will use the secure enclave (keychain if not available) to generate a key used to encrypt the contents locally, and retrieve.
-The class can be used to take the decrypted JSON and convert it back into Wallet classes, ready to be used.
+ A service class used to store and retrieve `Wallet` objects such as `RegularWallet`, `HDWallet`, `LedgerWallet` and `TorusWallet` from the devices disk.
+ This class will use the secure enclave (keychain if not available) to generate a key used to encrypt the contents locally, and retrieve.
+ This class will also store non senstiivve "metadata" about wallets, to allow storage of UI related data users might want to add, without cluttering up the wallet objects themselves
 */
 public class WalletCacheService {
 	
@@ -49,8 +57,13 @@ public class WalletCacheService {
 	/// The application key used to identify the encryption keys
 	fileprivate static let applicationKey = "app.kukai.kukai-core-swift.walletcache.encryption"
 	
-	// The filename where the data will be stored
-	fileprivate static let cacheFileName = "kukai-core-wallets.txt"
+	/// The filename where the wallet data will be stored, encrypted
+	fileprivate static let sensitiveCacheFileName = "kukai-core-wallets.txt"
+	
+	/// The filename where the public wallet data and in app metadata will be stored, unencrypted
+	fileprivate static let nonsensitiveCacheFileName = "kukai-core-wallets-metadata.txt"
+	
+	
 	
 	
 	
@@ -67,95 +80,91 @@ public class WalletCacheService {
 	
 	
 	
+	
+	
 	// MARK: - Storage and Retrieval
 	
 	/**
-	Add a `Wallet` object to the local encrypted storage, provided it doesn't already exist
-	- Parameter wallet: An object conforming to `Wallet` to be stored
-	- Returns: Bool, indicating if the storage was successful or not
-	*/
-	public func cache<T: Wallet>(wallet: T) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt(), !existingWallets.contains(where: { $0.address == wallet.address }) else {
+	 Securely cache a walelt object, and record a default metadata object
+	 - Parameter wallet: An object conforming to `Wallet` to be stored
+	 - Parameter childOfIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
+	 - Returns: Bool, indicating if the storage was successful or not
+	 */
+	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?) -> Bool {
+		guard let existingWallets = readFromDiskAndDecrypt(), existingWallets[wallet.address] == nil, let existingMetadata = readNonsensitive(), (childOfIndex ?? 0) >= 0, (childOfIndex ?? -1) < existingMetadata.count else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to cache wallet, as can't decrypt existing wallets or wallet already exists in cache")
 			return false
 		}
 		
 		var newWallets = existingWallets
-		var tempWallet = wallet
-		tempWallet.sortIndex = newWallets.count
-		newWallets.append(tempWallet)
+		newWallets[wallet.address] = wallet
 		
-		return encryptAndWriteToDisk(wallets: newWallets)
-	}
-	
-	/**
-	 Update a `HDWallet` instance to record changes to `.childWallets` in the cache
-	 - Parameter hdWallet: The modified `HDWallet` to be stored
-	 - Parameter atIndex: the index of the old copy of the the `HDWallet` to replace
-	 - Returns: Bool, indicating if the storage was successful or not
-	 */
-	public func update(hdWallet: HDWallet, atIndex: Int) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt(), atIndex < existingWallets.count else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to fetch wallets or range out of bounds")
-			return false
+		var newMetadata = existingMetadata
+		if let index = childOfIndex {
+			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true))
+		} else {
+			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: false))
 		}
 		
-		var newWallets = existingWallets
-		newWallets[atIndex] = hdWallet
-		
-		return encryptAndWriteToDisk(wallets: newWallets)
+		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
 	}
 	
 	/**
-	 Remove a specific wallet, or child wallet from the cache
-	 - Parameter withAddress: The address of the wallet to remove
-	 - Parameter parentHDWallet: Optional, required if trying to remove the child address of a HDWallet
+	 Delete both a secure wallet entry and its related metadata object
+	 - Parameter withAddress: The address of the wallet
+	 - Parameter parentIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
-	public func deleteWallet(withAddress: String, parentHDWallet: String?) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt() else {
+	public func deleteWallet(withAddress: String, parentIndex: Int?) -> Bool {
+		guard let existingWallets = readFromDiskAndDecrypt(), let existingMetadata = readNonsensitive() else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to fetch wallets")
 			return false
 		}
 		
 		var newWallets = existingWallets
+		newWallets.removeValue(forKey: withAddress)
 		
-		// Either find the parent HDWallet and then remove its child, else find the wallet and remove it
-		if let hdWalletAddress = parentHDWallet {
-			guard let hdWallet = newWallets.first(where: { $0.address == hdWalletAddress }) as? HDWallet, let index = hdWallet.childWallets.firstIndex(where: { $0.address == withAddress }) else {
+		var newMetadata = existingMetadata
+		if let hdWalletIndex = parentIndex {
+			guard let childIndex = newMetadata[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
 				return false
 			}
 			
-			let _ = hdWallet.childWallets.remove(at: index)
-			
+			let _ = newMetadata[hdWalletIndex].children.remove(at: childIndex)
 			
 		} else {
-			guard let index = newWallets.firstIndex(where: { $0.address == withAddress }) else {
+			guard let index = newMetadata.firstIndex(where: { $0.address == withAddress }) else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
 				return false
 			}
 			
-			let _ = newWallets.remove(at: index)
+			let _ = newMetadata.remove(at: index)
 		}
 		
-		return encryptAndWriteToDisk(wallets: newWallets)
+		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
 	}
 	
+	
+	
+	
+	
+	// MARK: - Read and Write
+	
 	/**
-	Take an array of `Wallet` objects, serialise to JSON, encrypt and then write to disk
-	- Returns: Bool, indicating if the process was successful
-	*/
-	public func encryptAndWriteToDisk(wallets: [Wallet]) -> Bool {
+	 Take a dictionary of `Wallet` objects with their addresses as the key, serialise to JSON, encrypt and then write to disk
+	 - Returns: Bool, indicating if the process was successful
+	 */
+	public func encryptAndWriteToDisk(wallets: [String: Wallet]) -> Bool {
 		do {
 			
 			/// Because `Wallet` is a generic protocl, `JSONEncoder` can't be called on an array of it.
 			/// Instead we must iterate through each item in the array, use its `type` to determine the corresponding class, and encode each one
 			/// The only way to encode all of these items individually, without loosing data, is to convert each one to a JSON object, pack in an array and call `JSONSerialization.data`
 			/// This results in a JSON blob containing all of the unique properties of each subclass, while allowing the caller to pass in any conforming `Wallet` type
-			var jsonArray: [Any] = []
+			var jsonDict: [String: Any] = [:]
 			var walletData: Data = Data()
-			for wallet in wallets {
+			for wallet in wallets.values {
 				switch wallet.type {
 					case .regular:
 						if let walletObj = wallet as? RegularWallet {
@@ -166,12 +175,12 @@ public class WalletCacheService {
 						if let walletObj = wallet as? HDWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
-					
+						
 					case .social:
 						if let walletObj = wallet as? TorusWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
-					
+						
 					case .ledger:
 						if let walletObj = wallet as? LedgerWallet {
 							walletData = try JSONEncoder().encode(walletObj)
@@ -179,17 +188,17 @@ public class WalletCacheService {
 				}
 				
 				let jsonObj = try JSONSerialization.jsonObject(with: walletData, options: .allowFragments)
-				jsonArray.append(jsonObj)
+				jsonDict[wallet.address] = jsonObj
 			}
 			
-			let jsonData = try JSONSerialization.data(withJSONObject: jsonArray, options: .fragmentsAllowed)
+			let jsonData = try JSONSerialization.data(withJSONObject: jsonDict, options: .fragmentsAllowed)
 			
 			
 			/// Take the JSON blob, encrypt and store on disk
 			guard loadOrCreateKeys(),
 				  let plaintext = String(data: jsonData, encoding: .utf8),
 				  let ciphertextData = try? encrypt(plaintext),
-				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.cacheFileName) else {
+				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.sensitiveCacheFileName) else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to save wallet items")
 				return false
 			}
@@ -203,12 +212,12 @@ public class WalletCacheService {
 	}
 	
 	/**
-	Go to the file on disk (if present), decrypt its contents and retrieve an array of `Wallet`
-	- Returns: An array of `Wallet` if present on disk
-	*/
-	public func readFromDiskAndDecrypt() -> [Wallet]? {
-		guard let data = DiskService.readData(fromFileName: WalletCacheService.cacheFileName) else {
-			return [] // No such file
+	 Go to the file on disk (if present), decrypt its contents and retrieve a dictionary of `Wallet's with the key being the wallet address
+	 - Returns: A dictionary of `Wallet` if present on disk
+	 */
+	public func readFromDiskAndDecrypt() -> [String: Wallet]? {
+		guard let data = DiskService.readData(fromFileName: WalletCacheService.sensitiveCacheFileName) else {
+			return [:] // No such file
 		}
 		
 		guard loadOrCreateKeys(),
@@ -222,9 +231,12 @@ public class WalletCacheService {
 			/// Similar to the issue mentioned in `encryptAndWriteToDisk`, we can't ask `JSONEncoder` to encode an array of `Wallet`.
 			/// We must read the raw JSON, extract the `type` field and use it to determine the appropriate class
 			/// Once we have that, we simply call `JSONDecode` for each obj, with the correct class and put in an array
-			var wallets: [Wallet] = []
-			let jsonArray = try JSONSerialization.jsonObject(with: plaintextData, options: .allowFragments) as? [[String: Any]]
-			for jsonObj in jsonArray ?? [[:]] {
+			var wallets: [String: Wallet] = [:]
+			guard let jsonDict = try JSONSerialization.jsonObject(with: plaintextData, options: .allowFragments) as? [String: [String: Any]] else {
+				return [:]
+			}
+			
+			for jsonObj in jsonDict.values {
 				guard let type = WalletType(rawValue: (jsonObj["type"] as? String) ?? "") else {
 					os_log("Unable to parse wallet object of type: %@", log: .kukaiCoreSwift, type: .error, (jsonObj["type"] as? String) ?? "")
 					continue
@@ -235,24 +247,22 @@ public class WalletCacheService {
 				switch type {
 					case .regular:
 						let wallet = try JSONDecoder().decode(RegularWallet.self, from: jsonObjAsData)
-						wallets.append(wallet)
+						wallets[wallet.address] = wallet
 						
 					case .hd:
 						let wallet = try JSONDecoder().decode(HDWallet.self, from: jsonObjAsData)
-						wallets.append(wallet)
-					
+						wallets[wallet.address] = wallet
+						
 					case .social:
 						let wallet = try JSONDecoder().decode(TorusWallet.self, from: jsonObjAsData)
-						wallets.append(wallet)
+						wallets[wallet.address] = wallet
 						
 					case .ledger:
 						let wallet = try JSONDecoder().decode(LedgerWallet.self, from: jsonObjAsData)
-						wallets.append(wallet)
+						wallets[wallet.address] = wallet
 				}
 			}
 			
-			
-			wallets.sort(by: { $0.sortIndex < $1.sortIndex })
 			return wallets
 			
 		} catch (let error) {
@@ -262,78 +272,17 @@ public class WalletCacheService {
 	}
 	
 	/**
-	Read, decrypt and re-create the `Wallet` objects from the stored cache
-	- Returns: An array of `Wallet` objects if present on disk
-	*/
-	public func fetchWallets() -> [Wallet]? {
-		guard let cacheItems = readFromDiskAndDecrypt() else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items")
-			return nil
-		}
-		
-		return cacheItems
-	}
-	
-	/**
-	A shorthand function to avoid unnecessary processing. It will read, decrypt and re-create the first `Wallet` object present on disk
-	- Returns: A `Wallet` object if present on disk
-	*/
-	public func fetchPrimaryWallet() -> Wallet? {
-		guard let cacheItems = readFromDiskAndDecrypt(),
-			  let first = cacheItems.first else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items")
-			return nil
-		}
-		
-		return first
-	}
-	
-	/**
-	 A shorthand function to avoid unnecessary processing. It will read, decrypt and re-create the first `Wallet` object matching the address, if found
-	 - Returns: A `Wallet` object if present on disk
+	 Write an ordered array of `WalletMetadata` to disk, replacing existing file if exists
 	 */
-	public func fetchWallet(address: String) -> Wallet? {
-		guard let cacheItems = readFromDiskAndDecrypt() else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to read wallet items")
-			return nil
-		}
-		
-		// Cycle through all wallets
-		for item in cacheItems {
-			
-			// If top level item matches, return it
-			if item.address == address {
-				return item
-			}
-			
-			// If not, and wallet is of type hd, cycle through its child wallets to see if they match
-			if item.type == .hd, let hdWallet = item as? HDWallet {
-				for subItem in hdWallet.childWallets {
-					if subItem.address == address {
-						return subItem
-					}
-				}
-			}
-		}
-		
-		return nil
+	public func writeNonsensitive(_ metadata: [WalletMetadata]) -> Bool {
+		return DiskService.write(encodable: metadata, toFileName: WalletCacheService.nonsensitiveCacheFileName)
 	}
-
+	
 	/**
-	Delete the cached file and the assoicate keys used to encrypt it
-	- Returns: Bool, indicating if the process was successful or not
-	*/
-	public func deleteCacheAndKeys() -> Bool {
-		
-		if Thread.current.isRunningXCTest {
-			self.publicKey = nil
-			self.privateKey = nil
-			
-		} else {
-			try? deleteKey()
-		}
-		
-		return DiskService.delete(fileName: WalletCacheService.cacheFileName)
+	 Return an ordered array of `WalletMetadata` if present on disk
+	 */
+	public func readNonsensitive() -> [WalletMetadata]? {
+		return DiskService.read(type: [WalletMetadata].self, fromFileName: WalletCacheService.nonsensitiveCacheFileName)
 	}
 }
 
@@ -394,7 +343,7 @@ extension WalletCacheService {
 	fileprivate func createKeys() throws -> (public: SecKey, private: SecKey?) {
 		var error: Unmanaged<CFError>?
 		
-		let privateKeyAccessControl: SecAccessControlCreateFlags = CurrentDevice.hasSecureEnclave ?  [.privateKeyUsage] : []
+		let privateKeyAccessControl: SecAccessControlCreateFlags = CurrentDevice.hasSecureEnclave ?  [.userPresence, .privateKeyUsage] : [.userPresence]
 		guard let privateKeyAccess = SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, privateKeyAccessControl, &error) else {
 			if let err = error { throw err.takeRetainedValue() as Error }
 			else { throw WalletCacheError.unableToAccessEnclaveOrKeychain }

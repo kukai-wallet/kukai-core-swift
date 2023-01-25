@@ -34,9 +34,6 @@ public class HDWallet: Wallet {
 	/// The public TZ1 address of the wallet
 	public var address: String
 	
-	/// Used by `WalletCacheService` to control the order wallets are returned
-	public var sortIndex: Int
-	
 	/// An WalletCore object representing the PrivateKey used to generate the wallet
 	public var privateKey: PrivateKey
 	
@@ -48,9 +45,6 @@ public class HDWallet: Wallet {
 	
 	/// The Bip44 derivationPath used to create the wallet
 	public var derivationPath: String
-	
-	/// HDWallets created with the same key pair, by incrementing the derivation path. Stored so they can be grouped appropriately
-	public var childWallets: [HDWallet] = []
 	
 	/// The passphrase used to create the wallet. Not accessible by design, only stored as needed to enable adding child wallets to HD
 	private var passphrase: String
@@ -77,7 +71,6 @@ public class HDWallet: Wallet {
 		self.mnemonic = mnemonic
 		self.derivationPath = derivationPath
 		self.passphrase = passphrase
-		self.sortIndex = 0
 	}
 	
 	/**
@@ -136,17 +129,27 @@ public class HDWallet: Wallet {
 	
 	/**
 	 The default implementation in Ledger is to not give users the option to provide their own derivation path, but instead increment the "account" field by 1 each time.
-	 This function will create a new `HDWallet`, by taking the default derivation path and changing the account to `self.childWallets.count + 1`, and using the same key
+	 This function will create a new `HDWallet`, by taking the default derivation path and changing the account to the index supplied, and using the same key
 	 */
-	public func addNextChildWallet() -> Bool {
-		let newDerivationPath = HD.defaultDerivationPath(withAccountIndex: self.childWallets.count + 1)
+	public func createChild(accountIndex: Int) -> HDWallet? {
+		let newDerivationPath = HD.defaultDerivationPath(withAccountIndex: accountIndex)
 		
 		guard let newWallet = HDWallet(withMnemonic: self.mnemonic, passphrase: self.passphrase, derivationPath: newDerivationPath) else {
-			return false
+			return nil
 		}
 		
-		self.childWallets.append(newWallet)
-		return true
+		return newWallet
+	}
+	
+	/**
+	 This function will create a new `HDWallet`, by using the same key combined with the supplied derivationPath
+	 */
+	public func createChild(derivationPath: String) -> HDWallet? {
+		guard let newWallet = HDWallet(withMnemonic: self.mnemonic, passphrase: self.passphrase, derivationPath: derivationPath) else {
+			return nil
+		}
+		
+		return newWallet
 	}
 }
 

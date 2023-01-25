@@ -27,9 +27,6 @@ public class LedgerWallet: Wallet {
 	/// The TZ address pulled from the Ledger device, cached to avoid complex retrieval when fetching balances etc.
 	public var address: String
 	
-	/// The sort index of the wallet, in the list of all wallets
-	public var sortIndex: Int
-	
 	/// The raw hex public key extracted from the Ledger, needed in order to perform REVEAL operations
 	public var publicKey: String
 	
@@ -60,7 +57,6 @@ public class LedgerWallet: Wallet {
 			return nil
 		}
 		
-		self.sortIndex = 0
 		self.address = address
 		
 		let startIndex = publicKey.index(publicKey.startIndex, offsetBy: 2)
