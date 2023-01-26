@@ -29,7 +29,8 @@ enum WalletCacheError: Error {
 /// Object to store Ui related info about wallets, seperated from the wallet object itself to avoid issues merging together
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
-	public var displayName: String
+	public var displayName: String?
+	public var socialType: TorusAuthProvider?
 	public var type: WalletType
 	public var children: [WalletMetadata]
 	public var isChild: Bool
@@ -108,8 +109,12 @@ public class WalletCacheService {
 			}
 			
 			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			
+		} else if let torusWallet = wallet as? TorusWallet {
+			newMetadata.append(WalletMetadata(address: wallet.address, displayName: torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			
 		} else {
-			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 		}
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)

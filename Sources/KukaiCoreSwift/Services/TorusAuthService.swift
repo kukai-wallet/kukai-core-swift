@@ -21,7 +21,7 @@ import os.log
 // MARK: - Types
 
 /// List of providers currently supported and available on the Tezos network
-public enum TorusAuthProvider: String {
+public enum TorusAuthProvider: String, Codable {
 	case apple
 	case twitter
 	case google
