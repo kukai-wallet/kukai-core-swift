@@ -115,13 +115,14 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testAllowance() {
-		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: MockConstants.defaultHdWallet.address, allowance: MockConstants.token3Decimals_1, wallet: MockConstants.defaultHdWallet)
+		let address = MockConstants.defaultHdWallet.address
+		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op.counter == "0")
 		XCTAssert(op.operationKind == .transaction)
 		XCTAssert(op is OperationTransaction)
 		
-		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: MockConstants.defaultHdWallet.address, allowance: MockConstants.token3Decimals_1, wallet: MockConstants.defaultHdWallet)
+		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
 		XCTAssert(op2.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op2.counter == "0")
 		XCTAssert(op2.operationKind == .transaction)
@@ -129,7 +130,9 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testPayload() {
-		let payload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet)
+		let address = MockConstants.defaultHdWallet.address
+		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
+		let payload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: MockConstants.sendOperations, walletAddress: address, base58EncodedPublicKey: key)
 		XCTAssert(payload.branch == "BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK", payload.branch)
 		XCTAssert(payload.contents.count == 1)
 		XCTAssert(payload.contents[0].operationKind == .transaction)
@@ -138,8 +141,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testPayloadNFT() {
+		let address = MockConstants.defaultHdWallet.address
+		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
 		let operation = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let payload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: operation, withWallet: MockConstants.defaultHdWallet)
+		let payload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: operation, walletAddress: address, base58EncodedPublicKey: key)
 		XCTAssert(payload.branch == "BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK", payload.branch)
 		XCTAssert(payload.contents.count == 1)
 		XCTAssert(payload.contents[0].operationKind == .transaction)
@@ -163,9 +168,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testXtzToToken() {
+		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
-		let op = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), walletAddress: address, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -192,9 +198,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testTokenToXTZ_LB() {
+		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
-		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), walletAddress: address, timeout: 30)
 		
 		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -269,9 +276,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testTokenToXTZ_QUIPU() {
+		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
-		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.swapTokenToXTZ(withDex: dex, tokenAmount: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minXTZAmount: XTZAmount(fromNormalisedAmount: 1), walletAddress: address, timeout: 30)
 		
 		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -342,9 +350,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testAddLiquidity_LB() {
+		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
-		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, walletAddress: address, timeout: 30)
 		
 		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -419,9 +428,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testAddLiquidity_QUIPU() {
+		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
-		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.addLiquidity(withDex: dex, xtz: XTZAmount(fromNormalisedAmount: 1), token: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), minLiquidty: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), isInitialLiquidity: false, walletAddress: address, timeout: 30)
 		
 		XCTAssert(op.count == 4)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
@@ -488,9 +498,10 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testRemoveLiquidity() {
+		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
-		let op = OperationFactory.removeLiquidity(withDex: dex, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), wallet: MockConstants.defaultHdWallet, timeout: 30)
+		let op = OperationFactory.removeLiquidity(withDex: dex, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), walletAddress: address, timeout: 30)
 		
 		XCTAssert(op.count == 1)
 		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)

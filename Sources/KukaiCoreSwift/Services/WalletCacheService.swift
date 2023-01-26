@@ -33,6 +33,7 @@ public struct WalletMetadata: Codable, Hashable {
 	public var type: WalletType
 	public var children: [WalletMetadata]
 	public var isChild: Bool
+	public var bas58EncodedPublicKey: String
 }
 
 
@@ -106,9 +107,9 @@ public class WalletCacheService {
 				return false
 			}
 			
-			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true))
+			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 		} else {
-			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: false))
+			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 		}
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
