@@ -73,7 +73,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		
 		// Send NFT
-		let tokenOp3 = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let tokenOp3 = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		XCTAssert(tokenOp3.count == 1)
 		XCTAssert(tokenOp3[0].source == MockConstants.defaultHdWallet.address)
 		XCTAssert(tokenOp3[0].counter == "0")
@@ -143,7 +143,7 @@ class OperationFactoryTests: XCTestCase {
 	func testPayloadNFT() {
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		let operation = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let operation = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		let payload = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: operation, walletAddress: address, base58EncodedPublicKey: key)
 		XCTAssert(payload.branch == "BLEDGNuADAwZfKK7iZ6PHnu7gZFSXuRPVFXe2PhSnb6aMyKn3mK", payload.branch)
 		XCTAssert(payload.contents.count == 1)

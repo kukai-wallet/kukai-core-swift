@@ -57,13 +57,12 @@ public class OperationFactory {
 	/**
 	 Create the operations necessary to send aan NFT
 	 - parameter : The amount of the given token to send.
-	 - parameter of: The `NFT` type that will be sent.
-	 - parameter parentToken: The `Token` type that the NFT belongs too.
+	 - parameter ofNft: The `NFT` type that will be sent.
 	 - parameter from: The address to deduct the funds from.
 	 - parameter to: The destination address that will recieve the funds.
 	 - returns: An array of `Operation` subclasses.
 	 */
-	public static func sendOperation(_ amount: Decimal, of nft: NFT, from: String, to: String) -> [Operation] {
+	public static func sendOperation(_ amount: Decimal, ofNft nft: NFT, from: String, to: String) -> [Operation] {
 		
 		// Return empty array if `amount` is a negaitve value
 		if amount < 0 {

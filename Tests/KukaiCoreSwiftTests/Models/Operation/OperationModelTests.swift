@@ -123,7 +123,7 @@ class OperationModelTests: XCTestCase {
 	}
 	
 	func testTransactionNFT() {
-		guard let op = OperationFactory.sendOperation(1, of: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address).first as? OperationTransaction else {
+		guard let op = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address).first as? OperationTransaction else {
 				  XCTFail("Couldn't create ops")
 				  return
 			  }
