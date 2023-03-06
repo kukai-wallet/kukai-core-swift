@@ -30,11 +30,16 @@ enum WalletCacheError: Error {
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
 	public var displayName: String?
+	public var tezosDomain: String?
 	public var socialType: TorusAuthProvider?
 	public var type: WalletType
 	public var children: [WalletMetadata]
 	public var isChild: Bool
 	public var bas58EncodedPublicKey: String
+	
+	public func hasTezosDomain() -> Bool {
+		return tezosDomain != nil
+	}
 }
 
 
