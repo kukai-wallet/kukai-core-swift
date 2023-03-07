@@ -40,6 +40,17 @@ public struct WalletMetadata: Codable, Hashable {
 	public func hasTezosDomain() -> Bool {
 		return tezosDomain != nil
 	}
+	
+	public init(address: String, displayName: String? = nil, tezosDomain: String? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
+		self.address = address
+		self.displayName = displayName
+		self.tezosDomain = tezosDomain
+		self.socialType = socialType
+		self.type = type
+		self.children = children
+		self.isChild = isChild
+		self.bas58EncodedPublicKey = bas58EncodedPublicKey
+	}
 }
 
 
