@@ -372,6 +372,50 @@ public class OperationFactory {
 	
 	
 	
+	// MARK: - Extractors
+	
+	public struct Extractor {
+		
+		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?)? {
+			if let michelsonDict = michelson as? [String: Any] {
+				// FA1.2
+				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+				
+				if let str = rpcAmountString {
+					return (rpcAmount: str, tokenId: nil)
+				} else {
+					return nil
+				}
+				
+			} else if let michelsonArray = michelson as? [[String: Any]] {
+				// FA2
+				let argsArray = michelsonArray[0].michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
+				let rpcAmountString = argsArray?.michelsonInt(atIndex: 1)
+				let tokenId = argsArray?.michelsonInt(atIndex: 0)
+				
+				if let str = rpcAmountString, let tId = tokenId {
+					return (rpcAmount: str, tokenId: Decimal(string: tId))
+				} else {
+					return nil
+				}
+				
+			} else {
+				return nil
+			}
+		}
+		
+		public static func faTokenDetailsFromSend(operation: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
+			if let params = operation.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? []) {
+				let tokenContractAddress = operation.destination
+				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId)
+			}
+			
+			return nil
+		}
+	}
+	
+	
+	
 	// MARK: - Private helpers
 	
 	

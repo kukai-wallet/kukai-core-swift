@@ -913,9 +913,8 @@ public class TzKTClient {
 	
 	// MARK: - Transaction History
 	
-	public func fetchTransactions(forAddress address: String, completion: @escaping (([TzKTTransaction]) -> Void)) {
+	public func fetchTransactions(forAddress address: String, limit: Int = 50, completion: @escaping (([TzKTTransaction]) -> Void)) {
 		self.dispatchGroupTransactions = DispatchGroup()
-		dispatchGroupTransactions.enter()
 		dispatchGroupTransactions.enter()
 		dispatchGroupTransactions.enter()
 		
@@ -923,7 +922,7 @@ public class TzKTClient {
 		url.appendPathComponent("v1/accounts/\(address)/operations")
 		url.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
 		url.appendQueryItem(name: "micheline", value: 1)
-		url.appendQueryItem(name: "limit", value: 50)
+		url.appendQueryItem(name: "limit", value: limit)
 		
 		tempTransactions = []
 		
@@ -938,7 +937,6 @@ public class TzKTClient {
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
-					self.dispatchGroupTransactions.leave()
 					self.dispatchGroupTransactions.leave()
 					self.dispatchGroupTransactions.leave()
 			}
@@ -956,34 +954,17 @@ public class TzKTClient {
 	private func queryFaTokenReceives(forAddress address: String, lastId: Decimal?) {
 		guard let id = lastId else {
 			self.dispatchGroupTransactions.leave()
-			self.dispatchGroupTransactions.leave()
 			return
 		}
 		
-		var url1 = config.tzktURL
-		url1.appendPathComponent("v1/operations/transactions")
-		url1.appendQueryItem(name: "sender.ne", value: address)
-		url1.appendQueryItem(name: "target.ne", value: address)
-		url1.appendQueryItem(name: "initiator.ne", value: address)
-		url1.appendQueryItem(name: "entrypoint", value: "transfer")
-		url1.appendQueryItem(name: "parameter.to", value: address)
-		url1.appendQueryItem(name: "id.gt", value: id.description)
-		url1.appendQueryItem(name: "status", value: "applied")
-		url1.appendQueryItem(name: "micheline", value: 1)
+		var url = config.tzktURL
+		url.appendPathComponent("v1/tokens/transfers")
+		url.appendQueryItem(name: "anyof.from.to", value: address)
+		url.appendQueryItem(name: "id.gt", value: id.description)
+		url.appendQueryItem(name: "offset", value: 0)
+		url.appendQueryItem(name: "sort.desc", value: "id")
 		
-		var url2 = config.tzktURL
-		url2.appendPathComponent("v1/operations/transactions")
-		url2.appendQueryItem(name: "sender.ne", value: address)
-		url2.appendQueryItem(name: "target.ne", value: address)
-		url2.appendQueryItem(name: "initiator.ne", value: address)
-		url2.appendQueryItem(name: "entrypoint", value: "transfer")
-		url2.appendQueryItem(name: "parameter.[*].txs.[*].to_", value: address)
-		url2.appendQueryItem(name: "id.gt", value: id.description)
-		url2.appendQueryItem(name: "status", value: "applied")
-		url2.appendQueryItem(name: "micheline", value: 1)
-		
-		
-		networkService.request(url: url1, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
 			guard let self = self else { return }
 			
 			switch result {
@@ -993,20 +974,6 @@ public class TzKTClient {
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 2: %@", "\(error)")
-					self.dispatchGroupTransactions.leave()
-			}
-		}
-		
-		networkService.request(url: url2, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
-			guard let self = self else { return }
-			
-			switch result {
-				case .success(let transactions):
-					self.tempTransactions.append(contentsOf: transactions)
-					self.dispatchGroupTransactions.leave()
-					
-				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Parse error 3: %@", "\(error)")
 					self.dispatchGroupTransactions.leave()
 			}
 		}
