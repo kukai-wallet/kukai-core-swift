@@ -9,42 +9,14 @@ import Foundation
 
 public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 	
-	// MARK: Types
-	
-	public enum TransactionGroupType: String, Codable {
-		case send
-		case receive
-		case delegate
-		case reveal
-		case exchange
-		case contractCall
-		case unknown
-	}
-	
-	public struct TokenDetails: Codable {
-		public let token: Token
-		public let amount: TokenAmount
-		
-		public init(token: Token, amount: TokenAmount) {
-			self.token = token
-			self.amount = amount
-		}
-		
-		public func isXTZ() -> Bool {
-			return token.isXTZ()
-		}
-	}
-	
-	
-	
 	// MARK: - Properties
 	
-	public var groupType: TransactionGroupType
+	public var groupType: TzKTTransaction.TransactionSubType
 	public let hash: String
 	public let transactions: [TzKTTransaction]
 	
-	public var primaryToken: TokenDetails? = nil
-	public var secondaryToken: TokenDetails? = nil
+	public var primaryToken: Token? = nil
+	public var secondaryToken: Token? = nil
 	public var entrypointCalled: String? = nil
 	
 	public var id: Decimal {
@@ -63,49 +35,20 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 		self.groupType = .unknown
 		
 		
-		if transactions.count == 1, let entrypoint = first.getEntrypoint(), entrypoint == "transfer" {
-			self.entrypointCalled = entrypoint
-			self.primaryToken = createTokenDetails(transaction: first)
-			
-			if first.sender.address != currentWalletAddress && first.initiater?.address != currentWalletAddress {
-				self.groupType = .receive
-				
-			} else {
-				self.groupType = .send
-			}
-			
-		} else if transactions.count == 1, let entrypoint = first.getEntrypoint() {
-			self.groupType = .contractCall
-			self.entrypointCalled = entrypoint
-			
-		} else if transactions.count == 1 {
-			if first.target?.address == currentWalletAddress {
-				self.groupType = .receive
-				self.primaryToken = createTokenDetails(transaction: first)
-				
-			} else if first.target?.address != currentWalletAddress {
-				self.groupType = .send
-				self.primaryToken = createTokenDetails(transaction: first)
-				
-			} else if first.type == .delegation {
-				self.groupType = .delegate
-				
-			} else if first.type == .reveal {
-				self.groupType = .reveal
-				
-			} else {
-				self.groupType = .unknown
-			}
+		if transactions.count == 1 {
+			self.groupType = first.subType ?? .unknown
+			self.entrypointCalled = first.entrypointCalled
+			self.primaryToken = first.primaryToken
 			
 		} else if transactions.count > 1,
 				  let exchangeFirst = transactions.last(where: { $0.getEntrypoint() == "transfer" || $0.amount != .zero() }),
 				  let exchangeLast = transactions.first(where: { ($0.getEntrypoint() == "transfer" || $0.amount != .zero()) && $0.id != exchangeFirst.id }),
 				  (exchangeFirst.target?.address != currentWalletAddress && exchangeFirst.getTokenTransferDestination() != currentWalletAddress),
 				  (exchangeLast.target?.address == currentWalletAddress || exchangeLast.getTokenTransferDestination() == currentWalletAddress),
-				  let primary = createTokenDetails(transaction: exchangeFirst),
-				  let secondary = createTokenDetails(transaction: exchangeLast),
-				  (primary.isXTZ() || primary.token.tokenContractAddress != nil),
-				  (secondary.isXTZ() || secondary.token.tokenContractAddress != nil) {
+				  let primary = exchangeFirst.createPrimaryToken(),
+				  let secondary = exchangeLast.createPrimaryToken(),
+				  (primary.isXTZ() || primary.tokenContractAddress != nil),
+				  (secondary.isXTZ() || secondary.tokenContractAddress != nil) {
 			
 			// Going from reverse order, get first op in the array that transfers token or XTZ amount
 			// get the last op that transfers a token or an XTZ amount
@@ -119,24 +62,13 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			self.primaryToken = primary
 			self.secondaryToken = secondary
 			
-		} else if let entrypoint = last.getEntrypoint() {
+		} else if let entrypoint = last.entrypointCalled {
 			self.groupType = .contractCall
 			self.entrypointCalled = entrypoint
 			
 		} else {
 			self.groupType = .unknown
 		}
-	}
-	
-	private func createTokenDetails(transaction: TzKTTransaction) -> TokenDetails? {
-		if (transaction.amount != .zero()) {
-			return TokenDetails(token: Token.xtz(), amount: transaction.amount)
-			
-		} else if let data = transaction.getFaTokenTransferData() {
-			return data
-		}
-		
-		return nil
 	}
 	
 	

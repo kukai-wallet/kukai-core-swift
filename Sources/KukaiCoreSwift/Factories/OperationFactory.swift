@@ -376,6 +376,9 @@ public class OperationFactory {
 	
 	public struct Extractor {
 		
+		/**
+		 Extract rpc amount (without decimal info)  and a tokenId from a michelson FA1.2 / FA2 trasfer payload
+		 */
 		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?)? {
 			if let michelsonDict = michelson as? [String: Any] {
 				// FA1.2
@@ -389,7 +392,8 @@ public class OperationFactory {
 				
 			} else if let michelsonArray = michelson as? [[String: Any]] {
 				// FA2
-				let argsArray = michelsonArray[0].michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
+				
+				let argsArray = michelsonArray[0].michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
 				let rpcAmountString = argsArray?.michelsonInt(atIndex: 1)
 				let tokenId = argsArray?.michelsonInt(atIndex: 0)
 				
@@ -404,10 +408,24 @@ public class OperationFactory {
 			}
 		}
 		
-		public static func faTokenDetailsFromSend(operation: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
-			if let params = operation.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? []) {
-				let tokenContractAddress = operation.destination
+		/**
+		 Extract details form a payload in order to present to the user what it is they are trying to send
+		 */
+		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
+			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? []) {
+				let tokenContractAddress = transaction.destination
 				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId)
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Helper to  call `faTokenDetailsFrom(transaction: OperationTransaction)` on the first `OperationTransaction` in an array of operations. Allows to more easily parse an array of operations that may include `approval`'s or `update_operator` calls
+		 */
+		public static func faTokenDetailsFrom(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
+			if let op = operations.first(where: { $0 is OperationTransaction }) as? OperationTransaction {
+				return OperationFactory.Extractor.faTokenDetailsFrom(transaction: op)
 			}
 			
 			return nil

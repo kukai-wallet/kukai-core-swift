@@ -984,12 +984,16 @@ public class TzKTClient {
 		var groups: [TzKTTransactionGroup] = []
 		
 		for tran in transactions {
+			
+			var processedTran = tran
+			processedTran.processAdditionalData(withCurrentWalletAddress: currentWalletAddress)
+			
 			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
-				tempTrans.append(tran)
+				tempTrans.append(processedTran)
 				
 			} else if tempTrans.first?.hash != tran.hash, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 				groups.append(group)
-				tempTrans = [tran]
+				tempTrans = [processedTran]
 			}
 		}
 		

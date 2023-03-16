@@ -530,4 +530,31 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	
+	func testExtractors() {
+		let xtzOp = OperationFactory.sendOperation(MockConstants.xtz_1, of: MockConstants.tokenXTZ, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let results1 = OperationFactory.Extractor.faTokenDetailsFrom(operations: xtzOp)
+		XCTAssert(results1 == nil)
+		
+		let opFA1 = OperationFactory.sendOperation(MockConstants.token3Decimals_1, of: MockConstants.token3Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let results2 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opFA1)
+		XCTAssert(results2 != nil)
+		XCTAssert(results2?.tokenContract == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", results2?.tokenContract ?? "-")
+		XCTAssert(results2?.rpcAmount == "1000", results2?.rpcAmount ?? "-")
+		XCTAssert(results2?.tokenId == nil, results2?.tokenId?.description ?? "-")
+		
+		let opFA2 = OperationFactory.sendOperation(MockConstants.token10Decimals_1, of: MockConstants.token10Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let results3 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opFA2)
+		XCTAssert(results3 != nil)
+		XCTAssert(results3?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", results3?.tokenContract ?? "-")
+		XCTAssert(results3?.rpcAmount == "10000000000", results3?.rpcAmount ?? "-")
+		XCTAssert(results3?.tokenId == 0, results3?.tokenId?.description ?? "-")
+		
+		let opNFT = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
+		let results4 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opNFT)
+		XCTAssert(results4 != nil)
+		XCTAssert(results4?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", results4?.tokenContract ?? "-")
+		XCTAssert(results4?.rpcAmount == "1", results4?.rpcAmount ?? "-")
+		XCTAssert(results4?.tokenId == 4, results4?.tokenId?.description ?? "-")
+	}
 }

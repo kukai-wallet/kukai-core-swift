@@ -28,6 +28,16 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case unknown
 	}
 	
+	public enum TransactionSubType: String, Codable {
+		case send
+		case receive
+		case delegate
+		case reveal
+		case exchange
+		case contractCall
+		case unknown
+	}
+	
 	public struct TransactionLocation: Codable {
 		public let alias: String?
 		public let address: String
@@ -61,7 +71,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public let status: TransactionStatus
 	
 	public let date: Date?
-	
+	public var subType: TransactionSubType? = nil
+	public var entrypointCalled: String? = nil
+	public var primaryToken: Token? = nil
 	
 	
 	// MARK: - CustomStringConvertible
@@ -87,7 +99,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - Codable Protocol
 	
 	public enum CodingKeys: String, CodingKey {
-		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status
+		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status, subType, entrypointCalled, primaryToken
 	}
 	
 	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TransactionLocation?, sender: TransactionLocation, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TransactionLocation?, prevDelegate: TransactionLocation?, newDelegate: TransactionLocation?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
@@ -155,6 +167,14 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		date = dateFormatter.date(from: timestamp)
+		
+		
+		// Check for additional data
+		if let subtypeString = try container.decodeIfPresent(String.self, forKey: .subType) {
+			subType = TransactionSubType(rawValue: subtypeString) ?? .unknown
+			entrypointCalled = try container.decodeIfPresent(String.self, forKey: .entrypointCalled)
+			primaryToken = try container.decodeIfPresent(Token.self, forKey: .primaryToken)
+		}
 	}
 	
 	public func encode(to encoder: Encoder) throws {
@@ -176,6 +196,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		try container.encode(allocationFee.rpcRepresentation, forKey: .allocationFee)
 		try container.encode(amount.rpcRepresentation, forKey: .amount)
 		try container.encode(status.rawValue, forKey: .status)
+		
+		// Check for additional data
+		try container.encodeIfPresent(subType, forKey: .subType)
+		try container.encodeIfPresent(entrypointCalled, forKey: .entrypointCalled)
+		try container.encodeIfPresent(primaryToken, forKey: .primaryToken)
 	}
 	
 	
@@ -210,13 +235,60 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		return entrypoint
 	}
 	
+	public mutating func processAdditionalData(withCurrentWalletAddress currentWalletAddress: String) {
+		if let entrypoint = self.getEntrypoint(), entrypoint == "transfer" {
+			self.entrypointCalled = entrypoint
+			self.primaryToken = createPrimaryToken()
+			
+			if self.sender.address != currentWalletAddress && self.initiater?.address != currentWalletAddress {
+				self.subType = .receive
+			} else {
+				self.subType = .send
+			}
+			
+		} else if let entrypoint = getEntrypoint() {
+			self.subType = .contractCall
+			self.entrypointCalled = entrypoint
+			
+		} else {
+			if self.target?.address == currentWalletAddress {
+				self.subType = .receive
+				self.primaryToken = createPrimaryToken()
+				
+			} else if self.target?.address != currentWalletAddress {
+				self.subType = .send
+				self.primaryToken = createPrimaryToken()
+				
+			} else if self.type == .delegation {
+				self.subType = .delegate
+				
+			} else if self.type == .reveal {
+				self.subType = .reveal
+				
+			} else {
+				self.subType = .unknown
+			}
+		}
+	}
+	
+	public func createPrimaryToken() -> Token? {
+		if self.amount != .zero() {
+			return Token.xtz(withAmount: amount)
+			
+		} else if let token = self.getFaTokenTransferData() {
+			return token
+		}
+		
+		return nil
+	}
+	
 	/**
 	 The TzKT transaction API doesn't provide all the info needed to normalise Token amounts. It only gives address and rpc amount.
 	 Burried inside the michelson, the dex contract needs to be told the token id, and the `target` will contain the address.
 	 This function will try to extract address, token id and rpc amount and return them in the standard objects, so that they can be used in conjuction with other functions to fetch the decimal data.
 	 e.g. DipDup client can fetch all tokens from dexes, containing all token info. Using the address and id, the rest could be found via that, assuming zero for anything else (such as NFTs)
 	 */
-	public func getFaTokenTransferData() -> TzKTTransactionGroup.TokenDetails? {
+	public func getFaTokenTransferData() -> Token? {
 		guard getEntrypoint() == "transfer" else {
 			return nil
 		}
@@ -229,10 +301,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let tokenId = obj["token_id"],
 		   let contractAddress = target?.address
 		{
-			return TzKTTransactionGroup.TokenDetails(
-				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: Decimal(string: tokenId), nfts: nil),
-				amount: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
-			)
+			let amount = TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: Decimal(string: tokenId), nfts: nil)
+			return token
 		}
 		
 		// FA1 token
@@ -240,10 +311,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let amount = json["value"] as? String,
 		   let contractAddress = target?.address
 		{
-			return TzKTTransactionGroup.TokenDetails(
-				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: 0, nfts: nil),
-				amount: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
-			)
+			let amount = TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: nil, nfts: nil)
+			return token
 		}
 		
 		// Different type of dex contract
@@ -251,10 +321,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let amount = json["amount"] as? String,
 		   let contractAddress = target?.address
 		{
-			return TzKTTransactionGroup.TokenDetails(
-				token: Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: .zero(), thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: 0, nfts: nil),
-				amount: TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
-			)
+			let amount = TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
+			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: nil, nfts: nil)
+			return token
 		}
 		
 		return nil

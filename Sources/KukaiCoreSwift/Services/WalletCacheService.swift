@@ -26,11 +26,11 @@ enum WalletCacheError: Error {
 	case unableToDecrypt
 }
 
-/// Object to store Ui related info about wallets, seperated from the wallet object itself to avoid issues merging together
+/// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
 	public var displayName: String?
-	public var tezosDomain: String?
+	public var tezosDomains: [String]?
 	public var socialType: TorusAuthProvider?
 	public var type: WalletType
 	public var children: [WalletMetadata]
@@ -38,13 +38,21 @@ public struct WalletMetadata: Codable, Hashable {
 	public var bas58EncodedPublicKey: String
 	
 	public func hasTezosDomain() -> Bool {
-		return tezosDomain != nil
+		return (tezosDomains ?? []).count > 0
 	}
 	
-	public init(address: String, displayName: String? = nil, tezosDomain: String? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
+	public func primaryTezosDomain() -> String? {
+		if let domains = tezosDomains {
+			return domains.first
+		}
+		
+		return nil
+	}
+	
+	public init(address: String, displayName: String? = nil, tezosDomains: [String]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
 		self.address = address
 		self.displayName = displayName
-		self.tezosDomain = tezosDomain
+		self.tezosDomains = tezosDomains
 		self.socialType = socialType
 		self.type = type
 		self.children = children
