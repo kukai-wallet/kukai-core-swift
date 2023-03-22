@@ -976,6 +976,7 @@ public class TzKTClient {
 			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
 				if transfer.transactionId == transaction.id {
 					self.tempTransactions[transactionIndex].tzktBalanceToken = transfer.token
+					self.tempTransactions[transactionIndex].amount = transfer.amount
 					transfersToRemove.append(transferIndex)
 				}
 			}
