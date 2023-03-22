@@ -66,6 +66,10 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			self.groupType = .contractCall
 			self.entrypointCalled = entrypoint
 			
+		} else if let last = transactions.last, last.subType != .unknown {
+			self.groupType = last.subType ?? .unknown
+			self.primaryToken = last.primaryToken
+			
 		} else {
 			self.groupType = .unknown
 		}

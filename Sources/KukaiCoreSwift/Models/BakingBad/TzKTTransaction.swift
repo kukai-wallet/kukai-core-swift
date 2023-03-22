@@ -38,16 +38,6 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case unknown
 	}
 	
-	public struct TransactionLocation: Codable {
-		public let alias: String?
-		public let address: String
-		
-		public init(alias: String?, address: String) {
-			self.alias = alias
-			self.address = address
-		}
-	}
-	
 	
 	
 	// MARK: - Properties
@@ -58,22 +48,24 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public let timestamp: String
 	public let hash: String
 	public let counter: Decimal
-	public let initiater: TransactionLocation?
-	public let sender: TransactionLocation
+	public let initiater: TzKTAddress?
+	public let sender: TzKTAddress
 	public var bakerFee: XTZAmount
 	public var storageFee: XTZAmount
 	public var allocationFee: XTZAmount
-	public let target: TransactionLocation?
-	public let prevDelegate: TransactionLocation?
-	public let newDelegate: TransactionLocation?
+	public let target: TzKTAddress?
+	public let prevDelegate: TzKTAddress?
+	public let newDelegate: TzKTAddress?
 	public var amount: TokenAmount
 	public let parameter: [String: String]?
 	public let status: TransactionStatus
 	
 	public let date: Date?
+	public var tzktBalanceToken: TzKTBalanceToken? = nil
 	public var subType: TransactionSubType? = nil
 	public var entrypointCalled: String? = nil
 	public var primaryToken: Token? = nil
+	
 	
 	
 	// MARK: - CustomStringConvertible
@@ -102,7 +94,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status, subType, entrypointCalled, primaryToken
 	}
 	
-	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TransactionLocation?, sender: TransactionLocation, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TransactionLocation?, prevDelegate: TransactionLocation?, newDelegate: TransactionLocation?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
+	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TzKTAddress?, sender: TzKTAddress, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TzKTAddress?, prevDelegate: TzKTAddress?, newDelegate: TzKTAddress?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
 		
 		self.type = type
 		self.id = id
@@ -127,6 +119,37 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		date = dateFormatter.date(from: timestamp)
 	}
 	
+	public init(from: TzKTTokenTransfer) {
+		let sourceAddress = from.from == nil ? from.token.contract : from.from
+		
+		self.type = .transaction
+		self.id = from.id
+		self.level = from.level
+		self.timestamp = from.timestamp
+		
+		// Hash is essential to be able to group batch transactions together, the only item shared between TzKTTokenTransfer and TzKTTransaction that matches this usecase, is level + timestamp
+		// But need to be careful to not rely on it for anything else, like viewing in explorer
+		self.hash = from.level.description + "_" + from.timestamp
+		self.counter = 0
+		self.initiater = sourceAddress
+		self.sender = sourceAddress ?? from.token.contract
+		self.bakerFee = .zero()
+		self.storageFee = .zero()
+		self.allocationFee = .zero()
+		self.target = from.to ?? from.token.contract
+		self.prevDelegate = nil
+		self.newDelegate = nil
+		self.amount = from.amount
+		self.parameter = nil
+		self.status = .applied
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		date = dateFormatter.date(from: timestamp)
+		
+		self.tzktBalanceToken = from.token
+	}
+	
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		
@@ -138,11 +161,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		timestamp = try container.decode(String.self, forKey: .timestamp)
 		hash = try container.decode(String.self, forKey: .hash)
 		counter = try container.decode(Decimal.self, forKey: .counter)
-		initiater = try? container.decode(TransactionLocation.self, forKey: .initiater)
-		sender = try container.decode(TransactionLocation.self, forKey: .sender)
-		target = try? container.decode(TransactionLocation.self, forKey: .target)
-		prevDelegate = try? container.decode(TransactionLocation.self, forKey: .prevDelegate)
-		newDelegate = try? container.decode(TransactionLocation.self, forKey: .newDelegate)
+		initiater = try? container.decode(TzKTAddress.self, forKey: .initiater)
+		sender = try container.decode(TzKTAddress.self, forKey: .sender)
+		target = try? container.decode(TzKTAddress.self, forKey: .target)
+		prevDelegate = try? container.decode(TzKTAddress.self, forKey: .prevDelegate)
+		newDelegate = try? container.decode(TzKTAddress.self, forKey: .newDelegate)
 		parameter = try? container.decodeIfPresent([String: String].self, forKey: .parameter)
 		
 		
@@ -272,7 +295,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	}
 	
 	public func createPrimaryToken() -> Token? {
-		if self.amount != .zero() {
+		if let balanceToken = self.tzktBalanceToken {
+			return Token(from: balanceToken, andRpcAmount: self.amount.rpcRepresentation)
+			
+		} else if self.amount != .zero() {
 			return Token.xtz(withAmount: amount)
 			
 		} else if let token = self.getFaTokenTransferData() {

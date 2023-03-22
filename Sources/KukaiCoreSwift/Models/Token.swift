@@ -114,6 +114,29 @@ public class Token: Codable, CustomStringConvertible {
 	}
 	
 	/**
+	 Init a `Token` from an object returned by the TzKT API
+	 */
+	public init(from: TzKTBalanceToken, andRpcAmount: String?) {
+		let decimalsString = from.metadata?.decimals ?? "0"
+		let decimalsInt = Int(decimalsString) ?? 0
+		
+		self.name = from.metadata?.name ?? ""
+		self.symbol = from.displaySymbol
+		self.tokenType = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2) ? .nonfungible : .fungible
+		self.faVersion = from.standard
+		self.balance = TokenAmount(fromRpcAmount: andRpcAmount ?? "0", decimalPlaces: decimalsInt) ?? .zeroBalance(decimalPlaces: decimalsInt)
+		self.thumbnailURL = from.metadata?.thumbnailURL
+		self.tokenContractAddress = from.contract.address
+		self.tokenId = Decimal(string: from.tokenId) ?? 0
+		self.nfts = []
+		
+		// TODO: make failable init
+		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
+			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name ?? tokenContractAddress ?? "")
+		}
+	}
+	
+	/**
 	Create a `Token` object with all the settings needed for XTZ
 	- returns: `Token`
 	*/

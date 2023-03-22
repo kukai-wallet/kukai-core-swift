@@ -34,6 +34,7 @@ public class TzKTClient {
 	private let dipDupClient: DipDupClient
 	
 	private var tempTransactions: [TzKTTransaction] = []
+	private var tempTokenTransfers: [TzKTTokenTransfer] = []
 	private var dispatchGroupTransactions = DispatchGroup()
 	private let tokenBalanceQueue: DispatchQueue
 	
@@ -852,19 +853,7 @@ public class TzKTClient {
 			}
 			
 			// Else create a Token object and put into array
-			let token = Token(
-				name: balance.token.metadata?.name ?? "",
-				symbol: balance.token.displaySymbol,
-				tokenType: .fungible,
-				faVersion: balance.token.standard,
-				balance: balance.tokenAmount,
-				thumbnailURL: balance.token.metadata?.thumbnailURL ?? avatarURL(forToken: balance.token.contract.address),
-				tokenContractAddress: balance.token.contract.address,
-				tokenId: Decimal(string: balance.token.tokenId) ?? 0,
-				nfts: []
-			)
-			
-			tokens.append(token)
+			tokens.append(Token(from: balance.token, andRpcAmount: balance.tokenAmount.rpcRepresentation))
 		}
 		
 		// Take NFT's, create actual NFT objects and add them to `Token` instances
@@ -925,6 +914,7 @@ public class TzKTClient {
 		url.appendQueryItem(name: "limit", value: limit)
 		
 		tempTransactions = []
+		tempTokenTransfers = []
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
 			guard let self = self else { return }
@@ -964,12 +954,13 @@ public class TzKTClient {
 		url.appendQueryItem(name: "offset", value: 0)
 		url.appendQueryItem(name: "sort.desc", value: "id")
 		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTokenTransfer].self) { [weak self] (result) in
 			guard let self = self else { return }
 			
 			switch result {
 				case .success(let transactions):
-					self.tempTransactions.append(contentsOf: transactions)
+					self.tempTokenTransfers = transactions
+					self.mergeTokenTransfersWithTransactions()
 					self.dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
@@ -977,6 +968,23 @@ public class TzKTClient {
 					self.dispatchGroupTransactions.leave()
 			}
 		}
+	}
+	
+	private func mergeTokenTransfersWithTransactions() {
+		for (transferIndex, transfer) in self.tempTokenTransfers.enumerated() {
+			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
+				if transfer.transactionId == transaction.id {
+					self.tempTransactions[transactionIndex].tzktBalanceToken = transfer.token
+					self.tempTokenTransfers.remove(at: transferIndex)
+				}
+			}
+		}
+		
+		for leftOverTransfer in self.tempTokenTransfers {
+			self.tempTransactions.append( TzKTTransaction(from: leftOverTransfer) )
+		}
+		
+		self.tempTokenTransfers = []
 	}
 	
 	public func groupTransactions(transactions: [TzKTTransaction], currentWalletAddress: String) -> [TzKTTransactionGroup] {
