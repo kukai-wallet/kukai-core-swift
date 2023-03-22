@@ -971,14 +971,16 @@ public class TzKTClient {
 	}
 	
 	private func mergeTokenTransfersWithTransactions() {
+		var transfersToRemove: [Int] = []
 		for (transferIndex, transfer) in self.tempTokenTransfers.enumerated() {
 			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
 				if transfer.transactionId == transaction.id {
 					self.tempTransactions[transactionIndex].tzktBalanceToken = transfer.token
-					self.tempTokenTransfers.remove(at: transferIndex)
+					transfersToRemove.append(transferIndex)
 				}
 			}
 		}
+		self.tempTokenTransfers.remove(atOffsets: IndexSet(transfersToRemove))
 		
 		for leftOverTransfer in self.tempTokenTransfers {
 			self.tempTransactions.append( TzKTTransaction(from: leftOverTransfer) )
