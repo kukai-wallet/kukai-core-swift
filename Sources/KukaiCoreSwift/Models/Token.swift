@@ -116,7 +116,7 @@ public class Token: Codable, CustomStringConvertible {
 	/**
 	 Init a `Token` from an object returned by the TzKT API
 	 */
-	public init(from: TzKTBalanceToken, andRpcAmount: String?) {
+	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount) {
 		let decimalsString = from.metadata?.decimals ?? "0"
 		let decimalsInt = Int(decimalsString) ?? 0
 		
@@ -124,10 +124,33 @@ public class Token: Codable, CustomStringConvertible {
 		self.symbol = from.displaySymbol
 		self.tokenType = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2) ? .nonfungible : .fungible
 		self.faVersion = from.standard
-		self.balance = TokenAmount(fromRpcAmount: andRpcAmount ?? "0", decimalPlaces: decimalsInt) ?? .zeroBalance(decimalPlaces: decimalsInt)
+		self.balance = andTokenAmount
 		self.thumbnailURL = from.metadata?.thumbnailURL
 		self.tokenContractAddress = from.contract.address
 		self.tokenId = Decimal(string: from.tokenId) ?? 0
+		self.nfts = []
+		
+		// TODO: make failable init
+		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
+			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name ?? tokenContractAddress ?? "")
+		}
+	}
+	
+	/**
+	 Init a `Token` from an object returned by the TzKT API
+	 */
+	public init(from: TzKTTokenTransfer) {
+		let decimalsString = from.token.metadata?.decimals ?? "0"
+		let decimalsInt = Int(decimalsString) ?? 0
+		
+		self.name = from.token.metadata?.name ?? ""
+		self.symbol = from.token.displaySymbol
+		self.tokenType = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2) ? .nonfungible : .fungible
+		self.faVersion = from.token.standard
+		self.balance = from.tokenAmount()
+		self.thumbnailURL = from.token.metadata?.thumbnailURL
+		self.tokenContractAddress = from.token.contract.address
+		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
 		self.nfts = []
 		
 		// TODO: make failable init

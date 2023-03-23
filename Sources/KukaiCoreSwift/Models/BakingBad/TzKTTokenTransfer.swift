@@ -14,6 +14,10 @@ public struct TzKTTokenTransfer: Codable {
 	public let token: TzKTBalanceToken
 	public let to: TzKTAddress?
 	public let from: TzKTAddress?
-	public let amount: TokenAmount
+	public let amount: String
 	public let transactionId: Decimal
+	
+	public func tokenAmount() -> TokenAmount {
+		return TokenAmount(fromRpcAmount: amount, decimalPlaces: token.metadata?.decimalsInt ?? 0) ?? .zero()
+	}
 }

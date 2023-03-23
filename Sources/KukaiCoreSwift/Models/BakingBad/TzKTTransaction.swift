@@ -61,7 +61,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public let status: TransactionStatus
 	
 	public let date: Date?
-	public var tzktBalanceToken: TzKTBalanceToken? = nil
+	public var tzktTokenTransfer: TzKTTokenTransfer? = nil {
+		didSet {
+			self.amount = tzktTokenTransfer?.tokenAmount() ?? .zero()
+		}
+	}
 	public var subType: TransactionSubType? = nil
 	public var entrypointCalled: String? = nil
 	public var primaryToken: Token? = nil
@@ -139,7 +143,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.target = from.to ?? from.token.contract
 		self.prevDelegate = nil
 		self.newDelegate = nil
-		self.amount = from.amount
+		self.amount = from.tokenAmount()
 		self.parameter = nil
 		self.status = .applied
 		
@@ -147,7 +151,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		date = dateFormatter.date(from: timestamp)
 		
-		self.tzktBalanceToken = from.token
+		self.tzktTokenTransfer = from
 	}
 	
 	public init(from decoder: Decoder) throws {
@@ -295,8 +299,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	}
 	
 	public func createPrimaryToken() -> Token? {
-		if let balanceToken = self.tzktBalanceToken {
-			return Token(from: balanceToken, andRpcAmount: self.amount.rpcRepresentation)
+		if let tokenTransfer = self.tzktTokenTransfer {
+			return Token(from: tokenTransfer)
 			
 		} else if self.amount != .zero() {
 			return Token.xtz(withAmount: amount)

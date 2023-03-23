@@ -853,7 +853,7 @@ public class TzKTClient {
 			}
 			
 			// Else create a Token object and put into array
-			tokens.append(Token(from: balance.token, andRpcAmount: balance.tokenAmount.rpcRepresentation))
+			tokens.append(Token(from: balance.token, andTokenAmount: balance.tokenAmount))
 		}
 		
 		// Take NFT's, create actual NFT objects and add them to `Token` instances
@@ -975,8 +975,7 @@ public class TzKTClient {
 		for (transferIndex, transfer) in self.tempTokenTransfers.enumerated() {
 			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
 				if transfer.transactionId == transaction.id {
-					self.tempTransactions[transactionIndex].tzktBalanceToken = transfer.token
-					self.tempTransactions[transactionIndex].amount = transfer.amount
+					self.tempTransactions[transactionIndex].tzktTokenTransfer = transfer
 					transfersToRemove.append(transferIndex)
 				}
 			}
