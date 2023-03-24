@@ -287,14 +287,14 @@ public class TzKTClient {
 				let amount = (tx.amount as? XTZAmount) ?? .zero()
 				
 				var alias = tx.sender.alias
-				var avatarURL = self?.avatarURL(forToken: tx.sender.address)
+				var avatarURL = TzKTClient.avatarURL(forToken: tx.sender.address)
 				var fee = 0.0
 				var indexOfCyclePaymentIsFor = cycleIndexPaymentReceived
 				
 				// If the tx came from the baker directly, grab the config and apply
 				if let config = bakerConfigs[tx.sender.address] {
 					alias = config.name
-					avatarURL = self?.avatarURL(forToken: config.address)
+					avatarURL = TzKTClient.avatarURL(forToken: config.address)
 					fee = config.fee
 					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
 					
@@ -304,7 +304,7 @@ public class TzKTClient {
 					for pair in bakerPayoutAddresses {
 						if pair.value.address == tx.sender.address, let config = bakerConfigs[pair.key] {
 							alias = config.name
-							avatarURL = self?.avatarURL(forToken: config.address)
+							avatarURL = TzKTClient.avatarURL(forToken: config.address)
 							fee = config.fee
 							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
 						}
@@ -386,7 +386,7 @@ public class TzKTClient {
 		let cycle = cycles[selectedIndex]
 		let alias = config.name
 		let address = config.address
-		let logo = avatarURL(forToken: address)
+		let logo = TzKTClient.avatarURL(forToken: address)
 		let reward = rewards[selectedIndex]
 		let amount = reward.estimatedReward(withFee: fee, andRewardStruct: config.rewardStruct())
 		
@@ -873,7 +873,7 @@ public class TzKTClient {
 				tokenType: .nonfungible,
 				faVersion: first.token.standard,
 				balance: TokenAmount.zero(),
-				thumbnailURL: avatarURL(forToken: first.token.contract.address),
+				thumbnailURL: TzKTClient.avatarURL(forToken: first.token.contract.address),
 				tokenContractAddress: first.token.contract.address,
 				tokenId: Decimal(string: first.token.tokenId) ?? 0,
 				nfts: temp
@@ -890,7 +890,7 @@ public class TzKTClient {
 	 Or, if you need to use it seperately, given the token address you can use this function
 	 - parameter forToken: The token address who's image you are looking for.
 	 */
-	public func avatarURL(forToken token: String) -> URL? {
+	public static func avatarURL(forToken token: String) -> URL? {
 		guard let imageURL = URL(string: "https://services.tzkt.io/v1/avatars/\(token)") else {
 			return nil
 		}

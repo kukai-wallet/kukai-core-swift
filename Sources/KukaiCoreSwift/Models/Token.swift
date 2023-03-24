@@ -125,7 +125,7 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenType = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2) ? .nonfungible : .fungible
 		self.faVersion = from.standard
 		self.balance = andTokenAmount
-		self.thumbnailURL = from.metadata?.thumbnailURL
+		self.thumbnailURL = from.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.contract.address)
 		self.tokenContractAddress = from.contract.address
 		self.tokenId = Decimal(string: from.tokenId) ?? 0
 		self.nfts = []
@@ -148,7 +148,7 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenType = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2) ? .nonfungible : .fungible
 		self.faVersion = from.token.standard
 		self.balance = from.tokenAmount()
-		self.thumbnailURL = from.token.metadata?.thumbnailURL
+		self.thumbnailURL = from.token.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.token.contract.address)
 		self.tokenContractAddress = from.token.contract.address
 		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
 		self.nfts = []

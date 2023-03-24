@@ -221,7 +221,7 @@ class TzKTClientTests: XCTestCase {
 	}
 	
 	func testAvatarURL() {
-		let url = MockConstants.shared.tzktClient.avatarURL(forToken: "KT1abc123")
+		let url = TzKTClient.avatarURL(forToken: "KT1abc123")
 		
 		XCTAssert(url?.absoluteString == "https://services.tzkt.io/v1/avatars/KT1abc123", url?.absoluteString ?? "-")
 	}
