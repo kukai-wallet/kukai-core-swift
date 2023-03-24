@@ -119,10 +119,11 @@ public class Token: Codable, CustomStringConvertible {
 	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount) {
 		let decimalsString = from.metadata?.decimals ?? "0"
 		let decimalsInt = Int(decimalsString) ?? 0
+		let isNFT = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2)
 		
 		self.name = from.metadata?.name ?? ""
-		self.symbol = from.displaySymbol
-		self.tokenType = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2) ? .nonfungible : .fungible
+		self.symbol = isNFT ? from.contract.alias ?? "" : from.displaySymbol
+		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.standard
 		self.balance = andTokenAmount
 		self.thumbnailURL = from.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.contract.address)
@@ -142,10 +143,11 @@ public class Token: Codable, CustomStringConvertible {
 	public init(from: TzKTTokenTransfer) {
 		let decimalsString = from.token.metadata?.decimals ?? "0"
 		let decimalsInt = Int(decimalsString) ?? 0
+		let isNFT = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2)
 		
 		self.name = from.token.metadata?.name ?? ""
-		self.symbol = from.token.displaySymbol
-		self.tokenType = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2) ? .nonfungible : .fungible
+		self.symbol = isNFT ? from.token.contract.alias ?? "" : from.token.displaySymbol
+		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.token.standard
 		self.balance = from.tokenAmount()
 		self.thumbnailURL = from.token.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.token.contract.address)
