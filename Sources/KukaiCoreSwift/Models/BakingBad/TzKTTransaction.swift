@@ -11,12 +11,18 @@ import Foundation
 /// A model matching the response that comes back from TzKT's API: `v1/accounts/<address>/operations`
 public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Identifiable {
 	
+	public static let dateFormatter = DateFormatter(withFormat: "yyyy-MM-dd'T'HH:mm:ssZ")
+	
+	
 	// MARK: Types
 	
 	public enum TransactionStatus: String, Codable {
 		case applied
 		case failed
 		case backtracked
+		case unconfirmed
+		case partiallyConfirmed
+		case confirmed
 		case unknown
 	}
 	
@@ -98,6 +104,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status, subType, entrypointCalled, primaryToken
 	}
 	
+	/// Manually init a `TzKTTransaction`
 	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TzKTAddress?, sender: TzKTAddress, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TzKTAddress?, prevDelegate: TzKTAddress?, newDelegate: TzKTAddress?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
 		
 		self.type = type
@@ -118,11 +125,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.parameter = parameter
 		self.status = status
 		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-		date = dateFormatter.date(from: timestamp)
+		self.date = TzKTTransaction.dateFormatter.date(from: timestamp)
 	}
 	
+	/// Convert a `TzKTTokenTransfer` into a `TzKTTransaction`
 	public init(from: TzKTTokenTransfer) {
 		let sourceAddress = from.from == nil ? from.token.contract : from.from
 		
@@ -147,9 +153,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.parameter = nil
 		self.status = .applied
 		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-		date = dateFormatter.date(from: timestamp)
+		self.date = TzKTTransaction.dateFormatter.date(from: timestamp)
 		
 		self.tzktTokenTransfer = from
 	}
@@ -191,9 +195,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		let statusString = try container.decode(String.self, forKey: .status)
 		status = TransactionStatus(rawValue: statusString) ?? .unknown
 		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-		date = dateFormatter.date(from: timestamp)
+		self.date = TzKTTransaction.dateFormatter.date(from: timestamp)
 		
 		
 		// Check for additional data
@@ -228,6 +230,17 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		try container.encodeIfPresent(subType, forKey: .subType)
 		try container.encodeIfPresent(entrypointCalled, forKey: .entrypointCalled)
 		try container.encodeIfPresent(primaryToken, forKey: .primaryToken)
+	}
+	
+	/// Used for creating "Pending" transactions
+	public static func placeholder(withStatus status: TransactionStatus, opHash: String, type: TransactionType, counter: Decimal, fromWallet: WalletMetadata, destination: TzKTAddress, amount: TokenAmount, parameters: [String: String]?) -> TzKTTransaction {
+		let timestamp = TzKTTransaction.dateFormatter.string(from: Date())
+		let sender = TzKTAddress(alias: fromWallet.displayName, address: fromWallet.address)
+		
+		var transaction = TzKTTransaction(type: .transaction, id: 0, level: 0, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: destination, prevDelegate: nil, newDelegate: nil, amount: amount, parameter: parameters, status: status)
+		transaction.processAdditionalData(withCurrentWalletAddress: fromWallet.address)
+		
+		return transaction
 	}
 	
 	
