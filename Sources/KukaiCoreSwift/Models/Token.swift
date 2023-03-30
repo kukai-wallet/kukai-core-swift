@@ -179,7 +179,7 @@ public class Token: Codable, CustomStringConvertible {
 	}
 	
 	/// Useful for creating placeholders for pending activity items
-	public static func placeholder(fromNFT nft: NFT, amount: TokenAmount, thumbnailURL: URL) -> Token {
+	public static func placeholder(fromNFT nft: NFT, amount: TokenAmount, thumbnailURL: URL?) -> Token {
 		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil)
 	}
 	
