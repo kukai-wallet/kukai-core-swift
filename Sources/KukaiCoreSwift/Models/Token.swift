@@ -178,6 +178,11 @@ public class Token: Codable, CustomStringConvertible {
 		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
 	}
 	
+	/// Useful for creating placeholders for pending activity items
+	public static func placeholder(fromNFT nft: NFT, amount: TokenAmount) -> Token {
+		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, thumbnailURL: nft.thumbnailURI, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil)
+	}
+	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
 	public var description: String {
 		return "{Symbol: \(symbol), Name: \(name ?? ""), Type: \(tokenType), FaVersion: \(faVersion ?? .unknown), NFT count: \(nfts?.count ?? 0)}"
