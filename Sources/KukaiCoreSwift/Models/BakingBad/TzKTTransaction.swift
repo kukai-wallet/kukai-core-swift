@@ -59,7 +59,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public var bakerFee: XTZAmount
 	public var storageFee: XTZAmount
 	public var allocationFee: XTZAmount
-	public let target: TzKTAddress?
+	public var target: TzKTAddress?
 	public let prevDelegate: TzKTAddress?
 	public let newDelegate: TzKTAddress?
 	public var amount: TokenAmount
