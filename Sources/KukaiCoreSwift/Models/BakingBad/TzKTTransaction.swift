@@ -276,7 +276,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	}
 	
 	public mutating func processAdditionalData(withCurrentWalletAddress currentWalletAddress: String) {
-		if let entrypoint = self.getEntrypoint(), entrypoint == "transfer" {
+		if type == .reveal {
+			self.subType = .reveal
+			
+		} else if let entrypoint = self.getEntrypoint(), entrypoint == "transfer" {
 			self.entrypointCalled = entrypoint
 			self.primaryToken = createPrimaryToken()
 			
