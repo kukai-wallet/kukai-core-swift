@@ -170,7 +170,7 @@ public class OperationFactory {
 	public static func approveOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
 		let params: [String: Any] = [
 			"entrypoint": OperationTransaction.StandardEntrypoint.approve.rawValue,
-			"value": ["prim":"Pair", "args":[["string":spenderAddress], ["int":allowance.rpcRepresentation]]]
+			"value": ["prim":"Pair", "args":[["string":spenderAddress], ["int":allowance.rpcRepresentation]]] as [String : Any]
 		]
 		
 		return OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: tokenAddress, parameters: params)
@@ -188,7 +188,7 @@ public class OperationFactory {
 	public static func updateOperatorsOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
 		let params: [String: Any] = [
 			"entrypoint": OperationTransaction.StandardEntrypoint.updateOperators.rawValue,
-			"value": [["prim": "Left","args": [["prim": "Pair","args": [["string": walletAddress], ["prim": "Pair","args": [["string": spenderAddress], ["int": allowance.rpcRepresentation]]]]]]]]
+			"value": [["prim": "Left","args": [["prim": "Pair","args": [["string": walletAddress] as [String: Any], ["prim": "Pair","args": [["string": spenderAddress], ["int": allowance.rpcRepresentation]]]]] as [String : Any]]]] as [[String: Any]]
 		]
 		
 		return OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: tokenAddress, parameters: params)
@@ -359,13 +359,13 @@ public class OperationFactory {
 			case .fa1_2, .unknown:
 				return [
 					"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
-					"value": ["prim":"Pair","args":[["string":from], ["prim":"Pair","args":[["string":to], ["int":tokenAmount.rpcRepresentation]]]]]
+					"value": ["prim":"Pair","args":[["string":from] as [String : Any], ["prim":"Pair","args":[["string":to], ["int":tokenAmount.rpcRepresentation]]]]] as [String : Any]
 				]
 				
 			case .fa2:
 				return [
 					"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
-					"value": [["prim":"Pair","args":[["string":from], [["prim":"Pair","args":[["string":to], ["prim":"Pair","args":[["int":"\(tokenId)"], ["int":tokenAmount.rpcRepresentation]]]]]]]]]
+					"value": [["prim":"Pair","args":[["string":from], [["prim":"Pair","args":[["string":to] as [String : Any], ["prim":"Pair","args":[["int":"\(tokenId)"], ["int":tokenAmount.rpcRepresentation]]]]] as [String : Any]]] as [Any]] as [String : Any]]
 				]
 		}
 	}
@@ -412,7 +412,7 @@ public class OperationFactory {
 		 Extract details form a payload in order to present to the user what it is they are trying to send
 		 */
 		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
-			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? []) {
+			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? [Any]()) {
 				let tokenContractAddress = transaction.destination
 				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId)
 			}
@@ -445,7 +445,7 @@ public class OperationFactory {
 		
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.xtzToToken.rawValue,
-			"value": ["prim":"Pair", "args":[["string":walletAddress], ["prim":"Pair", "args":[["int":minTokenAmount.rpcRepresentation], ["string":dateString]]]]]
+			"value": ["prim":"Pair", "args":[["string":walletAddress] as [String : Any], ["prim":"Pair", "args":[["int":minTokenAmount.rpcRepresentation], ["string":dateString]]]]] as [String : Any]
 		]
 	}
 	
@@ -453,7 +453,7 @@ public class OperationFactory {
 		
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.tezToTokenPayment.rawValue,
-			"value": ["prim": "Pair", "args": [["int": minTokenAmount.rpcRepresentation], ["string": walletAddress]]]
+			"value": ["prim": "Pair", "args": [["int": minTokenAmount.rpcRepresentation], ["string": walletAddress]]] as [String : Any]
 		]
 	}
 	
@@ -465,14 +465,14 @@ public class OperationFactory {
 		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.tokenToXtz.rawValue,
-			"value": ["prim":"Pair", "args": [["string": walletAddress], ["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation], ["prim": "Pair", "args":[["int":minXTZAmount.rpcRepresentation], ["string": dateString]]]]]]]
+			"value": ["prim":"Pair", "args": [["string": walletAddress] as [String : Any], ["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation] as [String : Any], ["prim": "Pair", "args":[["int":minXTZAmount.rpcRepresentation], ["string": dateString]]]]]]] as [String : Any]
 		]
 	}
 	
 	private static func tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, walletAddress: String) -> [String: Any] {
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.tokenToTezPayment.rawValue,
-			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation], ["int": minXTZAmount.rpcRepresentation]]], ["string": walletAddress]]]
+			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation], ["int": minXTZAmount.rpcRepresentation]]] as [String : Any], ["string": walletAddress]]] as [String : Any]
 		]
 	}
 	
@@ -485,7 +485,7 @@ public class OperationFactory {
 		
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.addLiquidity.rawValue,
-			"value": ["prim": "Pair", "args": [["string":walletAddress], ["prim":"Pair", "args":[["int":minLiquidtyMinted.rpcRepresentation], ["prim":"Pair", "args":[["int":tokensToDeposit.rpcRepresentation], ["string":dateString]]]]]]]
+			"value": ["prim": "Pair", "args": [["string":walletAddress] as [String : Any], ["prim":"Pair", "args":[["int":minLiquidtyMinted.rpcRepresentation] as [String : Any] as [String : Any], ["prim":"Pair", "args":[["int":tokensToDeposit.rpcRepresentation], ["string":dateString]]]]]]] as [String : Any]
 		]
 	}
 	
@@ -508,14 +508,14 @@ public class OperationFactory {
 		
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.removeLiquidity.rawValue,
-			"value": ["prim":"Pair","args":[["string":walletAddress], ["prim":"Pair","args":[["int":liq], ["prim":"Pair","args":[["int":xtz], ["prim":"Pair","args":[["int":token], ["string":dateString]]]]]]]]]
+			"value": ["prim":"Pair","args":[["string":walletAddress] as [String : Any], ["prim":"Pair","args":[["int":liq] as [String : Any], ["prim":"Pair","args":[["int":xtz] as [String : Any], ["prim":"Pair","args":[["int":token], ["string":dateString]]]]]]]]] as [String : Any]
 		]
 	}
 	
 	private static func removeLiquidity_quipu_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount) -> [String: Any] {
 		return [
 			"entrypoint": OperationTransaction.StandardEntrypoint.divestLiquidity.rawValue,
-			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": minXTZ.rpcRepresentation], ["int": minToken.rpcRepresentation]]], ["int": liquidityToBurn.rpcRepresentation]]]
+			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": minXTZ.rpcRepresentation], ["int": minToken.rpcRepresentation]]] as [String : Any], ["int": liquidityToBurn.rpcRepresentation]]] as [String : Any]
 		]
 	}
 	
