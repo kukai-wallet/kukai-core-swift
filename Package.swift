@@ -30,7 +30,7 @@ let package = Package(
 				"SignalRClient",
 			],
 			resources: [
-				.copy("Services/External")
+				.copy("Services/External-js")
 			]
 		),
 		
