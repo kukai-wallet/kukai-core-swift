@@ -23,10 +23,14 @@ import os.log
 /// List of providers currently supported and available on the Tezos network
 public enum TorusAuthProvider: String, Codable {
 	case apple
-	case twitter
 	case google
-	case reddit
 	case facebook
+	case twitter
+	case reddit
+	case discord
+	case twitch
+	case line
+	case github
 }
 
 /// SDK requires information about the verifer that can't be stored inside the verifier, add a wrapper object to allow passing of all the data
@@ -227,6 +231,9 @@ public class TorusAuthService: NSObject {
 				case .facebook:
 					print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
 					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					
+				default:
+					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 			}
 			
 			
