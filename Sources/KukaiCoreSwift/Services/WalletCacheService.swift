@@ -135,7 +135,7 @@ public class WalletCacheService {
 			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
-			newMetadata.append(WalletMetadata(address: wallet.address, displayName: torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.append(WalletMetadata(address: wallet.address, displayName: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else {
 			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
