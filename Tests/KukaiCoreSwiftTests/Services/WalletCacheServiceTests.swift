@@ -121,8 +121,8 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.hdWallet.childWalletAddresses[0], parentIndex: 0))
 		
 		let walletMetadata = walletCacheService.readNonsensitive()
-		XCTAssert(walletMetadata[0].children.count == 1)
-		XCTAssert(walletMetadata[0].children[0].address == MockConstants.hdWallet.childWalletAddresses[1])
+		XCTAssert(walletMetadata.hdWallets[0].children.count == 1)
+		XCTAssert(walletMetadata.hdWallets[0].children[0].address == MockConstants.hdWallet.childWalletAddresses[1])
 		
 		// Clean up
 		XCTAssert(walletCacheService.deleteAllCacheAndKeys())

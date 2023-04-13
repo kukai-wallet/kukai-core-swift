@@ -77,7 +77,7 @@ class OperationModelTests: XCTestCase {
 	func testSmartContractInvocation() {
 		let params: [String: Any] = [
 			"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
-			"value": ["prim":"Pair","args":[["string":MockConstants.defaultHdWallet.address], ["prim":"Pair","args":[["string":MockConstants.defaultLinearWallet.address], ["int":"1"]]]]]
+			"value": ["prim":"Pair","args":[["string":MockConstants.defaultHdWallet.address] as [String : Any], ["prim":"Pair","args":[["string":MockConstants.defaultLinearWallet.address], ["int":"1"]]]]] as [String : Any]
 		]
 		
 		let op = OperationTransaction(amount: TokenAmount.zero(), source: MockConstants.defaultHdWallet.address, destination: MockConstants.token3Decimals.tokenContractAddress ?? "", parameters: params)

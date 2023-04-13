@@ -26,6 +26,18 @@ enum WalletCacheError: Error {
 	case unableToDecrypt
 }
 
+/// Container to store groups of WalletMetadata based on type
+public struct WalletMetadataList: Codable, Hashable {
+	public var socialWallets: [WalletMetadata]
+	public var hdWallets: [WalletMetadata]
+	public var linearWallets: [WalletMetadata]
+	public var ledgerWallets: [WalletMetadata]
+	
+	public func isEmpty() -> Bool {
+		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty
+	}
+}
+
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
@@ -127,18 +139,24 @@ public class WalletCacheService {
 		
 		var newMetadata = readNonsensitive()
 		if let index = childOfIndex {
-			if index >= newMetadata.count {
-				os_log(.error, log: .kukaiCoreSwift, "WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"%@\", when there are currently only \"%@\" items", index, newMetadata.count)
+			if index >= newMetadata.hdWallets.count {
+				os_log(.error, log: .kukaiCoreSwift, "WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"%@\", when there are currently only \"%@\" items", index, newMetadata.hdWallets.count)
 				return false
 			}
 			
-			newMetadata[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, displayName: wallet.address, type: wallet.type, children: [], isChild: true, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			
+		} else if let _ = wallet as? HDWallet {
+			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, displayName: wallet.address, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
-			newMetadata.append(WalletMetadata(address: wallet.address, displayName: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, displayName: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			
+		} else if let _ = wallet as? LedgerWallet {
+			newMetadata.ledgerWallets.append(WalletMetadata(address: wallet.address, displayName: wallet.address, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else {
-			newMetadata.append(WalletMetadata(address: wallet.address, displayName: wallet.address, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, displayName: wallet.address, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 		}
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
@@ -161,20 +179,30 @@ public class WalletCacheService {
 		
 		var newMetadata = readNonsensitive()
 		if let hdWalletIndex = parentIndex {
-			guard hdWalletIndex < newMetadata.count, let childIndex = newMetadata[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
+			guard hdWalletIndex < newMetadata.hdWallets.count, let childIndex = newMetadata.hdWallets[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
 				return false
 			}
 			
-			let _ = newMetadata[hdWalletIndex].children.remove(at: childIndex)
+			let _ = newMetadata.hdWallets[hdWalletIndex].children.remove(at: childIndex)
 			
 		} else {
-			guard let index = newMetadata.firstIndex(where: { $0.address == withAddress }) else {
+			if let index = newMetadata.hdWallets.firstIndex(where: { $0.address == withAddress }) {
+				let _ = newMetadata.hdWallets.remove(at: index)
+				
+			} else if let index = newMetadata.socialWallets.firstIndex(where: { $0.address == withAddress }) {
+				let _ = newMetadata.socialWallets.remove(at: index)
+				
+			} else if let index = newMetadata.linearWallets.firstIndex(where: { $0.address == withAddress }) {
+				let _ = newMetadata.linearWallets.remove(at: index)
+				
+			} else if let index = newMetadata.ledgerWallets.firstIndex(where: { $0.address == withAddress }) {
+				let _ = newMetadata.ledgerWallets.remove(at: index)
+				
+			} else {
 				os_log(.error, log: .kukaiCoreSwift, "Unable to locate wallet")
 				return false
 			}
-			
-			let _ = newMetadata.remove(at: index)
 		}
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
@@ -339,15 +367,15 @@ public class WalletCacheService {
 	/**
 	 Write an ordered array of `WalletMetadata` to disk, replacing existing file if exists
 	 */
-	public func writeNonsensitive(_ metadata: [WalletMetadata]) -> Bool {
+	public func writeNonsensitive(_ metadata: WalletMetadataList) -> Bool {
 		return DiskService.write(encodable: metadata, toFileName: WalletCacheService.nonsensitiveCacheFileName)
 	}
 	
 	/**
 	 Return an ordered array of `WalletMetadata` if present on disk
 	 */
-	public func readNonsensitive() -> [WalletMetadata] {
-		return DiskService.read(type: [WalletMetadata].self, fromFileName: WalletCacheService.nonsensitiveCacheFileName) ?? []
+	public func readNonsensitive() -> WalletMetadataList {
+		return DiskService.read(type: WalletMetadataList.self, fromFileName: WalletCacheService.nonsensitiveCacheFileName) ?? WalletMetadataList(socialWallets: [], hdWallets: [], linearWallets: [], ledgerWallets: [])
 	}
 }
 
