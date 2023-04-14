@@ -33,6 +33,13 @@ public struct WalletMetadataList: Codable, Hashable {
 	public var linearWallets: [WalletMetadata]
 	public var ledgerWallets: [WalletMetadata]
 	
+	public init(socialWallets: [WalletMetadata], hdWallets: [WalletMetadata], linearWallets: [WalletMetadata], ledgerWallets: [WalletMetadata]) {
+		self.socialWallets = socialWallets
+		self.hdWallets = hdWallets
+		self.linearWallets = linearWallets
+		self.ledgerWallets = ledgerWallets
+	}
+	
 	public func isEmpty() -> Bool {
 		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty
 	}
