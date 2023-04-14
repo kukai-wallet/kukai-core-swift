@@ -36,6 +36,23 @@ public struct WalletMetadataList: Codable, Hashable {
 	public func isEmpty() -> Bool {
 		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty
 	}
+	
+	public func firstWallet() -> WalletMetadata? {
+		if socialWallets.count > 0 {
+			return socialWallets.first
+			
+		} else if hdWallets.count > 0 {
+			return hdWallets.first
+			
+		} else if linearWallets.count > 0 {
+			return linearWallets.first
+			
+		} else if ledgerWallets.count > 0 {
+			return ledgerWallets.first
+		}
+		
+		return nil
+	}
 }
 
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
