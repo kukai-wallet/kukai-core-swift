@@ -73,6 +73,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		return nil
 	}
+	
+	public func count() -> Int {
+		return socialWallets.count + hdWallets.count + linearWallets.count + ledgerWallets.count
+	}
 }
 
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
