@@ -68,6 +68,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		for metadata in hdWallets {
 			if metadata.address == address { return metadata }
+			
+			for childMetadata in metadata.children {
+				if childMetadata.address == address { return childMetadata }
+			}
 		}
 		
 		for metadata in linearWallets {
@@ -83,6 +87,32 @@ public struct WalletMetadataList: Codable, Hashable {
 	
 	public func count() -> Int {
 		return socialWallets.count + hdWallets.count + linearWallets.count + ledgerWallets.count
+	}
+	
+	public func addresses() -> [String] {
+		var temp: [String] = []
+		
+		for metadata in socialWallets {
+			temp.append(metadata.address)
+		}
+		
+		for metadata in hdWallets {
+			temp.append(metadata.address)
+			
+			for childMetadata in metadata.children {
+				temp.append(childMetadata.address)
+			}
+		}
+		
+		for metadata in linearWallets {
+			temp.append(metadata.address)
+		}
+		
+		for metadata in ledgerWallets {
+			temp.append(metadata.address)
+		}
+		
+		return temp
 	}
 }
 
