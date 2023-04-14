@@ -114,6 +114,28 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		return temp
 	}
+	
+	public func allMetadata() -> [WalletMetadata] {
+		var temp: [WalletMetadata] = []
+		
+		for metadata in socialWallets {
+			temp.append(metadata)
+		}
+		
+		for metadata in hdWallets {
+			temp.append(metadata)
+		}
+		
+		for metadata in linearWallets {
+			temp.append(metadata)
+		}
+		
+		for metadata in ledgerWallets {
+			temp.append(metadata)
+		}
+		
+		return temp
+	}
 }
 
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
