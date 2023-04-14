@@ -37,7 +37,7 @@ public struct WalletMetadataList: Codable, Hashable {
 		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty
 	}
 	
-	public func firstWallet() -> WalletMetadata? {
+	public func firstMetadata() -> WalletMetadata? {
 		if socialWallets.count > 0 {
 			return socialWallets.first
 			
@@ -49,6 +49,26 @@ public struct WalletMetadataList: Codable, Hashable {
 			
 		} else if ledgerWallets.count > 0 {
 			return ledgerWallets.first
+		}
+		
+		return nil
+	}
+	
+	public func metadata(forAddress address: String) -> WalletMetadata? {
+		for metadata in socialWallets {
+			if metadata.address == address { return metadata }
+		}
+		
+		for metadata in hdWallets {
+			if metadata.address == address { return metadata }
+		}
+		
+		for metadata in linearWallets {
+			if metadata.address == address { return metadata }
+		}
+		
+		for metadata in ledgerWallets {
+			if metadata.address == address { return metadata }
 		}
 		
 		return nil
