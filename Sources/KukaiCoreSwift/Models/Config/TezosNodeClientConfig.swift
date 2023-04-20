@@ -65,7 +65,7 @@ public struct TezosNodeClientConfig {
 		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
 		
 		/// The default testnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
-		public static let tezosDomainsURL = URL(string: "https://ithacanet-api.tezos.domains/graphql")!
+		public static let tezosDomainsURL = URL(string: "https://ghostnet-api.tezos.domains/graphql")!
 	}
 	
 	
