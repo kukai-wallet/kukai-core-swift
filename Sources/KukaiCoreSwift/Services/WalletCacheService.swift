@@ -85,26 +85,39 @@ public struct WalletMetadataList: Codable, Hashable {
 		return nil
 	}
 	
-	public mutating func update(address: String, with newMetadata: WalletMetadata) {
+	public mutating func update(address: String, with newMetadata: WalletMetadata) -> Bool {
 		for (index, metadata) in socialWallets.enumerated() {
-			if metadata.address == address { socialWallets[index] = newMetadata; return }
+			if metadata.address == address { socialWallets[index] = newMetadata; return true }
 		}
 		
 		for (index, metadata) in hdWallets.enumerated() {
-			if metadata.address == address { hdWallets[index] = newMetadata; return  }
+			if metadata.address == address { hdWallets[index] = newMetadata; return true }
 			
 			for (childIndex, childMetadata) in metadata.children.enumerated() {
-				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return }
+				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return true }
 			}
 		}
 		
 		for (index, metadata) in linearWallets.enumerated() {
-			if metadata.address == address { linearWallets[index] = newMetadata; return  }
+			if metadata.address == address { linearWallets[index] = newMetadata; return true }
 		}
 		
 		for (index, metadata) in ledgerWallets.enumerated() {
-			if metadata.address == address { ledgerWallets[index] = newMetadata; return  }
+			if metadata.address == address { ledgerWallets[index] = newMetadata; return true }
 		}
+		
+		return false
+	}
+	
+	public mutating func set(domain: TezosDomainsReverseRecord, forAddress address: String) -> Bool {
+		var meta = metadata(forAddress: address)
+		meta?.tezosDomains = [domain]
+		
+		if let meta = meta, update(address: address, with: meta) {
+			return true
+		}
+		
+		return false
 	}
 	
 	public func count() -> Int {
@@ -164,7 +177,7 @@ public struct WalletMetadataList: Codable, Hashable {
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
 	public var displayName: String?
-	public var tezosDomains: [String]?
+	public var tezosDomains: [TezosDomainsReverseRecord]?
 	public var socialType: TorusAuthProvider?
 	public var type: WalletType
 	public var children: [WalletMetadata]
@@ -175,7 +188,7 @@ public struct WalletMetadata: Codable, Hashable {
 		return (tezosDomains ?? []).count > 0
 	}
 	
-	public func primaryTezosDomain() -> String? {
+	public func primaryTezosDomain() -> TezosDomainsReverseRecord? {
 		if let domains = tezosDomains {
 			return domains.first
 		}
@@ -183,7 +196,7 @@ public struct WalletMetadata: Codable, Hashable {
 		return nil
 	}
 	
-	public init(address: String, displayName: String? = nil, tezosDomains: [String]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
+	public init(address: String, displayName: String? = nil, tezosDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
 		self.address = address
 		self.displayName = displayName
 		self.tezosDomains = tezosDomains
@@ -192,6 +205,14 @@ public struct WalletMetadata: Codable, Hashable {
 		self.children = children
 		self.isChild = isChild
 		self.bas58EncodedPublicKey = bas58EncodedPublicKey
+	}
+	
+	public static func == (lhs: WalletMetadata, rhs: WalletMetadata) -> Bool {
+		return lhs.address == rhs.address
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(address)
 	}
 }
 

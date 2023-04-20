@@ -12,6 +12,11 @@ public struct TezosDomainsAddressResponse: Codable {
 	
 	/// Domain object containing details about the domain
 	public let domain: TezosDomainsDomain
+	
+	/// Default init
+	public init(domain: TezosDomainsDomain) {
+		self.domain = domain
+	}
 }
 
 /// Domain object containing details about the domain
@@ -22,6 +27,12 @@ public struct TezosDomainsDomain: Codable {
 	
 	/// The Tezos address that the domain points too
 	public let address: String
+	
+	/// Default init
+	public init(name: String, address: String) {
+		self.name = name
+		self.address = address
+	}
 }
 
 /// Response object wrapper for querying a reverse record
@@ -37,6 +48,11 @@ public struct TezosDomainsDomainResponse: Codable {
 		}
 		
 		return domain
+	}
+	
+	/// Default init
+	public init(reverseRecord: TezosDomainsReverseRecord?) {
+		self.reverseRecord = reverseRecord
 	}
 }
 
@@ -57,4 +73,13 @@ public struct TezosDomainsReverseRecord: Codable {
 	
 	/// The domain object continaing the name and address
 	public let domain: TezosDomainsDomain
+	
+	/// Default init
+	public init(id: String, address: String, owner: String, expiresAtUtc: String, domain: TezosDomainsDomain) {
+		self.id = id
+		self.address = address
+		self.owner = owner
+		self.expiresAtUtc = expiresAtUtc
+		self.domain = domain
+	}
 }
