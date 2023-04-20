@@ -85,6 +85,28 @@ public struct WalletMetadataList: Codable, Hashable {
 		return nil
 	}
 	
+	public mutating func update(address: String, with newMetadata: WalletMetadata) {
+		for (index, metadata) in socialWallets.enumerated() {
+			if metadata.address == address { socialWallets[index] = newMetadata; return }
+		}
+		
+		for (index, metadata) in hdWallets.enumerated() {
+			if metadata.address == address { hdWallets[index] = newMetadata; return  }
+			
+			for (childIndex, childMetadata) in metadata.children.enumerated() {
+				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return }
+			}
+		}
+		
+		for (index, metadata) in linearWallets.enumerated() {
+			if metadata.address == address { linearWallets[index] = newMetadata; return  }
+		}
+		
+		for (index, metadata) in ledgerWallets.enumerated() {
+			if metadata.address == address { ledgerWallets[index] = newMetadata; return  }
+		}
+	}
+	
 	public func count() -> Int {
 		return socialWallets.count + hdWallets.count + linearWallets.count + ledgerWallets.count
 	}
