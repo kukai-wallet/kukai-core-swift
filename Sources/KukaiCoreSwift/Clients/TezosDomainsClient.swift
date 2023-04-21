@@ -59,14 +59,14 @@ public class TezosDomainsClient {
 	 - parameters address: A tezos address
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
-	public func getMainAndGhostDomainFor(address: String) -> AnyPublisher<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> {
+	public func getMainAndGhostDomainFor(address: String) -> Future<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> {
 		var bag = Set<AnyCancellable>()
 		let publishers: [AnyPublisher<Result<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>, Never>] = [
 			getDomainFor(address: address, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL).convertToResult(),
 			getDomainFor(address: address, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL).convertToResult()
 		]
 		
-		let pub = Future<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> { promise in
+		return Future<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> { promise in
 			Publishers.MergeMany(publishers)
 				.collect()
 				.sink { error in
@@ -95,8 +95,6 @@ public class TezosDomainsClient {
 				}
 				.store(in: &bag)
 		}
-		
-		return pub.eraseToAnyPublisher()
 	}
 	
 	/**
