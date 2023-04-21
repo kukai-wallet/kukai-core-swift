@@ -44,13 +44,59 @@ public class TezosDomainsClient {
 	/**
 	 Request a domain (if it exists) for the given tezos address
 	 - parameters address: A tezos address
+	 - parameters url: An optional URL to request, for advanced cases
 	 - returns: A Publisher containing a graphQL object or an error
 	 */
-	public func getDomainFor(address: String) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError> {
+	public func getDomainFor(address: String, url: URL? = nil) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError> {
 		let queryDict = ["query": "query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		return self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self)
+		return self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self)
+	}
+	
+	/**
+	 Request a domain (if it exists) for the given tezos address on both the default mainnet and ghostnet networks
+	 - parameters address: A tezos address
+	 - returns: A Publisher containing a graphQL object or an error
+	 */
+	public func getMainAndGhostDomainFor(address: String) -> AnyPublisher<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> {
+		var bag = Set<AnyCancellable>()
+		let publishers: [AnyPublisher<Result<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>, Never>] = [
+			getDomainFor(address: address, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL).convertToResult(),
+			getDomainFor(address: address, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL).convertToResult()
+		]
+		
+		let pub = Future<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> { promise in
+			Publishers.MergeMany(publishers)
+				.collect()
+				.sink { error in
+					// Never executed, due to `.convertToResult()` returning Never as the error
+					
+				} onSuccess: { domains in
+					var mainnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
+					var testnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
+					
+					for res in domains {
+						switch res {
+							case .success(let gql):
+								if gql.data?.reverseRecord?.domain.name.suffix(3) == "tez" {
+									mainnetResult = gql
+								} else {
+									testnetResult = gql
+								}
+								
+							case .failure(_):
+								let _ = ""
+						}
+					}
+					
+					promise(.success((mainnet: mainnetResult, ghostnet: testnetResult)))
+					bag.removeAll()
+				}
+				.store(in: &bag)
+		}
+		
+		return pub.eraseToAnyPublisher()
 	}
 	
 	/**

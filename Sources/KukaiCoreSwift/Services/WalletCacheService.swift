@@ -109,9 +109,16 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(domain: TezosDomainsReverseRecord, forAddress address: String) -> Bool {
+	public mutating func set(mainnetDomain: TezosDomainsReverseRecord?, ghostnetDomain: TezosDomainsReverseRecord?, forAddress address: String) -> Bool {
 		var meta = metadata(forAddress: address)
-		meta?.tezosDomains = [domain]
+		
+		if let mainnet = mainnetDomain {
+			meta?.mainnetDomains = [mainnet]
+		}
+		
+		if let ghostnet = ghostnetDomain {
+			meta?.ghostnetDomains = [ghostnet]
+		}
 		
 		if let meta = meta, update(address: address, with: meta) {
 			return true
@@ -177,29 +184,59 @@ public struct WalletMetadataList: Codable, Hashable {
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
 	public var displayName: String?
-	public var tezosDomains: [TezosDomainsReverseRecord]?
+	public var mainnetDomains: [TezosDomainsReverseRecord]?
+	public var ghostnetDomains: [TezosDomainsReverseRecord]?
 	public var socialType: TorusAuthProvider?
 	public var type: WalletType
 	public var children: [WalletMetadata]
 	public var isChild: Bool
 	public var bas58EncodedPublicKey: String
 	
-	public func hasTezosDomain() -> Bool {
-		return (tezosDomains ?? []).count > 0
+	public func hasMainnetDomain() -> Bool {
+		return (mainnetDomains ?? []).count > 0
 	}
 	
-	public func primaryTezosDomain() -> TezosDomainsReverseRecord? {
-		if let domains = tezosDomains {
+	public func hasGhostnetDomain() -> Bool {
+		return (ghostnetDomains ?? []).count > 0
+	}
+	
+	public func hasDomain(onNetwork network: TezosNodeClientConfig.NetworkType) -> Bool {
+		if network == .mainnet {
+			return hasMainnetDomain()
+		} else {
+			return hasGhostnetDomain()
+		}
+	}
+	
+	public func primaryMainnetDomain() -> TezosDomainsReverseRecord? {
+		if let domains = mainnetDomains {
 			return domains.first
 		}
 		
 		return nil
 	}
 	
-	public init(address: String, displayName: String? = nil, tezosDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
+	public func primaryGhostnetDomain() -> TezosDomainsReverseRecord? {
+		if let domains = ghostnetDomains {
+			return domains.first
+		}
+		
+		return nil
+	}
+	
+	public func primaryDomain(onNetwork network: TezosNodeClientConfig.NetworkType) -> TezosDomainsReverseRecord? {
+		if network == .mainnet {
+			return primaryMainnetDomain()
+		} else {
+			return primaryGhostnetDomain()
+		}
+	}
+	
+	public init(address: String, displayName: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
 		self.address = address
 		self.displayName = displayName
-		self.tezosDomains = tezosDomains
+		self.mainnetDomains = mainnetDomains
+		self.ghostnetDomains = ghostnetDomains
 		self.socialType = socialType
 		self.type = type
 		self.children = children
