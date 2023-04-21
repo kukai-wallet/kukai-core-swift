@@ -74,15 +74,16 @@ public class TezosDomainsClient {
 					
 				} onSuccess: { domains in
 					var mainnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
-					var testnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
+					var ghostnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
 					
 					for res in domains {
 						switch res {
 							case .success(let gql):
 								if gql.data?.reverseRecord?.domain.name.suffix(3) == "tez" {
 									mainnetResult = gql
-								} else {
-									testnetResult = gql
+									
+								} else if gql.data?.reverseRecord?.domain.name.suffix(3) == "gho" {
+									ghostnetResult = gql
 								}
 								
 							case .failure(_):
@@ -90,7 +91,7 @@ public class TezosDomainsClient {
 						}
 					}
 					
-					promise(.success((mainnet: mainnetResult, ghostnet: testnetResult)))
+					promise(.success((mainnet: mainnetResult, ghostnet: ghostnetResult)))
 					bag.removeAll()
 				}
 				.store(in: &bag)
