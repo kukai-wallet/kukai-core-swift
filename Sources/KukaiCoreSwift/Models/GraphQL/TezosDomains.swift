@@ -7,6 +7,33 @@
 
 import Foundation
 
+
+// MARK: Domain
+
+/// Response object wrapper for querying an address in bulk
+public struct TezosDomainsAddressBulkResponse: Codable {
+	
+	/// Object containing all the info of the record
+	public let domains: TezosDomainsDomains?
+	
+	/// Default init
+	public init(domains: TezosDomainsDomains?) {
+		self.domains = domains
+	}
+}
+
+
+/// Object containing an array of domains
+public struct TezosDomainsDomains: Codable {
+	
+	let items: [TezosDomainsDomain]
+	
+	/// Default init
+	public init(items: [TezosDomainsDomain]) {
+		self.items = items
+	}
+}
+
 /// Response object wrapper for querying an address
 public struct TezosDomainsAddressResponse: Codable {
 	
@@ -35,6 +62,12 @@ public struct TezosDomainsDomain: Codable {
 	}
 }
 
+
+
+
+
+// MARK: Reverse Record
+
 /// Response object wrapper for querying a reverse record
 public struct TezosDomainsDomainResponse: Codable {
 	
@@ -53,6 +86,30 @@ public struct TezosDomainsDomainResponse: Codable {
 	/// Default init
 	public init(reverseRecord: TezosDomainsReverseRecord?) {
 		self.reverseRecord = reverseRecord
+	}
+}
+
+/// Response object wrapper for querying a reverse record in bulk
+public struct TezosDomainsDomainBulkResponse: Codable {
+	
+	/// Object containing all the info of the record
+	public let reverseRecords: TezosDomainsReverseRecords?
+	
+	/// Default init
+	public init(reverseRecords: TezosDomainsReverseRecords?) {
+		self.reverseRecords = reverseRecords
+	}
+}
+
+
+/// Object containing an array of reverse records
+public struct TezosDomainsReverseRecords: Codable {
+	
+	let items: [TezosDomainsReverseRecord]
+	
+	/// Default init
+	public init(items: [TezosDomainsReverseRecord]) {
+		self.items = items
 	}
 }
 

@@ -176,9 +176,18 @@ public struct MockConstants {
 			
 			// Tezos domains
 			MockPostUrlKey(url: URL(string: "https://ghostnet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-domain_request")):
-				(MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
-			MockPostUrlKey(url: URL(string: "https://ghostnet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
 				(MockConstants.jsonStub(fromFilename: "tezos_domains-domain"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://ghostnet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://ghostnet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-bulk-domain_request")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-bulk-domain"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://ghostnet-api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-bulk-reverseRecord_request")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-bulk-reverseRecord"), MockConstants.http200),
+			
+			MockPostUrlKey(url: URL(string: "https://api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_request_mainnet")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-reverseRecord_mainnet"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://api.tezos.domains/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "tezos_domains-bulk-reverseRecord_request_mainnet")):
+				(MockConstants.jsonStub(fromFilename: "tezos_domains-bulk-reverseRecord_mainnet"), MockConstants.http200),
 			
 			// DipDup
 			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_exchange_request_1")):

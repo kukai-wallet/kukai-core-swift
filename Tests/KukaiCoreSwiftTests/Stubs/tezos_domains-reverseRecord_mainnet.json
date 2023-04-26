@@ -1,0 +1,14 @@
+{
+	"data": {
+	  "reverseRecord": {
+		"id": "ReverseRecord:tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov",
+		"address": "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov",
+		"owner": "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov",
+		"expiresAtUtc": "2024-07-13T11:30:07Z",
+		"domain": {
+		  "name": "crane-cost.tez",
+		  "address": "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"
+		}
+	  }
+	}
+  }

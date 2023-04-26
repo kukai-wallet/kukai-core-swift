@@ -1,0 +1,1 @@
+{"query":"query { domains(where: { name: { in: [\"crane-cost.gra\",\"crane-cost.gra\",\"crane-cost.gra\",] } }) { items {name, address}}}"}

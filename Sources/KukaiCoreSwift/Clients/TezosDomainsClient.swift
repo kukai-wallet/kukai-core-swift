@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 /**
  A client class allowing integration with the tezos domains GraphQL API. See more here: https://tezos.domains/
@@ -19,7 +18,16 @@ public class TezosDomainsClient {
 	/// The config used for URL's and logging
 	private let config: TezosNodeClientConfig
 	
-	
+	/// Object to wrap up a response fomr both networks
+	public struct BothNetworkReverseRecord {
+		var mainnet: TezosDomainsReverseRecord?
+		var ghostnet: TezosDomainsReverseRecord?
+		
+		public init(mainnet: TezosDomainsReverseRecord?, ghostnet: TezosDomainsReverseRecord?) {
+			self.mainnet = mainnet
+			self.ghostnet = ghostnet
+		}
+	}
 	
 	
 	
@@ -39,144 +47,131 @@ public class TezosDomainsClient {
 	
 	
 	
-	// MARK: - Public functions
+	// MARK: - Public single functions
 	
-	/**
-	 Request a domain (if it exists) for the given tezos address
-	 - parameters address: A tezos address
-	 - parameters url: An optional URL to request, for advanced cases
-	 - returns: A Publisher containing a graphQL object or an error
-	 */
-	public func getDomainFor(address: String, url: URL? = nil) -> AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError> {
+	public func getDomainFor(address: String, url: URL? = nil, completion: @escaping ((Result<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>) -> Void)) {
 		let queryDict = ["query": "query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		return self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self)
+		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self, completion: completion)
 	}
 	
-	/**
-	 Request a domain (if it exists) for the given tezos address on both the default mainnet and ghostnet networks
-	 - parameters address: A tezos address
-	 - returns: A Publisher containing a graphQL object or an error
-	 */
-	public func getMainAndGhostDomainFor(address: String) -> Future<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> {
-		var bag = Set<AnyCancellable>()
-		let publishers: [AnyPublisher<Result<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>, Never>] = [
-			getDomainFor(address: address, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL).convertToResult(),
-			getDomainFor(address: address, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL).convertToResult()
-		]
+	public func getMainAndGhostDomainFor(address: String, completion: @escaping (( BothNetworkReverseRecord ) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		dispatchGroup.enter()
+		dispatchGroup.enter()
 		
-		return Future<(mainnet: GraphQLResponse<TezosDomainsDomainResponse>?, ghostnet: GraphQLResponse<TezosDomainsDomainResponse>?), KukaiError> { promise in
-			Publishers.MergeMany(publishers)
-				.collect()
-				.sink { error in
-					// Never executed, due to `.convertToResult()` returning Never as the error
-					
-				} onSuccess: { domains in
-					var mainnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
-					var ghostnetResult: GraphQLResponse<TezosDomainsDomainResponse>? = nil
-					
-					for res in domains {
-						switch res {
-							case .success(let gql):
-								if gql.data?.reverseRecord?.domain.name.suffix(3) == "tez" {
-									mainnetResult = gql
-									
-								} else if gql.data?.reverseRecord?.domain.name.suffix(3) == "gho" {
-									ghostnetResult = gql
-								}
-								
-							case .failure(_):
-								let _ = ""
-						}
-					}
-					
-					promise(.success((mainnet: mainnetResult, ghostnet: ghostnetResult)))
-					bag.removeAll()
-				}
-				.store(in: &bag)
+		var returnObj = BothNetworkReverseRecord(mainnet: nil, ghostnet: nil)
+		
+		getDomainFor(address: address, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL) { result in
+			guard let res = try? result.get() else {
+				dispatchGroup.leave()
+				return
+			}
+			
+			returnObj.mainnet = res.data?.reverseRecord
+			dispatchGroup.leave()
+		}
+		
+		getDomainFor(address: address, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL) { result in
+			guard let res = try? result.get() else {
+				dispatchGroup.leave()
+				return
+			}
+			
+			returnObj.ghostnet = res.data?.reverseRecord
+			dispatchGroup.leave()
+		}
+		
+		
+		dispatchGroup.notify(queue: .main) {
+			completion(returnObj)
 		}
 	}
 	
-	/**
-	 Request a tezos address tied to a tezos-domain
-	 - parameters domain: A tezos domain owned by a tezos address
-	 - returns: A Publisher containing a graphQL object or an error
-	 */
-	public func getAddressFor(domain: String) -> AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError> {
+	public func getAddressFor(domain: String, completion: @escaping ((Result<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError>) -> Void)) {
 		let queryDict = ["query": "query {domain(name: \"\(domain)\") { name, address }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		return self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressResponse>.self)
+		self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressResponse>.self, completion: completion)
 	}
 	
-	/**
-	 Similar to `getDomainFor(address: String)` but allows for bulk fetching
-	 - parameters addresses: An array of tezos addresses
-	 - returns: A Publisher containing a graphQL object or an error
-	 */
-	public func getDomainsFor(addresses: [String]) -> Future<[String: GraphQLResponse<TezosDomainsDomainResponse>], KukaiError> {
-		var bag = Set<AnyCancellable>()
-		var publishers: [AnyPublisher<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>] = []
-		for address in addresses {
-			publishers.append(self.getDomainFor(address: address))
+	
+	
+	// MARK: - Public bulk functions
+	
+	public func getDomainsFor(addresses: [String], url: URL? = nil, completion: @escaping ((Result<GraphQLResponse<TezosDomainsDomainBulkResponse>, KukaiError>) -> Void)) {
+		var addressArray = ""
+		for add in addresses {
+			addressArray += "\"\(add)\","
 		}
 		
-		return Future<[String: GraphQLResponse<TezosDomainsDomainResponse>], KukaiError> { promise in
-			Publishers.MergeMany(publishers)
-				.collect()
-				.sink { error in
-					promise(.failure(error))
-					
-				} onSuccess: { domains in
-					var dict: [String: GraphQLResponse<TezosDomainsDomainResponse>] = [:]
-					for domain in domains {
-						guard let address = domain.data?.reverseRecord?.address else {
-							continue
-						}
-						
-						dict[address] = domain
-					}
-					
-					promise(.success(dict))
-					bag.removeAll()
-				}
-				.store(in: &bag)
+		let queryDict = ["query": "query { reverseRecords(where: { address: { in: [\(addressArray)] } }) { items { id, address, owner, expiresAtUtc, domain { name, address }}}}"]
+		let data = try? JSONEncoder().encode(queryDict)
+		
+		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainBulkResponse>.self, completion: completion)
+	}
+	
+	public func getMainAndGhostDomainsFor(addresses: [String], completion: @escaping (( [String: BothNetworkReverseRecord] ) -> Void)) {
+		let dispatchGroup = DispatchGroup()
+		dispatchGroup.enter()
+		dispatchGroup.enter()
+		
+		var mainResults: GraphQLResponse<TezosDomainsDomainBulkResponse>? = nil
+		var ghostResults: GraphQLResponse<TezosDomainsDomainBulkResponse>? = nil
+		
+		getDomainsFor(addresses: addresses, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL) { result in
+			guard let res = try? result.get() else {
+				dispatchGroup.leave()
+				return
+			}
+			
+			mainResults = res
+			dispatchGroup.leave()
+		}
+		
+		getDomainsFor(addresses: addresses, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL) { result in
+			guard let res = try? result.get() else {
+				dispatchGroup.leave()
+				return
+			}
+			
+			ghostResults = res
+			dispatchGroup.leave()
+		}
+		
+		
+		// Map the results into a dictionary of [address: (mainnet + ghostnet)] so that its easier for client code to use walletCache update methods
+		dispatchGroup.notify(queue: .global(qos: .background)) {
+			var returnObj: [String: BothNetworkReverseRecord] = [:]
+			
+			let mainnetRecords = mainResults?.data?.reverseRecords?.items.reduce(into: [String: TezosDomainsReverseRecord]()) {
+				$0[$1.address] = $1
+			} ?? [:]
+			
+			let ghostnetRecords = ghostResults?.data?.reverseRecords?.items.reduce(into: [String: TezosDomainsReverseRecord]()) {
+				$0[$1.address] = $1
+			} ?? [:]
+			
+			for add in addresses {
+				returnObj[add] = BothNetworkReverseRecord(mainnet: mainnetRecords[add], ghostnet: ghostnetRecords[add])
+			}
+			
+			DispatchQueue.main.async {
+				completion(returnObj)
+			}
 		}
 	}
 	
-	/**
-	 Similar to `getAddressFor(domain: String)` but allows for bulk fetching
-	 - parameters domains: An array of tezos domain owned by a tezos addresses
-	 - returns: A Publisher containing a graphQL object or an error
-	 */
-	public func getAddressesFor(domains: [String]) -> Future<[String: String], KukaiError> {
-		var bag = Set<AnyCancellable>()
-		var publishers: [AnyPublisher<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError>] = []
-		for domain in domains {
-			publishers.append(self.getAddressFor(domain: domain))
+	public func getAddressesFor(domains: [String], completion: @escaping ((Result<GraphQLResponse<TezosDomainsAddressBulkResponse>, KukaiError>) -> Void)) {
+		var domainsArray = ""
+		for dom in domains {
+			domainsArray += "\"\(dom)\","
 		}
 		
-		return Future<[String: String], KukaiError> { promise in
-			Publishers.MergeMany(publishers)
-				.collect()
-				.sink { error in
-					promise(.failure(error))
-					
-				} onSuccess: { domains in
-					var dict: [String: String] = [:]
-					for domain in domains {
-						guard let dom = domain.data?.domain.name, let address = domain.data?.domain.address else {
-							continue
-						}
-						
-						dict[dom] = address
-					}
-					
-					promise(.success(dict))
-					bag.removeAll()
-				}
-				.store(in: &bag)
-		}
+		let queryDict = ["query": "query { domains(where: { name: { in: [\(domainsArray)] } }) { items {name, address}}}"]
+		let data = try? JSONEncoder().encode(queryDict)
+		
+		self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressBulkResponse>.self, completion: completion)
 	}
 }

@@ -1,0 +1,1 @@
+{"query":"query { reverseRecords(where: { address: { in: [\"tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov\",\"tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov\",] } }) { items { id, address, owner, expiresAtUtc, domain { name, address }}}}"}

@@ -11,8 +11,6 @@ import Combine
 
 class TezosDomainsClientTests: XCTestCase {
 	
-	private var bag = Set<AnyCancellable>()
-	
 	override func setUpWithError() throws {
 	}
 
@@ -22,64 +20,90 @@ class TezosDomainsClientTests: XCTestCase {
 	
 	func testGetDomain() {
 		let expectation = XCTestExpectation(description: "tezos domain")
-		MockConstants.shared.tezosDomainsClient.getDomainFor(address: "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov")
-			.sink { error in
-				XCTFail(error.description)
-				expectation.fulfill()
-				
-			} onSuccess: { response in
-				XCTAssert(response.data?.domain() == "crane-cost.gra", "\( response.data?.domain() ?? "-" )")
-				expectation.fulfill()
+		MockConstants.shared.tezosDomainsClient.getDomainFor(address: "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", completion: { result in
+			switch result {
+				case .success(let response):
+					XCTAssert(response.data?.domain() == "crane-cost.gra", "\( response.data?.domain() ?? "-" )")
+					expectation.fulfill()
+					
+				case .failure(let error):
+					XCTFail(error.description)
+					expectation.fulfill()
 			}
-			.store(in: &bag)
+		})
 		
 		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetAddress() {
 		let expectation = XCTestExpectation(description: "tezos domain")
-		MockConstants.shared.tezosDomainsClient.getAddressFor(domain: "crane-cost.gra")
-			.sink { error in
-				XCTFail(error.description)
-				expectation.fulfill()
-				
-			} onSuccess: { response in
-				XCTAssert(response.data?.domain.address == "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "\( response.data?.domain.address ?? "-" )")
-				expectation.fulfill()
+		MockConstants.shared.tezosDomainsClient.getAddressFor(domain: "crane-cost.gra", completion: { result in
+			switch result {
+				case .success(let response):
+					XCTAssert(response.data?.domain.address == "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "\( response.data?.domain.address ?? "-" )")
+					expectation.fulfill()
+					
+				case .failure(let error):
+					XCTFail(error.description)
+					expectation.fulfill()
 			}
-			.store(in: &bag)
+		})
 		
 		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetDomains() {
 		let expectation = XCTestExpectation(description: "tezos domain")
-		MockConstants.shared.tezosDomainsClient.getDomainsFor(addresses: ["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"])
-			.sink { error in
-				XCTFail(error.description)
-				expectation.fulfill()
-				
-			} onSuccess: { response in
-				XCTAssert(response["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.data?.domain() == "crane-cost.gra", "\( response["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.data?.domain() ?? "-" )")
-				expectation.fulfill()
+		MockConstants.shared.tezosDomainsClient.getDomainsFor(addresses: ["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"], completion: { result in
+			switch result {
+				case .success(let response):
+					XCTAssert(response.data?.reverseRecords?.items[0].domain.name == "crane-cost.gra", "\( response.data?.reverseRecords?.items[0].domain.name ?? "-" )")
+					expectation.fulfill()
+					
+				case .failure(let error):
+					XCTFail(error.description)
+					expectation.fulfill()
 			}
-			.store(in: &bag)
+		})
 		
 		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetAddresses() {
 		let expectation = XCTestExpectation(description: "tezos domain")
-		MockConstants.shared.tezosDomainsClient.getAddressesFor(domains: ["crane-cost.gra", "crane-cost.gra", "crane-cost.gra"])
-			.sink { error in
-				XCTFail(error.description)
-				expectation.fulfill()
-				
-			} onSuccess: { response in
-				XCTAssert(response["crane-cost.gra"] == "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "\( response["crane-cost.gra"] ?? "-" )")
-				expectation.fulfill()
+		MockConstants.shared.tezosDomainsClient.getAddressesFor(domains: ["crane-cost.gra", "crane-cost.gra", "crane-cost.gra"], completion: { result in
+			switch result {
+				case .success(let response):
+					XCTAssert(response.data?.domains?.items[0].address == "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "\( response.data?.domains?.items[0].address ?? "-" )")
+					expectation.fulfill()
+					
+				case .failure(let error):
+					XCTFail(error.description)
+					expectation.fulfill()
 			}
-			.store(in: &bag)
+		})
+		
+		wait(for: [expectation], timeout: 10)
+	}
+	
+	func testGetBoth() {
+		let expectation = XCTestExpectation(description: "tezos domain")
+		MockConstants.shared.tezosDomainsClient.getMainAndGhostDomainFor(address: "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov") { result in
+			XCTAssert(result.mainnet?.domain.name == "crane-cost.tez", result.mainnet?.domain.name ?? "-")
+			XCTAssert(result.ghostnet?.domain.name == "crane-cost.gra", result.ghostnet?.domain.name ?? "-")
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 10)
+	}
+	
+	func testGetBothBulk() {
+		let expectation = XCTestExpectation(description: "tezos domain")
+		MockConstants.shared.tezosDomainsClient.getMainAndGhostDomainsFor(addresses: ["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]) { result in
+			XCTAssert(result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.mainnet?.domain.name == "crane-cost.tez", result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.mainnet?.domain.name ?? "-")
+			XCTAssert(result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.ghostnet?.domain.name == "crane-cost.gra", result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.ghostnet?.domain.name ?? "-")
+			expectation.fulfill()
+		}
 		
 		wait(for: [expectation], timeout: 10)
 	}
