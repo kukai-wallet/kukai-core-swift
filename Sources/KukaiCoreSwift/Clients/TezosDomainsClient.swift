@@ -56,15 +56,18 @@ public class TezosDomainsClient {
 		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self, completion: completion)
 	}
 	
-	public func getMainAndGhostDomainFor(address: String, completion: @escaping (( BothNetworkReverseRecord ) -> Void)) {
+	public func getMainAndGhostDomainFor(address: String, completion: @escaping (( Result<BothNetworkReverseRecord, KukaiError> ) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		dispatchGroup.enter()
 		dispatchGroup.enter()
 		
+		var errorMain: KukaiError? = nil
+		var errorGhost: KukaiError? = nil
 		var returnObj = BothNetworkReverseRecord(mainnet: nil, ghostnet: nil)
 		
 		getDomainFor(address: address, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL) { result in
 			guard let res = try? result.get() else {
+				errorMain = result.getFailure()
 				dispatchGroup.leave()
 				return
 			}
@@ -75,6 +78,7 @@ public class TezosDomainsClient {
 		
 		getDomainFor(address: address, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL) { result in
 			guard let res = try? result.get() else {
+				errorGhost = result.getFailure()
 				dispatchGroup.leave()
 				return
 			}
@@ -85,7 +89,13 @@ public class TezosDomainsClient {
 		
 		
 		dispatchGroup.notify(queue: .main) {
-			completion(returnObj)
+			// Its very likely 1 will fail and the other will not, and this is an expected outcome. Only return an error if both fail
+			if let err = errorMain, errorGhost != nil {
+				completion(Result.failure(err))
+				return
+			}
+			
+			completion(Result.success(returnObj))
 		}
 	}
 	
@@ -112,16 +122,19 @@ public class TezosDomainsClient {
 		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainBulkResponse>.self, completion: completion)
 	}
 	
-	public func getMainAndGhostDomainsFor(addresses: [String], completion: @escaping (( [String: BothNetworkReverseRecord] ) -> Void)) {
+	public func getMainAndGhostDomainsFor(addresses: [String], completion: @escaping (( Result<[String: BothNetworkReverseRecord], KukaiError> ) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		dispatchGroup.enter()
 		dispatchGroup.enter()
 		
+		var errorMain: KukaiError? = nil
+		var errorGhost: KukaiError? = nil
 		var mainResults: GraphQLResponse<TezosDomainsDomainBulkResponse>? = nil
 		var ghostResults: GraphQLResponse<TezosDomainsDomainBulkResponse>? = nil
 		
 		getDomainsFor(addresses: addresses, url: TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL) { result in
 			guard let res = try? result.get() else {
+				errorMain = result.getFailure()
 				dispatchGroup.leave()
 				return
 			}
@@ -132,6 +145,7 @@ public class TezosDomainsClient {
 		
 		getDomainsFor(addresses: addresses, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL) { result in
 			guard let res = try? result.get() else {
+				errorGhost = result.getFailure()
 				dispatchGroup.leave()
 				return
 			}
@@ -158,7 +172,13 @@ public class TezosDomainsClient {
 			}
 			
 			DispatchQueue.main.async {
-				completion(returnObj)
+				// Its very likely 1 will fail and the other will not, and this is an expected outcome. Only return an error if both fail
+				if let err = errorMain, errorGhost != nil {
+					completion(Result.failure(err))
+					return
+				}
+				
+				completion(Result.success(returnObj))
 			}
 		}
 	}

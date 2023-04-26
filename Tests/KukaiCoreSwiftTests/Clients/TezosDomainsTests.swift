@@ -89,9 +89,16 @@ class TezosDomainsClientTests: XCTestCase {
 	func testGetBoth() {
 		let expectation = XCTestExpectation(description: "tezos domain")
 		MockConstants.shared.tezosDomainsClient.getMainAndGhostDomainFor(address: "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov") { result in
-			XCTAssert(result.mainnet?.domain.name == "crane-cost.tez", result.mainnet?.domain.name ?? "-")
-			XCTAssert(result.ghostnet?.domain.name == "crane-cost.gra", result.ghostnet?.domain.name ?? "-")
-			expectation.fulfill()
+			switch result {
+				case .success(let response):
+					XCTAssert(response.mainnet?.domain.name == "crane-cost.tez", response.mainnet?.domain.name ?? "-")
+					XCTAssert(response.ghostnet?.domain.name == "crane-cost.gra", response.ghostnet?.domain.name ?? "-")
+					expectation.fulfill()
+					
+				case .failure(let error):
+					XCTFail(error.description)
+					expectation.fulfill()
+			}
 		}
 		
 		wait(for: [expectation], timeout: 10)
@@ -100,9 +107,16 @@ class TezosDomainsClientTests: XCTestCase {
 	func testGetBothBulk() {
 		let expectation = XCTestExpectation(description: "tezos domain")
 		MockConstants.shared.tezosDomainsClient.getMainAndGhostDomainsFor(addresses: ["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov", "tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]) { result in
-			XCTAssert(result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.mainnet?.domain.name == "crane-cost.tez", result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.mainnet?.domain.name ?? "-")
-			XCTAssert(result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.ghostnet?.domain.name == "crane-cost.gra", result["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.ghostnet?.domain.name ?? "-")
-			expectation.fulfill()
+			switch result {
+				case .success(let response):
+					XCTAssert(response["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.mainnet?.domain.name == "crane-cost.tez", response["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.mainnet?.domain.name ?? "-")
+					XCTAssert(response["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.ghostnet?.domain.name == "crane-cost.gra", response["tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov"]?.ghostnet?.domain.name ?? "-")
+					expectation.fulfill()
+					
+				case .failure(let error):
+					XCTFail(error.description)
+					expectation.fulfill()
+			}
 		}
 		
 		wait(for: [expectation], timeout: 10)
