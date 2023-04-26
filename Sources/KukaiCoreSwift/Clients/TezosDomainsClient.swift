@@ -20,8 +20,8 @@ public class TezosDomainsClient {
 	
 	/// Object to wrap up a response fomr both networks
 	public struct BothNetworkReverseRecord {
-		var mainnet: TezosDomainsReverseRecord?
-		var ghostnet: TezosDomainsReverseRecord?
+		public var mainnet: TezosDomainsReverseRecord?
+		public var ghostnet: TezosDomainsReverseRecord?
 		
 		public init(mainnet: TezosDomainsReverseRecord?, ghostnet: TezosDomainsReverseRecord?) {
 			self.mainnet = mainnet
