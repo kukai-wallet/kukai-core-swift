@@ -263,6 +263,7 @@ public class MediaProxyService: NSObject {
 	public static func removeAllImages() {
 		MediaProxyService.permanentImageCache().clearCache(completion: nil)
 		MediaProxyService.temporaryImageCache().clearCache(completion: nil)
+		KingfisherManager.shared.cache.clearCache()
 	}
 	
 	/// Clear only iamges from cahce that have expired
