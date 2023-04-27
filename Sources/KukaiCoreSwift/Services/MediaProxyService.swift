@@ -295,7 +295,7 @@ public class MediaProxyService: NSObject {
 		if Thread.current.isRunningXCTest { return }
 		
 		let fileExtension = url.absoluteString.components(separatedBy: ".").last ?? ""
-		var processors: [KingfisherOptionsInfoItem] = [.originalCache(cache)]
+		var processors: [KingfisherOptionsInfoItem] = [.targetCache(cache)]
 		
 		if fileExtension == "svg" {
 			processors = [.processor(SVGImgProcessor())]
