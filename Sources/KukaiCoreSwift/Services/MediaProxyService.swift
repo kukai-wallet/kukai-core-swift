@@ -262,7 +262,7 @@ public class MediaProxyService: NSObject {
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize?, completion: ((CGSize?) -> Void)? = nil) {
+	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			imageView.image = fallback
 			if let comp = completion { comp(nil) }
@@ -286,10 +286,6 @@ public class MediaProxyService: NSObject {
 		} else if fileExtension == "gif" {
 			// Do nothing, all handled by default
 			processors = [.processor(DefaultImageProcessor.default)]
-			
-		} else if let size = downSampleSize {
-			// Only possible on non SVG's and non gifs, like jpeg, png etc
-			processors = [.processor( DownsamplingImageProcessor(size: size))]
 		}
 		
 		imageView.kf.indicatorType = .activity
@@ -344,7 +340,14 @@ public class MediaProxyService: NSObject {
 			return false
 		}
 		
-		return ImageCache.default.isCached(forKey: url.absoluteString)
+		var identifier = DefaultImageProcessor.default.identifier
+		let fileExtension = url.absoluteString.components(separatedBy: ".").last ?? ""
+		
+		if fileExtension == "svg" {
+			identifier = SVGImgProcessor().identifier
+		}
+		
+		return ImageCache.default.isCached(forKey: url.absoluteString, processorIdentifier: identifier)
 	}
 	
 	public static func imageCache() -> ImageCache {
