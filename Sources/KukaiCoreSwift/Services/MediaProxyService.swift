@@ -264,6 +264,7 @@ public class MediaProxyService: NSObject {
 		MediaProxyService.permanentImageCache().clearCache(completion: nil)
 		MediaProxyService.temporaryImageCache().clearCache(completion: nil)
 		KingfisherManager.shared.cache.clearCache()
+		ImageCache.default.clearCache()
 	}
 	
 	/// Clear only iamges from cahce that have expired
@@ -310,29 +311,16 @@ public class MediaProxyService: NSObject {
 			processors = [.processor( DownsamplingImageProcessor(size: size))]
 		}
 		
-		
-		// Custom cache / retreive to deal with retreiveal issue
-		if cache.isCached(forKey: url.absoluteString) {
-			retreiveAndDisplay(url: url, to: imageView, fromCache: cache, fallback: fallback, processors: processors)
-		} else {
-			imageView.kf.indicatorType = .activity
-			cacheImage(url: url, cache: cache) { size in
-				retreiveAndDisplay(url: url, to: imageView, fromCache: cache, fallback: fallback, processors: processors)
+		imageView.kf.indicatorType = .activity
+		imageView.kf.setImage(with: url, options: processors) { result in
+			guard let res = try? result.get() else {
+				imageView.image = fallback
+				if let comp = completion { comp(nil) }
+				return
 			}
-		}
-	}
-	
-	private static func retreiveAndDisplay(url: URL, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, processors: [KingfisherOptionsInfoItem], completion: ((CGSize?) -> Void)? = nil) {
-		cache.retrieveImage(forKey: url.absoluteString, options: processors) { result in
-			switch result {
-				case .success(let value):
-					imageView.image = value.image
-					if let completion = completion { completion(value.image?.size) }
-					
-				case .failure(let error):
-					os_log("Error fetching from cache: %@", log: .kukaiCoreSwift, type: .default, "\(error)")
-					imageView.image = fallback
-					if let comp = completion { comp(nil) }
+			
+			if let completion = completion {
+				completion(res.image.size)
 			}
 		}
 	}
