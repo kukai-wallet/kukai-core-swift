@@ -14,6 +14,11 @@ public enum MediaProxyServiceError: String, Error {
 	case unableToParseContentType
 }
 
+public enum CacheType {
+	case temporary
+	case permanent
+}
+
 /// A service class for interacting with the TC infrastructure to proxy NFT images, videos and audio files
 public class MediaProxyService: NSObject {
 	
@@ -48,13 +53,6 @@ public class MediaProxyService: NSObject {
 		case gifOnly
 		case imageAndAudio
 	}
-	
-	/// Constants useful for dealing with the service and its storage / caching
-	public struct Constants {
-		public static let permanentImageCacheName = "kukai-mediaproxy-permanent"
-		public static let temporaryImageCacheName = "kukai-mediaproxy-temporary"
-	}
-	
 	
 	private var getMediaTypeCompletion: ((Result<[MediaType], KukaiError>) -> Void)? = nil
 	private var getMediaTypeDownloadTask: URLSessionDownloadTask? = nil
@@ -241,35 +239,14 @@ public class MediaProxyService: NSObject {
 	
 	// MARK: - Cache management
 	
-	/// Some images (like token icons) don't change, are displayed on the main screen everytime and should be cached until users explaictly requests to clear space.
-	/// This function returns a cache for these images that don't automatically expire
-	public static func permanentImageCache() -> ImageCache {
-		let cache = ImageCache(name: MediaProxyService.Constants.permanentImageCacheName)
-		cache.diskStorage.config.expiration = .never
-		
-		return cache
-	}
-	
-	/// Some images (like NFT dispaly images) are large and require a lot of space. They are not pinned to the homepage and visible 24/7. They should auto expire after a reasonable period
-	/// This function returns a cache for these images that expire automatically after 30 days
-	public static func temporaryImageCache() -> ImageCache {
-		let cache = ImageCache(name: MediaProxyService.Constants.temporaryImageCacheName)
-		cache.diskStorage.config.expiration = .days(30)
-		
-		return cache
-	}
-	
 	/// Clear all images from all caches
 	public static func removeAllImages() {
-		MediaProxyService.permanentImageCache().clearCache(completion: nil)
-		MediaProxyService.temporaryImageCache().clearCache(completion: nil)
-		KingfisherManager.shared.cache.clearCache()
 		ImageCache.default.clearCache()
 	}
 	
 	/// Clear only iamges from cahce that have expired
 	public static func clearExpiredImages() {
-		MediaProxyService.temporaryImageCache().cleanExpiredCache(completion: nil)
+		ImageCache.default.cleanExpiredCache(completion: nil)
 	}
 	
 	
@@ -285,7 +262,7 @@ public class MediaProxyService: NSObject {
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, fromCache cache: ImageCache, fallback: UIImage, downSampleSize: CGSize?, completion: ((CGSize?) -> Void)? = nil) {
+	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize?, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			imageView.image = fallback
 			if let comp = completion { comp(nil) }
@@ -297,7 +274,11 @@ public class MediaProxyService: NSObject {
 		if Thread.current.isRunningXCTest { return }
 		
 		let fileExtension = url.absoluteString.components(separatedBy: ".").last ?? ""
-		var processors: [KingfisherOptionsInfoItem] = [.targetCache(cache)]
+		var processors: [KingfisherOptionsInfoItem] = []
+		
+		if cacheType == .temporary {
+			processors = [.diskCacheExpiration(.days(30))]
+		}
 		
 		if fileExtension == "svg" {
 			processors = [.processor(SVGImgProcessor())]
@@ -331,7 +312,7 @@ public class MediaProxyService: NSObject {
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func cacheImage(url: URL?, cache: ImageCache, completion: @escaping ((CGSize?) -> Void)) {
+	public static func cacheImage(url: URL?, completion: @escaping ((CGSize?) -> Void)) {
 		guard let url = url else {
 			completion(nil)
 			return
@@ -346,7 +327,7 @@ public class MediaProxyService: NSObject {
 		downloader.downloadImage(with: url) { result in
 			switch result {
 				case .success(let value):
-					cache.store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo([])) { _ in
+					ImageCache.default.store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo([])) { _ in
 						completion(value.image.size)
 					}
 					
@@ -358,12 +339,12 @@ public class MediaProxyService: NSObject {
 	}
 	
 	/// Check if a given url is already cached
-	public static func isCached(url: URL?, cache: ImageCache) -> Bool {
+	public static func isCached(url: URL?) -> Bool {
 		guard let url = url else {
 			return false
 		}
 		
-		return cache.isCached(forKey: url.absoluteString)
+		return ImageCache.default.isCached(forKey: url.absoluteString)
 	}
 	
 	/**
@@ -372,13 +353,13 @@ public class MediaProxyService: NSObject {
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func sizeForImageIfCached(url: URL?, fromCache cache: ImageCache, completion: @escaping ((CGSize?) -> Void) ) {
+	public static func sizeForImageIfCached(url: URL?, completion: @escaping ((CGSize?) -> Void) ) {
 		guard let url = url else {
 			completion(nil)
 			return
 		}
 		
-		cache.retrieveImage(forKey: url.absoluteString) { result in
+		ImageCache.default.retrieveImage(forKey: url.absoluteString) { result in
 			switch result {
 				case .success(let value):
 					completion(value.image?.size)
