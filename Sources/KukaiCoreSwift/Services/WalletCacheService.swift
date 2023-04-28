@@ -183,7 +183,8 @@ public struct WalletMetadataList: Codable, Hashable {
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
 public struct WalletMetadata: Codable, Hashable {
 	public var address: String
-	public var displayName: String?
+	public var walletNickname: String?
+	public var socialUsername: String?
 	public var mainnetDomains: [TezosDomainsReverseRecord]?
 	public var ghostnetDomains: [TezosDomainsReverseRecord]?
 	public var socialType: TorusAuthProvider?
@@ -232,9 +233,10 @@ public struct WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public init(address: String, displayName: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
+	public init(address: String, walletNickname: String? = nil, socialUsername: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
 		self.address = address
-		self.displayName = displayName
+		self.walletNickname = walletNickname
+		self.socialUsername = socialUsername
 		self.mainnetDomains = mainnetDomains
 		self.ghostnetDomains = ghostnetDomains
 		self.socialType = socialType
