@@ -127,6 +127,17 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
+	public mutating func set(nickname: String?, forAddress address: String) -> Bool {
+		var meta = metadata(forAddress: address)
+		meta?.walletNickname = nickname
+		
+		if let meta = meta, update(address: address, with: meta) {
+			return true
+		}
+		
+		return false
+	}
+	
 	public func count() -> Int {
 		return socialWallets.count + hdWallets.count + linearWallets.count + ledgerWallets.count
 	}
