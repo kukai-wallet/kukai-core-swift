@@ -235,7 +235,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	/// Used for creating "Pending" transactions
 	public static func placeholder(withStatus status: TransactionStatus, opHash: String, type: TransactionType, counter: Decimal, fromWallet: WalletMetadata, destination: TzKTAddress, xtzAmount: TokenAmount, parameters: [String: String]?, primaryToken: Token?) -> TzKTTransaction {
 		let timestamp = TzKTTransaction.dateFormatter.string(from: Date())
-		let sender = TzKTAddress(alias: fromWallet.displayName, address: fromWallet.address)
+		let sender = TzKTAddress(alias: fromWallet.walletNickname ?? fromWallet.socialUsername ?? fromWallet.address, address: fromWallet.address)
 		
 		var transaction = TzKTTransaction(type: .transaction, id: 0, level: 0, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: destination, prevDelegate: nil, newDelegate: nil, amount: xtzAmount, parameter: parameters, status: status)
 		transaction.processAdditionalData(withCurrentWalletAddress: fromWallet.address)
