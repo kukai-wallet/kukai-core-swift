@@ -394,6 +394,14 @@ public class WalletCacheService {
 			
 		} else {
 			if let index = newMetadata.hdWallets.firstIndex(where: { $0.address == withAddress }) {
+				
+				// Children will be removed from metadata automatically, as they are contained inside the parent, however they won't from the encrypted cache
+				// Remove them from encrypted first, then parent from metadata
+				let children = newMetadata.hdWallets[index].children
+				for child in children {
+					newWallets.removeValue(forKey: child.address)
+				}
+				
 				let _ = newMetadata.hdWallets.remove(at: index)
 				
 			} else if let index = newMetadata.socialWallets.firstIndex(where: { $0.address == withAddress }) {
