@@ -24,6 +24,9 @@ public struct Account: Codable, Hashable {
 	/// All the wallets NFT's, grouped into parent FA2 objects so they can be displayed in groups or individaully
 	public let nfts: [Token]
 	
+	/// 10 most recent NFTs to hit the wallet
+	public let recentNFTs: [NFT]
+	
 	/// All the wallets Defi, Liquidity Tokens
 	public let liquidityTokens: [DipDupPositionData]
 	
@@ -40,17 +43,19 @@ public struct Account: Codable, Hashable {
 		self.xtzBalance = .zero()
 		self.tokens = []
 		self.nfts = []
+		self.recentNFTs = []
 		self.liquidityTokens = []
 		self.delegate = nil
 		self.delegationLevel = 0
 	}
 	
 	/// Full init
-	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
+	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], recentNFTs: [NFT], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
 		self.walletAddress = walletAddress
 		self.xtzBalance = xtzBalance
 		self.tokens = tokens
 		self.nfts = nfts
+		self.recentNFTs = recentNFTs
 		self.liquidityTokens = liquidityTokens
 		self.delegate = delegate
 		self.delegationLevel = delegationLevel
