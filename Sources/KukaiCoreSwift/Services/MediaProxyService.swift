@@ -198,7 +198,7 @@ public class MediaProxyService: NSObject {
 			return nil
 		}
 		
-		let duplicatesRemoved = Array(Set(types))
+		let duplicatesRemoved = NSOrderedSet(array: types).map({ $0 as? MediaType })
 		if duplicatesRemoved.contains(where: { $0 == .audio }) && duplicatesRemoved.contains(where: { $0 == .image }) {
 			return .imageAndAudio
 			
