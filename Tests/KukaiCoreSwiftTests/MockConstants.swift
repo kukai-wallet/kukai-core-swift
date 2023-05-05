@@ -80,6 +80,7 @@ public struct MockConstants {
 		tzktBalancePageURL.appendQueryItem(name: "balance.gt", value: 0)
 		tzktBalancePageURL.appendQueryItem(name: "offset", value: 0)
 		tzktBalancePageURL.appendQueryItem(name: "limit", value: 10000)
+		tzktBalancePageURL.appendQueryItem(name: "sort.desc", value: "lastLevel")
 		
 		var tzktCyclesURL = tzktURL.appendingPathComponent("v1/cycles")
 		tzktCyclesURL.appendQueryItem(name: "limit", value: 25)

@@ -708,6 +708,7 @@ public class TzKTClient {
 		url.appendQueryItem(name: "balance.gt", value: 0)
 		url.appendQueryItem(name: "offset", value: offset * TzKTClient.Constants.tokenBalanceQuerySize)
 		url.appendQueryItem(name: "limit", value: TzKTClient.Constants.tokenBalanceQuerySize)
+		url.appendQueryItem(name: "sort.desc", value: "lastLevel")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBalance].self) { (result) in
 			completion(result)
