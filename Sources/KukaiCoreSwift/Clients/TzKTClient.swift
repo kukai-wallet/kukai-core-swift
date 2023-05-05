@@ -759,7 +759,7 @@ public class TzKTClient {
 		var tokenBalances: [TzKTBalance] = []
 		var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
-		var groupedData: (tokens: [Token], nftGroups: [Token]) = (tokens: [], nftGroups: [])
+		var groupedData: (tokens: [Token], nftGroups: [Token], recentNFTs: [NFT]) = (tokens: [], nftGroups: [], recentNFTs: [])
 		
 		
 		dispatchGroup.enter()
@@ -815,7 +815,7 @@ public class TzKTClient {
 				completion(Result.failure(err))
 				
 			} else {
-				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: liquidityTokens) ?? (tokens: [], nftGroups: [])
+				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: liquidityTokens) ?? (tokens: [], nftGroups: [], recentNFTs: [])
 				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, liquidityTokens: liquidityTokens, delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
 				
 				completion(Result.success(account))
@@ -824,9 +824,11 @@ public class TzKTClient {
 	}
 	
 	/// Private function to add balance pages together and group NFTs under their parent contracts
-	private func groupBalances(_ balances: [TzKTBalance], filteringOutLiquidityTokens liquidityTokens: [DipDupPositionData]) -> (tokens: [Token], nftGroups: [Token]) {
+	private func groupBalances(_ balances: [TzKTBalance], filteringOutLiquidityTokens liquidityTokens: [DipDupPositionData]) -> (tokens: [Token], nftGroups: [Token], recentNFTs: [NFT]) {
 		var tokens: [Token] = []
 		var nftGroups: [Token] = []
+		var recentNFTs: [NFT] = []
+		var tempRecentNFTs: [TzKTBalance] = []
 		var tempNFT: [String: [TzKTBalance]] = [:]
 		
 		for balance in balances {
@@ -845,6 +847,10 @@ public class TzKTClient {
 			
 			// If its an NFT, hold onto for later
 			if balance.isNFT() {
+				if tempRecentNFTs.count < 10 {
+					tempRecentNFTs.append(balance)
+				}
+				
 				if tempNFT[balance.token.contract.address] == nil {
 					tempNFT[balance.token.contract.address] = [balance]
 				} else {
@@ -883,7 +889,11 @@ public class TzKTClient {
 			nftGroups.append(nftToken)
 		}
 		
-		return (tokens: tokens, nftGroups: nftGroups.sorted(by: { $0.id > $1.id }))
+		for nftBalance in tempRecentNFTs {
+			recentNFTs.append(NFT(fromTzKTBalance: nftBalance))
+		}
+		
+		return (tokens: tokens, nftGroups: nftGroups.sorted(by: { $0.id > $1.id }), recentNFTs: recentNFTs)
 	}
 	
 	/**
