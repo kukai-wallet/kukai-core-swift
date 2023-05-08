@@ -150,7 +150,13 @@ public struct WalletMetadataList: Codable, Hashable {
 	}
 	
 	public func count() -> Int {
-		return socialWallets.count + hdWallets.count + linearWallets.count + ledgerWallets.count
+		var total = (socialWallets.count + linearWallets.count + ledgerWallets.count)
+		
+		for wallet in hdWallets {
+			total += (1 + wallet.children.count)
+		}
+		
+		return total
 	}
 	
 	public func addresses() -> [String] {
