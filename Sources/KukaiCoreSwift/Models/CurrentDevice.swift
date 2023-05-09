@@ -10,6 +10,12 @@ import Foundation
 import LocalAuthentication
 
 
+public enum BiometricType {
+	case none
+	case touch
+	case face
+}
+
 /// Enum used to get details about the current device's capabilities
 public enum CurrentDevice {
 	
@@ -24,7 +30,7 @@ public enum CurrentDevice {
 	}
 	
 	/// Does the current device have biometric hardware available
-	private static var hasBiometrics: Bool {
+	public static var hasBiometrics: Bool {
 		
 		let localAuthContext = LAContext()
 		var error: NSError?
@@ -36,27 +42,32 @@ public enum CurrentDevice {
 		var isValidPolicy = localAuthContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
 		
 		guard isValidPolicy == true else {
-			
-			if #available(iOS 11, *) {
-				if error!.code != LAError.biometryNotAvailable.rawValue {
-					isValidPolicy = true
+			if error!.code != LAError.biometryNotAvailable.rawValue {
+				return true
 					
-				} else {
-					isValidPolicy = false
-				}
-				
 			} else {
-				if error!.code != LAError.touchIDNotAvailable.rawValue {
-					isValidPolicy = true
-					
-				} else {
-					isValidPolicy = false
-				}
+				return false
 			}
-			
-			return isValidPolicy
 		}
 		
 		return isValidPolicy
+	}
+	
+	public static func biometricType() -> BiometricType {
+		let authContext = LAContext()
+		let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+		switch(authContext.biometryType) {
+			case .none:
+				return .none
+				
+			case .touchID:
+				return .touch
+				
+			case .faceID:
+				return .face
+				
+			@unknown default:
+				return .none
+		}
 	}
 }
