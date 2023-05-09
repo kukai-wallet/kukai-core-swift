@@ -656,7 +656,7 @@ extension WalletCacheService {
 	fileprivate func createKeys() throws -> (public: SecKey, private: SecKey?) {
 		var error: Unmanaged<CFError>?
 		
-		let privateKeyAccessControl: SecAccessControlCreateFlags = CurrentDevice.hasSecureEnclave ?  [.userPresence, .privateKeyUsage] : [.userPresence]
+		let privateKeyAccessControl: SecAccessControlCreateFlags = CurrentDevice.hasSecureEnclave ?  [.privateKeyUsage] : []
 		guard let privateKeyAccess = SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, privateKeyAccessControl, &error) else {
 			if let err = error { throw err.takeRetainedValue() as Error }
 			else { throw WalletCacheError.unableToAccessEnclaveOrKeychain }
