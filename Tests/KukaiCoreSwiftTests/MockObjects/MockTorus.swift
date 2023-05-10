@@ -8,20 +8,17 @@
 import UIKit
 import CustomAuth
 import TorusUtils
-import PromiseKit
 import FetchNodeDetails
 
 public class MockCustomAuth: CustomAuth {
 	
-	override open func triggerLogin(controller: UIViewController? = nil, browserType: URLOpenerTypes = .sfsafari, modalPresentationStyle: UIModalPresentationStyle = .fullScreen) -> Promise<[String : Any]> {
+	override open func triggerLogin(controller: UIViewController? = nil, browserType: URLOpenerTypes = .asWebAuthSession, modalPresentationStyle: UIModalPresentationStyle = .fullScreen) async throws -> [String : Any] {
 		guard let verifierType = self.subVerifierDetails.first?.loginProvider else {
 			fatalError("can't find verifier")
 		}
 		
-		let (tempPromise, seal) = Promise<[String:Any]>.pending()
-		
 		if verifierType == .apple  { // Apple
-			seal.fulfill([
+			return [
 				"privateKey": MockConstants.linearWalletSecp256k1.privateKey,
 				"publicAddress": "0x6A6b215e489Cb563e421fD94E21cBC5178AB72F9",
 				"userInfo": [
@@ -33,10 +30,9 @@ public class MockCustomAuth: CustomAuth {
 					"email_verified": "true",
 					"updated_at": "2021-07-12T10:48:21.666Z"
 				]
-			])
-			
+			]
 		} else if verifierType == .twitter { // Twitter
-			seal.fulfill([
+			return [
 				"privateKey": MockConstants.linearWalletSecp256k1.privateKey,
 				"publicAddress": "0x97cc326c49C288710883D415d20b00D415d20b00",
 				"userInfo": [
@@ -47,10 +43,10 @@ public class MockCustomAuth: CustomAuth {
 					"name": "Test McTestface",
 					"nickname": "testy"
 				]
-			])
+			]
 			
 		} else if verifierType == .reddit { // Reddit
-			seal.fulfill([
+			return [
 				"privateKey": MockConstants.linearWalletSecp256k1.privateKey,
 				"publicAddress": "0xf2f31e21fA3D60DC19feF2CB20804EF2CB20804EF",
 				"userInfo": [
@@ -58,10 +54,10 @@ public class MockCustomAuth: CustomAuth {
 					"icon_img": "https://www.redditstatic.com/avatars/avatar_default_06_0DD3BB.png",
 					"updated_at": "2021-07-12T10:49:56.465Z",
 				]
-			])
+			]
 			
 		} else if verifierType == .google { // Google
-			seal.fulfill([
+			return [
 				"privateKey": MockConstants.linearWalletSecp256k1.privateKey,
 				"publicAddress": "0xf2f31e21fA3D60DC19feF2CB20804EF2CB20804EF",
 				"userInfo": [
@@ -69,13 +65,11 @@ public class MockCustomAuth: CustomAuth {
 					"email": "testy@domain.com",
 					"picture": "https://www.redditstatic.com/avatars/avatar_default_06_0DD3BB.png",
 				]
-			])
+			]
 			
 		} else {
 			fatalError("Invalid verifier")
 		}
-		
-		return tempPromise
 	}
 }
 

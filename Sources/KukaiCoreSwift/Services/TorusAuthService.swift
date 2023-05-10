@@ -97,7 +97,7 @@ public class TorusAuthService: NSObject {
 	private let mainnetProxyAddress = "0x638646503746d5456209e33a2ff5e3226d698bea"
 	
 	/// Shared instance of the Torus SDK object, with a temprary init
-	private var torus = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifierName: "", subVerifierDetails: [])
+	private var torus = CustomAuth(aggregateVerifierType: .singleLogin, aggregateVerifier: "", subVerifierDetails: [])
 	
 	/// Shared instance of the Torus Util object
 	private let torusUtils: TorusUtils
@@ -154,18 +154,18 @@ public class TorusAuthService: NSObject {
 			
 		} else if verifierWrapper.isAggregate {
 			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
-							   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
+							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
+							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 							   loglevel: .info,
 							   urlSession: self.networkService.urlSession,
 							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 			
 		} else {
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
-							   aggregateVerifierName: verifierWrapper.subverifier.subVerifierId,
+							   aggregateVerifier: verifierWrapper.subverifier.clientId,
 							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
+							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 							   loglevel: .info,
 							   urlSession: self.networkService.urlSession,
 							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
@@ -192,66 +192,75 @@ public class TorusAuthService: NSObject {
 			return
 		}
 		
-		
 		// If not apple call torus code
-		torus.triggerLogin(controller: displayOver).done { data in
-			os_log("Torus returned succesful data", log: .torus, type: .debug)
-			
-			var username: String? = nil
-			var userId: String? = nil
-			var profile: String? = nil
-			var pk: String? = nil
-			
-			// Each serach returns required data in a different format. Grab the private key and social profile info needed
-			switch authType {
-				case .apple, .google:
-					if let userInfoDict = data["userInfo"] as? [String: Any] {
-						username = userInfoDict["name"] as? String
-						userId = userInfoDict["email"] as? String
-						profile = userInfoDict["picture"] as? String
-					}
-					pk = data["privateKey"] as? String
+		triggerLogin(torus: torus, authType: authType, completion: completion)
+	}
+	
+	private func triggerLogin(torus: CustomAuth, authType: TorusAuthProvider, completion: @escaping ((Result<TorusWallet, KukaiError>) -> Void)) {
+		Task { @MainActor in
+			do {
+				let data = try await torus.triggerLogin()
+				os_log("Torus returned succesful data", log: .torus, type: .debug)
 				
-				case .twitter:
-					if let userInfoDict = data["userInfo"] as? [String: Any] {
-						username = userInfoDict["nickname"] as? String
-						userId = userInfoDict["sub"] as? String
-						profile = userInfoDict["picture"] as? String
-					}
-					pk = data["privateKey"] as? String
-					
-				case .reddit:
-					if let userInfoDict = data["userInfo"] as? [String: Any] {
-						username = userInfoDict["name"] as? String
-						userId = nil
-						profile = userInfoDict["icon_img"] as? String
-					}
-					pk = data["privateKey"] as? String
-					
-				case .facebook:
-					print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
+				var username: String? = nil
+				var userId: String? = nil
+				var profile: String? = nil
+				var pk: String? = nil
+				
+				// Each serach returns required data in a different format. Grab the private key and social profile info needed
+				switch authType {
+					case .apple, .google:
+						if let userInfoDict = data["userInfo"] as? [String: Any] {
+							username = userInfoDict["name"] as? String
+							userId = userInfoDict["email"] as? String
+							profile = userInfoDict["picture"] as? String
+						}
+						pk = data["privateKey"] as? String
+						
+					case .twitter:
+						if let userInfoDict = data["userInfo"] as? [String: Any] {
+							username = userInfoDict["nickname"] as? String
+							userId = userInfoDict["sub"] as? String
+							profile = userInfoDict["picture"] as? String
+						}
+						pk = data["privateKey"] as? String
+						
+					case .reddit:
+						if let userInfoDict = data["userInfo"] as? [String: Any] {
+							username = userInfoDict["name"] as? String
+							userId = nil
+							profile = userInfoDict["icon_img"] as? String
+						}
+						pk = data["privateKey"] as? String
+						
+					case .facebook:
+						print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
+						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+						
+					default:
+						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
+				}
+				
+				
+				// Create wallet with details and return
+				guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
+					os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
 					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
-					
-				default:
-					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
-			}
-			
-			
-			// Create wallet with details and return
-			guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
-				os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
-				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					return
+				}
+				
+				completion(Result.success(wallet))
+			} catch {
+				os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
+				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 				return
 			}
-			
-			completion(Result.success(wallet))
-			
-		}.catch { error in
-			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
-			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
-			return
 		}
 	}
+	
+	
+	
+	
 	
 	/**
 	Get a TZ2 address from a social media user name. If Twitter, will first convert the username to a userid and then query
@@ -269,14 +278,14 @@ public class TorusAuthService: NSObject {
 			twitterLookup(username: socialUsername) { [weak self] twitterResult in
 				switch twitterResult {
 					case .success(let twitterUserId):
-						self?.getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.subVerifierId, verifierWrapper: verifierWrapper, socialUserId: "twitter|\(twitterUserId)", completion: completion)
+						self?.getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.clientId, verifierWrapper: verifierWrapper, socialUserId: "twitter|\(twitterUserId)", completion: completion)
 						
 					case .failure(let twitterError):
 						completion(Result.failure(twitterError))
 				}
 			}
 		} else {
-			getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.subVerifierId, verifierWrapper: verifierWrapper, socialUserId: socialUsername, completion: completion)
+			getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.clientId, verifierWrapper: verifierWrapper, socialUserId: socialUsername, completion: completion)
 		}
 	}
 	
@@ -284,16 +293,19 @@ public class TorusAuthService: NSObject {
 	private func getPublicAddress(verifierName: String, verifierWrapper: SubverifierWrapper, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		let isTestnet = (verifierWrapper.networkType == .testnet)
-		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .ROPSTEN : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
-		self.fetchNodeDetails.getNodeDetails(verifier: verifierName, verifierID: socialUserId).done { [weak self] remoteNodeDetails in
-			self?.nodeDetails = remoteNodeDetails
-			
-			guard let nd = self?.nodeDetails else {
-				completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
-				return
-			}
-			
-			self?.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true).done { data in
+		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .TESTNET : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
+		
+		Task { @MainActor in
+			do {
+				let remoteNodeDetails = try await self.fetchNodeDetails.getNodeDetails(verifier: verifierName, verifierID: socialUserId)
+				self.nodeDetails = remoteNodeDetails
+				
+				guard let nd = self.nodeDetails else {
+					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
+					return
+				}
+				
+				let data = try await self.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true)
 				guard let pubX = data.x,
 					  let pubY = data.y,
 					  let bytesX = Sodium.shared.utils.hex2bin(pubX),
@@ -323,16 +335,11 @@ public class TorusAuthService: NSObject {
 				let tz2Address = Base58Check.encode(message: hash, prefix: Prefix.Address.tz2)
 				completion(Result.success(tz2Address))
 				
-			}.catch { error in
-				os_log("Error fetching address: %@", log: .torus, type: .error, "\(error)")
+			} catch {
+				os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
 				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 				return
 			}
-			
-		}.catch { error in
-			os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
-			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
-			return
 		}
 	}
 	
@@ -401,24 +408,29 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 				let sub = claim.string ?? ""
 				
 				let tdsdk = CustomAuth(aggregateVerifierType: .singleIdVerifier,
-									   aggregateVerifierName: verifierWrapper.aggregateVerifierName ?? "",
+									   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 									   subVerifierDetails: [],
-									   network: verifierWrapper.networkType == .testnet ? .ROPSTEN : .MAINNET,
+									   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 									   loglevel: .info,
 									   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
-				tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier).done { [weak self] data in
-					
-					guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
-						os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
-						self?.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
-						return
+				
+				Task { @MainActor in
+					do {
+						let data = try await tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier)
+						
+						guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
+							os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
+							self.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+							return
+						}
+						
+						self.createWalletCompletion(Result.success(wallet))
+						
+					} catch {
+						self.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: error)))
 					}
-					
-					self?.createWalletCompletion(Result.success(wallet))
-					
-				}.catch { [weak self] error in
-					self?.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: error)))
 				}
+				
 				
 			default:
 				break

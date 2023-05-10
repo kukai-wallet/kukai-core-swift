@@ -11,9 +11,9 @@ import CustomAuth
 
 class TorusAuthServiceTests: XCTestCase {
 	
-	static let googleSubVerifier = SubVerifierDetails(loginType: .web, loginProvider: .google, clientId: "mock-google-id", verifierName: "mock-google-name", redirectURL: "native://mock1")
+	static let googleSubVerifier = SubVerifierDetails(loginType: .web, loginProvider: .google, clientId: "mock-google-id", verifier: "mock-google-name", redirectURL: "native://mock1")
 	let torusService = TorusAuthService(networkService: MockConstants.shared.networkService, verifiers: [
-		.twitter: SubverifierWrapper(aggregateVerifierName: "mock-twitter-verifier", networkType: .testnet, subverifier: SubVerifierDetails(loginType: .web, loginProvider: .twitter, clientId: "mock-twitter-id", verifierName: "mock-twitter-name", redirectURL: "native://mock1", jwtParams: ["domain": "torus-test.auth0.com"])),
+		.twitter: SubverifierWrapper(aggregateVerifierName: "mock-twitter-verifier", networkType: .testnet, subverifier: SubVerifierDetails(loginType: .web, loginProvider: .twitter, clientId: "mock-twitter-id", verifier: "mock-twitter-name", redirectURL: "native://mock1", jwtParams: ["domain": "torus-test.auth0.com"])),
 		.google: SubverifierWrapper(aggregateVerifierName: "mock-google-verifier", networkType: .testnet, subverifier: TorusAuthServiceTests.googleSubVerifier)
 	])
 	
@@ -25,9 +25,9 @@ class TorusAuthServiceTests: XCTestCase {
 	
 	func testCreateGoogleWallet() {
 		let mockTorus = MockCustomAuth(aggregateVerifierType: .singleIdVerifier,
-									   aggregateVerifierName: "mock-google-verifier",
+									   aggregateVerifier: "mock-google-verifier",
 									   subVerifierDetails: [TorusAuthServiceTests.googleSubVerifier],
-									   network: .ROPSTEN,
+									   network: .TESTNET,
 									   loglevel: .info,
 									   urlSession: MockConstants.shared.networkService.urlSession)
 		

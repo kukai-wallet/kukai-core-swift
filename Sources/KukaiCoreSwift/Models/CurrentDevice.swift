@@ -39,7 +39,7 @@ public enum CurrentDevice {
 		/// the policy evaluation to fail - e.g. a passcode set, a fingerprint
 		/// enrolled with Touch ID or a face set up with Face ID. This method allows easy checking
 		/// for such conditions.
-		var isValidPolicy = localAuthContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
+		let isValidPolicy = localAuthContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
 		
 		guard isValidPolicy == true else {
 			if error!.code != LAError.biometryNotAvailable.rawValue {
