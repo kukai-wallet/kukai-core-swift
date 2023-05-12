@@ -8,6 +8,7 @@
 
 import Foundation
 import KukaiCryptoSwift
+import Sodium
 import os.log
 
 /**
@@ -104,8 +105,18 @@ public class HDWallet: Wallet {
 	/**
 	 Sign a hex payload with the private key
 	 */
-	public func sign(_ hex: String, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
-		guard let signature = privateKey.sign(hex: hex) else {
+	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
+		guard let bytes = Sodium.shared.utils.hex2bin(hex) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+			return
+		}
+		
+		var bytesToSign = bytes
+		if isOperation {
+			bytesToSign = bytesToSign.addOperationWatermarkAndHash() ?? []
+		}
+		
+		guard let signature = privateKey.sign(bytes: bytesToSign) else {
 			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
 			return
 		}

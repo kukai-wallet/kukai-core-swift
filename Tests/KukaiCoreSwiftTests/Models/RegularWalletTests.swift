@@ -58,7 +58,7 @@ class RegularWalletTests: XCTestCase {
 	
 	func testSigning() {
 		let messageHex = MockConstants.messageToSign.data(using: .utf8)?.toHexString() ?? "-"
-		MockConstants.defaultLinearWallet.sign(messageHex) { result in
+		MockConstants.defaultLinearWallet.sign(messageHex, isOperation: false) { result in
 			guard let signedData = try? result.get() else {
 				XCTFail("No signature: \(result.getFailure())")
 				return

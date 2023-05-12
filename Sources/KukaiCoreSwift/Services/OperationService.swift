@@ -131,7 +131,7 @@ public class OperationService {
 		
 		
 		// Sign whatever string is required, and move on to preapply / inject
-		wallet.sign(stringToSign) { [weak self] result in
+		wallet.sign(stringToSign, isOperation: true) { [weak self] result in
 			guard let signature = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
 				return

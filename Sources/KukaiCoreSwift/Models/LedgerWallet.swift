@@ -74,7 +74,7 @@ public class LedgerWallet: Wallet {
 	 Else it will be treated as an unknown operation and will simply display the Blake2b hash.
 	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
 	*/
-	public func sign(_ hex: String, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
+	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
 		let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)

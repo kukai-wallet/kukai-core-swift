@@ -46,7 +46,7 @@ public protocol Wallet: Codable {
 	 - parameter hex: A hex encoded string, representing a forged operation payload.
 	 - parameter completion: A completion block to run with the resulting signature, needs to be done async in order to support usecases such as signing with an external ledger.
 	 */
-	func sign(_ hex: String, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void))
+	func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void))
 	
 	/// Query which curve the given wallet is using
 	func privateKeyCurve() -> EllipticalCurve
