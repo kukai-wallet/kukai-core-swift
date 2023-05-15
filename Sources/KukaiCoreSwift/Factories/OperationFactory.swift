@@ -433,6 +433,19 @@ public class OperationFactory {
 		
 		/**
 		 Return true if
+		 - contains 1 operation with a non-zero amount, with no parameters
+		 */
+		public static func isTezTransfer(operations: [Operation]) -> Bool {
+			if operations.count == 1, let op = operations.first as? OperationTransaction, op.amount != "0", op.parameters == nil {
+				return true
+			}
+			
+			return false
+		}
+		
+		
+		/**
+		 Return true if
 		 - contains an operation calling an entrypoint that is not approve, updateOperators or transfer
 		 */
 		public static func isContractCall(operations: [Operation]) -> Bool {
