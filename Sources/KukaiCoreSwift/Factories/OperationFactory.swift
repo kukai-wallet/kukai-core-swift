@@ -430,6 +430,23 @@ public class OperationFactory {
 			
 			return nil
 		}
+		
+		/**
+		 Return true if
+		 - contains an operation calling an entrypoint that is not approve, updateOperators or transfer
+		 */
+		public static func isContractCall(operations: [Operation]) -> Bool {
+			for op in operations {
+				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
+				   (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue &&
+					entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue &&
+					entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue) {
+					return true
+				}
+			}
+			
+			return false
+		}
 	}
 	
 	
