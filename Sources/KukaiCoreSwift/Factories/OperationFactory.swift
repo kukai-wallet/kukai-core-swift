@@ -460,6 +460,18 @@ public class OperationFactory {
 			
 			return false
 		}
+		
+		/// Easy way to extract the first non-`approval` or `update_operator` transaction
+		public static func firstTransferEntrypointOperation(operations: [Operation]) -> OperationTransaction? {
+			for op in operations {
+				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
+				   entrypoint == OperationTransaction.StandardEntrypoint.transfer.rawValue {
+					return opTrans
+				}
+			}
+			
+			return nil
+		}
 	}
 	
 	
