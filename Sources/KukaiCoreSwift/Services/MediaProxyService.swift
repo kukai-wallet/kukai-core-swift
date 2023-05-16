@@ -138,7 +138,7 @@ public class MediaProxyService: NSObject {
 	/**
 	 Using only info from `TzKTBalanceMetadataFormat` determine the media type(s) of the object
 	 */
-	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat]) -> [MediaType] {
+	public static func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat]) -> [MediaType] {
 		var types: [MediaType] = []
 		
 		// Check if the metadata contains a format with a mimetype
@@ -174,7 +174,7 @@ public class MediaProxyService: NSObject {
 	 */
 	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<[MediaType], KukaiError>) -> Void)) {
 		
-		let types = getMediaType(fromFormats: formats)
+		let types = MediaProxyService.getMediaType(fromFormats: formats)
 		if types.count > 0 {
 			completion(Result.success(types))
 			return
@@ -187,7 +187,7 @@ public class MediaProxyService: NSObject {
 			return
 		}
 		
-		if url.pathExtension != "", url.pathExtension != "gif", let type = checkFileExtension(fileExtension: url.pathExtension) {
+		if url.pathExtension != "", url.pathExtension != "gif", let type = MediaProxyService.checkFileExtension(fileExtension: url.pathExtension) {
 			completion(Result.success([type]))
 			return
 		}
@@ -224,7 +224,7 @@ public class MediaProxyService: NSObject {
 		}
 	}
 	
-	private func checkFileExtension(fileExtension: String) -> MediaType? {
+	private static func checkFileExtension(fileExtension: String) -> MediaType? {
 		if fileExtension != "" {
 			if fileExtension == "gif" {
 				return.gif
