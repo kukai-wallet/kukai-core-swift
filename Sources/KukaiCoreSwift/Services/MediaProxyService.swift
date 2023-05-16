@@ -136,14 +136,9 @@ public class MediaProxyService: NSObject {
 	// MARK: - Type checking
 	
 	/**
-	 Given multiple sources of information, attempt to find the media type the url is pointing too
-	 - parameter fromFormats: An array of `TzKTBalanceMetadataFormat` that comes down with the TzKTClient's balancing fetching code. It MAY contain infomration on the media type
-	 - parameter orURL: The URL for the record. It MAY contain a file extension dennoting the file type
-	 - parameter urlSession: If type can't be found via URL or metadata, download the first packet, examine the headers for `Content-Type` using this session. (HEAD requests aren't currently supported if the asset hasn't been already cached)
-	 - parameter completion: A block to run when a type can be found, or an error encountered
+	 Using only info from `TzKTBalanceMetadataFormat` determine the media type(s) of the object
 	 */
-	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<[MediaType], KukaiError>) -> Void)) {
-		
+	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat]) -> [MediaType] {
 		var types: [MediaType] = []
 		
 		// Check if the metadata contains a format with a mimetype
@@ -167,6 +162,19 @@ public class MediaProxyService: NSObject {
 			}
 		}
 		
+		return types
+	}
+	
+	/**
+	 Given multiple sources of information, attempt to find the media type the url is pointing too
+	 - parameter fromFormats: An array of `TzKTBalanceMetadataFormat` that comes down with the TzKTClient's balancing fetching code. It MAY contain infomration on the media type
+	 - parameter orURL: The URL for the record. It MAY contain a file extension dennoting the file type
+	 - parameter urlSession: If type can't be found via URL or metadata, download the first packet, examine the headers for `Content-Type` using this session. (HEAD requests aren't currently supported if the asset hasn't been already cached)
+	 - parameter completion: A block to run when a type can be found, or an error encountered
+	 */
+	public func getMediaType(fromFormats formats: [TzKTBalanceMetadataFormat], orURL url: URL?, urlSession: URLSession = .shared, completion: @escaping ((Result<[MediaType], KukaiError>) -> Void)) {
+		
+		let types = getMediaType(fromFormats: formats)
 		if types.count > 0 {
 			completion(Result.success(types))
 			return
