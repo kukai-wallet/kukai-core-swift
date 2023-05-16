@@ -377,15 +377,16 @@ public class OperationFactory {
 	public struct Extractor {
 		
 		/**
-		 Extract rpc amount (without decimal info)  and a tokenId from a michelson FA1.2 / FA2 trasfer payload
+		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload
 		 */
-		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?)? {
+		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let michelsonDict = michelson as? [String: Any] {
 				// FA1.2
 				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
 				
 				if let str = rpcAmountString {
-					return (rpcAmount: str, tokenId: nil)
+					return (rpcAmount: str, tokenId: nil, destination: rpcDestinationString)
 				} else {
 					return nil
 				}
@@ -393,12 +394,15 @@ public class OperationFactory {
 			} else if let michelsonArray = michelson as? [[String: Any]] {
 				// FA2
 				
-				let argsArray = michelsonArray[0].michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
-				let rpcAmountString = argsArray?.michelsonInt(atIndex: 1)
-				let tokenId = argsArray?.michelsonInt(atIndex: 0)
+				let argsArray1 = michelsonArray[0].michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()
+				let rpcDestination = argsArray1?.michelsonString(atIndex: 0)
 				
-				if let str = rpcAmountString, let tId = tokenId {
-					return (rpcAmount: str, tokenId: Decimal(string: tId))
+				let argsArray2 = argsArray1?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
+				let rpcAmountString = argsArray2?.michelsonInt(atIndex: 1)
+				let tokenId = argsArray2?.michelsonInt(atIndex: 0)
+				
+				if let str = rpcAmountString, let tId = tokenId, let dest = rpcDestination {
+					return (rpcAmount: str, tokenId: Decimal(string: tId), destination: dest)
 				} else {
 					return nil
 				}
@@ -409,12 +413,12 @@ public class OperationFactory {
 		}
 		
 		/**
-		 Extract details form a payload in order to present to the user what it is they are trying to send
+		 Extract details from a payload in order to present to the user what it is they are trying to send
 		 */
-		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
+		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? [Any]()) {
 				let tokenContractAddress = transaction.destination
-				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId)
+				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId, destination: amountAndId.destination)
 			}
 			
 			return nil
@@ -423,7 +427,7 @@ public class OperationFactory {
 		/**
 		 Helper to  call `faTokenDetailsFrom(transaction: OperationTransaction)` on the first `OperationTransaction` in an array of operations. Allows to more easily parse an array of operations that may include `approval`'s or `update_operator` calls
 		 */
-		public static func faTokenDetailsFrom(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?)? {
+		public static func faTokenDetailsFrom(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let op = operations.first(where: { $0 is OperationTransaction }) as? OperationTransaction {
 				return OperationFactory.Extractor.faTokenDetailsFrom(transaction: op)
 			}
