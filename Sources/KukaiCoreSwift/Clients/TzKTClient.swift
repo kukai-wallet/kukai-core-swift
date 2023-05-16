@@ -928,21 +928,18 @@ public class TzKTClient {
 		tempTokenTransfers = []
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
-			guard let self = self else { return }
-			
 			switch result {
 				case .success(let transactions):
-					self.tempTransactions = transactions
-					self.queryFaTokenReceives(forAddress: address, lastId: self.tempTransactions.last?.id)
-					self.dispatchGroupTransactions.leave()
+					self?.tempTransactions = transactions
+					self?.queryFaTokenReceives(forAddress: address, lastId: self?.tempTransactions.last?.id)
+					self?.dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
-					self.dispatchGroupTransactions.leave()
-					self.dispatchGroupTransactions.leave()
+					self?.dispatchGroupTransactions.leave()
+					self?.dispatchGroupTransactions.leave()
 			}
 		}
-		
 		
 		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
 		self.dispatchGroupTransactions.notify(queue: .main) { [weak self] in
@@ -966,17 +963,15 @@ public class TzKTClient {
 		url.appendQueryItem(name: "sort.desc", value: "id")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTokenTransfer].self) { [weak self] (result) in
-			guard let self = self else { return }
-			
 			switch result {
 				case .success(let transactions):
-					self.tempTokenTransfers = transactions
-					self.mergeTokenTransfersWithTransactions()
-					self.dispatchGroupTransactions.leave()
+					self?.tempTokenTransfers = transactions
+					self?.mergeTokenTransfersWithTransactions()
+					self?.dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 2: %@", "\(error)")
-					self.dispatchGroupTransactions.leave()
+					self?.dispatchGroupTransactions.leave()
 			}
 		}
 	}
