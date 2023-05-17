@@ -113,7 +113,7 @@ public class HDWallet: Wallet {
 		
 		var bytesToSign: [UInt8] = []
 		if isOperation {
-			bytesToSign = bytesToSign.addOperationWatermarkAndHash() ?? []
+			bytesToSign = bytes.addOperationWatermarkAndHash() ?? []
 		} else {
 			bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
 		}
