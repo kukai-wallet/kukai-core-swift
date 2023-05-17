@@ -111,9 +111,11 @@ public class HDWallet: Wallet {
 			return
 		}
 		
-		var bytesToSign = bytes
+		var bytesToSign: [UInt8] = []
 		if isOperation {
 			bytesToSign = bytesToSign.addOperationWatermarkAndHash() ?? []
+		} else {
+			bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
 		}
 		
 		guard let signature = privateKey.sign(bytes: bytesToSign) else {
