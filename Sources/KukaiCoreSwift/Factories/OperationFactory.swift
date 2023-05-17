@@ -447,24 +447,6 @@ public class OperationFactory {
 			return false
 		}
 		
-		
-		/**
-		 Return true if
-		 - contains an operation calling an entrypoint that is not approve, updateOperators or transfer
-		 */
-		public static func isContractCall(operations: [Operation]) -> Bool {
-			for op in operations {
-				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
-				   (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue &&
-					entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue &&
-					entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue) {
-					return true
-				}
-			}
-			
-			return false
-		}
-		
 		/// Easy way to extract the first non-`approval` or `update_operator` transaction
 		public static func firstTransferEntrypointOperation(operations: [Operation]) -> OperationTransaction? {
 			for op in operations {
@@ -475,6 +457,37 @@ public class OperationFactory {
 			}
 			
 			return nil
+		}
+		
+		/**
+		 Return the entrypoint and address of the first operation, that doesn't equal `approve`, `update_operator` or `transfer`
+		 */
+		public static func isContractCall(operations: [Operation]) -> (entrypoint: String, address: String)? {
+			for op in operations {
+				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
+				   (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue &&
+					entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue &&
+					entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue) {
+					return (entrypoint: entrypoint, address: opTrans.destination)
+				}
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Run through list of operations and extract .amount from any OperationTransaction
+		 */
+		public static func totalXTZAmountForContractCall(operations: [Operation]) -> XTZAmount {
+			var amount = XTZAmount.zero()
+			
+			for op in operations {
+				if let opTrans = op as? OperationTransaction {
+					amount += (XTZAmount(fromRpcAmount: opTrans.amount) ?? .zero())
+				}
+			}
+			
+			return amount
 		}
 	}
 	
