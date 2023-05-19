@@ -248,7 +248,7 @@ public struct MockConstants {
 		public static let address = "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG"
 		public static let privateKey = "80d4e52897c8e14fbfad4637373de405fa2cc7f27eb9f890db975948b0e7fdb0cd33a22f74d8e04977f74db15a0b1e92d21a59f351e987b9fd462bf6ef2dc253"
 		public static let publicKey = "cd33a22f74d8e04977f74db15a0b1e92d21a59f351e987b9fd462bf6ef2dc253"
-		public static let signedData = "71a10defd81fa7bb3f15793d4285761fc8c5c85f2ccee5b95f0cbec40c6e87fcb03bffa601cecf93defd3aabe17d1b2d1acfb28231b9c35597ef8e8c0a998a04"
+		public static let signedData = "c4425645318449e5f49f4923a9d12f2d945ebe1c4d897a27883394af46463ba4f9ca16e3d7ffe6439dc62b054b74af3869c2da7efd0c27039b93de2bf7ea490f"
 		public static let base58Encoded = "edpkvCbYCa6d6g9hEcK6tvwgsY9jfB4HDzp3jZSBwfuWNSvxE5T5KR"
 	}
 	
@@ -268,7 +268,7 @@ public struct MockConstants {
 		public static let address = "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
 		public static let privateKey = "3f54684924468bc4a7044729ee578176aef5933c69ad16ff3340412e4a5ca3961e4291f2501ce283e55ce583d4388ec8d247dd6c72fff3ff2d48b2af84cc9a23"
 		public static let publicKey = "1e4291f2501ce283e55ce583d4388ec8d247dd6c72fff3ff2d48b2af84cc9a23"
-		public static let signedData = "7e8a580076aa7f69f57f474865f7610be062cc37ab1f8372fb87e5a831b9c88fcb81b4fdbb80a9343f5cc01856c5dde113ae8807bb771d75d2c3cc6881ad200b"
+		public static let signedData = "ac7047164b3e76cde3b1962726206cb82b0f59ae84c6c74b04feaacd3f433c1c2399bf55d044ca61e08832f3f1e91d789ef2cbc83c09ecffec3df0d4b88f320c"
 		public static let base58Encoded = "edpktsYtWnwnuiLkHySdNSihWEChdeFzyz9v8Vdb8aAWRibsPH7g7E"
 		
 		public static let childWalletAddresses = ["tz1UT8i2XoS3c8fosNhJeBQ9fRSYURT7m5gZ", "tz1LbbJKLx3Epu8hNqzRQk82fVT6AEWXMymB", "tz1YWuMAR5r15tqHwgBP5cAQULua3o7ZfiJf"]

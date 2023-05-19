@@ -980,7 +980,7 @@ public class TzKTClient {
 		var transfersToRemove: [Int] = []
 		for (transferIndex, transfer) in self.tempTokenTransfers.enumerated() {
 			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
-				if transfer.transactionId == transaction.id {
+				if transfer.transactionId == transaction.id && transaction.tokenTransfersCount == nil {
 					self.tempTransactions[transactionIndex].tzktTokenTransfer = transfer
 					self.tempTransactions[transactionIndex].target = transfer.to ?? transfer.token.contract // replace target == contract, with the final wallet destination (if available)
 					transfersToRemove.append(transferIndex)
@@ -1005,8 +1005,12 @@ public class TzKTClient {
 			var processedTran = tran
 			processedTran.processAdditionalData(withCurrentWalletAddress: currentWalletAddress)
 			
-			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
+			if tempTrans.count == 0 || (tempTrans.first?.hash == tran.hash && tempTrans.first?.sender.address == tran.sender.address) {
 				tempTrans.append(processedTran)
+				
+			} else if tempTrans.first?.hash == tran.hash && tempTrans.first?.sender.address != tran.sender.address {
+				// If has the same hash, but not the same sender, then its an internal operation. Strip those out
+				continue
 				
 			} else if tempTrans.first?.hash != tran.hash, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 				groups.append(group)

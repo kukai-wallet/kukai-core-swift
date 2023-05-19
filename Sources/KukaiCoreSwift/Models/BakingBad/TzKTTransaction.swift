@@ -65,6 +65,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public var amount: TokenAmount
 	public let parameter: [String: String]?
 	public let status: TransactionStatus
+	public let hasInternals: Bool
+	public let tokenTransfersCount: Decimal?
 	
 	public let date: Date?
 	public var tzktTokenTransfer: TzKTTokenTransfer? = nil {
@@ -101,11 +103,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - Codable Protocol
 	
 	public enum CodingKeys: String, CodingKey {
-		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status, subType, entrypointCalled, primaryToken
+		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, amount, parameter, status, subType, entrypointCalled, primaryToken, hasInternals, tokenTransfersCount
 	}
 	
 	/// Manually init a `TzKTTransaction`
-	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TzKTAddress?, sender: TzKTAddress, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TzKTAddress?, prevDelegate: TzKTAddress?, newDelegate: TzKTAddress?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus) {
+	public init(type: TransactionType, id: Decimal, level: Decimal, timestamp: String, hash: String, counter: Decimal, initiater: TzKTAddress?, sender: TzKTAddress, bakerFee: XTZAmount, storageFee: XTZAmount, allocationFee: XTZAmount, target: TzKTAddress?, prevDelegate: TzKTAddress?, newDelegate: TzKTAddress?, amount: TokenAmount, parameter: [String: String]?, status: TransactionStatus, hasInternals: Bool, tokenTransfersCount: Decimal?) {
 		
 		self.type = type
 		self.id = id
@@ -124,6 +126,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.amount = amount
 		self.parameter = parameter
 		self.status = status
+		self.hasInternals = hasInternals
+		self.tokenTransfersCount = tokenTransfersCount
 		
 		self.date = TzKTTransaction.dateFormatter.date(from: timestamp)
 	}
@@ -152,6 +156,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.amount = from.tokenAmount()
 		self.parameter = nil
 		self.status = .applied
+		self.hasInternals = false
+		self.tokenTransfersCount = nil
 		
 		self.date = TzKTTransaction.dateFormatter.date(from: timestamp)
 		
@@ -195,6 +201,9 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		let statusString = try container.decode(String.self, forKey: .status)
 		status = TransactionStatus(rawValue: statusString) ?? .unknown
 		
+		hasInternals = (try? container.decode(Bool.self, forKey: .hasInternals)) ?? false
+		tokenTransfersCount = try? container.decodeIfPresent(Decimal.self, forKey: .tokenTransfersCount)
+		
 		self.date = TzKTTransaction.dateFormatter.date(from: timestamp)
 		
 		
@@ -225,6 +234,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		try container.encode(allocationFee.rpcRepresentation, forKey: .allocationFee)
 		try container.encode(amount.rpcRepresentation, forKey: .amount)
 		try container.encode(status.rawValue, forKey: .status)
+		try container.encode(hasInternals, forKey: .hasInternals)
+		try container.encode(tokenTransfersCount, forKey: .tokenTransfersCount)
 		
 		// Check for additional data
 		try container.encodeIfPresent(subType, forKey: .subType)
@@ -237,7 +248,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		let timestamp = TzKTTransaction.dateFormatter.string(from: Date())
 		let sender = TzKTAddress(alias: fromWallet.walletNickname ?? fromWallet.socialUsername ?? fromWallet.address, address: fromWallet.address)
 		
-		var transaction = TzKTTransaction(type: .transaction, id: 0, level: 0, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: destination, prevDelegate: nil, newDelegate: nil, amount: xtzAmount, parameter: parameters, status: status)
+		var transaction = TzKTTransaction(type: .transaction, id: 0, level: 0, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: destination, prevDelegate: nil, newDelegate: nil, amount: xtzAmount, parameter: parameters, status: status, hasInternals: false, tokenTransfersCount: nil)
 		transaction.processAdditionalData(withCurrentWalletAddress: fromWallet.address)
 		
 		if let pToken = primaryToken {
