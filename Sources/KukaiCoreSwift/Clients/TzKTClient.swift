@@ -1008,15 +1008,16 @@ public class TzKTClient {
 		
 		for tran in transactions {
 			
+			// Filter out internal operations
+			if tran.hasInternals == false && tran.sender.address != currentWalletAddress {
+				continue
+			}
+			
 			var processedTran = tran
 			processedTran.processAdditionalData(withCurrentWalletAddress: currentWalletAddress)
 			
-			if tempTrans.count == 0 || (tempTrans.first?.hash == tran.hash && tempTrans.first?.sender.address == tran.sender.address) {
+			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
 				tempTrans.append(processedTran)
-				
-			} else if tempTrans.first?.hash == tran.hash && tempTrans.first?.sender.address != tran.sender.address {
-				// If has the same hash, but not the same sender, then its an internal operation. Strip those out
-				continue
 				
 			} else if tempTrans.first?.hash != tran.hash, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 				groups.append(group)
