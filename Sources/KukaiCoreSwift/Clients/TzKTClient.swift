@@ -1009,7 +1009,7 @@ public class TzKTClient {
 		for tran in transactions {
 			
 			// Filter out internal operations
-			if tran.hasInternals == false && (tran.sender.address != currentWalletAddress || tran.target?.address == currentWalletAddress) {
+			if tran.target?.address != currentWalletAddress || (tran.hasInternals == false && tran.sender.address != currentWalletAddress) {
 				continue
 			}
 			
