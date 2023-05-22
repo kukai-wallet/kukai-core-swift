@@ -463,12 +463,23 @@ public class OperationFactory {
 		 Return the entrypoint and address of the first operation, that doesn't equal `approve`, `update_operator` or `transfer`
 		 */
 		public static func isContractCall(operations: [Operation]) -> (entrypoint: String, address: String)? {
+			if let contractOp = firstContractCallOperation(operations: operations), let entrypoint = contractOp.parameters?["entrypoint"] as? String {
+				return (entrypoint: entrypoint, address: contractOp.destination)
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Return the first operation where entrypoint doesn't equal `approve`, `update_operator` or `transfer`
+		 */
+		public static func firstContractCallOperation(operations: [Operation]) -> OperationTransaction? {
 			for op in operations {
 				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
 				   (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue &&
 					entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue &&
 					entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue) {
-					return (entrypoint: entrypoint, address: opTrans.destination)
+					return opTrans
 				}
 			}
 			
