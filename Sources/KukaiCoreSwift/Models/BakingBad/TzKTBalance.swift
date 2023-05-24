@@ -125,6 +125,7 @@ public struct TzKTBalanceMetadata: Codable {
 		case artifactUri
 		case thumbnailUri
 		case description
+		case mintingTool
 		case tags
 		case minter
 		case shouldPreferSymbol
@@ -143,6 +144,7 @@ public struct TzKTBalanceMetadata: Codable {
 			artifactUri = try container.decodeIfPresent(String.self, forKey: .artifactUri)
 			thumbnailUri = try container.decodeIfPresent(String.self, forKey: .thumbnailUri)
 			description = try container.decodeIfPresent(String.self, forKey: .description)
+			mintingTool = try container.decodeIfPresent(String.self, forKey: .mintingTool)
 			tags = try container.decodeIfPresent([String].self, forKey: .tags)
 			minter = try container.decodeIfPresent(String.self, forKey: .minter)
 			
@@ -174,6 +176,7 @@ public struct TzKTBalanceMetadata: Codable {
 			artifactUri = nil
 			thumbnailUri = nil
 			description = nil
+			mintingTool = nil
 			tags = nil
 			minter = nil
 			shouldPreferSymbol = nil
@@ -191,6 +194,7 @@ public struct TzKTBalanceMetadata: Codable {
 		try container.encode(artifactUri, forKey: .artifactUri)
 		try container.encode(thumbnailUri, forKey: .thumbnailUri)
 		try container.encode(description, forKey: .description)
+		try container.encode(mintingTool, forKey: .mintingTool)
 		try container.encode(tags, forKey: .tags)
 		try container.encode(minter, forKey: .minter)
 		try container.encode(shouldPreferSymbol, forKey: .shouldPreferSymbol)
