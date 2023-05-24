@@ -99,7 +99,7 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter tokenId: The token id if the token is an FA2 token, nil otherwise.
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?) {
+	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?, mintingTool: String?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
@@ -109,6 +109,7 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenContractAddress = tokenContractAddress
 		self.tokenId = tokenId
 		self.nfts = nfts
+		self.mintingTool = mintingTool
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
@@ -171,7 +172,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`
 	*/
 	public static func xtz() -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
 	}
 	
 	/**
@@ -180,12 +181,12 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`.
 	*/
 	public static func xtz(withAmount amount: TokenAmount) -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Useful for creating placeholders for pending activity items
 	public static func placeholder(fromNFT nft: NFT, amount: TokenAmount, thumbnailURL: URL?) -> Token {
-		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil)
+		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type

@@ -883,7 +883,8 @@ public class TzKTClient {
 				thumbnailURL: TzKTClient.avatarURL(forToken: first.token.contract.address),
 				tokenContractAddress: first.token.contract.address,
 				tokenId: Decimal(string: first.token.tokenId) ?? 0,
-				nfts: temp
+				nfts: temp,
+				mintingTool: first.token.metadata?.mintingTool
 			)
 			
 			nftGroups.append(nftToken)

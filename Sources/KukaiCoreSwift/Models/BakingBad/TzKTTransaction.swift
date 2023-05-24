@@ -363,7 +363,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let contractAddress = target?.address
 		{
 			let amount = TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
-			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: Decimal(string: tokenId), nfts: nil)
+			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: Decimal(string: tokenId), nfts: nil, mintingTool: nil)
 			return token
 		}
 		
@@ -373,7 +373,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let contractAddress = target?.address
 		{
 			let amount = TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
-			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: nil, nfts: nil)
+			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: nil, nfts: nil, mintingTool: nil)
 			return token
 		}
 		
@@ -383,7 +383,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		   let contractAddress = target?.address
 		{
 			let amount = TokenAmount(fromRpcAmount: amount, decimalPlaces: 0) ?? .zero()
-			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: nil, nfts: nil)
+			let token = Token(name: "", symbol: "", tokenType: .fungible, faVersion: .fa1_2, balance: amount, thumbnailURL: nil, tokenContractAddress: contractAddress, tokenId: nil, nfts: nil, mintingTool: nil)
 			return token
 		}
 		
