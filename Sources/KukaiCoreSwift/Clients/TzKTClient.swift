@@ -880,7 +880,7 @@ public class TzKTClient {
 			}
 			
 			let nftToken = Token(
-				name: first.token.contract.alias,
+				name: first.token.contract.alias ?? first.token.metadata?.name,
 				symbol: first.token.displaySymbol,
 				tokenType: .nonfungible,
 				faVersion: first.token.standard,
