@@ -80,6 +80,9 @@ public class Token: Codable, CustomStringConvertible {
 	/// The individual NFT's owned of this token type
 	public var nfts: [NFT]?
 	
+	/// The URL of the tool used to mint the item
+	public var mintingTool: String?
+	
 	
 	
 	// MARK: - Init
@@ -130,6 +133,7 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenContractAddress = from.contract.address
 		self.tokenId = Decimal(string: from.tokenId) ?? 0
 		self.nfts = []
+		self.mintingTool = from.metadata?.mintingTool
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
@@ -154,6 +158,7 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenContractAddress = from.token.contract.address
 		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
 		self.nfts = []
+		self.mintingTool = from.mintingTool
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {

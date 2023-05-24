@@ -96,6 +96,9 @@ public struct TzKTBalanceMetadata: Codable {
 	/// Description of the token or NFT
 	public var description: String?
 	
+	/// URL to the tool that was used to mint the item
+	public var mintingTool: String?
+	
 	/// A list of tags to categorize the token / NFT
 	public var tags: [String]?
 	
