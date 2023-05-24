@@ -851,10 +851,15 @@ public class TzKTClient {
 					tempRecentNFTs.append(balance)
 				}
 				
-				if tempNFT[balance.token.contract.address] == nil {
-					tempNFT[balance.token.contract.address] = [balance]
+				var uniqueKey = balance.token.contract.address
+				if let mintingTool = balance.token.metadata?.mintingTool {
+					uniqueKey += mintingTool
+				}
+				
+				if tempNFT[uniqueKey] == nil {
+					tempNFT[uniqueKey] = [balance]
 				} else {
-					tempNFT[balance.token.contract.address]?.append(balance)
+					tempNFT[uniqueKey]?.append(balance)
 				}
 				continue
 			}
