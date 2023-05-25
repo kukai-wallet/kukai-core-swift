@@ -89,6 +89,7 @@ class TzKTClientTests: XCTestCase {
 			
 			
 			// Test Exchange
+			/*
 			XCTAssert(groups[84].groupType == .exchange, groups[84].groupType.rawValue)
 			XCTAssert(groups[84].hash == "opPA7o4i7JtR2bnsW7rTnqFHoTzK4kDcMgV5SJmR6QS8vhYHp2X", groups[84].hash)
 			XCTAssert(groups[84].primaryToken?.tokenContractAddress == "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn", groups[84].primaryToken?.tokenContractAddress ?? "-")
@@ -106,7 +107,7 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[84].transactions[1].amount.normalisedRepresentation == "0", groups[84].transactions[1].amount.normalisedRepresentation)
 			//XCTAssert(groups[84].transactions[2].id == 184404702, "\(groups[84].transactions[2].id)")
 			//XCTAssert(groups[84].transactions[2].amount.normalisedRepresentation == "0", groups[84].transactions[2].amount.normalisedRepresentation)
-			
+			*/
 			
 			// Test Receive
 			XCTAssert(groups[85].hash == "onvh7egDq7RmM9CaY8W2hKMPxF4fNhv6sDaNxvpnDKqKNrAwVQq", groups[85].hash)

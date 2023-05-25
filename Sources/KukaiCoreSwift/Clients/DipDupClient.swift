@@ -108,6 +108,10 @@ public class DipDupClient {
 	 - parameter completion: Block returning a GraphQL response or an KukaiError
 	 */
 	public func getAllExchangesAndTokens(completion: @escaping ((Result<[DipDupExchangesAndTokens], KukaiError>) -> Void)) {
+		if exchangeQuery_currentOffset == 0 {
+			exchangeQuery_tokens = []
+		}
+		
 		getExchangesAndTokens(limit: DipDupClient.dexMaxQuerySize, offset: exchangeQuery_currentOffset) { [weak self] result in
 			guard let res = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
@@ -121,6 +125,7 @@ public class DipDupClient {
 				self?.getAllExchangesAndTokens(completion: completion)
 				
 			} else {
+				self?.exchangeQuery_currentOffset = 0
 				let sorted = self?.sortByTezPool(exchangeQueryTokens: self?.exchangeQuery_tokens ?? []) ?? []
 				completion(Result.success(sorted))
 			}

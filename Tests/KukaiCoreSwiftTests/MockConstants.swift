@@ -26,6 +26,7 @@ public struct MockConstants {
 	public let tzktClient: TzKTClient
 	public let tezosDomainsClient: TezosDomainsClient
 	public let dipDupClient: DipDupClient
+	public let objktClient: ObjktClient
 	
 	
 	public static let http200 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 200, httpVersion: nil, headerFields: nil)
@@ -203,6 +204,15 @@ public struct MockConstants {
 				(MockConstants.jsonStub(fromFilename: "dipdup_dex_liquidity_response"), MockConstants.http200),
 			MockPostUrlKey(url: URL(string: "https://dex.dipdup.net/v1/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "dipdup_dex_chart_request")):
 				(MockConstants.jsonStub(fromFilename: "dipdup_dex_chart_response"), MockConstants.http200),
+			
+			
+			// OBJKT
+			MockPostUrlKey(url: URL(string: "https://data.objkt.com/v3/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "objkt_collections_request_1")):
+				(MockConstants.jsonStub(fromFilename: "objkt_collections_response_1"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://data.objkt.com/v3/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "objkt_collections_request_2")):
+				(MockConstants.jsonStub(fromFilename: "objkt_collections_response_2"), MockConstants.http200),
+			MockPostUrlKey(url: URL(string: "https://data.objkt.com/v3/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "objkt_token_request")):
+				(MockConstants.jsonStub(fromFilename: "objkt_token_response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession
@@ -213,6 +223,7 @@ public struct MockConstants {
 		let opService = OperationService(config: config, networkService: networkService)
 		tezosNodeClient.operationService = opService
 		dipDupClient = DipDupClient(networkService: networkService, config: config)
+		objktClient = ObjktClient(networkService: networkService, config: config)
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
 		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
 		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient, dipDupClient: dipDupClient)
@@ -352,12 +363,13 @@ public struct MockConstants {
 		sendOperationWithReveal = [OperationReveal(wallet: MockConstants.defaultHdWallet), OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)]
 	}
 	
-	static func jsonStub(fromFilename filename: String, ofExtension fileExtension: String = "json", replacing: [String: String] = [:]) -> Data {
+	static func jsonStub(fromFilename filename: String, ofExtension fileExtension: String = "json", replacing: [String: String] = [:], replacingWithRandom: [String] = []) -> Data {
 		guard let path = Bundle.module.url(forResource: filename, withExtension: fileExtension, subdirectory: "Stubs"),
 			let stubData = try? Data(contentsOf: path) else {
 				fatalError("Can't find or read `\(filename).\(fileExtension)`")
 		}
 		
+		var updatedData = stubData
 		if replacing.keys.count > 0 {
 			guard let dataString = String(data: stubData, encoding: .utf8) else {
 				fatalError("Can't find or read `\(filename).\(fileExtension)`")
@@ -368,9 +380,23 @@ public struct MockConstants {
 				updatedString = updatedString.replacingOccurrences(of: key, with: replacing[key] ?? "")
 			}
 			
-			return updatedString.data(using: .utf8) ?? Data()
+			updatedData = updatedString.data(using: .utf8) ?? Data()
 		}
 		
-		return stubData
+		if replacingWithRandom.count > 0 {
+			guard let dataString = String(data: updatedData, encoding: .utf8) else {
+				fatalError("Can't find or read `\(filename).\(fileExtension)`")
+			}
+			
+			var updatedString = dataString
+			replacingWithRandom.forEach { (key) in
+				let random = Int.random(in: 0..<10000)
+				updatedString = updatedString.replacingOccurrences(of: key, with: "\(random))")
+			}
+			
+			updatedData = updatedString.data(using: .utf8) ?? Data()
+		}
+		
+		return updatedData
 	}
 }

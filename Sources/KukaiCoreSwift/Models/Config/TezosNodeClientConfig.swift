@@ -46,6 +46,9 @@ public struct TezosNodeClientConfig {
 		
 		/// The default mainnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
 		public static let tezosDomainsURL = URL(string: "https://api.tezos.domains/graphql")!
+		
+		/// The default mainnet URL to use for `objktApiURL`, For more information on this service, see: https://public-api-v3-20221206.objkt.com/docs/
+		public static let objktApiURL = URL(string: "https://data.objkt.com/v3/graphql")!
 	}
 	
 	/// Preconfigured struct with all the URL's needed to work with Tezos testnet
@@ -66,6 +69,9 @@ public struct TezosNodeClientConfig {
 		
 		/// The default testnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
 		public static let tezosDomainsURL = URL(string: "https://ghostnet-api.tezos.domains/graphql")!
+		
+		/// The default testnet URL to use for `objktApiURL`, For more information on this service, see: https://public-api-v3-20221206.objkt.com/docs/
+		public static let objktApiURL = URL(string: "https://data.objkt.com/v3/graphql")!
 	}
 	
 	
@@ -89,6 +95,9 @@ public struct TezosNodeClientConfig {
 	
 	/// The URL to use for `TezosDomainsClient`
 	public let tezosDomainsURL: URL
+	
+	/// The URL to use for `TezosDomainsClient`
+	public let objktApiURL: URL
 	
 	/// The `URLSession` that will be used for all network communication. If looking to mock this library, users should create their own `URLSessionMock` and pass it in.
 	public var urlSession: URLSession
@@ -114,13 +123,14 @@ public struct TezosNodeClientConfig {
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	*/
-	private init(primaryNodeURL: URL, parseNodeURL: URL?, forgingType: ForgingType, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, urlSession: URLSession, networkType: NetworkType) {
+	private init(primaryNodeURL: URL, parseNodeURL: URL?, forgingType: ForgingType, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) {
 		self.primaryNodeURL = primaryNodeURL
 		self.parseNodeURL = primaryNodeURL
 		self.forgingType = forgingType
 		self.tzktURL = tzktURL
 		self.betterCallDevURL = betterCallDevURL
 		self.tezosDomainsURL = tezosDomainsURL
+		self.objktApiURL = objktApiURL
 		self.urlSession = urlSession
 		self.networkType = networkType
 	}
@@ -142,6 +152,7 @@ public struct TezosNodeClientConfig {
 				tzktURL = TezosNodeClientConfig.defaultMainnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultMainnetURLs.betterCallDevURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL
+				objktApiURL = TezosNodeClientConfig.defaultMainnetURLs.objktApiURL
 			
 			case .testnet:
 				primaryNodeURL = TezosNodeClientConfig.defaultTestnetURLs.primaryNodeURL
@@ -150,6 +161,7 @@ public struct TezosNodeClientConfig {
 				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultTestnetURLs.betterCallDevURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL
+				objktApiURL = TezosNodeClientConfig.defaultTestnetURLs.objktApiURL
 		}
 	}
 	
@@ -162,7 +174,7 @@ public struct TezosNodeClientConfig {
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithLocalForge(primaryNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithLocalForge(primaryNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		return TezosNodeClientConfig(
 			primaryNodeURL: primaryNodeURL,
 			parseNodeURL: nil,
@@ -170,6 +182,7 @@ public struct TezosNodeClientConfig {
 			tzktURL: tzktURL,
 			betterCallDevURL: betterCallDevURL,
 			tezosDomainsURL: tezosDomainsURL,
+			objktApiURL: objktApiURL,
 			urlSession: urlSession,
 			networkType: networkType)
 	}
@@ -184,7 +197,7 @@ public struct TezosNodeClientConfig {
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithRemoteForge(primaryNodeURL: URL, parseNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithRemoteForge(primaryNodeURL: URL, parseNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		if primaryNodeURL.absoluteString == parseNodeURL.absoluteString {
 			fatalError("Setting the `primaryNodeURL` and the `parseNodeURL` to the same server poses a huge security risk, called a 'Blind signature attack'. Doing so is forbidden in this library.")
 		}
@@ -196,6 +209,7 @@ public struct TezosNodeClientConfig {
 			tzktURL: tzktURL,
 			betterCallDevURL: betterCallDevURL,
 			tezosDomainsURL: tezosDomainsURL,
+			objktApiURL: objktApiURL,
 			urlSession: urlSession,
 			networkType: networkType)
 	}
