@@ -58,10 +58,6 @@ public class ObjktClient {
 	}
 	
 	public func resolveCollectionsAll(addresses: [String], completion: @escaping ((Result<Bool, KukaiError>) -> Void)) {
-		if collectionsQuery_pageCount == 0 {
-			collections = [:]
-		}
-		
 		let leftOfSearch = (collectionsQuery_pageCount * collectionsQuery_maxPage)
 		var rightOfSearch = (leftOfSearch + collectionsQuery_maxPage)
 		if rightOfSearch > addresses.count {
