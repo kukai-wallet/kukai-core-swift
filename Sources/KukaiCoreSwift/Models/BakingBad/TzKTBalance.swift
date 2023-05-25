@@ -24,7 +24,7 @@ public struct TzKTBalance: Codable {
 	
 	/// Basic check to see if token is an NFT or not. May not be 100% successful, needs research
 	public func isNFT() -> Bool {
-		return token.metadata?.decimals == "0" && token.standard == .fa2 && (token.metadata?.artifactUri != nil || token.metadata?.displayUri != nil || token.metadata?.thumbnailUri != nil)
+		return token.metadata?.decimals == "0" && token.standard == .fa2 && token.metadata?.artifactUri != nil
 	}
 }
 
