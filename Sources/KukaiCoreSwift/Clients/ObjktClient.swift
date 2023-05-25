@@ -112,7 +112,7 @@ public class ObjktClient {
 			addressArray += "\"\(add)\","
 		}
 		
-		let queryDict = ["query": "query { fa(where: {contract: {_in: [\(addressArray)] }}) { contract, name, logo }"]
+		let queryDict = ["query": "query { fa(where: {contract: {_in: [\(addressArray)] }}) { contract, name, logo }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
 		self.networkService.request(url: self.config.objktApiURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktCollections>.self, completion: completion)
