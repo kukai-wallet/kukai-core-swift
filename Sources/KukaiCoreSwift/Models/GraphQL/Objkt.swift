@@ -9,14 +9,14 @@ import Foundation
 
 /// GarpQL bulk response for a group of collections
 public struct ObjktCollections: Codable {
-	let fa: [ObjktCollection]
+	public let fa: [ObjktCollection]
 }
 
 /// Single collection item
 public struct ObjktCollection: Codable {
-	let contract: String
-	let name: String?
-	let logo: String?
+	public let contract: String
+	public let name: String?
+	public let logo: String?
 }
 
 
@@ -25,41 +25,41 @@ public struct ObjktCollection: Codable {
 
 /// GarpQL response for required data for a given token
 public struct ObjktTokenReponse: Codable {
-	let token: [ObjktToken]
-	let event: [ObjktEvent]
-	let fa: [ObjktFa]
+	public let token: [ObjktToken]
+	public let event: [ObjktEvent]
+	public let fa: [ObjktFa]
 }
 
 /// Single token item
 public struct ObjktToken: Codable {
-	let highest_offer: Decimal?
-	let lowest_ask: Decimal?
-	let metadata: String?
-	let name: String?
-	let attributes: [ObjktAttribute]
+	public let highest_offer: Decimal?
+	public let lowest_ask: Decimal?
+	public let metadata: String?
+	public let name: String?
+	public let attributes: [ObjktAttribute]
 }
 
 public struct ObjktAttribute: Codable {
-	let attribute: ObjktAttributeData
+	public let attribute: ObjktAttributeData
 }
 
 public struct ObjktAttributeData: Codable {
-	let name: String
-	let value: String
-	let attribute_counts: [ObjktAttributeCounts]
+	public let name: String
+	public let value: String
+	public let attribute_counts: [ObjktAttributeCounts]
 }
 
 public struct ObjktAttributeCounts: Codable {
-	let editions: Decimal
+	public let editions: Decimal
 }
 
 /// Single event item
 public struct ObjktEvent: Codable {
-	let price_xtz: Decimal?
+	public let price_xtz: Decimal?
 }
 
 /// Single FA item
 public struct ObjktFa: Codable {
-	let editions: Decimal?
-	let floor_price: Decimal?
+	public let editions: Decimal?
+	public let floor_price: Decimal?
 }
