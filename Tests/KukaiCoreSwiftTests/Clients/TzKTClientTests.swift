@@ -67,7 +67,7 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[0].hash == "3242628_2023-03-20T14:09:29Z", groups[0].hash)
 			XCTAssert(groups[0].primaryToken?.tokenContractAddress == "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv", groups[0].primaryToken?.tokenContractAddress ?? "-")
 			XCTAssert(groups[0].primaryToken?.balance.normalisedRepresentation == "1", groups[0].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[0].primaryToken?.name == "Mystique Mooncake", groups[0].primaryToken?.name ?? "-")
+			XCTAssert(groups[0].primaryToken?.name == "Mooncakes", groups[0].primaryToken?.name ?? "-")
 			
 			
 			// Test FA receive token with decimals as part of a batch
@@ -85,7 +85,7 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[45].hash == "3102560_2023-01-30T14:37:44Z", groups[45].hash)
 			XCTAssert(groups[45].primaryToken?.tokenContractAddress == "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv", groups[45].primaryToken?.tokenContractAddress ?? "-")
 			XCTAssert(groups[45].primaryToken?.balance.normalisedRepresentation == "2", groups[45].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[45].primaryToken?.name == "Longevity Mooncake", groups[45].primaryToken?.name ?? "-")
+			XCTAssert(groups[45].primaryToken?.name == "Mooncakes", groups[45].primaryToken?.name ?? "-")
 			
 			
 			// Test Exchange
@@ -167,13 +167,13 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(account.xtzBalance.normalisedRepresentation == "1.843617", account.xtzBalance.normalisedRepresentation)
 					XCTAssert(account.tokens.count == 20, "\(account.tokens.count)")
 					XCTAssert(account.tokens[0].symbol == "kUSD", account.tokens[0].symbol)
-					XCTAssert(account.tokens[0].name == "Kolibri USD", account.tokens[0].name ?? "")
+					XCTAssert(account.tokens[0].name == "kUSD", account.tokens[0].name ?? "")
 					XCTAssert(account.tokens[0].balance.normalisedRepresentation == "1.122564894578671941", account.tokens[0].balance.normalisedRepresentation)
 					XCTAssert(account.tokens[1].symbol == "USDtz", account.tokens[1].symbol)
-					XCTAssert(account.tokens[1].name == "USDtez", account.tokens[1].name ?? "")
+					XCTAssert(account.tokens[1].name == "USDtz", account.tokens[1].name ?? "")
 					XCTAssert(account.tokens[1].balance.normalisedRepresentation == "0.004337", account.tokens[1].balance.normalisedRepresentation)
 					XCTAssert(account.tokens[2].symbol == "crDAO", account.tokens[2].symbol)
-					XCTAssert(account.tokens[2].name == "Crunchy DAO", account.tokens[2].name ?? "")
+					XCTAssert(account.tokens[2].name == "crDAO", account.tokens[2].name ?? "")
 					XCTAssert(account.tokens[2].balance.normalisedRepresentation == "0.12810553", account.tokens[2].balance.normalisedRepresentation)
 					
 					XCTAssert(account.nfts.count == 6, "\(account.nfts.count)")

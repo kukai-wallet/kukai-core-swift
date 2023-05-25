@@ -125,7 +125,7 @@ public class Token: Codable, CustomStringConvertible {
 		let decimalsInt = Int(decimalsString) ?? 0
 		let isNFT = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2)
 		
-		self.name = from.metadata?.name ?? ""
+		self.name = from.contract.alias ?? from.contract.address
 		self.symbol = isNFT ? from.contract.alias ?? "" : from.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.standard
@@ -150,7 +150,7 @@ public class Token: Codable, CustomStringConvertible {
 		let decimalsInt = Int(decimalsString) ?? 0
 		let isNFT = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2)
 		
-		self.name = from.token.metadata?.name ?? ""
+		self.name = from.token.contract.alias ?? from.token.contract.address
 		self.symbol = isNFT ? from.token.contract.alias ?? "" : from.token.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.token.standard
