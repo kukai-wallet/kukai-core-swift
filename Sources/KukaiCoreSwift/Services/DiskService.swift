@@ -130,6 +130,16 @@ public class DiskService {
 		}
 	}
 	
+	public static func delete(fileNames: [String]) -> Bool {
+		for fileName in fileNames {
+			if !DiskService.delete(fileName: fileName) {
+				return false
+			}
+		}
+		
+		return true
+	}
+	
 	
 	
 	// MARK: - Utility
@@ -161,5 +171,24 @@ public class DiskService {
 		}
 		
 		return nil
+	}
+	
+	
+	/**
+	 Find all files in documents directory begining with prefix
+	 */
+	
+	public static func allFileNamesWith(prefix: String) -> [String] {
+		var tempStrings: [String] = []
+		
+		if let dir = documentsDirectory(), let contents = try? FileManager.default.contentsOfDirectory(atPath: dir.path) {
+			for filename in contents {
+				if filename.prefix(prefix.count) == prefix {
+					tempStrings.append(filename)
+				}
+			}
+		}
+		
+		return tempStrings
 	}
 }
