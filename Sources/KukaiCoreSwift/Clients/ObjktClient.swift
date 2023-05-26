@@ -47,6 +47,13 @@ public class ObjktClient {
 	// MARK: - Public single functions
 	
 	public func unresolvedCollections(addresses: [String]) -> [String] {
+		
+		// OBJKT doesn't currently support testnet, easy solution to prevent unwanted requests / processing until a solution is found
+		// But allow for XCTest, which targets testnet
+		if self.config.networkType == .testnet && !Thread.current.isRunningXCTest {
+			return []
+		}
+		
 		var unresolved: [String] = []
 		for add in addresses {
 			if collections[add] == nil {
