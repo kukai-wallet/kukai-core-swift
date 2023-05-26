@@ -57,12 +57,12 @@ public struct NFT: Codable, Hashable {
 	/// Recording if the user has marked the token as hidden
 	public var isHidden: Bool = false
 	
-	/// Recording if the user has marked the token as a favourite
-	public var isFavourite: Bool = false
-	
 	/// Recording if the position the index the user chose for the favourite token to appear
-	public var favouriteSortIndex: Int = 0
+	public var favouriteSortIndex: Int? = nil
 	
+	public var isFavourite: Bool {
+		return favouriteSortIndex != nil
+	}
 	
 	
 	/**
