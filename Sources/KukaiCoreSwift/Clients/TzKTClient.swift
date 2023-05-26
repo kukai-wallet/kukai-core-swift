@@ -39,12 +39,12 @@ public class TzKTClient {
 	private let tokenBalanceQueue: DispatchQueue
 	
 	private var signalrConnection: HubConnection? = nil
-	private var addressToWatch: String = ""
-	private var newAddressToWatch: String? = nil
+	private var addressesToWatch: [String] = []
+	private var newAddressesToWatch: [String] = []
 	
 	public var isListening = false
 	
-	@Published public var accountDidChange: Bool = false
+	@Published public var accountDidChange: String = ""
 	
 	
 	
@@ -621,8 +621,8 @@ public class TzKTClient {
 	 Open a websocket connection to request a notification for any changes to the given account. The @Published var `accountDidChange` will be notified if something occurs
 	 - parameter address: The Tz address of the account to monitor
 	 */
-	public func listenForAccountChanges(address: String) {
-		addressToWatch = address
+	public func listenForAccountChanges(addresses: [String]) {
+		addressesToWatch = addresses
 		isListening = true
 		
 		var url = config.tzktURL
@@ -641,8 +641,10 @@ public class TzKTClient {
 				let obj = try argumentExtractor.getArgument(type: AccountSubscriptionResponse.self)
 				os_log("Incoming object parsed: %@", log: .tzkt, type: .debug, "\(obj)")
 				
-				if obj.data != nil {
-					self?.accountDidChange = true
+				if let data = obj.data {
+					for addressObj in data {
+						self?.accountDidChange = addressObj.address
+					}
 				}
 				
 			} catch (let error) {
@@ -668,8 +670,8 @@ public class TzKTClient {
 	/**
 	 Close the current connection and open another
 	 */
-	public func changeAddressToListenForChanges(address: String) {
-		self.newAddressToWatch = address
+	public func changeAddressToListenForChanges(addresses: [String]) {
+		self.newAddressesToWatch = addresses
 		self.stopListeningForAccountChanges()
 	}
 	
@@ -1045,7 +1047,7 @@ extension TzKTClient: HubConnectionDelegate {
 	public func connectionDidOpen(hubConnection: HubConnection) {
 		
 		// Request to be subscribed to events belonging to the given account
-		let subscription = AccountSubscription(addresses: [addressToWatch])
+		let subscription = AccountSubscription(addresses: addressesToWatch)
 		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
 			if let error = error {
 				os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
@@ -1059,9 +1061,9 @@ extension TzKTClient: HubConnectionDelegate {
 	public func connectionDidClose(error: Error?) {
 		os_log("SignalR connection closed: %@", log: .tzkt, type: .debug, String(describing: error))
 		
-		if let address = newAddressToWatch {
-			self.listenForAccountChanges(address: address)
-			newAddressToWatch = nil
+		if newAddressesToWatch.count > 0 {
+			self.listenForAccountChanges(addresses: newAddressesToWatch)
+			newAddressesToWatch = []
 		}
 	}
 	
