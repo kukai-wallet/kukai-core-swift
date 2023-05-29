@@ -281,22 +281,11 @@ public class MediaProxyService: NSObject {
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
-		let fileExtension = url.absoluteString.components(separatedBy: ".").last ?? ""
-		var processors: [KingfisherOptionsInfoItem] = []
+		var processors: [KingfisherOptionsInfoItem] = [.downloader(ContentTypeCheckingImageDownloader(name: "custom-svg")), .processor(DefaultImageProcessor.default)]
 		
 		if cacheType == .temporary {
-			processors = [.diskCacheExpiration(.days(30))]
+			processors.append(.diskCacheExpiration(.days(7)))
 		}
-		
-		if fileExtension == "svg" {
-			processors = [.processor(SVGImgProcessor())]
-			
-		} else if fileExtension == "gif" {
-			// Do nothing, all handled by default
-			processors = [.processor(DefaultImageProcessor.default)]
-		}
-		
-		processors.append(.downloader(ContentTypeCheckingImageDownloader(name: "custom-svg")))
 		
 		imageView.kf.indicatorType = .activity
 		imageView.kf.setImage(with: url, options: processors) { result in
@@ -352,12 +341,6 @@ public class MediaProxyService: NSObject {
 		}
 		
 		var identifier = DefaultImageProcessor.default.identifier
-		let fileExtension = url.absoluteString.components(separatedBy: ".").last ?? ""
-		
-		if fileExtension == "svg" {
-			identifier = SVGImgProcessor().identifier
-		}
-		
 		return ImageCache.default.isCached(forKey: url.absoluteString, processorIdentifier: identifier)
 	}
 	
