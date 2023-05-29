@@ -62,10 +62,6 @@ public class MediaProxyService: NSObject {
 	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg"] // gifs might be reencoded as video, so have to exclude them
 	
 	
-	override public init() {
-		KingfisherManager.shared.downloader = ContentTypeCheckingImageDownloader(name: "custom-svg")
-	}
-	
 	
 	// MARK: - URL conversion
 	
@@ -299,6 +295,8 @@ public class MediaProxyService: NSObject {
 			// Do nothing, all handled by default
 			processors = [.processor(DefaultImageProcessor.default)]
 		}
+		
+		processors.append(.downloader(ContentTypeCheckingImageDownloader(name: "custom-svg")))
 		
 		imageView.kf.indicatorType = .activity
 		imageView.kf.setImage(with: url, options: processors) { result in
