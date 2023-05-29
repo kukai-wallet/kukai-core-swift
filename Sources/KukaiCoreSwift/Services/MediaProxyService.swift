@@ -62,7 +62,7 @@ public class MediaProxyService: NSObject {
 	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg"] // gifs might be reencoded as video, so have to exclude them
 	
 	
-	override init() {
+	override public init() {
 		KingfisherManager.shared.downloader = ContentTypeCheckingImageDownloader(name: "custom-svg")
 	}
 	
