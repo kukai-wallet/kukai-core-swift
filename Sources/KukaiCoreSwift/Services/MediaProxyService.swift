@@ -340,7 +340,7 @@ public class MediaProxyService: NSObject {
 			return false
 		}
 		
-		var identifier = DefaultImageProcessor.default.identifier
+		let identifier = DefaultImageProcessor.default.identifier
 		return ImageCache.default.isCached(forKey: url.absoluteString, processorIdentifier: identifier)
 	}
 	
