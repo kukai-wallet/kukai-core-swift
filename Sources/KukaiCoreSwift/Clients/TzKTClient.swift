@@ -44,7 +44,7 @@ public class TzKTClient {
 	
 	public var isListening = false
 	
-	@Published public var accountDidChange: String = ""
+	@Published public var accountDidChange: [String] = []
 	
 	
 	
@@ -642,9 +642,12 @@ public class TzKTClient {
 				os_log("Incoming object parsed: %@", log: .tzkt, type: .debug, "\(obj)")
 				
 				if let data = obj.data {
+					var changedAddress: [String] = []
 					for addressObj in data {
-						self?.accountDidChange = addressObj.address
+						changedAddress.append(addressObj.address)
 					}
+					
+					self?.accountDidChange = changedAddress
 				}
 				
 			} catch (let error) {
