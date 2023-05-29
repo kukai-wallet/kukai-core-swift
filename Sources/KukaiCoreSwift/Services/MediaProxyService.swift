@@ -330,8 +330,8 @@ public class MediaProxyService: NSObject {
 		if Thread.current.isRunningXCTest { return }
 		
 		
-		let downloader = ImageDownloader.default
-		downloader.downloadImage(with: url) { result in
+		//let downloader = ImageDownloader.default
+		ContentTypeCheckingImageDownloader(name: "custom-svg").downloadImage(with: url) { result in
 			switch result {
 				case .success(let value):
 					ImageCache.default.store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo([])) { _ in
@@ -435,21 +435,6 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 	}
 }
 
-/*
-extension MediaProxyService: ImageDownloaderDelegate {
-	
-	public func imageDownloader(_ downloader: ImageDownloader, didDownload data: Data, with dataTask: SessionDataTask) -> Data? {
-		
-		let contentType = dataTask.task.originalRequest?.value(forHTTPHeaderField: "Content-Type")
-		print("contentType: \(contentType)")
-		
-		
-		
-		return data
-	}
-}
-*/
-
 public class ContentTypeCheckingImageDownloader: ImageDownloader {
 	
 	public override func startDownloadTask(context: DownloadingContext, callback: SessionDataTask.TaskCallback) -> DownloadTask {
@@ -480,8 +465,6 @@ public class ContentTypeCheckingImageDownloader: ImageDownloader {
 					if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type"), contentType.contains("svg") {
 						for (index, callback) in processor.callbacks.enumerated() {
 							if callback.options.processor.identifier == DefaultImageProcessor.default.identifier {
-								
-								print("custom SVG processing")
 								processor.callbacks[index].options.processor = SVGImgProcessor()
 							}
 						}
