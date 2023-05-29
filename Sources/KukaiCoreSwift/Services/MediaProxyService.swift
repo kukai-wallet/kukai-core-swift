@@ -299,6 +299,7 @@ public class MediaProxyService: NSObject {
 		imageView.kf.indicatorType = .activity
 		imageView.kf.setImage(with: url, options: processors) { result in
 			guard let res = try? result.get() else {
+				os_log("Error fetching: %@, Error: %@", log: .kukaiCoreSwift, type: .error, url.absoluteString, String(describing: try? result.getError()))
 				imageView.image = fallback
 				if let comp = completion { comp(nil) }
 				return
