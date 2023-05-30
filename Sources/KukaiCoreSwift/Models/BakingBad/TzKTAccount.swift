@@ -13,15 +13,44 @@ public struct TzKTAccount: Codable, Equatable {
 	/// The address XTZ balance in RPC format
 	public let balance: Decimal?
 	
+	/// type of account e.g. "user"
+	public let type: String
+	
+	/// tz1/2/3 kt1 address
+	public let address: String
+	
+	/// prefixed public key
+	public let publicKey: String
+	
+	/// whether or not the account has performed a reveal operation
+	public let revealed: Bool
+	
 	/// The addresses delegation status
 	public let delegate: TzKTAccountDelegate?
 	
 	/// The block level the delegate address was set
 	public let delegationLevel: Decimal?
 	
+	public let activeTokensCount: Decimal?
+	
+	public let tokenBalancesCount: Decimal?
+	
 	/// Helper method to convert the RPC balance into an XTZAmount
 	public var xtzBalance: XTZAmount {
 		return XTZAmount(fromRpcAmount: balance ?? 0) ?? .zero()
+	}
+	
+	/// Generic init
+	public init(balance: Decimal?, type: String, address: String, publicKey: String, revealed: Bool, delegate: TzKTAccountDelegate?, delegationLevel: Decimal?, activeTokensCount: Decimal?, tokenBalancesCount: Decimal?) {
+		self.balance = balance
+		self.type = type
+		self.address = address
+		self.publicKey = publicKey
+		self.revealed = revealed
+		self.delegate = delegate
+		self.delegationLevel = delegationLevel
+		self.activeTokensCount = activeTokensCount
+		self.tokenBalancesCount = tokenBalancesCount
 	}
 }
 

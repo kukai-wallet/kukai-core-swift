@@ -760,7 +760,7 @@ public class TzKTClient {
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var tzktAccount = TzKTAccount(balance: 0, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0)
+		var tzktAccount = TzKTAccount(balance: 0, type: "user", address: "", publicKey: "", revealed: false, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0, activeTokensCount: 0, tokenBalancesCount: 0)
 		var tokenBalances: [TzKTBalance] = []
 		var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
