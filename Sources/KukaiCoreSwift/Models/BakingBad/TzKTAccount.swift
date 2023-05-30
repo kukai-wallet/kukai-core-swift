@@ -23,7 +23,7 @@ public struct TzKTAccount: Codable, Equatable {
 	public let publicKey: String?
 	
 	/// whether or not the account has performed a reveal operation
-	public let revealed: Bool
+	public let revealed: Bool?
 	
 	/// The addresses delegation status
 	public let delegate: TzKTAccountDelegate?
