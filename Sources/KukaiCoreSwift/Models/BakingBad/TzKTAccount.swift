@@ -13,14 +13,14 @@ public struct TzKTAccount: Codable, Equatable {
 	/// The address XTZ balance in RPC format
 	public let balance: Decimal?
 	
-	/// type of account e.g. "user"
+	/// type of account e.g. "user" or "empty"
 	public let type: String
 	
 	/// tz1/2/3 kt1 address
 	public let address: String
 	
 	/// prefixed public key
-	public let publicKey: String
+	public let publicKey: String?
 	
 	/// whether or not the account has performed a reveal operation
 	public let revealed: Bool
