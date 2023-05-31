@@ -60,7 +60,7 @@ public class MediaProxyService: NSObject {
 	private static let videoFormats = ["mp4", "mov"]
 	private static let audioFormats = ["mpeg", "mpg", "mp3"]
 	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg"] // gifs might be reencoded as video, so have to exclude them
-	
+	private static let customImageDownloader = ContentTypeCheckingImageDownloader(name: "custom-svg")
 	
 	
 	// MARK: - URL conversion
@@ -281,7 +281,7 @@ public class MediaProxyService: NSObject {
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
-		var processors: [KingfisherOptionsInfoItem] = [.downloader(ContentTypeCheckingImageDownloader(name: "custom-svg")), .processor(DefaultImageProcessor.default)]
+		var processors: [KingfisherOptionsInfoItem] = [.downloader(MediaProxyService.customImageDownloader), .processor(DefaultImageProcessor.default)]
 		
 		if cacheType == .temporary {
 			processors.append(.diskCacheExpiration(.days(7)))
@@ -314,13 +314,10 @@ public class MediaProxyService: NSObject {
 			return
 		}
 		
-		
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
-		
-		//let downloader = ImageDownloader.default
-		ContentTypeCheckingImageDownloader(name: "custom-svg").downloadImage(with: url) { result in
+		MediaProxyService.customImageDownloader.downloadImage(with: url) { result in
 			switch result {
 				case .success(let value):
 					ImageCache.default.store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo([])) { _ in
