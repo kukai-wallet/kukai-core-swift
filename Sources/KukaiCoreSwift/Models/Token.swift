@@ -151,8 +151,8 @@ public class Token: Codable, CustomStringConvertible {
 		let decimalsInt = Int(decimalsString) ?? 0
 		let isNFT = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2)
 		
-		self.name = from.token.contract.alias ?? from.token.contract.address
-		self.symbol = isNFT ? from.token.contract.alias ?? "" : from.token.displaySymbol
+		self.name = from.token.metadata?.name ?? "Unknown Token"
+		self.symbol = isNFT ? from.token.metadata?.symbol ?? "" : from.token.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.token.standard
 		self.balance = from.tokenAmount()
