@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
+public struct TzKTTransactionGroup: Codable, Hashable, Identifiable, CustomStringConvertible {
 	
 	// MARK: - Properties
 	
@@ -26,7 +26,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 	}
 	
 	public init?(withTransactions transactions: [TzKTTransaction], currentWalletAddress: String) {
-		guard let first = transactions.first, let last = transactions.last else {
+		guard let first = transactions.first/*, let last = transactions.last*/ else {
 			return nil
 		}
 		
@@ -40,7 +40,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			self.entrypointCalled = first.entrypointCalled
 			self.primaryToken = first.primaryToken
 			
-		} else if transactions.count > 1,
+		}/* else if transactions.count > 1,
 				  let exchangeFirst = transactions.last(where: { $0.getEntrypoint() == "transfer" || $0.amount != .zero() }),
 				  let exchangeLast = transactions.first(where: { ($0.getEntrypoint() == "transfer" || $0.amount != .zero()) && $0.id != exchangeFirst.id }),
 				  (exchangeFirst.target?.address != currentWalletAddress && exchangeFirst.getTokenTransferDestination() != currentWalletAddress),
@@ -62,7 +62,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 			self.primaryToken = primary
 			self.secondaryToken = secondary
 			
-		} else if let entrypoint = last.entrypointCalled {
+		  }*/ else if let entrypoint = transactions.last(where: { $0.entrypointCalled != "approve" && $0.entrypointCalled != "update_operators" && $0.entrypointCalled != nil })?.entrypointCalled {
 			self.groupType = .contractCall
 			self.entrypointCalled = entrypoint
 			
@@ -75,6 +75,13 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable {
 		}
 	}
 	
+	
+	
+	// MARK: - CustomStringConvertible
+	
+	public var description: String {
+		return "\nHash: \(hash), GroupType: \(groupType), entrypointCalled: \(entrypointCalled ?? "-"), primaryToken: \(primaryToken?.balance.normalisedRepresentation ?? "-") \(primaryToken?.symbol ?? "-"), secondaryToken: \(secondaryToken?.balance.normalisedRepresentation ?? "-") \(secondaryToken?.symbol ?? "-"), Transactions: \n \(transactions) \n"
+	}
 	
 	
 	// MARK: - Hashable

@@ -61,6 +61,8 @@ class TzKTClientTests: XCTestCase {
 			
 			XCTAssert(groups.count == 102, "\(groups.count)")
 			
+			print("\n\n\nGroups: \n\(groups)\n\n\n")
+			
 			
 			// Test FA receive 1 mooncake
 			XCTAssert(groups[0].groupType == .receive, groups[0].groupType.rawValue)
@@ -89,25 +91,13 @@ class TzKTClientTests: XCTestCase {
 			
 			
 			// Test Exchange
-			/*
-			XCTAssert(groups[84].groupType == .exchange, groups[84].groupType.rawValue)
+			XCTAssert(groups[84].groupType == .contractCall, groups[84].groupType.rawValue)
 			XCTAssert(groups[84].hash == "opPA7o4i7JtR2bnsW7rTnqFHoTzK4kDcMgV5SJmR6QS8vhYHp2X", groups[84].hash)
-			XCTAssert(groups[84].primaryToken?.tokenContractAddress == "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn", groups[84].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[84].primaryToken?.tokenId == nil, groups[84].primaryToken?.tokenId?.description ?? "-")
-			XCTAssert(groups[84].primaryToken?.balance.normalisedRepresentation == "811", groups[84].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[84].secondaryToken?.tokenContractAddress == nil, groups[84].secondaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[84].secondaryToken?.tokenId == nil, groups[84].secondaryToken?.tokenId?.description ?? "-")
-			XCTAssert(groups[84].secondaryToken?.balance.normalisedRepresentation == "0.107519", groups[84].secondaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[84].entrypointCalled == nil, groups[84].entrypointCalled ?? "-")
+			XCTAssert(groups[84].entrypointCalled == "tokenToTezPayment", groups[84].entrypointCalled ?? "-")
 			
-			XCTAssert(groups[84].transactions.count == 2, "\(groups[84].transactions.count)")
-			XCTAssert(groups[84].transactions[0].id == 184404704, "\(groups[84].transactions[0].id)")
-			XCTAssert(groups[84].transactions[0].amount.normalisedRepresentation == "0.107519", groups[84].transactions[0].amount.normalisedRepresentation)
-			XCTAssert(groups[84].transactions[1].id == 184404703, "\(groups[84].transactions[1].id)")
-			XCTAssert(groups[84].transactions[1].amount.normalisedRepresentation == "0", groups[84].transactions[1].amount.normalisedRepresentation)
-			//XCTAssert(groups[84].transactions[2].id == 184404702, "\(groups[84].transactions[2].id)")
-			//XCTAssert(groups[84].transactions[2].amount.normalisedRepresentation == "0", groups[84].transactions[2].amount.normalisedRepresentation)
-			*/
+			XCTAssert(groups[84].transactions.count == 3, groups[84].transactions.count.description)
+			XCTAssert(groups[84].transactions[0].primaryToken?.balance.normalisedRepresentation == "0.107519", groups[84].transactions[0].primaryToken?.balance.normalisedRepresentation ?? "-")
+			XCTAssert(groups[84].transactions[0].primaryToken?.symbol == "XTZ", groups[84].transactions[0].primaryToken?.symbol ?? "-")
 			
 			// Test Receive
 			XCTAssert(groups[85].hash == "onvh7egDq7RmM9CaY8W2hKMPxF4fNhv6sDaNxvpnDKqKNrAwVQq", groups[85].hash)
@@ -127,30 +117,12 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[88].secondaryToken?.tokenContractAddress == nil, groups[88].secondaryToken?.tokenContractAddress ?? "-")
 			XCTAssert(groups[88].secondaryToken?.tokenId == nil, groups[88].secondaryToken?.tokenId?.description ?? "-")
 			XCTAssert(groups[88].secondaryToken?.balance.normalisedRepresentation == nil, groups[88].secondaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[88].entrypointCalled == "update_operators", groups[88].entrypointCalled ?? "-")
+			XCTAssert(groups[88].entrypointCalled == "ask", groups[88].entrypointCalled ?? "-")
 			
 			// Test Harvest
-			/*
+			XCTAssert(groups[90].groupType == .contractCall, groups[90].groupType.rawValue)
 			XCTAssert(groups[90].hash == "oopWrK35bXMtHoeHsRRUfaMgDX8NNGAVJBzior57zkJWVYubgGX", groups[90].hash)
-			XCTAssert(groups[90].primaryToken?.tokenContractAddress == nil, groups[90].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[90].primaryToken?.tokenId == nil, groups[90].primaryToken?.tokenId?.description ?? "-")
-			XCTAssert(groups[90].primaryToken?.balance.normalisedRepresentation == nil, groups[90].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[90].secondaryToken?.tokenContractAddress == nil, groups[90].secondaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[90].secondaryToken?.tokenId == nil, groups[90].secondaryToken?.tokenId?.description ?? "-")
-			XCTAssert(groups[90].secondaryToken?.balance.normalisedRepresentation == nil, groups[90].secondaryToken?.balance.normalisedRepresentation ?? "-")
 			XCTAssert(groups[90].entrypointCalled == "harvest", groups[90].entrypointCalled ?? "-")
-			
-			XCTAssert(groups[90].transactions.count == 6, "\(groups[90].transactions.count)")
-			XCTAssert(groups[90].transactions[0].id == 183382669, "\(groups[90].transactions[0].id)")
-			XCTAssert(groups[90].transactions[0].amount.normalisedRepresentation == "0", groups[90].transactions[0].amount.normalisedRepresentation)
-			XCTAssert(groups[90].transactions[0].getFaTokenTransferData()?.balance.normalisedRepresentation == "387545563", groups[90].transactions[0].getFaTokenTransferData()?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[90].transactions[1].id == 183382668, "\(groups[90].transactions[1].id)")
-			XCTAssert(groups[90].transactions[1].amount.normalisedRepresentation == "0", groups[90].transactions[1].amount.normalisedRepresentation)
-			XCTAssert(groups[90].transactions[1].getFaTokenTransferData()?.balance.normalisedRepresentation == nil, groups[90].transactions[1].getFaTokenTransferData()?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[90].transactions[2].id == 183382667, "\(groups[90].transactions[2].id)")
-			XCTAssert(groups[90].transactions[2].amount.normalisedRepresentation == "0", groups[90].transactions[2].amount.normalisedRepresentation)
-			XCTAssert(groups[90].transactions[2].getFaTokenTransferData()?.balance.normalisedRepresentation == "435173012223", groups[90].transactions[2].getFaTokenTransferData()?.balance.normalisedRepresentation ?? "-")
-			*/
 			
 			expectation.fulfill()
 		}

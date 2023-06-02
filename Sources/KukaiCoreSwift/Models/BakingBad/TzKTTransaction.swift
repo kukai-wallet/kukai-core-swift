@@ -83,7 +83,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - CustomStringConvertible
 	
 	public var description: String {
-		return "\(type.rawValue): \nCounter: \(counter), level: \(level), Hash: \(hash), \nInitiater: \(initiater?.address ?? "-"), Sender: \(sender.address), Target: \(target?.address ?? "-"), Amount: \(amount.description)\n"
+		return "\nHash: \(hash),\(type.rawValue), subtype: \(subType ?? .unknown), entrypointCalled: \(entrypointCalled ?? "-"), Sender: \(sender.address), Target: \(target?.address ?? "-"), primaryToken: \(primaryToken?.balance.normalisedRepresentation ?? "-") \(primaryToken?.symbol ?? "-")\n"
 	}
 	
 	
