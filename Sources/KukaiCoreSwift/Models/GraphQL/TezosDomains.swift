@@ -126,13 +126,13 @@ public struct TezosDomainsReverseRecord: Codable {
 	public let owner: String
 	
 	/// Expiration date
-	public let expiresAtUtc: String
+	public let expiresAtUtc: String?
 	
 	/// The domain object continaing the name and address
 	public let domain: TezosDomainsDomain
 	
 	/// Default init
-	public init(id: String, address: String, owner: String, expiresAtUtc: String, domain: TezosDomainsDomain) {
+	public init(id: String, address: String, owner: String, expiresAtUtc: String?, domain: TezosDomainsDomain) {
 		self.id = id
 		self.address = address
 		self.owner = owner

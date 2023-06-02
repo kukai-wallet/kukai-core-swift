@@ -67,7 +67,7 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[0].hash == "3242628_2023-03-20T14:09:29Z", groups[0].hash)
 			XCTAssert(groups[0].primaryToken?.tokenContractAddress == "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv", groups[0].primaryToken?.tokenContractAddress ?? "-")
 			XCTAssert(groups[0].primaryToken?.balance.normalisedRepresentation == "1", groups[0].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[0].primaryToken?.name == "Mooncakes", groups[0].primaryToken?.name ?? "-")
+			XCTAssert(groups[0].primaryToken?.name == "Mystique Mooncake", groups[0].primaryToken?.name ?? "-")
 			
 			
 			// Test FA receive token with decimals as part of a batch
@@ -85,7 +85,7 @@ class TzKTClientTests: XCTestCase {
 			XCTAssert(groups[45].hash == "3102560_2023-01-30T14:37:44Z", groups[45].hash)
 			XCTAssert(groups[45].primaryToken?.tokenContractAddress == "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv", groups[45].primaryToken?.tokenContractAddress ?? "-")
 			XCTAssert(groups[45].primaryToken?.balance.normalisedRepresentation == "2", groups[45].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[45].primaryToken?.name == "Mooncakes", groups[45].primaryToken?.name ?? "-")
+			XCTAssert(groups[45].primaryToken?.name == "Longevity Mooncake", groups[45].primaryToken?.name ?? "-")
 			
 			
 			// Test Exchange
