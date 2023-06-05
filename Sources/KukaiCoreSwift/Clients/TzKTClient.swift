@@ -621,14 +621,14 @@ public class TzKTClient {
 	 Open a websocket connection to request a notification for any changes to the given account. The @Published var `accountDidChange` will be notified if something occurs
 	 - parameter address: The Tz address of the account to monitor
 	 */
-	public func listenForAccountChanges(addresses: [String]) {
+	public func listenForAccountChanges(addresses: [String], withDebugging: Bool = false) {
 		addressesToWatch = addresses
 		isListening = true
 		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/events")
 		
-		if config.loggingConfig.logNetworkSuccesses {
+		if withDebugging {
 			signalrConnection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .debug).build()
 		} else {
 			signalrConnection = HubConnectionBuilder(url: url).build()
