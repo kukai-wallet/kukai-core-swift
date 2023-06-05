@@ -330,6 +330,12 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	}
 	
 	public func createPrimaryToken() -> Token? {
+		
+		// In situations, like manually creating placeholders, primary token can be set already before we get here
+		if primaryToken != nil {
+			return primaryToken
+		}
+		
 		if let tokenTransfer = self.tzktTokenTransfer {
 			return Token(from: tokenTransfer)
 			
