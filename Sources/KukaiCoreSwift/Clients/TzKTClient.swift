@@ -993,13 +993,17 @@ public class TzKTClient {
 		
 		for (transferIndex, transfer) in self.tempTokenTransfers.enumerated() {
 			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
-				if transfer.transactionId == transaction.id && transaction.tokenTransfersCount == nil {
-					self.tempTransactions[transactionIndex].tzktTokenTransfer = transfer
-					self.tempTransactions[transactionIndex].target = transfer.to ?? transfer.token.contract // replace target == contract, with the final wallet destination (if available)
-					transfersToRemove.append(transferIndex)
+				
+				if transfer.transactionId == transaction.id {
+					self.tempTokenTransfers[transferIndex].hash = transaction.hash
 					
-				} else if transfer.transactionId == transaction.id && transaction.tokenTransfersCount != nil {
-					transactionsToRemove.append(transactionIndex)
+					if transaction.tokenTransfersCount == nil {
+						self.tempTransactions[transactionIndex].tzktTokenTransfer = transfer
+						self.tempTransactions[transactionIndex].target = transfer.to ?? transfer.token.contract // replace target == contract, with the final wallet destination (if available)
+						transfersToRemove.append(transferIndex)
+					} else {
+						transactionsToRemove.append(transactionIndex)
+					}
 				}
 			}
 		}

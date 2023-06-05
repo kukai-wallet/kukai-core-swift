@@ -140,10 +140,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.id = from.id
 		self.level = from.level + 1 // For sorting, we want this to be above an item with the same level
 		self.timestamp = from.timestamp
-		
-		// Hash is essential to be able to group batch transactions together, the only item shared between TzKTTokenTransfer and TzKTTransaction that matches this usecase, is level + timestamp
-		// But need to be careful to not rely on it for anything else, like viewing in explorer
-		self.hash = from.level.description + "_" + from.timestamp
+		self.hash = from.hash ?? from.id.description
 		self.counter = 0
 		self.initiater = sourceAddress
 		self.sender = sourceAddress ?? from.token.contract

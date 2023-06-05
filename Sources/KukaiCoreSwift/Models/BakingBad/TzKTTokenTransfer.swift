@@ -9,6 +9,7 @@ import Foundation
 
 public struct TzKTTokenTransfer: Codable {
 	public let id: Decimal
+	public var hash: String? // Doesn't come from API, but needed later, added during grouping / conversion phase
 	public let level: Decimal
 	public let timestamp: String
 	public let token: TzKTBalanceToken
