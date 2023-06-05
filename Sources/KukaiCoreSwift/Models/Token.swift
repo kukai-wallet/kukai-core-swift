@@ -126,7 +126,7 @@ public class Token: Codable, CustomStringConvertible {
 		let decimalsInt = Int(decimalsString) ?? 0
 		let isNFT = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2)
 		
-		self.name = from.contract.alias ?? from.contract.address
+		self.name = from.contract.alias
 		self.symbol = isNFT ? from.contract.alias ?? "" : from.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.standard
