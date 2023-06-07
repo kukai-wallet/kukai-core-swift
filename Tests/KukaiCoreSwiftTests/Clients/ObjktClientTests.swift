@@ -76,6 +76,7 @@ class ObjktClientTests: XCTestCase {
 			XCTAssert(res.data?.fa[0].floor_price == 60000, res.data?.fa[0].floor_price?.description ?? "-")
 			
 			XCTAssertTrue(res.data?.isOnSale() == true)
+			XCTAssertTrue(res.data?.onSalePrice()?.description == "5", res.data?.onSalePrice()?.description ?? "-")
 			XCTAssertTrue(res.data?.lastSalePrice()?.description == "0.795", res.data?.lastSalePrice()?.description ?? "-")
 			XCTAssertTrue(res.data?.floorPrice()?.description == "0.06", res.data?.floorPrice()?.description ?? "-")
 			

@@ -84,6 +84,14 @@ public struct ObjktTokenReponse: Codable {
 		return token.first?.listings_active.first?.seller_address != nil
 	}
 	
+	public func onSalePrice() -> XTZAmount? {
+		if let decimal = token.first?.listings_active.first?.price_xtz {
+			return XTZAmount(fromRpcAmount: decimal.description)
+		}
+		
+		return nil
+	}
+	
 	public func lastSalePrice() -> XTZAmount? {
 		if let decimal = token.first?.listing_sales.first?.price_xtz {
 			return XTZAmount(fromRpcAmount: decimal.description)
