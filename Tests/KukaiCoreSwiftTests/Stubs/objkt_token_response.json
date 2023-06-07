@@ -95,6 +95,19 @@
 				]
 			  }
 			}
+		  ],
+		  "listing_sales": [
+			{
+			  "price_xtz": 795000,
+			  "timestamp": "2023-06-07T01:59:46+00:00"
+			}
+		  ],
+		  "listings_active": [
+			{
+			  "seller_address": "tz1WLHpHZvEtvZaKBxcRVxk2nyjGpW6LnX6Z",
+			  "price_xtz": 5000000,
+			  "price": 5000000
+			}
 		  ]
 		}
 	  ],

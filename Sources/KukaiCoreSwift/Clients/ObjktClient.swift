@@ -120,13 +120,13 @@ public class ObjktClient {
 			addressArray += "\"\(add)\","
 		}
 		
-		let queryDict = ["query": "query { fa(where: {contract: {_in: [\(addressArray)] }}) { contract, name, logo }}"]
+		let queryDict = ["query": "query { fa(where: {contract: {_in: [\(addressArray)] }}) { contract, name, logo, floor_price, twitter, website, owners, editions, creator { address, alias, website, twitter } }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
 		self.networkService.request(url: self.config.objktApiURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktCollections>.self, completion: completion)
 	}
 	
-	public func resolveToken(address: String, tokenId: Int, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
+	public func resolveToken(address: String, tokenId: Int, forOwnerWalletAddress walletAddress: String, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
 		var query = """
 		query {
 			token(where: {fa_contract: {_eq: "\(address)"}, token_id: {_eq: "\(tokenId)"}}) {
@@ -142,6 +142,14 @@ public class ObjktClient {
 							editions
 						}
 					}
+				},
+				listing_sales(order_by: {timestamp: desc}, limit: 1) {
+					price_xtz,
+					timestamp
+				},
+				listings_active( where: {seller_address: {_eq: "\(walletAddress)"}} ) {
+					seller_address,
+					price_xtz
 				}
 			}
 			event(

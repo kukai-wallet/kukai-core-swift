@@ -28,10 +28,18 @@ class ObjktClientTests: XCTestCase {
 			XCTAssert(res)
 			
 			let collections = MockConstants.shared.objktClient.collections
-			XCTAssert(collections.keys.count == 3, collections.keys.count.description) // stub data contains duplicates, 3 keys means it successfully executed a second request to get the additional batch of 5 items
+			XCTAssert(collections.keys.count == 4, collections.keys.count.description) // stub data contains duplicates, 3 keys means it successfully executed a second request to get the additional batch of 5 items
 			XCTAssert(collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.name == "Crystal Moon Crew", collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.name ?? "-")
 			XCTAssert(collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.logo == "ipfs://QmSN7P1MrC1uk9rbinqqtNBw3eoKH2rXWUu9bJjDDCLURL", collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.logo ?? "-")
 			XCTAssert(collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.contract == "KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK", collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.contract ?? "-")
+			
+			XCTAssert(collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.floorPrice()?.description == "0.16", collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.floorPrice()?.description ?? "-")
+			XCTAssert(collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.twitterURL()?.absoluteString == "https://www.twitter.com/PixelPotus", collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.twitterURL()?.absoluteString ?? "-")
+			XCTAssert(collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.websiteURL()?.absoluteString == "https://www.pixelpotus.com", collections["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK"]?.websiteURL()?.absoluteString ?? "-")
+			
+			XCTAssert(collections["blah9"]?.floorPrice()?.description == "0.13", collections["blah9"]?.floorPrice()?.description ?? "-")
+			XCTAssert(collections["blah9"]?.twitterURL() == nil, collections["blah9"]?.twitterURL()?.absoluteString ?? "-")
+			XCTAssert(collections["blah9"]?.websiteURL()?.absoluteString == "https://collectibles.manutd.com/", collections["blah9"]?.websiteURL()?.absoluteString ?? "-")
 			
 			expectation.fulfill()
 		}
@@ -46,7 +54,7 @@ class ObjktClientTests: XCTestCase {
 	func testResolveToken() {
 		let expectation = XCTestExpectation(description: "objkt-resolve-token")
 		
-		MockConstants.shared.objktClient.resolveToken(address: "KT1XNJ67F3JN2cmq6s1LmqtVg7gy9tCcN4E2", tokenId: 15) { result in
+		MockConstants.shared.objktClient.resolveToken(address: "KT1XNJ67F3JN2cmq6s1LmqtVg7gy9tCcN4E2", tokenId: 15, forOwnerWalletAddress: MockConstants.hdWallet.address) { result in
 			guard let res = try? result.get() else {
 				XCTFail(result.getFailure().description)
 				expectation.fulfill()
@@ -66,6 +74,10 @@ class ObjktClientTests: XCTestCase {
 			XCTAssert(res.data?.fa.count == 1, res.data?.fa.count.description ?? "-")
 			XCTAssert(res.data?.fa[0].editions == 69202, res.data?.fa[0].editions?.description ?? "-")
 			XCTAssert(res.data?.fa[0].floor_price == 60000, res.data?.fa[0].floor_price?.description ?? "-")
+			
+			XCTAssertTrue(res.data?.isOnSale() == true)
+			XCTAssertTrue(res.data?.lastSalePrice()?.description == "0.795", res.data?.lastSalePrice()?.description ?? "-")
+			XCTAssertTrue(res.data?.floorPrice()?.description == "0.06", res.data?.floorPrice()?.description ?? "-")
 			
 			expectation.fulfill()
 		}
