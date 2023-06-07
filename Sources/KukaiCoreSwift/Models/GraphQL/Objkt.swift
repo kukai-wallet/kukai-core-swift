@@ -37,13 +37,21 @@ public struct ObjktCollection: Codable {
 	
 	public func twitterURL() -> URL? {
 		if let str = twitter {
-			return URL(string: "https://www.twitter.com/\(str)")
+			return validTwitterURL(from: str)
 			
 		} else if let str = creator?.twitter {
-			return URL(string: "https://www.twitter.com/\(str)")
+			return validTwitterURL(from: str)
 		}
 		
 		return nil
+	}
+	
+	private func validTwitterURL(from: String) -> URL? {
+		if from.contains("twitter.com") {
+			return URL(string: from)
+		} else {
+			return URL(string: "https://www.twitter.com/\(from)")
+		}
 	}
 	
 	public func floorPrice() -> XTZAmount? {
