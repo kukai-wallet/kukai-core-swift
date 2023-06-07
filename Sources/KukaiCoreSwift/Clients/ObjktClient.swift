@@ -126,7 +126,7 @@ public class ObjktClient {
 		self.networkService.request(url: self.config.objktApiURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktCollections>.self, completion: completion)
 	}
 	
-	public func resolveToken(address: String, tokenId: Int, forOwnerWalletAddress walletAddress: String, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
+	public func resolveToken(address: String, tokenId: Decimal, forOwnerWalletAddress walletAddress: String, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
 		var query = """
 		query {
 			token(where: {fa_contract: {_eq: "\(address)"}, token_id: {_eq: "\(tokenId)"}}) {
