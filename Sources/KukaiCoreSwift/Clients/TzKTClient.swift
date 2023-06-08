@@ -929,60 +929,56 @@ public class TzKTClient {
 		dispatchGroupTransactions.enter()
 		dispatchGroupTransactions.enter()
 		
-		var url = config.tzktURL
-		url.appendPathComponent("v1/accounts/\(address)/operations")
-		url.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
-		url.appendQueryItem(name: "micheline", value: 1)
-		url.appendQueryItem(name: "limit", value: limit)
-		
 		tempTransactions = []
 		tempTokenTransfers = []
 		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
+		// Main transactions
+		var urlMain = config.tzktURL
+		urlMain.appendPathComponent("v1/accounts/\(address)/operations")
+		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
+		urlMain.appendQueryItem(name: "micheline", value: 1)
+		urlMain.appendQueryItem(name: "limit", value: limit)
+		
+		networkService.request(url: urlMain, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
 			switch result {
 				case .success(let transactions):
 					self?.tempTransactions = transactions
-					self?.queryFaTokenReceives(forAddress: address, lastId: self?.tempTransactions.last?.id)
 					self?.dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
 					self?.dispatchGroupTransactions.leave()
-					self?.dispatchGroupTransactions.leave()
 			}
 		}
 		
-		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
-		self.dispatchGroupTransactions.notify(queue: .main) { [weak self] in
-			self?.tempTransactions.sort { $0.level > $1.level }
-			
-			completion(self?.tempTransactions ?? [])
-		}
-	}
-	
-	private func queryFaTokenReceives(forAddress address: String, lastId: Decimal?) {
-		guard let id = lastId else {
-			self.dispatchGroupTransactions.leave()
-			return
-		}
+		// FA token receives
+		var urlReceive = config.tzktURL
+		urlReceive.appendPathComponent("v1/tokens/transfers")
+		urlReceive.appendQueryItem(name: "anyof.from.to", value: address)
+		urlReceive.appendQueryItem(name: "limit", value: 25)
+		urlReceive.appendQueryItem(name: "offset", value: 0)
+		urlReceive.appendQueryItem(name: "sort.desc", value: "id")
 		
-		var url = config.tzktURL
-		url.appendPathComponent("v1/tokens/transfers")
-		url.appendQueryItem(name: "anyof.from.to", value: address)
-		url.appendQueryItem(name: "id.gt", value: id.description)
-		url.appendQueryItem(name: "offset", value: 0)
-		url.appendQueryItem(name: "sort.desc", value: "id")
-		
-		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTokenTransfer].self) { [weak self] (result) in
+		networkService.request(url: urlReceive, isPOST: false, withBody: nil, forReturnType: [TzKTTokenTransfer].self) { [weak self] (result) in
 			switch result {
 				case .success(let transactions):
 					self?.tempTokenTransfers = transactions
-					self?.mergeTokenTransfersWithTransactions()
 					self?.dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 2: %@", "\(error)")
 					self?.dispatchGroupTransactions.leave()
+			}
+		}
+		
+		
+		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
+		self.dispatchGroupTransactions.notify(queue: .global(qos: .background)) { [weak self] in
+			self?.mergeTokenTransfersWithTransactions()
+			self?.tempTransactions.sort { $0.level > $1.level }
+			
+			DispatchQueue.main.async {
+				completion(self?.tempTransactions ?? [])
 			}
 		}
 	}
