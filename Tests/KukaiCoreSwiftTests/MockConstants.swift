@@ -62,7 +62,7 @@ public struct MockConstants {
 		
 		var tzktHistoryNativeReceiveURL = tzktURL.appendingPathComponent("v1/tokens/transfers")
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "anyof.from.to", value: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF")
-		tzktHistoryNativeReceiveURL.appendQueryItem(name: "id.gt", value: 174472305)
+		tzktHistoryNativeReceiveURL.appendQueryItem(name: "limit", value: 50)
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "offset", value: 0)
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "sort.desc", value: "id")
 		

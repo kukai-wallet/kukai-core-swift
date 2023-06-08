@@ -955,7 +955,7 @@ public class TzKTClient {
 		var urlReceive = config.tzktURL
 		urlReceive.appendPathComponent("v1/tokens/transfers")
 		urlReceive.appendQueryItem(name: "anyof.from.to", value: address)
-		urlReceive.appendQueryItem(name: "limit", value: 25)
+		urlReceive.appendQueryItem(name: "limit", value: limit)
 		urlReceive.appendQueryItem(name: "offset", value: 0)
 		urlReceive.appendQueryItem(name: "sort.desc", value: "id")
 		
