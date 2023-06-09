@@ -35,7 +35,6 @@ public class TzKTClient {
 	
 	private var tempTransactions: [TzKTTransaction] = []
 	private var tempTokenTransfers: [TzKTTokenTransfer] = []
-	private var dispatchGroupTransactions = DispatchGroup()
 	private let tokenBalanceQueue: DispatchQueue
 	
 	private var signalrConnection: HubConnection? = nil
@@ -925,7 +924,7 @@ public class TzKTClient {
 	// MARK: - Transaction History
 	
 	public func fetchTransactions(forAddress address: String, limit: Int = 50, completion: @escaping (([TzKTTransaction]) -> Void)) {
-		self.dispatchGroupTransactions = DispatchGroup()
+		let dispatchGroupTransactions = DispatchGroup()
 		dispatchGroupTransactions.enter()
 		dispatchGroupTransactions.enter()
 		
@@ -943,11 +942,11 @@ public class TzKTClient {
 			switch result {
 				case .success(let transactions):
 					self?.tempTransactions = transactions
-					self?.dispatchGroupTransactions.leave()
+					dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
-					self?.dispatchGroupTransactions.leave()
+					dispatchGroupTransactions.leave()
 			}
 		}
 		
@@ -963,17 +962,17 @@ public class TzKTClient {
 			switch result {
 				case .success(let transactions):
 					self?.tempTokenTransfers = transactions
-					self?.dispatchGroupTransactions.leave()
+					dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
 					os_log(.error, log: .kukaiCoreSwift, "Parse error 2: %@", "\(error)")
-					self?.dispatchGroupTransactions.leave()
+					dispatchGroupTransactions.leave()
 			}
 		}
 		
 		
 		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
-		self.dispatchGroupTransactions.notify(queue: .global(qos: .background)) { [weak self] in
+		dispatchGroupTransactions.notify(queue: .global(qos: .background)) { [weak self] in
 			self?.mergeTokenTransfersWithTransactions()
 			self?.tempTransactions.sort { $0.level > $1.level }
 			
