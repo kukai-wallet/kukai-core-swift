@@ -1032,15 +1032,26 @@ public class TzKTClient {
 			var processedTran = tran
 			processedTran.processAdditionalData(withCurrentWalletAddress: currentWalletAddress)
 			
-			
-			if tran.sender.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: [processedTran], currentWalletAddress: currentWalletAddress) {
-				groups.append(group)
-				
-			} else if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
+			// Loop through, grouping by hash
+			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
 				tempTrans.append(processedTran)
 				
-			} else if (tempTrans.first?.hash != tran.hash), let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
-				groups.append(group)
+			} else if tempTrans.first?.hash != tran.hash {
+				
+				// Split out any operation that didn't come from the wallet, as this is likely a receive, which we want to display seperately
+				var indexesToRemove: [Int] = []
+				for (index, tempTran) in tempTrans.enumerated() {
+					if tran.sender.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: [tempTran], currentWalletAddress: currentWalletAddress) {
+						indexesToRemove.append(index)
+						groups.append(group)
+					}
+				}
+				
+				tempTrans.remove(atOffsets: IndexSet(indexesToRemove))
+				if let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
+					groups.append(group)
+				}
+				
 				tempTrans = [processedTran]
 			}
 		}
