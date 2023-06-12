@@ -89,7 +89,7 @@ public class FeeEstimatorService {
 		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey)
 		
 		// Before estimating, set the maximum gas and storage to ensure the operation suceeds (excluding any errors such as invalid address, insufficnet funds etc)
-		let simulationGas = min(constants.maxGasPerOperation(), Int(constants.maxGasPerBlock() / operations.count + 1) )
+		let simulationGas = min(constants.maxGasPerOperation(), Int(constants.maxGasPerBlock() / (operations.count + 1)) )
 		let maxGasAndStorage = OperationFees(transactionFee: XTZAmount.zero(), gasLimit: simulationGas, storageLimit: constants.maxStoragePerOperation())
 		operationPayload.contents.forEach { $0.operationFees = maxGasAndStorage }
 		
