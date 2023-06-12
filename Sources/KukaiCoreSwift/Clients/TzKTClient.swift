@@ -1029,6 +1029,13 @@ public class TzKTClient {
 			if tempTrans.count == 0 || tempTrans.first?.hash == tran.hash {
 				tempTrans.append(processedTran)
 				
+				// If the sender wasn't the wallet (e.g. a receive), then its something we want to visually display outside of a batch
+				// split this out into its own group
+				if tran.sender.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
+					groups.append(group)
+					tempTrans = []
+				}
+				
 			} else if tempTrans.first?.hash != tran.hash, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 				groups.append(group)
 				tempTrans = [processedTran]
