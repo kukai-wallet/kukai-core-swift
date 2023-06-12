@@ -57,9 +57,8 @@ class TzKTClientTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "tzkt-testTransactionHistory")
 		
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
-			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
+			/*let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
-			/*
 			XCTAssert(groups.count == 118, "\(groups.count)")
 			
 			// Test FA receive 1 mooncake

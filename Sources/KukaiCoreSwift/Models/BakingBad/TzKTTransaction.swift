@@ -138,7 +138,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		
 		self.type = .transaction
 		self.id = from.id
-		self.level = from.level + 1 // For sorting, we want this to be above an item with the same level
+		self.level = from.level
 		self.timestamp = from.timestamp
 		self.hash = from.hash ?? from.id.description
 		self.counter = 0

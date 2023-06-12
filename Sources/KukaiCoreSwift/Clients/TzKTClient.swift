@@ -974,7 +974,7 @@ public class TzKTClient {
 		// When both done, add the arrays, re-sort and pass it to the parse function to create the transactionHistory object
 		dispatchGroupTransactions.notify(queue: .global(qos: .background)) { [weak self] in
 			self?.mergeTokenTransfersWithTransactions()
-			self?.tempTransactions.sort { $0.level > $1.level }
+			self?.tempTransactions.sort { $0.id > $1.id }
 			
 			DispatchQueue.main.async {
 				completion(self?.tempTransactions ?? [])
