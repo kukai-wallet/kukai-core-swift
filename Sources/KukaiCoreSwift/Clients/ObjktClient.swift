@@ -39,7 +39,7 @@ public class ObjktClient {
 		self.config = config
 		
 		collections = DiskService.read(type: [String: ObjktCollection].self, fromFileName: ObjktClient.collectionCacheKey) ?? [:]
-		tokens = DiskService.read(type: [String: ObjktTokenReponse].self, fromFileName: ObjktClient.collectionCacheKey) ?? [:]
+		tokens = DiskService.read(type: [String: ObjktTokenReponse].self, fromFileName: ObjktClient.tokenCacheKey) ?? [:]
 	}
 	
 	
