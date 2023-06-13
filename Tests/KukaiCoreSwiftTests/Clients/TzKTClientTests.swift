@@ -88,6 +88,35 @@ class TzKTClientTests: XCTestCase {
 			
 			
 			
+			XCTAssert(groups[3].transactions[0].subType == .send, groups[3].transactions[0].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[0].primaryToken?.tokenContractAddress == nil, groups[3].transactions[0].primaryToken?.tokenContractAddress ?? "-")
+			XCTAssert(groups[3].transactions[0].primaryToken?.balance.normalisedRepresentation == "0.000099", groups[3].transactions[0].primaryToken?.balance.normalisedRepresentation ?? "-")
+			XCTAssert(groups[3].transactions[0].primaryToken?.name == "Tezos", groups[3].transactions[0].primaryToken?.name ?? "-")
+			
+			XCTAssert(groups[3].transactions[1].subType == .contractCall, groups[3].transactions[1].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[1].entrypointCalled == "tezToTokenPayment", groups[3].transactions[1].entrypointCalled ?? "-")
+			
+			XCTAssert(groups[3].transactions[2].subType == .contractCall, groups[3].transactions[2].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[2].entrypointCalled == "update_operators", groups[3].transactions[2].entrypointCalled ?? "-")
+			
+			XCTAssert(groups[3].transactions[3].subType == .send, groups[3].transactions[3].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[3].primaryToken?.tokenContractAddress == "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc", groups[3].transactions[3].primaryToken?.tokenContractAddress ?? "-")
+			XCTAssert(groups[3].transactions[3].primaryToken?.balance.normalisedRepresentation == "3.15483", groups[3].transactions[3].primaryToken?.balance.normalisedRepresentation ?? "-")
+			XCTAssert(groups[3].transactions[3].primaryToken?.name == "fDAO", groups[3].transactions[3].primaryToken?.name ?? "-")
+			
+			XCTAssert(groups[3].transactions[4].subType == .contractCall, groups[3].transactions[4].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[4].entrypointCalled == "swap", groups[3].transactions[4].entrypointCalled ?? "-")
+			
+			XCTAssert(groups[3].transactions[5].subType == .contractCall, groups[3].transactions[5].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[5].entrypointCalled == "update_operators", groups[3].transactions[5].entrypointCalled ?? "-")
+			
+			XCTAssert(groups[3].transactions[6].subType == .contractCall, groups[3].transactions[6].subType?.rawValue ?? "-")
+			XCTAssert(groups[3].transactions[6].entrypointCalled == "tezToTokenPayment", groups[3].transactions[6].entrypointCalled ?? "-")
+			
+			
+			
+			
+			
 			// Call FXhash mint
 			XCTAssert(groups[4].groupType == .receive, groups[4].groupType.rawValue)
 			XCTAssert(groups[4].hash == "onqrPbMuVZy6dDELwhXfdF8BbANXy5mLj47gjAf7CE5cAUvSVoQ", groups[4].hash)
