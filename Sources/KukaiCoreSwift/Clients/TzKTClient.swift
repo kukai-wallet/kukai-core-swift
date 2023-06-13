@@ -1039,16 +1039,8 @@ public class TzKTClient {
 			} else if tempTrans.first?.hash != tran.hash {
 				
 				// Split out any operation that didn't come from the wallet, as this is likely a receive, which we want to display seperately
-				var indexesToRemove: [Int] = []
-				for (index, tempTran) in tempTrans.enumerated() {
-					if tran.sender.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: [tempTran], currentWalletAddress: currentWalletAddress) {
-						indexesToRemove.append(index)
-						groups.append(group)
-					}
-				}
-				
-				tempTrans.remove(atOffsets: IndexSet(indexesToRemove))
-				if let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
+				let newGroups = extractNonSenders(transactions: tempTrans, currentWalletAddress: currentWalletAddress)
+				for group in newGroups {
 					groups.append(group)
 				}
 				
@@ -1056,12 +1048,36 @@ public class TzKTClient {
 			}
 		}
 		
-		if tempTrans.count > 0, let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
-			groups.append(group)
+		if tempTrans.count > 0 {
+			let newGroups = extractNonSenders(transactions: tempTrans, currentWalletAddress: currentWalletAddress)
+			for group in newGroups {
+				groups.append(group)
+			}
 			tempTrans = []
 		}
 		
 		return groups
+	}
+	
+	private func extractNonSenders(transactions: [TzKTTransaction], currentWalletAddress: String) -> [TzKTTransactionGroup] {
+		var tempTrans = transactions
+		var tempGroups: [TzKTTransactionGroup] = []
+		
+		// Split out any operation that didn't come from the wallet, as this is likely a receive, which we want to display seperately
+		var indexesToRemove: [Int] = []
+		for (index, tempTran) in tempTrans.enumerated() {
+			if tempTran.sender.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: [tempTran], currentWalletAddress: currentWalletAddress) {
+				indexesToRemove.append(index)
+				tempGroups.append(group)
+			}
+		}
+		
+		tempTrans.remove(atOffsets: IndexSet(indexesToRemove))
+		if let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
+			tempGroups.append(group)
+		}
+		
+		return tempGroups
 	}
 }
 
