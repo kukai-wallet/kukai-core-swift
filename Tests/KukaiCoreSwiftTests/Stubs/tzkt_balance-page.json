@@ -1,5 +1,36 @@
 [
 	{
+        "id": 617635014246401,
+        "account": {
+            "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
+        },
+        "token": {
+            "id": 49616867295233,
+            "contract": {
+                "alias": "Wrapped Tokens Contract",
+                "address": "KT18fp5rcTW7mbWDmzFwjLDUhs5MeJmagDSZ"
+            },
+            "tokenId": "1",
+            "standard": "fa2",
+            "totalSupply": "289868031771383495604700",
+            "metadata": {
+                "name": "Wrapped BUSD",
+                "symbol": "wBUSD",
+                "decimals": "18",
+                "eth_name": "Binance USD",
+                "eth_symbol": "BUSD",
+                "eth_contract": "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
+                "thumbnailUri": "ipfs://QmRB63vb8ThpmxHKF4An3XD8unHyCUuLYm5bZNhXwU4gAZ"
+            }
+        },
+        "balance": "464038238858254",
+        "transfersCount": 2,
+        "firstLevel": 3711537,
+        "firstTime": "2023-06-15T11:20:03Z",
+        "lastLevel": 3711537,
+        "lastTime": "2023-06-15T11:20:03Z"
+    },
+	{
 		"id": 75969615364097,
 		"account": {
 			"address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"

@@ -48,10 +48,7 @@ public struct TzKTBalanceToken: Codable {
 		if metadata?.shouldPreferSymbol == true, let sym = metadata?.symbol {
 			return sym
 			
-		} else if metadata?.shouldPreferSymbol == nil, let alias = contract.alias {
-			return alias
-			
-		} else if metadata?.shouldPreferSymbol == false, let n = metadata?.name {
+		} else if (metadata?.shouldPreferSymbol == false || metadata?.symbol == nil), let n = metadata?.name {
 			return n
 			
 		} else {
