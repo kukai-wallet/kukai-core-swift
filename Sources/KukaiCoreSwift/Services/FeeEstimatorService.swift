@@ -187,15 +187,27 @@ public class FeeEstimatorService {
 			// We always do an estimation and pick which ever is higher, the supplied suggested fees (which should always be worst case, but can be flawed), or the result of the estimation
 			var lastOpFee: OperationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
 			var operationFeesToUse: [OperationFees] = []
-			if originalOps.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
-				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: originalOps, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
-				operationFeesToUse = originalOps.map({ $0.operationFees })
+			var original = originalOps
+			
+			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon.
+			// Check and add a dummy reveal operation to the "originalOps", so that fees are calcualted correctly
+			if (operations.first is OperationReveal && original.count < operations.count) {
+				let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "") // dummy only used as an OperationsFee placeholder
+				reveal.operationFees = OperationFees(transactionFee: .zero(), networkFees: fees.first?.networkFees ?? [], gasLimit: fees.first?.gasLimit ?? 0, storageLimit: fees.first?.storageLimit ?? 0)
+				original.insert(reveal, at: 0)
+			}
+			
+			// Check whether to use suggested fees, or estiamted fees
+			if original.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
+				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: original, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
+				operationFeesToUse = original.map({ $0.operationFees })
 				
 			} else {
 				lastOpFee = fees.last ?? OperationFees.zero()
 				operationFeesToUse = fees
 			}
 			
+			/*
 			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon. Double check if theres a mismatch and add missing fee if so
 			if (operations.first is OperationReveal && operationFeesToUse.count < operations.count), let firstEstimatedFee = fees.first {
 				
@@ -205,16 +217,16 @@ public class FeeEstimatorService {
 				let addedGasFee = self?.feeForGas(feeCopy.gasLimit) ?? .zero()
 				feeCopy.transactionFee = addedGasFee
 				
-				
 				// Add additional storage limits and network fees
-				feeCopy.storageLimit = 250
+				feeCopy.storageLimit = constants.bytesForReveal()
 				
 				let burnFee = self?.feeForBurn(feeCopy.storageLimit, withConstants: constants) ?? .zero()
-				let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: constants.xtzForReveal()]]
+				let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
 				feeCopy.networkFees = networkFees
 				
 				operationFeesToUse.insert(feeCopy, at: 0)
 			}
+			*/
 			
 			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
 			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
