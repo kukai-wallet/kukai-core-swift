@@ -934,7 +934,7 @@ public class TzKTClient {
 		// Main transactions
 		var urlMain = config.tzktURL
 		urlMain.appendPathComponent("v1/accounts/\(address)/operations")
-		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction,reveal")
+		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction")
 		urlMain.appendQueryItem(name: "micheline", value: 1)
 		urlMain.appendQueryItem(name: "limit", value: limit)
 		

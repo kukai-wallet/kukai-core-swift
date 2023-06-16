@@ -59,89 +59,158 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
 			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
-			XCTAssert(groups.count == 8, "\(groups.count)")
+			XCTAssert(groups.count == 16, "\(groups.count)")
 			
-			
-			// Call crunchy dex aggregator
-			XCTAssert(groups[0].groupType == .receive, groups[0].groupType.rawValue)
-			XCTAssert(groups[0].hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", groups[0].hash)
-			XCTAssert(groups[0].primaryToken?.tokenContractAddress == "KT1914CUZ7EegAFPbfgQMRkw8Uz5mYkEz2ui", groups[0].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[0].primaryToken?.balance.normalisedRepresentation == "228.9299288", groups[0].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[0].primaryToken?.name == "Crunchy.Network CRNCHY", groups[0].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[1].groupType == .receive, groups[1].groupType.rawValue)
-			XCTAssert(groups[1].hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", groups[1].hash)
-			XCTAssert(groups[1].primaryToken?.tokenContractAddress == nil, groups[1].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[1].primaryToken?.balance.normalisedRepresentation == "0.102422", groups[1].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[1].primaryToken?.name == "Tezos", groups[1].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[2].groupType == .receive, groups[2].groupType.rawValue)
-			XCTAssert(groups[2].hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", groups[2].hash)
-			XCTAssert(groups[2].primaryToken?.tokenContractAddress == "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc", groups[2].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[2].primaryToken?.balance.normalisedRepresentation == "3.160106", groups[2].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[2].primaryToken?.name == "fDAO", groups[2].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[3].groupType == .contractCall, groups[3].groupType.rawValue)
-			XCTAssert(groups[3].hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", groups[3].hash)
-			XCTAssert(groups[3].entrypointCalled == "tezToTokenPayment", groups[3].entrypointCalled ?? "-")
-			XCTAssert(groups[3].transactions.count == 7, groups[3].transactions.count.description)
-			
-			
-			
-			XCTAssert(groups[3].transactions[0].subType == .send, groups[3].transactions[0].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[0].primaryToken?.tokenContractAddress == nil, groups[3].transactions[0].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[3].transactions[0].primaryToken?.balance.normalisedRepresentation == "0.000099", groups[3].transactions[0].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[3].transactions[0].primaryToken?.name == "Tezos", groups[3].transactions[0].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[3].transactions[1].subType == .contractCall, groups[3].transactions[1].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[1].entrypointCalled == "tezToTokenPayment", groups[3].transactions[1].entrypointCalled ?? "-")
-			
-			XCTAssert(groups[3].transactions[2].subType == .contractCall, groups[3].transactions[2].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[2].entrypointCalled == "update_operators", groups[3].transactions[2].entrypointCalled ?? "-")
-			
-			XCTAssert(groups[3].transactions[3].subType == .send, groups[3].transactions[3].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[3].primaryToken?.tokenContractAddress == "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc", groups[3].transactions[3].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[3].transactions[3].primaryToken?.balance.normalisedRepresentation == "3.15483", groups[3].transactions[3].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[3].transactions[3].primaryToken?.name == "fDAO", groups[3].transactions[3].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[3].transactions[4].subType == .contractCall, groups[3].transactions[4].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[4].entrypointCalled == "swap", groups[3].transactions[4].entrypointCalled ?? "-")
-			
-			XCTAssert(groups[3].transactions[5].subType == .contractCall, groups[3].transactions[5].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[5].entrypointCalled == "update_operators", groups[3].transactions[5].entrypointCalled ?? "-")
-			
-			XCTAssert(groups[3].transactions[6].subType == .contractCall, groups[3].transactions[6].subType?.rawValue ?? "-")
-			XCTAssert(groups[3].transactions[6].entrypointCalled == "tezToTokenPayment", groups[3].transactions[6].entrypointCalled ?? "-")
-			
-			
-			
-			
-			
-			// Call FXhash mint
-			XCTAssert(groups[4].groupType == .receive, groups[4].groupType.rawValue)
-			XCTAssert(groups[4].hash == "onqrPbMuVZy6dDELwhXfdF8BbANXy5mLj47gjAf7CE5cAUvSVoQ", groups[4].hash)
-			XCTAssert(groups[4].primaryToken?.tokenContractAddress == "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi", groups[4].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[4].primaryToken?.balance.normalisedRepresentation == "1", groups[4].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[4].primaryToken?.name == "Unknown Token", groups[4].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[5].groupType == .contractCall, groups[5].groupType.rawValue)
-			XCTAssert(groups[5].hash == "onqrPbMuVZy6dDELwhXfdF8BbANXy5mLj47gjAf7CE5cAUvSVoQ", groups[5].hash)
-			XCTAssert(groups[5].entrypointCalled == "mint", groups[5].entrypointCalled ?? "-")
-			XCTAssert(groups[5].transactions.count == 1, groups[5].transactions.count.description)
-			
-			
-			
-			// Call wrap to wrap xtz
-			XCTAssert(groups[6].groupType == .receive, groups[6].groupType.rawValue)
-			XCTAssert(groups[6].hash == "ooyKEQLPDHHD2K8ZJSt92braYAPcRjxxfEmXVcdAQ5X4AoRuREA", groups[6].hash)
-			XCTAssert(groups[6].primaryToken?.tokenContractAddress == "KT1JFjwQ25n58NZr5Bwy9chAxHCaPsjvh5xt", groups[6].primaryToken?.tokenContractAddress ?? "-")
-			XCTAssert(groups[6].primaryToken?.balance.normalisedRepresentation == "0.975223", groups[6].primaryToken?.balance.normalisedRepresentation ?? "-")
-			XCTAssert(groups[6].primaryToken?.name == "WTZ", groups[6].primaryToken?.name ?? "-")
-			
-			XCTAssert(groups[7].groupType == .contractCall, groups[7].groupType.rawValue)
-			XCTAssert(groups[7].hash == "ooyKEQLPDHHD2K8ZJSt92braYAPcRjxxfEmXVcdAQ5X4AoRuREA", groups[7].hash)
-			XCTAssert(groups[7].entrypointCalled == "wrap", groups[7].entrypointCalled ?? "-")
-			XCTAssert(groups[7].transactions.count == 1, groups[7].transactions.count.description)
+			for (index, group) in groups.enumerated() {
+				
+				switch index {
+					case 0:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "op3K5QH2Tho6sUJy54hyRDXaRa7p11AvoVfZDmT4gLojFFDGG6Y", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "1", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Wood Mooncake", group.primaryToken?.name ?? "-")
+						
+					case 1:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "op3K5QH2Tho6sUJy54hyRDXaRa7p11AvoVfZDmT4gLojFFDGG6Y", group.hash)
+						XCTAssert(group.entrypointCalled == "claim", group.entrypointCalled ?? "-")
+						
+					case 2:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "opRQnyqN4fogpRSBCuxFpCm9SGooy1QY3r5Xc4FXre33tNFWh97", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "1", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Wood Mooncake", group.primaryToken?.name ?? "-")
+						
+					case 3:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "opRQnyqN4fogpRSBCuxFpCm9SGooy1QY3r5Xc4FXre33tNFWh97", group.hash)
+						XCTAssert(group.entrypointCalled == "claim", group.entrypointCalled ?? "-")
+						
+					case 4:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "oopQFnCyS9fPYeBftynXH6coUUAy4UPBuA3Hcp8nsApYNKxVuRx", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == nil, group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "0.5", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Tezos", group.primaryToken?.name ?? "-")
+						
+					case 5:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1914CUZ7EegAFPbfgQMRkw8Uz5mYkEz2ui", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "228.9299288", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Crunchy.Network CRNCHY", group.primaryToken?.name ?? "-")
+						
+					case 6:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == nil, group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "0.102422", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Tezos", group.primaryToken?.name ?? "-")
+						
+					case 7:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "3.160106", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "fDAO", group.primaryToken?.name ?? "-")
+						
+					case 8:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 7, group.transactions.count.description)
+						XCTAssert(group.hash == "onjmwjKLUPVpguDVYSZp2yh1tqGPp5oEgAjSbiFvxv74XsmMarg", group.hash)
+						XCTAssert(group.entrypointCalled == "tezToTokenPayment", group.entrypointCalled ?? "-")
+						
+						XCTAssert(group.transactions[0].subType == .send, group.transactions[0].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[0].primaryToken?.tokenContractAddress == nil, group.transactions[0].primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.transactions[0].primaryToken?.balance.normalisedRepresentation == "0.000099", group.transactions[0].primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.transactions[0].primaryToken?.name == "Tezos", group.transactions[0].primaryToken?.name ?? "-")
+						
+						XCTAssert(group.transactions[1].subType == .contractCall, group.transactions[1].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[1].entrypointCalled == "tezToTokenPayment", group.transactions[1].entrypointCalled ?? "-")
+						
+						XCTAssert(group.transactions[2].subType == .contractCall, group.transactions[2].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[2].entrypointCalled == "update_operators", group.transactions[2].entrypointCalled ?? "-")
+						
+						XCTAssert(group.transactions[3].subType == .send, group.transactions[3].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[3].primaryToken?.tokenContractAddress == "KT1KPoyzkj82Sbnafm6pfesZKEhyCpXwQfMc", group.transactions[3].primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.transactions[3].primaryToken?.balance.normalisedRepresentation == "3.15483", group.transactions[3].primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.transactions[3].primaryToken?.name == "fDAO", group.transactions[3].primaryToken?.name ?? "-")
+						
+						XCTAssert(group.transactions[4].subType == .contractCall, group.transactions[4].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[4].entrypointCalled == "swap", group.transactions[4].entrypointCalled ?? "-")
+						
+						XCTAssert(group.transactions[5].subType == .contractCall, group.transactions[5].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[5].entrypointCalled == "update_operators", group.transactions[5].entrypointCalled ?? "-")
+						
+						XCTAssert(group.transactions[6].subType == .contractCall, group.transactions[6].subType?.rawValue ?? "-")
+						XCTAssert(group.transactions[6].entrypointCalled == "tezToTokenPayment", group.transactions[6].entrypointCalled ?? "-")
+						
+					case 9:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "onqrPbMuVZy6dDELwhXfdF8BbANXy5mLj47gjAf7CE5cAUvSVoQ", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "1", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Unknown Token", group.primaryToken?.name ?? "-")
+						
+					case 10:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "onqrPbMuVZy6dDELwhXfdF8BbANXy5mLj47gjAf7CE5cAUvSVoQ", group.hash)
+						XCTAssert(group.entrypointCalled == "mint", group.entrypointCalled ?? "-")
+						
+					case 11:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "589699422879746", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1BRADdqGk2eLmMqvyWzqVmPQ1RCBCbW5dY", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "1", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "7/23 McLaren F1 Collectible", group.primaryToken?.name ?? "-")
+						
+					case 12:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "579854610202626", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1BRADdqGk2eLmMqvyWzqVmPQ1RCBCbW5dY", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "1", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "6/23 McLaren F1 Collectible", group.primaryToken?.name ?? "-")
+						
+					case 13:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "566013445799938", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1JBNFcB5tiycHNdYGYCtR3kk6JaJysUCi8", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "0", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Lugh Euro pegged stablecoin", group.primaryToken?.name ?? "-")
+						
+					case 14:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "ooyKEQLPDHHD2K8ZJSt92braYAPcRjxxfEmXVcdAQ5X4AoRuREA", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1JFjwQ25n58NZr5Bwy9chAxHCaPsjvh5xt", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "0.975223", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "WTZ", group.primaryToken?.name ?? "-")
+						
+					case 15:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "ooyKEQLPDHHD2K8ZJSt92braYAPcRjxxfEmXVcdAQ5X4AoRuREA", group.hash)
+						XCTAssert(group.entrypointCalled == "wrap", group.entrypointCalled ?? "-")
+						
+					default:
+						XCTFail("Missing test for transaction")
+				}
+			}
 			
 			expectation.fulfill()
 		}
