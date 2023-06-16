@@ -196,6 +196,11 @@ public class FeeEstimatorService {
 				operationFeesToUse = fees
 			}
 			
+			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon. Double check if theres a mismatch and add missing fee if so
+			if (operations.first is OperationReveal && operationFeesToUse.count < operations.count), let revealOp = operations.first as? OperationReveal {
+				operationFeesToUse.insert(revealOp.operationFees, at: 0)
+			}
+			
 			
 			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
 			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
