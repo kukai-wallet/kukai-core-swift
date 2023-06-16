@@ -8,8 +8,13 @@
 import Foundation
 import OSLog
 
+
 /// Model mapping to the Balance object returned from the new TzKT API, resulting from the merge of BCD and TzKT
 public struct TzKTBalance: Codable {
+	
+	public static let exceptionListNFT = [
+		"KT1GBZmSxmnKJXGMdMLbugPfLyUPmuLSMwKS" // Tezos domains
+	]
 	
 	/// String containing the RPC respresetnation of the balance of the given token
 	public let balance: String
@@ -24,7 +29,11 @@ public struct TzKTBalance: Codable {
 	
 	/// Basic check to see if token is an NFT or not. May not be 100% successful, needs research
 	public func isNFT() -> Bool {
-		return token.metadata?.decimals == "0" && token.standard == .fa2 && token.metadata?.artifactUri != nil
+		return (token.metadata?.decimals == "0" && token.standard == .fa2 && token.metadata?.artifactUri != nil) || isOnNFTExceptionList()
+	}
+	
+	public func isOnNFTExceptionList() -> Bool {
+		return TzKTBalance.exceptionListNFT.contains(token.contract.address)
 	}
 }
 

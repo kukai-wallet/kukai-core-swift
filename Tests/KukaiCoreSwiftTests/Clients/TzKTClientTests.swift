@@ -239,7 +239,7 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(account.tokens[3].name == "crDAO", account.tokens[3].name ?? "")
 					XCTAssert(account.tokens[3].balance.normalisedRepresentation == "0.12810553", account.tokens[3].balance.normalisedRepresentation)
 					
-					XCTAssert(account.nfts.count == 6, "\(account.nfts.count)")
+					XCTAssert(account.nfts.count == 7, "\(account.nfts.count)")
 					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
 					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
 					XCTAssert(account.nfts[0].nfts?[0].artifactURI?.absoluteString == "ipfs://QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURI?.absoluteString ?? "")
@@ -270,7 +270,8 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(keyValueAttributes3[2].key == "Abilities", keyValueAttributes3[2].key)
 					XCTAssert(keyValueAttributes3[2].value == "Reversible: Opponents arguments cost 1 more.", keyValueAttributes3[2].value)
 					
-					
+					XCTAssert(account.nfts[3].name == "Tezos Domains NameRegistry", account.nfts[3].name ?? "")
+					XCTAssert(account.nfts[3].nfts?[0].name == "blah.tez", account.nfts[3].nfts?[0].name ?? "")
 					
 					XCTAssert(account.liquidityTokens.count == 2, "\(account.liquidityTokens.count)")
 					XCTAssert(account.liquidityTokens[0].sharesQty == "91", account.liquidityTokens[0].sharesQty)

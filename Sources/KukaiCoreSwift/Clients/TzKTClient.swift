@@ -805,7 +805,8 @@ public class TzKTClient {
 							errorFound = error
 							
 						case .success(let balances):
-							tokenBalances.append(contentsOf: balances)
+							var metadataTokensOnly = balances.filter({ $0.token.metadata != nil })
+							tokenBalances.append(contentsOf: metadataTokensOnly)
 					}
 					
 					dispatchGroup.leave()
