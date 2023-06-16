@@ -197,8 +197,8 @@ public class FeeEstimatorService {
 			}
 			
 			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon. Double check if theres a mismatch and add missing fee if so
-			if (operations.first is OperationReveal && operationFeesToUse.count < operations.count), let revealOp = operations.first as? OperationReveal {
-				operationFeesToUse.insert(revealOp.operationFees, at: 0)
+			if (operations.first is OperationReveal && operationFeesToUse.count < operations.count), let firstEstimatedFee = fees.first {
+				operationFeesToUse.insert(firstEstimatedFee, at: 0)
 			}
 			
 			
