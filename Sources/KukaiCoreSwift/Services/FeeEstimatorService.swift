@@ -196,7 +196,6 @@ public class FeeEstimatorService {
 				operationFeesToUse = fees
 			}
 			
-			/*
 			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon. Double check if theres a mismatch and add missing fee if so
 			if (operations.first is OperationReveal && operationFeesToUse.count < operations.count), let firstEstimatedFee = fees.first {
 				
@@ -206,18 +205,16 @@ public class FeeEstimatorService {
 				let addedGasFee = self?.feeForGas(feeCopy.gasLimit) ?? .zero()
 				feeCopy.transactionFee = addedGasFee
 				
-				// Check if we need to add additonal network fees (for allocation / burn)
-				for networkFee in fees.last?.networkFees ?? [] {
-					
-					for chosenNetworkFee in operationFeesToUse.last?.networkFees ?? [] {
-						if let chosenKey = chosenNetworkFee.keys.first,
-					}
-				}
 				
+				// Add additional storage limits and network fees
+				feeCopy.storageLimit = 250
 				
-				operationFeesToUse.insert(firstEstimatedFee, at: 0)
+				let burnFee = self?.feeForBurn(feeCopy.storageLimit, withConstants: constants) ?? .zero()
+				let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: constants.xtzForReveal()]]
+				feeCopy.networkFees = networkFees
+				
+				operationFeesToUse.insert(feeCopy, at: 0)
 			}
-			*/
 			
 			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
 			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
