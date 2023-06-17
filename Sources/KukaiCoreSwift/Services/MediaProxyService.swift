@@ -85,7 +85,7 @@ public class MediaProxyService: NSObject {
 	 - parameter ofFormat: The requested format from the proxy
 	 - returns: An optional URL
 	 */
-	public static func url(fromUri uri: URL?, ofFormat format: Format) -> URL? {
+	public static func url(fromUri uri: URL?, ofFormat format: Format, keepGif: Bool = false) -> URL? {
 		guard let uri = uri, let scheme = uri.scheme, let strippedURL = uri.absoluteString.components(separatedBy: "://").last else {
 			return nil
 		}
@@ -104,7 +104,12 @@ public class MediaProxyService: NSObject {
 				return nil
 		}
 		
-		return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)/\(source.rawValue)/\(sanitizedURL)")
+		if keepGif {
+			return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)-keep-gif/\(source.rawValue)/\(sanitizedURL)")
+			
+		} else {
+			return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)/\(source.rawValue)/\(sanitizedURL)")
+		}
 	}
 	
 	/**
@@ -112,13 +117,13 @@ public class MediaProxyService: NSObject {
 	 - parameter fromNFT: `NFT` object
 	 - returns: An optional URL
 	 */
-	public static func thumbnailURL(forNFT nft: NFT) -> URL? {
+	public static func thumbnailURL(forNFT nft: NFT, keepGif: Bool = false) -> URL? {
 		
 		if nft.metadata?.symbol == "OBJKT" {
-			return MediaProxyService.url(fromUri: nft.displayURI, ofFormat: .icon)
+			return MediaProxyService.url(fromUri: nft.displayURI, ofFormat: .icon, keepGif: keepGif)
 			
 		} else {
-			return MediaProxyService.url(fromUri: nft.thumbnailURI ?? nft.displayURI, ofFormat: .icon)
+			return MediaProxyService.url(fromUri: nft.thumbnailURI ?? nft.displayURI, ofFormat: .icon, keepGif: keepGif)
 		}
 	}
 	
@@ -127,8 +132,8 @@ public class MediaProxyService: NSObject {
 	 - parameter fromNFT: `NFT` object
 	 - returns: An optional URL
 	 */
-	public static func displayURL(forNFT nft: NFT) -> URL? {
-		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: .small)
+	public static func displayURL(forNFT nft: NFT, keepGif: Bool = false) -> URL? {
+		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: .small, keepGif: keepGif)
 	}
 	
 	
