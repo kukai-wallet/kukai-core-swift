@@ -105,7 +105,7 @@ public class MediaProxyService: NSObject {
 		}
 		
 		if keepGif {
-			return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)-keep-gif/\(source.rawValue)/\(sanitizedURL)")
+			return URL(string: "https://media_mobile.tcinfra.net/media/\(format.rawValue)-keep-gif/\(source.rawValue)/\(sanitizedURL)")
 			
 		} else {
 			return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)/\(source.rawValue)/\(sanitizedURL)")
