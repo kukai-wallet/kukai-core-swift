@@ -224,6 +224,8 @@ class TzKTClientTests: XCTestCase {
 			
 			switch result {
 				case .success(let account):
+					
+					// Tokens
 					XCTAssert(account.xtzBalance.normalisedRepresentation == "1.843617", account.xtzBalance.normalisedRepresentation)
 					XCTAssert(account.tokens.count == 21, "\(account.tokens.count)")
 					XCTAssert(account.tokens[0].symbol == "wBUSD", account.tokens[0].symbol)
@@ -239,7 +241,10 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(account.tokens[3].name == "crDAO", account.tokens[3].name ?? "")
 					XCTAssert(account.tokens[3].balance.normalisedRepresentation == "0.12810553", account.tokens[3].balance.normalisedRepresentation)
 					
-					XCTAssert(account.nfts.count == 7, "\(account.nfts.count)")
+					
+					
+					// NFTs
+					XCTAssert(account.nfts.count == 9, "\(account.nfts.count)")
 					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
 					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
 					XCTAssert(account.nfts[0].nfts?[0].artifactURI?.absoluteString == "ipfs://QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURI?.absoluteString ?? "")
@@ -273,6 +278,14 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(account.nfts[3].name == "Tezos Domains NameRegistry", account.nfts[3].name ?? "")
 					XCTAssert(account.nfts[3].nfts?[0].name == "blah.tez", account.nfts[3].nfts?[0].name ?? "")
 					
+					XCTAssert(account.nfts[7].name == "DOGAMÍ x GAP", account.nfts[7].name ?? "")
+					XCTAssert(account.nfts[7].nfts?[0].name == "Bed Pillow #2435", account.nfts[7].nfts?[0].name ?? "")
+					
+					XCTAssert(account.nfts[8].tokenContractAddress == "KT1BA9igcUcgkMT4LEEQzwURsdMpQayfb6i4", account.nfts[8].name ?? "")
+					XCTAssert(account.nfts[8].nfts?[0].name == "Bear Pawtrait", account.nfts[8].nfts?[0].name ?? "")
+					
+					
+					// Liquidity tokens
 					XCTAssert(account.liquidityTokens.count == 2, "\(account.liquidityTokens.count)")
 					XCTAssert(account.liquidityTokens[0].sharesQty == "91", account.liquidityTokens[0].sharesQty)
 					XCTAssert(account.liquidityTokens[0].exchange.token.symbol == "tzBTC", account.liquidityTokens[0].exchange.token.symbol)

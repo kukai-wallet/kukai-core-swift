@@ -8,7 +8,6 @@
 import Foundation
 import OSLog
 
-
 /// Model mapping to the Balance object returned from the new TzKT API, resulting from the merge of BCD and TzKT
 public struct TzKTBalance: Codable {
 	
@@ -50,7 +49,8 @@ public struct TzKTBalanceToken: Codable {
 	public let standard: FaVersion
 	
 	/// Metadata about the token
-	public let metadata: TzKTBalanceMetadata?
+	@NilOnDecodingError
+	public var metadata: TzKTBalanceMetadata?
 	
 	/// Helper to determine what string is used as the symbol for display purposes
 	public var displaySymbol: String {
@@ -136,56 +136,57 @@ public struct TzKTBalanceMetadata: Codable {
 		case minter
 		case shouldPreferSymbol
 		case attributes
+		
+		// Handle miss named attribtues
+		case should_prefer_symbol
+		case display_uri
+		case artifact_uri
+		case thumbnail_uri
 	}
 	
 	public init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		decimals = try container.decode(String.self, forKey: .decimals)
+		
+		// if decimals is invalid data, throw an error. Token is unusable if we don't know its decimals
+		guard let _ = Decimal(string: decimals) else {
+			throw DecodingError.typeMismatch(String.self, DecodingError.Context(codingPath: [], debugDescription: "Decimals is not a valid number"))
+		}
+		
+		
+		name = try container.decodeIfPresent(String.self, forKey: .name)
+		symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
+		
+		displayUri = try container.decodeIfPresent(String.self, forKey: .displayUri, orBackupKey: .display_uri)
+		artifactUri = try container.decodeIfPresent(String.self, forKey: .artifactUri, orBackupKey: .artifact_uri)
+		thumbnailUri = try container.decodeIfPresent(String.self, forKey: .thumbnailUri, orBackupKey: .thumbnail_uri)
+		description = try container.decodeIfPresent(String.self, forKey: .description)
+		mintingTool = try container.decodeIfPresent(String.self, forKey: .mintingTool)
+		tags = try container.decodeIfPresent([String].self, forKey: .tags)
+		minter = try container.decodeIfPresent(String.self, forKey: .minter)
+		
+		
+		// Special handling for tokens like dogami that uploaded their formats as a string containing a JSON encoded array, instead of actually being an array
 		do {
-			let container = try decoder.container(keyedBy: CodingKeys.self)
-			name = try container.decodeIfPresent(String.self, forKey: .name)
-			symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
-			decimals = try container.decode(String.self, forKey: .decimals)
-			
 			formats = try container.decodeIfPresent([TzKTBalanceMetadataFormat].self, forKey: .formats)
-			displayUri = try container.decodeIfPresent(String.self, forKey: .displayUri)
-			artifactUri = try container.decodeIfPresent(String.self, forKey: .artifactUri)
-			thumbnailUri = try container.decodeIfPresent(String.self, forKey: .thumbnailUri)
-			description = try container.decodeIfPresent(String.self, forKey: .description)
-			mintingTool = try container.decodeIfPresent(String.self, forKey: .mintingTool)
-			tags = try container.decodeIfPresent([String].self, forKey: .tags)
-			minter = try container.decodeIfPresent(String.self, forKey: .minter)
-			
-			if let tempString = try? container.decodeIfPresent(String.self, forKey: .shouldPreferSymbol) {
-				shouldPreferSymbol = (tempString == "true")
-				
-			} else if let tempBool = try? container.decodeIfPresent(Bool.self, forKey: .shouldPreferSymbol) {
-				shouldPreferSymbol = tempBool
-				
-			} else {
-				shouldPreferSymbol = nil
-			}
-			
-			if let attributes = try? container.decodeIfPresent([Any].self, forKey: .attributes) {
-				self.attributes = attributes
-			} else {
-				attributes = nil
-			}
-		} catch (let error) {
-			os_log("Error parsing metadata: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
-			
-			// metadata can be tempermental due to creators putting strange content inside, return nil if can't parse
-			name = nil
-			symbol = nil
-			decimals = "0"
-			
+		} catch {
 			formats = nil
-			displayUri = nil
-			artifactUri = nil
-			thumbnailUri = nil
-			description = nil
-			mintingTool = nil
-			tags = nil
-			minter = nil
+		}
+		
+		
+		if let tempString = try? container.decodeIfPresent(String.self, forKey: .shouldPreferSymbol, orBackupKey: .should_prefer_symbol) {
+			shouldPreferSymbol = (tempString == "true")
+			
+		} else if let tempBool = try? container.decodeIfPresent(Bool.self, forKey: .shouldPreferSymbol, orBackupKey: .should_prefer_symbol) {
+			shouldPreferSymbol = tempBool
+			
+		} else {
 			shouldPreferSymbol = nil
+		}
+		
+		if let attributes = try? container.decodeIfPresent([Any].self, forKey: .attributes) {
+			self.attributes = attributes
+		} else {
 			attributes = nil
 		}
 	}
