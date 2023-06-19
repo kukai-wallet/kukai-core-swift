@@ -174,10 +174,10 @@ public struct TzKTBalanceMetadata: Codable {
 		}
 		
 		
-		if let tempString = try? container.decodeIfPresent(String.self, forKey: .shouldPreferSymbol, orBackupKey: .should_prefer_symbol) {
-			shouldPreferSymbol = (tempString == "true")
+		if let tempString = try? container.decodeIfPresent(String.self, forKey: .shouldPreferSymbol) {
+			shouldPreferSymbol = (tempString.lowercased() == "true")
 			
-		} else if let tempBool = try? container.decodeIfPresent(Bool.self, forKey: .shouldPreferSymbol, orBackupKey: .should_prefer_symbol) {
+		} else if let tempBool = try? container.decodeIfPresent(Bool.self, forKey: .shouldPreferSymbol) {
 			shouldPreferSymbol = tempBool
 			
 		} else {
