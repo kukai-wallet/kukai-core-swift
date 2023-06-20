@@ -394,6 +394,15 @@ public class WalletCacheService {
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
 	}
+	/**
+	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
+	 */
+	public func cacheWatchWallet(metadata: WalletMetadata) -> Bool {
+		var list = readNonsensitive()
+		list.watchWallets.append(metadata)
+		
+		return writeNonsensitive(list)
+	}
 	
 	/**
 	 Delete both a secure wallet entry and its related metadata object
