@@ -32,16 +32,18 @@ public struct WalletMetadataList: Codable, Hashable {
 	public var hdWallets: [WalletMetadata]
 	public var linearWallets: [WalletMetadata]
 	public var ledgerWallets: [WalletMetadata]
+	public var watchWallets: [WalletMetadata]
 	
-	public init(socialWallets: [WalletMetadata], hdWallets: [WalletMetadata], linearWallets: [WalletMetadata], ledgerWallets: [WalletMetadata]) {
+	public init(socialWallets: [WalletMetadata], hdWallets: [WalletMetadata], linearWallets: [WalletMetadata], ledgerWallets: [WalletMetadata], watchWallets: [WalletMetadata]) {
 		self.socialWallets = socialWallets
 		self.hdWallets = hdWallets
 		self.linearWallets = linearWallets
 		self.ledgerWallets = ledgerWallets
+		self.watchWallets = watchWallets
 	}
 	
 	public func isEmpty() -> Bool {
-		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty
+		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty && watchWallets.isEmpty
 	}
 	
 	public func firstMetadata() -> WalletMetadata? {
@@ -56,6 +58,9 @@ public struct WalletMetadataList: Codable, Hashable {
 			
 		} else if ledgerWallets.count > 0 {
 			return ledgerWallets.first
+			
+		} else if watchWallets.count > 0 {
+			return watchWallets.first
 		}
 		
 		return nil
@@ -82,6 +87,10 @@ public struct WalletMetadataList: Codable, Hashable {
 			if metadata.address == address { return metadata }
 		}
 		
+		for metaData in watchWallets {
+			if metaData.address == address { return metaData }
+		}
+		
 		return nil
 	}
 	
@@ -104,6 +113,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		for (index, metadata) in ledgerWallets.enumerated() {
 			if metadata.address == address { ledgerWallets[index] = newMetadata; return true }
+		}
+		
+		for (index, metadata) in watchWallets.enumerated() {
+			if metadata.address == address { watchWallets[index] = newMetadata; return true }
 		}
 		
 		return false
@@ -150,7 +163,7 @@ public struct WalletMetadataList: Codable, Hashable {
 	}
 	
 	public func count() -> Int {
-		var total = (socialWallets.count + linearWallets.count + ledgerWallets.count)
+		var total = (socialWallets.count + linearWallets.count + ledgerWallets.count + watchWallets.count)
 		
 		for wallet in hdWallets {
 			total += (1 + wallet.children.count)
@@ -182,6 +195,10 @@ public struct WalletMetadataList: Codable, Hashable {
 			temp.append(metadata.address)
 		}
 		
+		for metadata in watchWallets {
+			temp.append(metadata.address)
+		}
+		
 		return temp
 	}
 	
@@ -201,6 +218,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		}
 		
 		for metadata in ledgerWallets {
+			temp.append(metadata)
+		}
+		
+		for metadata in watchWallets {
 			temp.append(metadata)
 		}
 		
@@ -595,7 +616,7 @@ public class WalletCacheService {
 	 Return an ordered array of `WalletMetadata` if present on disk
 	 */
 	public func readNonsensitive() -> WalletMetadataList {
-		return DiskService.read(type: WalletMetadataList.self, fromFileName: WalletCacheService.nonsensitiveCacheFileName) ?? WalletMetadataList(socialWallets: [], hdWallets: [], linearWallets: [], ledgerWallets: [])
+		return DiskService.read(type: WalletMetadataList.self, fromFileName: WalletCacheService.nonsensitiveCacheFileName) ?? WalletMetadataList(socialWallets: [], hdWallets: [], linearWallets: [], ledgerWallets: [], watchWallets: [])
 	}
 }
 
