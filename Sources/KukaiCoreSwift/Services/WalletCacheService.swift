@@ -241,6 +241,7 @@ public struct WalletMetadata: Codable, Hashable {
 	public var type: WalletType
 	public var children: [WalletMetadata]
 	public var isChild: Bool
+	public var isWatchOnly: Bool
 	public var bas58EncodedPublicKey: String
 	
 	public func hasMainnetDomain() -> Bool {
@@ -283,7 +284,7 @@ public struct WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, bas58EncodedPublicKey: String) {
+	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String) {
 		self.address = address
 		self.hdWalletGroupName = hdWalletGroupName
 		self.walletNickname = walletNickname
@@ -294,6 +295,7 @@ public struct WalletMetadata: Codable, Hashable {
 		self.type = type
 		self.children = children
 		self.isChild = isChild
+		self.isWatchOnly = isWatchOnly
 		self.bas58EncodedPublicKey = bas58EncodedPublicKey
 	}
 	
@@ -377,19 +379,19 @@ public class WalletCacheService {
 				return false
 			}
 			
-			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let _ = wallet as? HDWallet {
-			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newMetadata.hdWallets.count + 1)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newMetadata.hdWallets.count + 1)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
-			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let _ = wallet as? LedgerWallet {
-			newMetadata.ledgerWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.ledgerWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else {
-			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 		}
 		
 		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
