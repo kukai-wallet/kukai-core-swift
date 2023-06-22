@@ -106,6 +106,7 @@ public class TokenAmount: Codable {
 	- parameter fromNormalisedAmount: A decimal containing an amount for the given token. Anything over the given decimal places for the token will be ignored.
 	*/
 	public init(fromNormalisedAmount normalisedAmount: Decimal, decimalPlaces: Int) {
+		let normalisedAmount = normalisedAmount.rounded(scale: decimalPlaces, roundingMode: .bankers)
 		let integerValue = BigInt(normalisedAmount.description) ?? 0
 		
 		// Convert decimalPlaces significant digits of decimals into integers to avoid having to deal with decimals.

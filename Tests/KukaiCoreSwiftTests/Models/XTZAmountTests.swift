@@ -55,7 +55,7 @@ class XTZAmountTests: XCTestCase {
 		XCTAssert(test3_formatSpain == "29,123456", test3_formatSpain ?? "-")
 		
 		
-		let test4 = XTZAmount(fromNormalisedAmount: 137615.12345678901234)
+		let test4 = XTZAmount(fromNormalisedAmount: 137615.123456)
 		let test4_formatUS = test4.formatNormalisedRepresentation(locale: Locale(identifier: "en_US"))
 		let test4_formatSpain = test4.formatNormalisedRepresentation(locale: Locale(identifier: "es_ES"))
 		

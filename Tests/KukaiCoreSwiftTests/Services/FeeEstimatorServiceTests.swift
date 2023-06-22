@@ -21,7 +21,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		
     }
 	
-	func testEstimation1() {
+	func testEstimationTransaction() {
 		MockConstants.resetOperations()
 		
 		let expectation = XCTestExpectation(description: "Estimation service")
@@ -32,7 +32,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
 					XCTAssert(operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees.allFees().description)
-					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000684), operations[1].operationFees.allFees().description)
+					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000682), operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -44,7 +44,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		wait(for: [expectation], timeout: 10)
 	}
 	
-	func testEstimation2() {
+	func testEstimationWithSuggestedGas() {
 		MockConstants.resetOperations()
 		
 		// Sample suggested operations = fees coming back from a dApp
@@ -62,7 +62,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 				case .success(let operations):
 					XCTAssert(operations.count == 2)
 					XCTAssert(operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount:  0), operations[0].operationFees.allFees().description)
-					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.014341), operations[1].operationFees.allFees().description)
+					XCTAssert(operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.014339), operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)

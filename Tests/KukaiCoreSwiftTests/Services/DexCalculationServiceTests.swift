@@ -397,7 +397,7 @@ class DexCalculationServiceTests: XCTestCase {
 		
 		XCTAssert(result?.tokenRequired.normalisedRepresentation == "0.093488", result?.tokenRequired.normalisedRepresentation ?? "-")
 		XCTAssert(result?.expectedLiquidity.normalisedRepresentation == "93.487111", result?.expectedLiquidity.normalisedRepresentation ?? "-")
-		XCTAssert(result?.minimumLiquidity.normalisedRepresentation == "46.743555", result?.minimumLiquidity.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumLiquidity.normalisedRepresentation == "46.743556", result?.minimumLiquidity.normalisedRepresentation ?? "-")
 		XCTAssert(result?.exchangeRate.description == "0.04057", result?.exchangeRate.description ?? "-")
 	}
 	
@@ -445,7 +445,7 @@ class DexCalculationServiceTests: XCTestCase {
 		result = dexCalculationService.calculateRemoveLiquidity(liquidityBurned: burnedLqt, totalLiquidity: totalLqt, xtzPool: xtzPool, tokenPool: tokenPool, maxSlippage: 0.5, dex: .lb)
 		
 		XCTAssert(result?.expectedToken.normalisedRepresentation == "0.000175", result?.expectedToken.normalisedRepresentation ?? "-")
-		XCTAssert(result?.minimumToken.normalisedRepresentation == "0.000087", result?.minimumToken.normalisedRepresentation ?? "-")
+		XCTAssert(result?.minimumToken.normalisedRepresentation == "0.000088", result?.minimumToken.normalisedRepresentation ?? "-")
 		XCTAssert(result?.expectedXTZ.normalisedRepresentation == "0.0225", result?.expectedXTZ.normalisedRepresentation ?? "-")
 		XCTAssert(result?.minimumXTZ.normalisedRepresentation == "0.01125", result?.minimumXTZ.normalisedRepresentation ?? "-")
 		XCTAssert(result?.exchangeRate.description == "0.007689", result?.exchangeRate.description ?? "-")

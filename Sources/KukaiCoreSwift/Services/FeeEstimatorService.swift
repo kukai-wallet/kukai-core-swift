@@ -79,29 +79,47 @@ public class FeeEstimatorService {
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
 	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
-		
-		// Make a copy of the operations before they are modified
-		guard let opJson = try? JSONEncoder().encode(operations), let opsCopy = try? JSONDecoder().decode([Operation].self, from: opJson) else {
-			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.failedToCopyOperations)))
-			return
-		}
-		
 		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey)
+		let originalRemoteOps = operations.copyOperations()
+		let preparedOperationsCopy = operationPayload.contents.copyOperations()
 		
 		// Before estimating, set the maximum gas and storage to ensure the operation suceeds (excluding any errors such as invalid address, insufficnet funds etc)
 		let simulationGas = min(constants.maxGasPerOperation(), Int(constants.maxGasPerBlock() / (operations.count + 1)) )
 		let maxGasAndStorage = OperationFees(transactionFee: XTZAmount.zero(), gasLimit: simulationGas, storageLimit: constants.maxStoragePerOperation())
-		operationPayload.contents.forEach { $0.operationFees = maxGasAndStorage }
+		operationPayload.contents.forEach {
+			$0.operationFees = maxGasAndStorage
+			
+			// To handle issues with sending max Tez, and simulation API not ignoring burn fees etc
+			// modify the operationPayload contents to send 1 mutez instead of real amount
+			// This won't effect the returned operations later, as we've made a deep copy first and will use that afte rthe estimation
+			if $0.operationKind == .transaction, let transOp = $0 as? OperationTransaction, (transOp.destination.prefix(3) != "KT1" && ($0 as? OperationTransaction)?.parameters == nil) {
+				transOp.amount = "1" // rpc representation of 1 mutez
+			}
+		}
 		
 		switch self.config.forgingType {
 			case .local:
 				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, signingCurve: EllipticalCurve.fromAddress(walletAddress), originalOps: opsCopy, completion: completion)
+					self?.handleForge(forgeResult: forgedResult,
+									  operationPayload: operationPayload,
+									  operationMetadata: operationMetadata,
+									  preparedOperationsCopy: preparedOperationsCopy,
+									  constants: constants,
+									  signingCurve: EllipticalCurve.fromAddress(walletAddress),
+									  originalRemoteOps: originalRemoteOps,
+									  completion: completion)
 				}
 				
 			case .remote:
 				operationService.remoteForge(operationPayload: operationPayload) { [weak self] forgedResult in
-					self?.handleForge(forgeResult: forgedResult, operationPayload: operationPayload, operationMetadata: operationMetadata, constants: constants, signingCurve: EllipticalCurve.fromAddress(walletAddress), originalOps: opsCopy, completion: completion)
+					self?.handleForge(forgeResult: forgedResult,
+									  operationPayload: operationPayload,
+									  operationMetadata: operationMetadata,
+									  preparedOperationsCopy: preparedOperationsCopy,
+									  constants: constants,
+									  signingCurve: EllipticalCurve.fromAddress(walletAddress),
+									  originalRemoteOps: originalRemoteOps,
+									  completion: completion)
 				}
 		}
 	}
@@ -110,9 +128,10 @@ public class FeeEstimatorService {
 	private func handleForge(forgeResult: Result<String, KukaiError>,
 							 operationPayload: OperationPayload,
 							 operationMetadata: OperationMetadata,
+							 preparedOperationsCopy: [Operation],
 							 constants: NetworkConstants,
 							 signingCurve: EllipticalCurve,
-							 originalOps: [Operation],
+							 originalRemoteOps: [Operation],
 							 completion: @escaping ((Result<[Operation], KukaiError>) -> Void))
 	{
 		switch forgeResult {
@@ -121,7 +140,7 @@ public class FeeEstimatorService {
 				mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: signingCurve)
 				let runOperationPayload = RunOperationPayload(chainID: operationMetadata.chainID, operation: mutablePayload)
 				
-				self.estimate(runOperationPayload: runOperationPayload, operations: mutablePayload.contents, constants: constants, forgedHex: hexString, originalOps: originalOps, completion: completion)
+				self.estimate(runOperationPayload: runOperationPayload, preparedOperationsCopy: preparedOperationsCopy, constants: constants, forgedHex: hexString, originalRemoteOps: originalRemoteOps, completion: completion)
 			
 			case .failure(let error):
 				completion(Result.failure(error))
@@ -130,7 +149,7 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, operations: [Operation], constants: NetworkConstants, forgedHex: String, originalOps: [Operation], completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
+	private func estimate(runOperationPayload: RunOperationPayload, preparedOperationsCopy: [Operation], constants: NetworkConstants, forgedHex: String, originalRemoteOps: [Operation], completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
 		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create runOperation RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
@@ -138,47 +157,13 @@ public class FeeEstimatorService {
 		}
 		
 		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { [weak self] (result) in
-			var operationResponseToProcess: OperationResponse? = nil
-			var errorToProcess: KukaiError? = nil
-			
-			switch result {
-				case .success(let operationResponse):
-					operationResponseToProcess = operationResponse
-					
-				case .failure(let error):
-					
-					// There are some situations where a estimation (simulation) will ignore fees that need to be paid and return a success, regardless of if the operation is possible with that send amount + fee
-					// There are types of fees where this doesn't work. For example burn fees, which are charged by the network itself.
-					// So if, for example, a user is trying to send all of their XTZ to an unrevealed destination, and we are trying to figure out the cost, the estimation will fail with an insufficnet funds error.
-					// The error will return with the correct amount of gas and storage, but the error forces it into here.
-					// So in an attempt to prevent this affecting users, we are trying to solve this hueristically, by saying if we get an insufficent_funds error, and we are trying to send a non-zero amount of XTZ,
-					// ignore the error and attempt to parse. Returning the result to the client, where they must examine the fee and decide if an amount needs to be deducted from the sending amount
-					if error.rpcErrorString == "contract.balance_too_low",
-					   operations.count <= 2,
-					   operations.last is OperationTransaction,
-					   (operations.last as? OperationTransaction)?.amount != "0",
-					   let jsonObjectWithError = try? JSONDecoder().decode(OperationResponse.self, from: error.responseJSON?.data(using: .utf8) ?? Data())
-					{
-						operationResponseToProcess = jsonObjectWithError
-					} else {
-						errorToProcess = error
-					}
-			}
-			
-			guard let opToProcess = operationResponseToProcess else {
-				os_log(.error, log: .kukaiCoreSwift, "Unable to estimate: %@", "\(errorToProcess?.description ?? "-")")
-				completion(Result.failure(errorToProcess ?? KukaiError.unknown()))
-				return
-			}
-			
-			// Extract gas, storage, burn, allocation etc, fees from the response body
-			guard let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
-				completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
+			guard let opToProcess = try? result.get(), let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
+				completion(Result.failure( result.getFailure()))
 				return
 			}
 			
 			// Make sure we have created a `OperationFees` for each operation
-			if fees.count != operations.count {
+			if fees.count != preparedOperationsCopy.count {
 				completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.invalidNumberOfFeesReturned)))
 				return
 			}
@@ -188,12 +173,12 @@ public class FeeEstimatorService {
 			// We always do an estimation and pick which ever is higher, the supplied suggested fees (which should always be worst case, but can be flawed), or the result of the estimation
 			var lastOpFee: OperationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
 			var operationFeesToUse: [OperationFees] = []
-			var original = originalOps
+			var original = originalRemoteOps
 			
 			
 			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon.
 			// Check and add a dummy reveal operation to the "originalOps", so that fees are calcualted correctly
-			if (operations.first is OperationReveal && original.count < operations.count) {
+			if (preparedOperationsCopy.first is OperationReveal && original.count < preparedOperationsCopy.count) {
 				let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "") // dummy only used as an OperationsFee placeholder
 				reveal.operationFees = OperationFees(transactionFee: .zero(), networkFees: fees.first?.networkFees ?? [], gasLimit: fees.first?.gasLimit ?? 0, storageLimit: fees.first?.storageLimit ?? 0)
 				original.insert(reveal, at: 0)
@@ -213,10 +198,10 @@ public class FeeEstimatorService {
 			
 			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
 			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
-			for (index, op) in operations.enumerated() {
+			for (index, op) in preparedOperationsCopy.enumerated() {
 				op.operationFees = operationFeesToUse[index]
 				
-				if index == operations.count-1 {
+				if index == preparedOperationsCopy.count-1 {
 					op.operationFees.transactionFee = lastOpFee.transactionFee
 					op.operationFees.networkFees = lastOpFee.networkFees
 					
@@ -225,7 +210,7 @@ public class FeeEstimatorService {
 				}
 			}
 			
-			completion(Result.success(operations))
+			completion(Result.success(preparedOperationsCopy))
 		}
 	}
 	

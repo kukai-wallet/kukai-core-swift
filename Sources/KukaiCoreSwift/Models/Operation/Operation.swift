@@ -115,3 +115,59 @@ public class Operation: Codable {
 			operationFees == op.operationFees
 	}
 }
+
+
+extension Array where Element == Operation {
+	
+	/**
+	 Operation's are classes, passed by reference, but often require making copies so that you can manipulate them before sending to be estimated.
+	 Function make it easy by converting the array to JSON and recreating, avoiding issues where construnctors manipulate inputs before storing
+	 */
+	public func copyOperations() -> [Operation] {
+		guard let opJson = try? JSONEncoder().encode(self), let jsonArray = try? JSONSerialization.jsonObject(with: opJson, options: .allowFragments) as? [[String: Any]] else {
+			return []
+		}
+		
+		var ops: [KukaiCoreSwift.Operation] = []
+		for (index, jsonObj) in jsonArray.enumerated() {
+			guard let kind = OperationKind(rawValue: (jsonObj["kind"] as? String) ?? ""), let jsonObjAsData = try? JSONSerialization.data(withJSONObject: jsonObj, options: .fragmentsAllowed) else {
+				continue
+			}
+			
+			var tempOp: KukaiCoreSwift.Operation? = nil
+			switch kind {
+				case .activate_account:
+					tempOp = try? JSONDecoder().decode(OperationActivateAccount.self, from: jsonObjAsData)
+				case .ballot:
+					tempOp = try? JSONDecoder().decode(OperationBallot.self, from: jsonObjAsData)
+				case .delegation:
+					tempOp = try? JSONDecoder().decode(OperationDelegation.self, from: jsonObjAsData)
+				case .double_baking_evidence:
+					tempOp = try? JSONDecoder().decode(OperationDoubleBakingEvidence.self, from: jsonObjAsData)
+				case .double_endorsement_evidence:
+					tempOp = try? JSONDecoder().decode(OperationDoubleEndorsementEvidence.self, from: jsonObjAsData)
+				case .endorsement:
+					tempOp = try? JSONDecoder().decode(OperationEndorsement.self, from: jsonObjAsData)
+				case .origination:
+					tempOp = try? JSONDecoder().decode(OperationOrigination.self, from: jsonObjAsData)
+				case .proposals:
+					tempOp = try? JSONDecoder().decode(OperationProposals.self, from: jsonObjAsData)
+				case .reveal:
+					tempOp = try? JSONDecoder().decode(OperationReveal.self, from: jsonObjAsData)
+				case .seed_nonce_revelation:
+					tempOp = try? JSONDecoder().decode(OperationSeedNonceRevelation.self, from: jsonObjAsData)
+				case .transaction:
+					tempOp = try? JSONDecoder().decode(OperationTransaction.self, from: jsonObjAsData)
+				case .unknown:
+					tempOp = nil
+			}
+			
+			if let tempOp = tempOp {
+				tempOp.operationFees = self[index].operationFees
+				ops.append(tempOp)
+			}
+		}
+		
+		return ops
+	}
+}
