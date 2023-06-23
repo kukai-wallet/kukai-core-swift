@@ -43,6 +43,11 @@ public class FeeEstimatorService {
 		case estimationRemoteError(errors: [OperationResponseInternalResultError]?)
 	}
 	
+	public struct EstimationResult: Codable {
+		let operations: [Operation]
+		let forgedString: String
+	}
+	
 	
 	
 	// MARK: - Public Properties
@@ -78,7 +83,7 @@ public class FeeEstimatorService {
 	- parameter withWallet: The `Wallet` object used for signing the transaction.
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
-	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
+	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
 		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey)
 		let originalRemoteOps = operations.copyOperations()
 		let preparedOperationsCopy = operationPayload.contents.copyOperations()
@@ -132,7 +137,7 @@ public class FeeEstimatorService {
 							 constants: NetworkConstants,
 							 signingCurve: EllipticalCurve,
 							 originalRemoteOps: [Operation],
-							 completion: @escaping ((Result<[Operation], KukaiError>) -> Void))
+							 completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void))
 	{
 		switch forgeResult {
 			case .success(let hexString):
@@ -149,7 +154,7 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, preparedOperationsCopy: [Operation], constants: NetworkConstants, forgedHex: String, originalRemoteOps: [Operation], completion: @escaping ((Result<[Operation], KukaiError>) -> Void)) {
+	private func estimate(runOperationPayload: RunOperationPayload, preparedOperationsCopy: [Operation], constants: NetworkConstants, forgedHex: String, originalRemoteOps: [Operation], completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
 		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
 			os_log(.error, log: .kukaiCoreSwift, "Unable to create runOperation RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
@@ -210,7 +215,7 @@ public class FeeEstimatorService {
 				}
 			}
 			
-			completion(Result.success(preparedOperationsCopy))
+			completion(Result.success(EstimationResult(operations: preparedOperationsCopy, forgedString: forgedHex)))
 		}
 	}
 	
@@ -290,22 +295,20 @@ public class FeeEstimatorService {
 	
 	/// Create an instance of `OperationFees` in order to calculate a transaction fee. Used to calculate the overall transaction fee
 	private func calcTransactionFee(totalGas: Int, opCount: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
-		let gasFee = feeForGas(totalGas)
-		let storageFee = feeForStorage(forgedHash, numberOfOperations: opCount)
-		let burnFee = feeForBurn(totalStorage, withConstants: constants)
+		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
+		let burnFee = FeeEstimatorService.feeForBurn(totalStorage, withConstants: constants)
 		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
 		
-		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: 0, storageLimit: 0)
+		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: 0, storageLimit: 0)
 	}
 	
 	/// Create an instance of `OperationFees` for a last operation, with its corresponding gas + storage, but fees for the entire list of operations
 	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, opCount: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants, allocationStorage: Int, totalAllocationFee: XTZAmount) -> OperationFees {
-		let gasFee = feeForGas(totalGas)
-		let storageFee = feeForStorage(forgedHash, numberOfOperations: opCount)
-		let burnFee = feeForBurn(totalStorage, withConstants: constants)
+		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
+		let burnFee = FeeEstimatorService.feeForBurn(totalStorage, withConstants: constants)
 		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: totalAllocationFee]]
 		
-		return OperationFees(transactionFee: FeeConstants.baseFee + gasFee + storageFee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage + allocationStorage)
+		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage + allocationStorage)
 	}
 	
 	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.
@@ -327,29 +330,36 @@ public class FeeEstimatorService {
 	}
 	
 	/// Calculate the fee to add for the given amount of gas
-	private func feeForGas(_ gas: Int) -> XTZAmount {
+	public static func feeForGas(_ gas: Int) -> XTZAmount {
 		let nanoTez = gas * FeeConstants.feePerGasUnit
 		return nanoTeztoXTZ(nanoTez)
 	}
 	
 	/// Calculate the fee to add based on the size of the forged string
-	private func feeForStorage(_ forgedHexString: String, numberOfOperations: Int) -> XTZAmount {
+	public static func feeForStorage(_ forgedHexString: String, numberOfOperations: Int) -> XTZAmount {
 		let forgedHexWithSignature = (forgedHexString + FeeEstimatorService.defaultSignatureHex)
 		let nanoTez = ((forgedHexWithSignature.count/2) + (10 * numberOfOperations)) * FeeConstants.feePerStorageByte // Multiply bytes (2 characters per byte) by the fee perSotrageByteConstant. Add 10 bytes per op to account for any variations
 		return nanoTeztoXTZ(nanoTez)
 	}
 	
 	/// Calculate the fee to add based on how many bytes of storage where needed
-	private func feeForBurn(_ burn: Int, withConstants contants: NetworkConstants) -> XTZAmount {
+	public static func feeForBurn(_ burn: Int, withConstants contants: NetworkConstants) -> XTZAmount {
 		return contants.xtzPerByte() * burn
 	}
 	
 	/// Most calcualtions are documented in NanoTez, which is not accpeted by the network RPC calls. Needs to be converted to Mutez / XTZ
-	private func nanoTeztoXTZ(_ nanoTez: NanoTez) -> XTZAmount {
+	public static func nanoTeztoXTZ(_ nanoTez: NanoTez) -> XTZAmount {
 		let mutez = nanoTez % FeeConstants.nanoTezPerMutez == 0 ?
 			nanoTez / FeeConstants.nanoTezPerMutez :
 			(nanoTez / FeeConstants.nanoTezPerMutez) + 1
 		
 		return XTZAmount(fromRpcAmount: Decimal(mutez)) ?? XTZAmount.zero()
+	}
+	
+	public static func fee(forGasLimit gasLimit: Int, forgedHexString: String, numberOfOperations: Int) -> XTZAmount {
+		let gasFee = feeForGas(gasLimit)
+		let costToStoreOp = feeForStorage(forgedHexString, numberOfOperations: numberOfOperations)
+		
+		return FeeConstants.baseFee + gasFee + costToStoreOp
 	}
 }

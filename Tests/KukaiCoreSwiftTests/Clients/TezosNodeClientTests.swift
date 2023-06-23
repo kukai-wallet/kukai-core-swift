@@ -58,10 +58,10 @@ class TezosNodeClientTests: XCTestCase {
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
 		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, walletAddress: address, base58EncodedPublicKey: key) { result in
 			switch result {
-				case .success(let ops):
-					XCTAssert(ops.count == 2)
-					XCTAssert(ops[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0), ops[0].operationFees.allFees().description)
-					XCTAssert(ops[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000680), ops[1].operationFees.allFees().description)
+				case .success(let result):
+					XCTAssert(result.operations.count == 2)
+					XCTAssert(result.operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0), result.operations[0].operationFees.allFees().description)
+					XCTAssert(result.operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000680), result.operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)
