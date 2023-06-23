@@ -382,7 +382,18 @@ public class WalletCacheService {
 			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let _ = wallet as? HDWallet {
-			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newMetadata.hdWallets.count + 1)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
+			
+			var newNumber = 0
+			if let lastDefaultName = newMetadata.hdWallets.reversed().first(where: { $0.hdWalletGroupName?.prefix(10) == "HD Wallet " }) {
+				let numberOnly = lastDefaultName.hdWalletGroupName?.replacingOccurrences(of: "HD Wallet ", with: "")
+				newNumber = (Int(numberOnly ?? "0") ?? 0) + 1
+			}
+			
+			if newNumber == 0 {
+				newNumber = newMetadata.hdWallets.count + 1
+			}
+			
+			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
 			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded()))

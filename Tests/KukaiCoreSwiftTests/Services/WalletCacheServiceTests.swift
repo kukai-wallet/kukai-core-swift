@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import KukaiCryptoSwift
 @testable import KukaiCoreSwift
 
 class WalletCacheServiceTests: XCTestCase {
@@ -157,5 +158,54 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(wallet1 != nil)
 		XCTAssert(wallet1?.address == MockConstants.linearWalletEd255519_withPassphrase.address, wallet1?.address ?? "-")
 		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+	}
+	
+	func testHDWalletNaming() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		let mnemonic = try! Mnemonic(numberOfWords: .twentyFour)
+		let hdWallet1 = HDWallet(withMnemonic: mnemonic, passphrase: "")!
+		let hdWallet2 = HDWallet(withMnemonic: mnemonic, passphrase: "a")!
+		let hdWallet3 = HDWallet(withMnemonic: mnemonic, passphrase: "ab")!
+		let hdWallet4 = HDWallet(withMnemonic: mnemonic, passphrase: "abc")!
+		
+		
+		// Set 2 wallets
+		let _ = walletCacheService.cache(wallet: hdWallet1, childOfIndex: nil)
+		var list = walletCacheService.readNonsensitive()
+		let groupName1 = list.metadata(forAddress: hdWallet1.address)?.hdWalletGroupName
+		XCTAssert(groupName1 == "HD Wallet 1", groupName1 ?? "-")
+		
+		let _ = walletCacheService.cache(wallet: hdWallet2, childOfIndex: nil)
+		list = walletCacheService.readNonsensitive()
+		let groupName2 = list.metadata(forAddress: hdWallet2.address)?.hdWalletGroupName
+		XCTAssert(groupName2 == "HD Wallet 2", groupName2 ?? "-")
+		
+		
+		// Update one and check
+		let _ = list.set(hdWalletGroupName: "Blah 2", forAddress: hdWallet2.address)
+		let _ = walletCacheService.writeNonsensitive(list)
+		
+		list = walletCacheService.readNonsensitive()
+		let groupName3 = list.metadata(forAddress: hdWallet2.address)?.hdWalletGroupName
+		XCTAssert(groupName3 == "Blah 2", groupName3 ?? "-")
+		
+		
+		// Add another to check did it reuse the name "HD Wallet 2"
+		let _ = walletCacheService.cache(wallet: hdWallet3, childOfIndex: nil)
+		list = walletCacheService.readNonsensitive()
+		let groupName4 = list.metadata(forAddress: hdWallet3.address)?.hdWalletGroupName
+		XCTAssert(groupName4 == "HD Wallet 2", groupName4 ?? "-")
+		
+		
+		// Change all names and add 4th
+		let _ = list.set(hdWalletGroupName: "Blah 1", forAddress: hdWallet1.address)
+		let _ = list.set(hdWalletGroupName: "Blah 3", forAddress: hdWallet3.address)
+		let _ = walletCacheService.writeNonsensitive(list)
+		
+		let _ = walletCacheService.cache(wallet: hdWallet4, childOfIndex: nil)
+		list = walletCacheService.readNonsensitive()
+		let groupName5 = list.metadata(forAddress: hdWallet4.address)?.hdWalletGroupName
+		XCTAssert(groupName5 == "HD Wallet 4", groupName5 ?? "-")
 	}
 }
