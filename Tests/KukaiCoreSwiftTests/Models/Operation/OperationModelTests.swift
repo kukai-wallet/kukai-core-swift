@@ -290,8 +290,8 @@ class OperationModelTests: XCTestCase {
 	}
 	
 	func testFees() {
-		let fees = OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 1), networkFees: [[.allocationFee: XTZAmount(fromNormalisedAmount: 2)]], gasLimit: 15000, storageLimit: 3000)
-		let fees2 = OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 2), networkFees: [[.allocationFee: XTZAmount(fromNormalisedAmount: 1)]], gasLimit: 13000, storageLimit: 4000)
+		let fees = OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 1), networkFees: [.allocationFee: XTZAmount(fromNormalisedAmount: 2)], gasLimit: 15000, storageLimit: 3000)
+		let fees2 = OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 2), networkFees: [.allocationFee: XTZAmount(fromNormalisedAmount: 1)], gasLimit: 13000, storageLimit: 4000)
 		
 		XCTAssertFalse(fees == fees2)
 		XCTAssert(fees.allFees() == XTZAmount(fromNormalisedAmount: 3), fees.allFees().normalisedRepresentation)

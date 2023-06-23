@@ -185,7 +185,7 @@ public class FeeEstimatorService {
 			// Check and add a dummy reveal operation to the "originalOps", so that fees are calcualted correctly
 			if (preparedOperationsCopy.first is OperationReveal && original.count < preparedOperationsCopy.count) {
 				let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "") // dummy only used as an OperationsFee placeholder
-				reveal.operationFees = OperationFees(transactionFee: .zero(), networkFees: fees.first?.networkFees ?? [], gasLimit: fees.first?.gasLimit ?? 0, storageLimit: fees.first?.storageLimit ?? 0)
+				reveal.operationFees = OperationFees(transactionFee: .zero(), networkFees: fees.first?.networkFees ?? [:], gasLimit: fees.first?.gasLimit ?? 0, storageLimit: fees.first?.storageLimit ?? 0)
 				original.insert(reveal, at: 0)
 			}
 			
@@ -297,7 +297,7 @@ public class FeeEstimatorService {
 	private func calcTransactionFee(totalGas: Int, opCount: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
 		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
 		let burnFee = FeeEstimatorService.feeForBurn(totalStorage, withConstants: constants)
-		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]]
+		let networkFees = [OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]
 		
 		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: 0, storageLimit: 0)
 	}
@@ -306,7 +306,7 @@ public class FeeEstimatorService {
 	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, opCount: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants, allocationStorage: Int, totalAllocationFee: XTZAmount) -> OperationFees {
 		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
 		let burnFee = FeeEstimatorService.feeForBurn(totalStorage, withConstants: constants)
-		let networkFees = [[OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: totalAllocationFee]]
+		let networkFees = [OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: totalAllocationFee]
 		
 		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage + allocationStorage)
 	}

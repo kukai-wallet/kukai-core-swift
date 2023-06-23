@@ -26,7 +26,7 @@ public struct OperationFees: Equatable {
 	public var transactionFee: XTZAmount
 	
 	/// Additional fees the account will have to pay in order to send this operation. Such as allocating space for an unrevealed account.
-	public var networkFees: [[NetworkFeeType: XTZAmount]] = []
+	public var networkFees: [NetworkFeeType: XTZAmount] = [:]
 	
 	/// The limit of gas (computation + CPU) this `Operation` should take. If it exceeds this value when running, the `Operation` will fail.
 	public var gasLimit: Int
@@ -47,13 +47,7 @@ public struct OperationFees: Equatable {
 	Add together all the network fees and transaction fees
 	*/
 	public func allNetworkFees() -> XTZAmount {
-		var total = XTZAmount.zero()
-		
-		networkFees.forEach { (fee) in
-			total += fee.values.reduce(XTZAmount.zero(), +)
-		}
-		
-		return total
+		return networkFees.values.reduce(XTZAmount.zero(), +)
 	}
 	
 	/**
