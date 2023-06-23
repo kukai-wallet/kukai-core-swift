@@ -61,7 +61,7 @@ class TezosNodeClientTests: XCTestCase {
 				case .success(let result):
 					XCTAssert(result.operations.count == 2)
 					XCTAssert(result.operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0), result.operations[0].operationFees.allFees().description)
-					XCTAssert(result.operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000680), result.operations[1].operationFees.allFees().description)
+					XCTAssert(result.operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000596), result.operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)

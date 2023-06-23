@@ -31,9 +31,6 @@ public class FeeEstimatorService {
 		public static let baseFee = XTZAmount(fromNormalisedAmount: 0.0001)
 	}
 	
-	/// Estimations can be slightly off, use safety margins to ensure they are high enough
-	let gasSafetyMargin = 500 // bumped up from 100, as now it seems emptying an account requires 400 more gas
-	
 	/// Various possible errors that can occur during an Estimation
 	public enum FeeEstimatorServiceError: Error {
 		case tezosNodeClientNotPresent
@@ -245,11 +242,11 @@ public class FeeEstimatorService {
 			var opAllocationFee = XTZAmount.zero()
 			
 			let results = extractAndParseAttributes(fromResult: content.metadata.operationResult, withConstants: constants)
-			opGas = results.consumedGas + gasSafetyMargin
+			opGas = FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
 			opStorage = results.storageBytesUsed
 			opAllocationFee = results.allocationFee
 			
-			totalGas += results.consumedGas + gasSafetyMargin
+			totalGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
 			totalStorage += results.storageBytesUsed
 			totalAllocationFee += results.allocationFee
 			
@@ -261,11 +258,11 @@ public class FeeEstimatorService {
 			if let innerOperationResults = content.metadata.internalOperationResults {
 				for innerResult in innerOperationResults {
 					let results = extractAndParseAttributes(fromResult: innerResult.result, withConstants: constants)
-					opGas += results.consumedGas + gasSafetyMargin
+					opGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
 					opStorage += results.storageBytesUsed
 					opAllocationFee += results.allocationFee
 					
-					totalGas += results.consumedGas + gasSafetyMargin
+					totalGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
 					totalStorage += results.storageBytesUsed
 					totalAllocationFee += results.allocationFee
 					
@@ -361,5 +358,9 @@ public class FeeEstimatorService {
 		let costToStoreOp = feeForStorage(forgedHexString, numberOfOperations: numberOfOperations)
 		
 		return FeeConstants.baseFee + gasFee + costToStoreOp
+	}
+	
+	public static func addGasSafetyMarginTo(gasUsed: Int) -> Int {
+		return max( Int(ceil(Double(gasUsed) * 1.02)), gasUsed + 80)
 	}
 }
