@@ -24,11 +24,11 @@ public class FeeEstimatorService {
 	
 	/// Constants needed to compute a fee
 	public struct FeeConstants {
-		static let nanoTezPerMutez: Int = 1000
-		static let minimalFee: NanoTez = 100_000
-		static let feePerGasUnit: NanoTez = 100
-		static let feePerStorageByte: NanoTez = 1000
-		static let baseFee = XTZAmount(fromNormalisedAmount: 0.0001)
+		public static let nanoTezPerMutez: Int = 1000
+		public static let minimalFee: NanoTez = 100_000
+		public static let feePerGasUnit: NanoTez = 100
+		public static let feePerStorageByte: NanoTez = 1000
+		public static let baseFee = XTZAmount(fromNormalisedAmount: 0.0001)
 	}
 	
 	/// Estimations can be slightly off, use safety margins to ensure they are high enough
@@ -44,8 +44,8 @@ public class FeeEstimatorService {
 	}
 	
 	public struct EstimationResult: Codable {
-		let operations: [Operation]
-		let forgedString: String
+		public let operations: [Operation]
+		public let forgedString: String
 	}
 	
 	
