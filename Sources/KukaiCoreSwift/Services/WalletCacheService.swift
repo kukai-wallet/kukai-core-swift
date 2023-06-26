@@ -472,6 +472,16 @@ public class WalletCacheService {
 	}
 	
 	/**
+	 Clear a watch wallet meatadata obj from the metadata cache only, does not affect actual wallet cache
+	 */
+	public func deleteWatchWallet(address: String) -> Bool {
+		var list = readNonsensitive()
+		list.watchWallets.removeAll(where: { $0.address == address })
+		
+		return writeNonsensitive(list)
+	}
+	
+	/**
 	 Find and return the secure object for a given address
 	 - Returns: Optional object confirming to `Wallet` protocol
 	 */
