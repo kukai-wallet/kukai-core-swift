@@ -71,7 +71,7 @@ public struct OperationFees: Equatable {
 				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001410), gasLimit: 10500, storageLimit: 257)
 			
 			case .reveal:
-				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001268), gasLimit: 10000, storageLimit: 0)
+				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001268), gasLimit: 200, storageLimit: 0)
 				
 			case .activate_account:
 				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001268), gasLimit: 10000, storageLimit: 0)

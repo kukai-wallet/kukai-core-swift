@@ -361,6 +361,6 @@ public class FeeEstimatorService {
 	}
 	
 	public static func addGasSafetyMarginTo(gasUsed: Int) -> Int {
-		return max( Int(ceil(Double(gasUsed) * 1.02)), gasUsed + 80)
+		return max( Int(ceil(Double(gasUsed) * 1.02)), gasUsed + 25)
 	}
 }
