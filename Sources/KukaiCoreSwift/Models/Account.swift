@@ -25,7 +25,7 @@ public struct Account: Codable, Hashable {
 	public let nfts: [Token]
 	
 	/// 10 most recent NFTs to hit the wallet
-	public let recentNFTs: [NFT]
+	public var recentNFTs: [NFT]
 	
 	/// All the wallets Defi, Liquidity Tokens
 	public let liquidityTokens: [DipDupPositionData]
