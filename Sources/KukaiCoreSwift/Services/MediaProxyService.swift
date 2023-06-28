@@ -71,12 +71,12 @@ public class MediaProxyService: NSObject {
 	 - parameter ofFormat: The requested format from the proxy
 	 - returns: An optional URL
 	 */
-	public static func url(fromUriString uri: String?, ofFormat format: Format) -> URL? {
+	public static func url(fromUriString uri: String?, ofFormat format: Format, keepGif: Bool = false) -> URL? {
 		guard let uri = uri else {
 			return nil
 		}
 		
-		return url(fromUri: URL(string: uri), ofFormat: format)
+		return url(fromUri: URL(string: uri), ofFormat: format, keepGif: keepGif)
 	}
 	
 	/**
