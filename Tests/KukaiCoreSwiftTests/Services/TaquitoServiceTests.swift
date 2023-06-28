@@ -26,9 +26,9 @@ class TaquitoServiceTests: XCTestCase {
 	
 	
 	override func setUpWithError() throws {
-		payload1 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops1, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
-		payload2 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops2, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
-		payload3 =  OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops3, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
+		payload1 = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops1, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
+		payload2 = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops2, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
+		payload3 = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops3, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
 	}
 
 	override func tearDownWithError() throws {
@@ -118,7 +118,7 @@ class TaquitoServiceTests: XCTestCase {
 					XCTFail()
 					
 				case .failure(let error):
-					XCTAssert(error.description == "Error - Unknown: InvalidBlockHashError: The block hash blah is invalid", error.description)
+					XCTAssert(error.description == "Error - Unknown: InvalidBlockHashError: Invalid block hash \"blah\" with unsupported prefix.", error.description)
 			}
 			
 			expectation.fulfill()

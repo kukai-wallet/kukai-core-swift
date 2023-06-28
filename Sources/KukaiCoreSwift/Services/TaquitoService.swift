@@ -13,6 +13,7 @@ import os.log
 /// Taquito (https://github.com/ecadlabs/taquito) is a popular open source Tezos library written in Typescript and Javascript.
 /// Taquito is made up of many separate packages that deal with various aspects of Tezos RPC and Michelson.
 /// This serivce class is a wrapper around a small piece of the Taquito library to expose funtionality that would otherwise be time consuming/risky/dangerous to re-implement natively.
+/// The JS can now be found on each github release here: https://github.com/ecadlabs/taquito/releases/, by extracting the zip named "taquito-local-forging-vanilla.zip"
 public class TaquitoService {
 	
 	/// Pirvate local copy of a javascript context
