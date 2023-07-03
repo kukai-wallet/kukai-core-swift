@@ -109,30 +109,30 @@ public struct KukaiError: CustomStringConvertible, Error {
 			switch errorType {
 				case .rpc:
 					if let rpcErrorString = rpcErrorString {
-						return "Error - RPC: \(rpcErrorString.removeLeadingProtocolFromRPCError() ?? rpcErrorString)"
+						return "RPC: \(rpcErrorString.removeLeadingProtocolFromRPCError() ?? rpcErrorString)"
 					}
-					return "Error - RPC: Unknown"
+					return "RPC: Unknown"
 					
 				case .system:
 					if let subType = subType {
-						return "Error - System: \(subType)"
+						return "System: \(subType)"
 					}
-					return "Error - System: Unknown"
+					return "System: Unknown"
 					
 				case .network(let statusCode):
-					return "Error - Network: \(statusCode)"
+					return "Network: \(statusCode)"
 					
 				case .internalApplication:
 					if let subType = subType {
-						return "Error - Internal Application: \(subType)"
+						return "Internal Application: \(subType)"
 					}
-					return "Error - Internal Application: Unknown"
+					return "Internal Application: Unknown"
 					
 				case .unknown:
 					if let rpcErrorString = rpcErrorString {
-						return "Error - Unknown: \(rpcErrorString)"
+						return "Unknown: \(rpcErrorString)"
 					}
-					return "Error - Unknown"
+					return "Unknown"
 			}
 		}
 	}
