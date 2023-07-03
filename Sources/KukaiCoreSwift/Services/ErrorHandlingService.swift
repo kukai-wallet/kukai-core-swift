@@ -35,16 +35,16 @@ public struct KukaiError: CustomStringConvertible, Error {
 	}
 	
 	/// The error category
-	let errorType: ErrorType
+	public let errorType: ErrorType
 	
 	/// Optional error subType coming from another source (the OS, URLSession, another library etc)
-	let subType: Error?
+	public let subType: Error?
 	
 	/// Optional string containing only the relvant portion of an RPC error (e.g instead of "proto.xxxxxxxx.gas\_exhausted.operation",  it would contain "gas\_exhausted.operation") to make parsing easier
-	let rpcErrorString: String?
+	public let rpcErrorString: String?
 	
 	/// Optional object containing smart contract failure casues. May contain an Int (error code), a String (semi human readbale error message), and/or a dictionary containing metadata
-	let failWith: FailWith?
+	public let failWith: FailWith?
 	
 	/// The requested URL that returned the error
 	public var requestURL: URL?
