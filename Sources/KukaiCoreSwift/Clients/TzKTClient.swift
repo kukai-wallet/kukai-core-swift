@@ -805,8 +805,7 @@ public class TzKTClient {
 							errorFound = error
 							
 						case .success(let balances):
-							let metadataTokensOnly = balances.filter({ $0.token.metadata != nil })
-							tokenBalances.append(contentsOf: metadataTokensOnly)
+							tokenBalances.append(contentsOf: balances)
 					}
 					
 					dispatchGroup.leave()
@@ -851,7 +850,7 @@ public class TzKTClient {
 			
 			
 			// If its an NFT, hold onto for later
-			if balance.isNFT() {
+			if balance.isNFT() && balance.token.malformedMetadata == false {
 				if tempRecentNFTs.count < 10 {
 					tempRecentNFTs.append(balance)
 				}
@@ -867,10 +866,10 @@ public class TzKTClient {
 					tempNFT[uniqueKey]?.append(balance)
 				}
 				continue
+			} else if balance.token.metadata != nil {
+				// Else create a Token object and put into array, if we have valid metadata (e.g. able to tell how many decimals it has)
+				tokens.append(Token(from: balance.token, andTokenAmount: balance.tokenAmount))
 			}
-			
-			// Else create a Token object and put into array
-			tokens.append(Token(from: balance.token, andTokenAmount: balance.tokenAmount))
 		}
 		
 		// Take NFT's, create actual NFT objects and add them to `Token` instances

@@ -22,7 +22,7 @@ class TokenTests: XCTestCase {
 	func testToken() {
 		let token = Token(name: "test1", symbol: "T", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount(fromNormalisedAmount: 3, decimalPlaces: 4), thumbnailURL: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: nil, nfts: nil, mintingTool: nil)
 		
-		let tzktBalance = TzKTBalance(balance: "1", token: TzKTBalanceToken(contract: TzKTAddress(alias: "Test Alias", address: "KT1abc"), tokenId: "0", standard: .fa2, metadata: nil))
+		let tzktBalance = TzKTBalance(balance: "1", token: TzKTBalanceToken(contract: TzKTAddress(alias: "Test Alias", address: "KT1abc"), tokenId: "0", standard: .fa2, totalSupply: "1", metadata: nil))
 		let nft = NFT(fromTzKTBalance: tzktBalance)
 		let token2 = Token(name: "test2", symbol: "F", tokenType: .nonfungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: 0, nfts: [nft], mintingTool: nil)
 		

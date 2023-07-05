@@ -28,7 +28,13 @@ public struct TzKTBalance: Codable {
 	
 	/// Basic check to see if token is an NFT or not. May not be 100% successful, needs research
 	public func isNFT() -> Bool {
-		return (token.metadata?.decimals == "0" && token.standard == .fa2 && token.metadata?.artifactUri != nil) || isOnNFTExceptionList()
+		// If token is an fa2 standard, and either provided onchain metadata to show it has no decimals and artifact URI   -OR- has no onchian data, but has a totalSupply of 1, it is most likley am NFT
+		// Fallback to an exception list of high profile tokens that falloutside of this
+		return (token.standard == .fa2 && (
+											(token.metadata?.decimals == "0" && token.metadata?.artifactUri != nil) ||
+											(token.totalSupply == "1")
+										)
+				) || isOnNFTExceptionList()
 	}
 	
 	public func isOnNFTExceptionList() -> Bool {
@@ -48,9 +54,14 @@ public struct TzKTBalanceToken: Codable {
 	/// Which FA version the token conforms too
 	public let standard: FaVersion
 	
+	/// Total avaialble supply of this address + token id combo
+	public let totalSupply: String?
+	
 	/// Metadata about the token
-	@NilOnDecodingError
+	//@NilOnDecodingError
 	public var metadata: TzKTBalanceMetadata?
+	
+	public var malformedMetadata: Bool
 	
 	/// Helper to determine what string is used as the symbol for display purposes
 	public var displaySymbol: String {
@@ -63,6 +74,50 @@ public struct TzKTBalanceToken: Codable {
 		} else {
 			return ((metadata?.symbol ?? metadata?.name) ?? "")
 		}
+	}
+	
+	public init(contract: TzKTAddress, tokenId: String, standard: FaVersion, totalSupply: String?, metadata: TzKTBalanceMetadata?) {
+		self.contract = contract
+		self.tokenId = tokenId
+		self.standard = standard
+		self.totalSupply = totalSupply
+		self.metadata = metadata
+		self.malformedMetadata = false
+	}
+	
+	enum CodingKeys: CodingKey {
+		case contract
+		case tokenId
+		case standard
+		case totalSupply
+		case metadata
+	}
+	
+	public init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.contract = try container.decode(TzKTAddress.self, forKey: .contract)
+		self.tokenId = try container.decode(String.self, forKey: .tokenId)
+		self.standard = try container.decode(FaVersion.self, forKey: .standard)
+		self.totalSupply = try container.decodeIfPresent(String.self, forKey: .totalSupply)
+		
+		do {
+			self.metadata = try container.decodeIfPresent(TzKTBalanceMetadata.self, forKey: .metadata)
+			self.malformedMetadata = false
+			
+		} catch {
+			// If metadata is present, but can't be parsed, we record this so we can filter out these tokens later on. Likely bad experiements
+			self.metadata = nil
+			self.malformedMetadata = true
+		}
+	}
+	
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(self.contract, forKey: .contract)
+		try container.encode(self.tokenId, forKey: .tokenId)
+		try container.encode(self.standard, forKey: .standard)
+		try container.encodeIfPresent(self.totalSupply, forKey: .totalSupply)
+		try container.encodeIfPresent(self.metadata, forKey: .metadata)
 	}
 }
 

@@ -61,12 +61,12 @@ public class HDWallet: Wallet {
 	 - Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
 	 */
 	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String, derivationPath: String = HD.defaultDerivationPath) {
-		guard let keyPair = KeyPair.hd(fromMnemonic: mnemonic, passphrase: passphrase, andDerivationPath: derivationPath) else {
+		guard let keyPair = KeyPair.hd(fromMnemonic: mnemonic, passphrase: passphrase, andDerivationPath: derivationPath), let pkh = keyPair.publicKey.publicKeyHash else {
 			return nil
 		}
 		
 		self.type = .hd
-		self.address = keyPair.publicKey.publicKeyHash ?? ""
+		self.address = pkh
 		self.privateKey = keyPair.privateKey
 		self.publicKey = keyPair.publicKey
 		self.mnemonic = mnemonic

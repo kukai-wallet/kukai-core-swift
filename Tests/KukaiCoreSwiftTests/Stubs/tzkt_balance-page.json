@@ -1,5 +1,26 @@
 [
 	{
+        "id": 645091316203522,
+        "account": {
+            "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
+        },
+        "token": {
+            "id": 645091316203521,
+            "contract": {
+                "address": "KT1UmNSC5gjZeTcTeMEGpXqUZaJwUVRqvunM"
+            },
+            "tokenId": "1495",
+            "standard": "fa2",
+            "totalSupply": "1"
+        },
+        "balance": "1",
+        "transfersCount": 1,
+        "firstLevel": 3819222,
+        "firstTime": "2023-07-04T11:04:35Z",
+        "lastLevel": 3819222,
+        "lastTime": "2023-07-04T11:04:35Z"
+    },
+	{
         "id": 77931403542529,
         "account": {
             "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
@@ -130,7 +151,7 @@
         "lastTime": "2021-05-13T16:50:30Z"
     },
 	{
-	        "id": 52347116978178,
+	    "id": 52347116978178,
         "account": {
             "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
         },

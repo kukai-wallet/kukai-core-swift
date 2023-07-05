@@ -67,12 +67,12 @@ public class RegularWallet: Wallet {
 	 - Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	 */
 	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String, ellipticalCurve: EllipticalCurve = .ed25519) {
-		guard let keyPair = KeyPair.regular(fromMnemonic: mnemonic, passphrase: passphrase, andSigningCurve: ellipticalCurve) else {
+		guard let keyPair = KeyPair.regular(fromMnemonic: mnemonic, passphrase: passphrase, andSigningCurve: ellipticalCurve), let pkh = keyPair.publicKey.publicKeyHash else {
 			return nil
 		}
 		
 		self.type = .regular
-		self.address = keyPair.publicKey.publicKeyHash ?? ""
+		self.address = pkh
 		self.privateKey = keyPair.privateKey
 		self.publicKey = keyPair.publicKey
 		self.mnemonic = mnemonic

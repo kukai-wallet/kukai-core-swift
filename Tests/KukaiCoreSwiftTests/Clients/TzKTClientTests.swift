@@ -244,7 +244,8 @@ class TzKTClientTests: XCTestCase {
 					
 					
 					// NFTs
-					XCTAssert(account.nfts.count == 9, "\(account.nfts.count)")
+					XCTAssert(account.nfts.count == 10, "\(account.nfts.count)")
+					
 					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
 					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
 					XCTAssert(account.nfts[0].nfts?[0].artifactURI?.absoluteString == "ipfs://QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURI?.absoluteString ?? "")
@@ -275,15 +276,17 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(keyValueAttributes3[2].key == "Abilities", keyValueAttributes3[2].key)
 					XCTAssert(keyValueAttributes3[2].value == "Reversible: Opponents arguments cost 1 more.", keyValueAttributes3[2].value)
 					
-					XCTAssert(account.nfts[3].name == "Tezos Domains NameRegistry", account.nfts[3].name ?? "")
-					XCTAssert(account.nfts[3].nfts?[0].name == "blah.tez", account.nfts[3].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[3].tokenContractAddress == "KT1UmNSC5gjZeTcTeMEGpXqUZaJwUVRqvunM", account.nfts[3].tokenContractAddress ?? "-")
+					XCTAssert(account.nfts[3].name == nil, account.nfts[3].name ?? "-")
 					
-					XCTAssert(account.nfts[7].name == "DOGAMÍ x GAP", account.nfts[7].name ?? "")
-					XCTAssert(account.nfts[7].nfts?[0].name == "Bed Pillow #2435", account.nfts[7].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[4].name == "Tezos Domains NameRegistry", account.nfts[4].name ?? "")
+					XCTAssert(account.nfts[4].nfts?[0].name == "blah.tez", account.nfts[4].nfts?[0].name ?? "")
 					
-					XCTAssert(account.nfts[8].tokenContractAddress == "KT1BA9igcUcgkMT4LEEQzwURsdMpQayfb6i4", account.nfts[8].name ?? "")
-					XCTAssert(account.nfts[8].nfts?[0].name == "Bear Pawtrait", account.nfts[8].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[8].name == "DOGAMÍ x GAP", account.nfts[8].name ?? "")
+					XCTAssert(account.nfts[8].nfts?[0].name == "Bed Pillow #2435", account.nfts[8].nfts?[0].name ?? "")
 					
+					XCTAssert(account.nfts[9].tokenContractAddress == "KT1BA9igcUcgkMT4LEEQzwURsdMpQayfb6i4", account.nfts[9].name ?? "")
+					XCTAssert(account.nfts[9].nfts?[0].name == "Bear Pawtrait", account.nfts[9].nfts?[0].name ?? "")
 					
 					// Liquidity tokens
 					XCTAssert(account.liquidityTokens.count == 2, "\(account.liquidityTokens.count)")

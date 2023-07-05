@@ -9,6 +9,7 @@ import Foundation
 
 @propertyWrapper
 public struct NilOnDecodingError<Wrapped> {
+	
 	public init(wrappedValue: Wrapped?) {
 		self.wrappedValue = wrappedValue
 	}
@@ -17,6 +18,7 @@ public struct NilOnDecodingError<Wrapped> {
 }
 
 extension NilOnDecodingError: Decodable where Wrapped: Decodable {
+	
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		do {
@@ -28,6 +30,7 @@ extension NilOnDecodingError: Decodable where Wrapped: Decodable {
 }
 
 extension NilOnDecodingError: Encodable where Wrapped: Encodable {
+	
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.singleValueContainer()
 		if let value = wrappedValue {
