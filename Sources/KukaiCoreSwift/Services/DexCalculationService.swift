@@ -74,7 +74,7 @@ public class DexCalculationService {
 			os_log("Dex calculation JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 		}
 		
-		if let jsSourcePath = Bundle.module.url(forResource: "kukai-dex-calculations", withExtension: "js", subdirectory: "External-js") {
+		if let jsSourcePath = Bundle.module.url(forResource: "kukai-dex-calculations", withExtension: "js") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
 				self.jsContext.evaluateScript(jsSourceContents)

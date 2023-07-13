@@ -104,7 +104,7 @@ class NetworkServiceTests: XCTestCase {
 						
 					case .failure(let error):
 						XCTAssert(error.errorType == .unknown)
-						XCTAssert(error.description == "Error - Unknown: Assert_failure src/proto_009_PsFLoren/lib_protocol/operation_repr.ml:203:6", error.description)
+						XCTAssert(error.description == "Unknown: Assert_failure src/proto_009_PsFLoren/lib_protocol/operation_repr.ml:203:6", error.description)
 						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation").absoluteString)
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)

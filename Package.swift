@@ -31,7 +31,9 @@ let package = Package(
 				"SignalRClient",
 			],
 			resources: [
-				.copy("Services/External-js")
+				.copy("Services/kukai-dex-calculations.js"),
+				.copy("Services/ledger_app_tezos.js"),
+				.copy("Services/taquito_local_forging.js")
 			]
 		),
 		

@@ -162,7 +162,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		
 		// Grab the custom ledger tezos app js and load it in
-		if let jsSourcePath = Bundle.module.url(forResource: "ledger_app_tezos", withExtension: "js", subdirectory: "External-js") {
+		if let jsSourcePath = Bundle.module.url(forResource: "ledger_app_tezos", withExtension: "js") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
 				self.jsContext.evaluateScript(jsSourceContents)

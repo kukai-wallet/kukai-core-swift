@@ -59,7 +59,7 @@ public class TaquitoService {
 			}
 		}
 		
-		if let jsSourcePath = Bundle.module.url(forResource: "taquito_local_forging", withExtension: "js", subdirectory: "External-js") {
+		if let jsSourcePath = Bundle.module.url(forResource: "taquito_local_forging", withExtension: "js") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
 				self.jsContext.evaluateScript(jsSourceContents)

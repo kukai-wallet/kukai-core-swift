@@ -118,7 +118,7 @@ class TaquitoServiceTests: XCTestCase {
 					XCTFail()
 					
 				case .failure(let error):
-					XCTAssert(error.description == "Error - Unknown: InvalidBlockHashError: Invalid block hash \"blah\" with unsupported prefix.", error.description)
+					XCTAssert(error.description == "Unknown: InvalidBlockHashError: Invalid block hash \"blah\" with unsupported prefix.", error.description)
 			}
 			
 			expectation.fulfill()
