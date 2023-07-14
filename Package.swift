@@ -17,7 +17,7 @@ let package = Package(
 		//.package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.6.2"),
 		.package(url: "https://github.com/simonmcl/Kingfisher.git", from: "1.0.0"),
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", from: "5.0.0"),
-		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.2"),
+		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.3"),
 		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
 	],
 	targets: [
