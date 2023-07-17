@@ -7,7 +7,6 @@ let package = Package(
 	name: "KukaiCoreSwift",
 	platforms: [
 		.iOS("15.0"),
-		.macOS(.v11),
 	],
 	products: [
 		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
