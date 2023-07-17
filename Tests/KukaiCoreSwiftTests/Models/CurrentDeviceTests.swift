@@ -22,4 +22,8 @@ class CurrentDeviceTests: XCTestCase {
 		XCTAssert(CurrentDevice.hasSecureEnclave == false)
 		XCTAssert(CurrentDevice.isSimulator == true)
 	}
+	
+	func testBiometrics() {
+		XCTAssert(CurrentDevice.biometricType() == .none)
+	}
 }

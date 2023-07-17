@@ -12,8 +12,8 @@ import LocalAuthentication
 
 public enum BiometricType {
 	case none
-	case touch
-	case face
+	case touchID
+	case faceID
 }
 
 /// Enum used to get details about the current device's capabilities
@@ -21,7 +21,7 @@ public enum CurrentDevice {
 	
 	/// Does the current device have a secure enclave
 	public static var hasSecureEnclave: Bool {
-		return !isSimulator && hasBiometrics
+		return !isSimulator && biometricType() != .none
 	}
 	
 	/// Is the current device a simulator
@@ -29,45 +29,28 @@ public enum CurrentDevice {
 		return TARGET_OS_SIMULATOR == 1
 	}
 	
-	/// Does the current device have biometric hardware available
-	public static var hasBiometrics: Bool {
-		
-		let localAuthContext = LAContext()
+	// Check what type of biometrics is available to the app
+	public static func biometricType() -> BiometricType {
+		let authContext = LAContext()
 		var error: NSError?
 		
-		/// Policies can have certain requirements which, when not satisfied, would always cause
-		/// the policy evaluation to fail - e.g. a passcode set, a fingerprint
-		/// enrolled with Touch ID or a face set up with Face ID. This method allows easy checking
-		/// for such conditions.
-		let isValidPolicy = localAuthContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
+		guard authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+			return .none
+		}
 		
-		guard isValidPolicy == true else {
-			if error!.code != LAError.biometryNotAvailable.rawValue {
-				return true
-					
-			} else {
-				return false
+		if #available(iOS 11.0, *) {
+			switch authContext.biometryType {
+				case .none:
+					return .none
+				case .touchID:
+					return .touchID
+				case .faceID:
+					return .faceID
+				@unknown default:
+					return .none
 			}
 		}
 		
-		return isValidPolicy
-	}
-	
-	public static func biometricType() -> BiometricType {
-		let authContext = LAContext()
-		let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-		switch(authContext.biometryType) {
-			case .none:
-				return .none
-				
-			case .touchID:
-				return .touch
-				
-			case .faceID:
-				return .face
-				
-			@unknown default:
-				return .none
-		}
+		return authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touchID : .none
 	}
 }
