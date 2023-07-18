@@ -40,7 +40,7 @@ class TezosNodeClientTests: XCTestCase {
 		MockConstants.shared.tezosNodeClient.getDelegate(forAddress: MockConstants.defaultHdWallet.address) { result in
 			switch result {
 				case .success(let address):
-					XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address)
+					XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address)
 					
 				case .failure(let error):
 					XCTFail(error.description)

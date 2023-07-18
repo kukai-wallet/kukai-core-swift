@@ -21,7 +21,7 @@ class RPCTests: XCTestCase {
 	
 	func testRPC() {
 		let rpcBalance = RPC.xtzBalance(forAddress: MockConstants.defaultHdWallet.address)
-		XCTAssert(rpcBalance.endpoint == "chains/main/blocks/head/context/contracts/tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF/balance", rpcBalance.endpoint)
+		XCTAssert(rpcBalance.endpoint == "chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/balance", rpcBalance.endpoint)
 		XCTAssert(rpcBalance.isPost == false)
 		XCTAssert(rpcBalance.payload == nil)
 		XCTAssert(rpcBalance.responseType == String.self)

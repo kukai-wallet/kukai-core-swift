@@ -146,8 +146,8 @@ class OperationModelTests: XCTestCase {
 			let tokenId = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			let amount = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
-			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
+			XCTAssert(destination == "tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy", destination ?? "-")
 			XCTAssert(tokenId == "4", tokenId ?? "-")
 			XCTAssert(amount == "1", amount ?? "-")
 			

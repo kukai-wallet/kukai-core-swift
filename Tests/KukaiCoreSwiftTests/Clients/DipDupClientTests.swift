@@ -45,7 +45,7 @@ class DipDupClientTests: XCTestCase {
 	func testGetLiquidity() {
 		let expectation = XCTestExpectation(description: "dipdup-get-liquidity")
 		
-		MockConstants.shared.dipDupClient.getLiquidityFor(address: "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF") { result in
+		MockConstants.shared.dipDupClient.getLiquidityFor(address: "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss") { result in
 			guard let res = try? result.get() else {
 				XCTFail(result.getFailure().description)
 				expectation.fulfill()

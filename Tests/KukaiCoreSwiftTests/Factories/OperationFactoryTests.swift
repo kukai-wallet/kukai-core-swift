@@ -39,8 +39,8 @@ class OperationFactoryTests: XCTestCase {
 			let destination = parameters.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0)
 			let amount = parameters.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
-			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
+			XCTAssert(destination == "tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy", destination ?? "-")
 			XCTAssert(amount == "1000", amount ?? "-")
 			
 		} else {
@@ -62,8 +62,8 @@ class OperationFactoryTests: XCTestCase {
 			let tokenId = parameters2.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			let amount = parameters2.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
-			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
+			XCTAssert(destination == "tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy", destination ?? "-")
 			XCTAssert(tokenId == "0", tokenId ?? "-")
 			XCTAssert(amount == "10000000000", amount ?? "-")
 			
@@ -86,8 +86,8 @@ class OperationFactoryTests: XCTestCase {
 			let tokenId = parameters3.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			let amount = parameters3.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
-			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
+			XCTAssert(destination == "tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy", destination ?? "-")
 			XCTAssert(tokenId == "4", tokenId ?? "-")
 			XCTAssert(amount == "1", amount ?? "-")
 			
@@ -157,8 +157,8 @@ class OperationFactoryTests: XCTestCase {
 			let tokenId = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			let amount = parameters.michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
-			XCTAssert(destination == "tz1T3QZ5w4K11RS3vy4TXiZepraV9R5GzsxG", destination ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
+			XCTAssert(destination == "tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy", destination ?? "-")
 			XCTAssert(tokenId == "4", tokenId ?? "-")
 			XCTAssert(amount == "1", amount ?? "-")
 			
@@ -189,7 +189,7 @@ class OperationFactoryTests: XCTestCase {
 			let amount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "xtzToToken", entrypoint ?? "-")
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
 			XCTAssert(amount == "100000000", amount ?? "-")
 			
 		} else {
@@ -266,7 +266,7 @@ class OperationFactoryTests: XCTestCase {
 			let minAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "tokenToXtz", entrypoint ?? "-")
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
 			XCTAssert(amount == "150000000", amount ?? "-")
 			XCTAssert(minAmount == "1000000", amount ?? "-")
 			
@@ -340,7 +340,7 @@ class OperationFactoryTests: XCTestCase {
 			let minAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 			
 			XCTAssert(entrypoint == "tokenToTezPayment", entrypoint ?? "-")
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
 			XCTAssert(amount == "150000000", amount ?? "-")
 			XCTAssert(minAmount == "1000000", amount ?? "-")
 			
@@ -418,7 +418,7 @@ class OperationFactoryTests: XCTestCase {
 			let minLqtAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "addLiquidity", entrypoint ?? "-")
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
 			XCTAssert(tokenAmount == "150000000", tokenAmount ?? "-")
 			XCTAssert(minLqtAmount == "150000000", minLqtAmount ?? "-")
 			
@@ -521,7 +521,7 @@ class OperationFactoryTests: XCTestCase {
 			let tokenAmount = value?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 			
 			XCTAssert(entrypoint == "removeLiquidity", entrypoint ?? "-")
-			XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address ?? "-")
+			XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address ?? "-")
 			XCTAssert(lqtBurnAmount == "150000000", lqtBurnAmount ?? "-")
 			XCTAssert(xtzAmount == "1000000", xtzAmount ?? "-")
 			XCTAssert(tokenAmount == "150000000", tokenAmount ?? "-")
