@@ -98,7 +98,7 @@ public struct TzKTBaker: Codable, Hashable {
 	}
 	
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
-		guard data.count == 3, let address = data[0] as? String, let balance = data[1] as? Decimal, let stakingBalance = data[2] as? Decimal else {
+		guard data.count == 3, let address = data[0] as? String, let balance = (data[1] as? NSNumber)?.decimalValue, let stakingBalance = (data[2] as? NSNumber)?.decimalValue else {
 			return nil
 		}
 		
