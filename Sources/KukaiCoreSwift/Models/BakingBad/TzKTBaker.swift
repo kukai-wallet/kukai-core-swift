@@ -103,7 +103,9 @@ public struct TzKTBaker: Codable, Hashable {
 		}
 		
 		let name = data[1] as? String
-		return TzKTBaker(address: address, name: name, logo: nil, balance: balance, stakingBalance: stakingBalance, stakingCapacity: stakingBalance, maxStakingBalance: stakingBalance, freeSpace: stakingBalance, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
+		let normalisedBalance = balance/1000000
+		let normalisedStakingBal = stakingBalance/1000000
+		return TzKTBaker(address: address, name: name, logo: nil, balance: normalisedBalance, stakingBalance: normalisedStakingBal, stakingCapacity: normalisedStakingBal, maxStakingBalance: normalisedStakingBal, freeSpace: normalisedStakingBal, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
 	}
 	
 	public func rewardStruct() -> TzKTBakerConfigRewardStruct? {
