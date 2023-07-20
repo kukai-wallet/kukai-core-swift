@@ -98,11 +98,12 @@ public struct TzKTBaker: Codable, Hashable {
 	}
 	
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
-		guard data.count == 3, let address = data[0] as? String, let balance = (data[1] as? NSNumber)?.decimalValue, let stakingBalance = (data[2] as? NSNumber)?.decimalValue else {
+		guard data.count == 3, let address = data[0] as? String, let balance = (data[2] as? NSNumber)?.decimalValue, let stakingBalance = (data[3] as? NSNumber)?.decimalValue else {
 			return nil
 		}
 		
-		return TzKTBaker(address: address, name: nil, logo: nil, balance: balance, stakingBalance: stakingBalance, stakingCapacity: stakingBalance * 2, maxStakingBalance: stakingBalance * 2, freeSpace: stakingBalance, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
+		let name = data[1] as? String
+		return TzKTBaker(address: address, name: name, logo: nil, balance: balance, stakingBalance: stakingBalance, stakingCapacity: stakingBalance, maxStakingBalance: stakingBalance, freeSpace: stakingBalance, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
 	}
 	
 	public func rewardStruct() -> TzKTBakerConfigRewardStruct? {

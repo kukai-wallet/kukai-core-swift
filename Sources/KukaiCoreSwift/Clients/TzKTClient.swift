@@ -158,7 +158,7 @@ public class TzKTClient {
 		} else {
 			var url = config.tzktURL
 			url.appendPathComponent("v1/delegates")
-			url.appendQueryItem(name: "select.values", value: "address,balance,stakingBalance")
+			url.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")
 			url.appendQueryItem(name: "active", value: "true")
 			url.appendQueryItem(name: "sort.desc", value: "stakingBalance")
 			url.appendQueryItem(name: "limit", value: 10)
