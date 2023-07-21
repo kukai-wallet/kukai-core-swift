@@ -306,19 +306,19 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 			self.entrypointCalled = entrypoint
 			
 		} else {
-			if self.target?.address == currentWalletAddress {
+			if self.type == .delegation {
+				self.subType = .delegate
+				
+			} else if self.type == .reveal {
+				self.subType = .reveal
+				
+			} else if self.target?.address == currentWalletAddress {
 				self.subType = .receive
 				self.primaryToken = createPrimaryToken()
 				
 			} else if self.target?.address != currentWalletAddress {
 				self.subType = .send
 				self.primaryToken = createPrimaryToken()
-				
-			} else if self.type == .delegation {
-				self.subType = .delegate
-				
-			} else if self.type == .reveal {
-				self.subType = .reveal
 				
 			} else {
 				self.subType = .unknown

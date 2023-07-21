@@ -929,5 +929,31 @@
         },
         "status": "applied",
         "hasInternals": true
-    }
+    },
+    {
+        "type": "delegation",
+        "id": 162385896669184,
+        "level": 2932791,
+        "timestamp": "2023-07-21T15:08:19Z",
+        "block": "BLGRuCdw6czoRQK9V3JJApDsCY9uctsQycgWx99jfKFV17wucB8",
+        "hash": "onpirLfDfojh84pihNKmrNFZ14Uf8z2SHYBVikcaKfSRBFFFb25",
+        "counter": 16355997,
+        "sender": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "gasLimit": 194,
+        "gasUsed": 169,
+        "storageLimit": 0,
+        "bakerFee": 281,
+        "amount": 4144650,
+        "prevDelegate": {
+            "alias": " Baking Benjamins",
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "newDelegate": {
+            "alias": "ECAD Labs Baker",
+            "address": "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP"
+        },
+        "status": "applied"
+    },
 ]

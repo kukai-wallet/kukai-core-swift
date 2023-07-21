@@ -59,7 +59,7 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
 			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
-			XCTAssert(groups.count == 16, "\(groups.count)")
+			XCTAssert(groups.count == 17, "\(groups.count)")
 			
 			for (index, group) in groups.enumerated() {
 				
@@ -206,6 +206,13 @@ class TzKTClientTests: XCTestCase {
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
 						XCTAssert(group.hash == "ooyKEQLPDHHD2K8ZJSt92braYAPcRjxxfEmXVcdAQ5X4AoRuREA", group.hash)
 						XCTAssert(group.entrypointCalled == "wrap", group.entrypointCalled ?? "-")
+						
+					case 16:
+						XCTAssert(group.groupType == .delegate, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "onpirLfDfojh84pihNKmrNFZ14Uf8z2SHYBVikcaKfSRBFFFb25", group.hash)
+						XCTAssert(group.transactions.first?.prevDelegate?.alias == " Baking Benjamins", group.transactions.first?.prevDelegate?.alias ?? "-")
+						XCTAssert(group.transactions.first?.newDelegate?.alias == "ECAD Labs Baker", group.transactions.first?.newDelegate?.alias ?? "-")
 						
 					default:
 						XCTFail("Missing test for transaction")
