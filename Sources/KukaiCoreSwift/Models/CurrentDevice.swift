@@ -36,7 +36,11 @@ public enum CurrentDevice {
 		var error: NSError?
 		
 		guard authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
-			return .unavailable
+			if error?.code == -7 {
+				return .unavailable // User has not setup biometrics on their device
+			} else {
+				return .none // (code == -6) = User has denied access
+			}
 		}
 		
 		if #available(iOS 11.0, *) {
