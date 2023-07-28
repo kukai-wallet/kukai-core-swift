@@ -21,7 +21,7 @@ public enum CurrentDevice {
 	
 	/// Does the current device have a secure enclave
 	public static var hasSecureEnclave: Bool {
-		return !isSimulator && biometricType() != .none
+		return !isSimulator && biometricTypeSupported() != .none
 	}
 	
 	/// Is the current device a simulator
@@ -29,14 +29,34 @@ public enum CurrentDevice {
 		return TARGET_OS_SIMULATOR == 1
 	}
 	
-	// Check what type of biometrics is available to the app
-	public static func biometricType() -> BiometricType {
+	// Check what type of biometrics is available to the app. Will return .none if user has opted to not give permission
+	public static func biometricTypeAuthorized() -> BiometricType {
 		let authContext = LAContext()
 		var error: NSError?
 		
 		guard authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
 			return .none
 		}
+		
+		if #available(iOS 11.0, *) {
+			switch authContext.biometryType {
+				case .none:
+					return .none
+				case .touchID:
+					return .touchID
+				case .faceID:
+					return .faceID
+				@unknown default:
+					return .none
+			}
+		}
+		
+		return authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touchID : .none
+	}
+	
+	// Check what type of biometrics is available to the app. Will return with the value indicating what capabilities the device has, ignoring whther user has given permission
+	public static func biometricTypeSupported() -> BiometricType {
+		let authContext = LAContext()
 		
 		if #available(iOS 11.0, *) {
 			switch authContext.biometryType {
