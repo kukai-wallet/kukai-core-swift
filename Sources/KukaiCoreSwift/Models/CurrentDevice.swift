@@ -11,6 +11,7 @@ import LocalAuthentication
 
 
 public enum BiometricType {
+	case unavailable
 	case none
 	case touchID
 	case faceID
@@ -35,7 +36,7 @@ public enum CurrentDevice {
 		var error: NSError?
 		
 		guard authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
-			return .none
+			return .unavailable
 		}
 		
 		if #available(iOS 11.0, *) {
