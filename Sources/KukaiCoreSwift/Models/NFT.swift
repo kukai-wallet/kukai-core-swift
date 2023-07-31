@@ -76,8 +76,8 @@ public struct NFT: Codable, Hashable {
 		faVersion = tzkt.token.standard
 		decimalPlaces = tzkt.token.metadata?.decimalsInt ?? 0
 		balance = Decimal(string: tzkt.balance) ?? 1
-		name = tzkt.token.metadata?.name ?? ""
-		symbol = tzkt.token.metadata?.symbol ?? ""
+		name = tzkt.token.metadata?.name ?? "Unknown Token"
+		symbol = tzkt.token.metadata?.symbol
 		description = tzkt.token.metadata?.description ?? ""
 		artifactURI = URL(string: tzkt.token.metadata?.artifactUri ?? "")
 		displayURI = URL(string: tzkt.token.metadata?.displayUri ?? "")

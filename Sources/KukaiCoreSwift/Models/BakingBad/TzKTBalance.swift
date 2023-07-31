@@ -175,6 +175,9 @@ public struct TzKTBalanceMetadata: Codable {
 	/// the easiest solution was to use `[Any]` with a custom decoder
 	public var attributes: [Any]?
 	
+	/// Flag, in seconds, indicating how long to wait before refreshing the token to update its metadata. E.g. fxHash will inject a token with a name "[Waiting to be Signed]". and then, all things going well, 30 seconds later its updated to the correct attributes
+	public let ttl: Int?
+	
 	
 	/// Need to define coding keys as many tokens have incorrectly set their metadata to have booleans inside strings, inside of just booleans
 	enum CodingKeys: String, CodingKey {
@@ -191,6 +194,7 @@ public struct TzKTBalanceMetadata: Codable {
 		case minter
 		case shouldPreferSymbol
 		case attributes
+		case ttl
 		
 		// Handle miss named attribtues
 		case should_prefer_symbol
@@ -244,6 +248,12 @@ public struct TzKTBalanceMetadata: Codable {
 		} else {
 			attributes = nil
 		}
+		
+		if let tempString = try? container.decodeIfPresent(String.self, forKey: .ttl) {
+			ttl = Int(tempString)
+		} else {
+			ttl = nil
+		}
 	}
 	
 	public func encode(to encoder: Encoder) throws {
@@ -261,6 +271,7 @@ public struct TzKTBalanceMetadata: Codable {
 		try container.encode(minter, forKey: .minter)
 		try container.encode(shouldPreferSymbol, forKey: .shouldPreferSymbol)
 		try container.encode(attributes, forKey: .attributes)
+		try container.encodeIfPresent(ttl?.description, forKey: .ttl)
 	}
 	
 	/// Helper to run the URI through the `MediaProxyService` to generate a useable URL for the thumbnail (if available)

@@ -5119,5 +5119,59 @@
 		"firstTime": "2022-05-24T15:27:44Z",
 		"lastLevel": 2392848,
 		"lastTime": "2022-05-24T15:27:44Z"
-	}
+	},
+	{
+        "id": 228032613711860,
+        "account": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "token": {
+            "id": 679575677829121,
+            "contract": {
+                "alias": "FXHASH GENTK v2",
+                "address": "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi"
+            },
+            "tokenId": "1604544",
+            "standard": "fa2",
+            "totalSupply": "1",
+            "metadata": {
+                "ttl": "30",
+                "name": "[WAITING TO BE SIGNED]",
+                "symbol": "GENTK",
+                "decimals": "0",
+                "displayUri": "ipfs://QmYwSwa5hP4346GqD7hAjutwJSmeYTdiLQ7Wec2C7Cez1D",
+                "artifactUri": "ipfs://QmdGV3UqJqX4v5x9nFcDYeekCEAm3SDXUG5SHdjKQKn4Pe",
+                "description": "This Gentk is waiting to be signed by the fxhash signer module",
+                "thumbnailUri": "ipfs://QmbvEAn7FLMeYBDroYwBP8qWc3d3VVWbk19tTB83LCMB5S"
+            }
+        },
+        "balance": "1",
+        "transfersCount": 1,
+        "firstLevel": 3956480,
+        "firstTime": "2023-07-28T15:52:10Z",
+        "lastLevel": 3956480,
+        "lastTime": "2023-07-28T15:52:10Z"
+    },
+	{
+        "id": 228032613711850,
+        "account": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "token": {
+            "id": 680894033559553,
+            "contract": {
+                "alias": "FXHASH GENTK v2",
+                "address": "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi"
+            },
+            "tokenId": "1604565",
+            "standard": "fa2",
+            "totalSupply": "1"
+        },
+        "balance": "1",
+        "transfersCount": 1,
+        "firstLevel": 3961369,
+        "firstTime": "2023-07-29T12:25:40Z",
+        "lastLevel": 3961369,
+        "lastTime": "2023-07-29T12:25:40Z"
+    }
 ]
