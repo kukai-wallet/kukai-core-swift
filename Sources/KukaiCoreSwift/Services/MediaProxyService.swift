@@ -275,7 +275,7 @@ public class MediaProxyService: NSObject {
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, completion: ((CGSize?) -> Void)? = nil) {
+	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize? = nil, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			imageView.image = fallback
 			if let comp = completion { comp(nil) }
@@ -286,7 +286,13 @@ public class MediaProxyService: NSObject {
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
-		var processors: [KingfisherOptionsInfoItem] = [.downloader(MediaProxyService.customImageDownloader), .processor(DefaultImageProcessor.default)]
+		var processors: [KingfisherOptionsInfoItem] = [.downloader(MediaProxyService.customImageDownloader)]
+		
+		if let downsample = downSampleSize {
+			processors.append(.processor(DownsamplingImageProcessor(size: downsample)))
+		} else {
+			processors.append(.processor(DefaultImageProcessor.default))
+		}
 		
 		if cacheType == .temporary {
 			processors.append(.diskCacheExpiration(.days(7)))
