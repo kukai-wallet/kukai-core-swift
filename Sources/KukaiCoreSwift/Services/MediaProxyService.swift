@@ -61,6 +61,8 @@ public class MediaProxyService: NSObject {
 	private static let audioFormats = ["mpeg", "mpg", "mp3"]
 	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg"] // gifs might be reencoded as video, so have to exclude them
 	private static let customImageDownloader = ContentTypeCheckingImageDownloader(name: "custom-svg")
+	private static let permanentCache = ImageCache(name: "permanent")
+	private static let temporaryCache = ImageCache(name: "temporary")
 	
 	
 	// MARK: - URL conversion
@@ -253,13 +255,24 @@ public class MediaProxyService: NSObject {
 	// MARK: - Cache management
 	
 	/// Clear all images from all caches
-	public static func removeAllImages() {
-		ImageCache.default.clearCache()
+	public static func removeAllImages(completion: @escaping (() -> Void)) {
+		MediaProxyService.temporaryCache.clearCache {
+			MediaProxyService.permanentCache.clearCache(completion: completion)
+		}
+	}
+	
+	public static func removeAllImages(fromCache: CacheType, completion: @escaping (() -> Void)) {
+		imageCache(forType: fromCache).clearCache(completion: completion)
 	}
 	
 	/// Clear only iamges from cahce that have expired
 	public static func clearExpiredImages() {
-		ImageCache.default.cleanExpiredCache(completion: nil)
+		MediaProxyService.temporaryCache.cleanExpiredCache(completion: nil)
+	}
+	
+	/// Get size in bytes
+	public static func sizeOf(cache: CacheType) -> UInt {
+		return (try? imageCache(forType: cache).diskStorage.totalSize()) ?? 0
 	}
 	
 	
@@ -295,7 +308,10 @@ public class MediaProxyService: NSObject {
 		}
 		
 		if cacheType == .temporary {
-			processors.append(.diskCacheExpiration(.days(7)))
+			processors.append(contentsOf: [.targetCache(MediaProxyService.temporaryCache), .diskCacheExpiration(.days(7))])
+			
+		} else {
+			processors.append(.targetCache(MediaProxyService.permanentCache))
 		}
 		
 		imageView.kf.indicatorType = .activity
@@ -313,13 +329,21 @@ public class MediaProxyService: NSObject {
 		}
 	}
 	
+	public static func imageCache(forType: CacheType) -> ImageCache {
+		if forType == .temporary {
+			return MediaProxyService.temporaryCache
+		} else {
+			return MediaProxyService.permanentCache
+		}
+	}
+	
 	/**
 	 Attempt to use KingFisher library to load an image from a URL, and store it directly in the cache for later usage. Also optional return the downloaded size via a completion block, useful for preparing table/collection view
 	 - parameter url: Media proxy URL pointing to an image
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func cacheImage(url: URL?, completion: @escaping ((CGSize?) -> Void)) {
+	public static func cacheImage(url: URL?, cacheType: CacheType = .temporary, completion: @escaping ((CGSize?) -> Void)) {
 		guard let url = url else {
 			completion(nil)
 			return
@@ -331,7 +355,13 @@ public class MediaProxyService: NSObject {
 		MediaProxyService.customImageDownloader.downloadImage(with: url) { result in
 			switch result {
 				case .success(let value):
-					ImageCache.default.store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo([])) { _ in
+					var options: [KingfisherOptionsInfoItem] = []
+					
+					if cacheType == .temporary {
+						options = [.diskCacheExpiration(.days(7))]
+					}
+					
+					imageCache(forType: cacheType).store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo(options)) { _ in
 						completion(value.image.size)
 					}
 					
@@ -343,17 +373,13 @@ public class MediaProxyService: NSObject {
 	}
 	
 	/// Check if a given url is already cached
-	public static func isCached(url: URL?) -> Bool {
+	public static func isCached(url: URL?, cacheType: CacheType = .temporary) -> Bool {
 		guard let url = url else {
 			return false
 		}
 		
 		let identifier = DefaultImageProcessor.default.identifier
-		return ImageCache.default.isCached(forKey: url.absoluteString, processorIdentifier: identifier)
-	}
-	
-	public static func imageCache() -> ImageCache {
-		return ImageCache.default
+		return imageCache(forType: cacheType).isCached(forKey: url.absoluteString, processorIdentifier: identifier)
 	}
 	
 	/**
@@ -362,13 +388,13 @@ public class MediaProxyService: NSObject {
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func sizeForImageIfCached(url: URL?, completion: @escaping ((CGSize?) -> Void) ) {
+	public static func sizeForImageIfCached(url: URL?, cacheType: CacheType = .temporary, completion: @escaping ((CGSize?) -> Void) ) {
 		guard let url = url else {
 			completion(nil)
 			return
 		}
 		
-		ImageCache.default.retrieveImage(forKey: url.absoluteString) { result in
+		imageCache(forType: cacheType).retrieveImage(forKey: url.absoluteString) { result in
 			switch result {
 				case .success(let value):
 					completion(value.image?.size)
