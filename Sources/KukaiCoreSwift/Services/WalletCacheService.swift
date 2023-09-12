@@ -202,11 +202,13 @@ public struct WalletMetadataList: Codable, Hashable {
 		return temp
 	}
 	
-	public func allMetadata() -> [WalletMetadata] {
+	public func allMetadata(onlySeedBased: Bool = false) -> [WalletMetadata] {
 		var temp: [WalletMetadata] = []
 		
-		for metadata in socialWallets {
-			temp.append(metadata)
+		if !onlySeedBased {
+			for metadata in socialWallets {
+				temp.append(metadata)
+			}
 		}
 		
 		for metadata in hdWallets {
@@ -217,12 +219,16 @@ public struct WalletMetadataList: Codable, Hashable {
 			temp.append(metadata)
 		}
 		
-		for metadata in ledgerWallets {
-			temp.append(metadata)
+		if !onlySeedBased {
+			for metadata in ledgerWallets {
+				temp.append(metadata)
+			}
 		}
 		
-		for metadata in watchWallets {
-			temp.append(metadata)
+		if !onlySeedBased {
+			for metadata in watchWallets {
+				temp.append(metadata)
+			}
 		}
 		
 		return temp
