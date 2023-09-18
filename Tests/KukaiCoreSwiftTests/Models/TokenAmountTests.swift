@@ -196,4 +196,20 @@ class TokenAmountTests: XCTestCase {
 		let addition = (newValue + second)
 		XCTAssert(addition == TokenAmount.zeroBalance(decimalPlaces: 6), addition.description)
 	}
+	
+	func testDecoder() {
+		let decoder = JSONDecoder()
+		
+		let json1 = "{\"balance\": \"123456\", \"decimalPlaces\": 3}"
+		let amount1 = try? decoder.decode(TokenAmount.self, from: json1.data(using: .utf8) ?? Data())
+		XCTAssert(amount1?.description == "123.456", amount1?.description ?? "-")
+		
+		let json2 = "\"123456\""
+		let amount2 = try? decoder.decode(TokenAmount.self, from: json2.data(using: .utf8) ?? Data())
+		XCTAssert(amount2?.description == "123456", amount2?.description ?? "-")
+		
+		let json3 = "123456"
+		let amount3 = try? decoder.decode(TokenAmount.self, from: json3.data(using: .utf8) ?? Data())
+		XCTAssert(amount3?.description == "123456", amount3?.description ?? "-")
+	}
 }

@@ -208,4 +208,96 @@ class WalletCacheServiceTests: XCTestCase {
 		let groupName5 = list.metadata(forAddress: hdWallet4.address)?.hdWalletGroupName
 		XCTAssert(groupName5 == "HD Wallet 4", groupName5 ?? "-")
 	}
+	
+	func testMetadata() {
+		let mainentDomain = [TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.tez", address: "tz1abc123"))]
+		let ghostnetDomain = [TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.gho", address: "tz1abc123"))]
+		let metadata1 = WalletMetadata(address: "tz1abc123", hdWalletGroupName: nil, mainnetDomains: mainentDomain, ghostnetDomains: ghostnetDomain, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		
+		XCTAssert(metadata1.hasMainnetDomain())
+		XCTAssert(metadata1.hasGhostnetDomain())
+		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.mainnet))
+		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.testnet))
+		XCTAssert(metadata1.mainnetDomains?.first?.domain.name == "blah.tez")
+		XCTAssert(metadata1.ghostnetDomains?.first?.domain.name == "blah.gho")
+		XCTAssert(metadata1.primaryMainnetDomain()?.domain.name == "blah.tez")
+		XCTAssert(metadata1.primaryGhostnetDomain()?.domain.name == "blah.gho")
+		XCTAssert(metadata1.primaryDomain(onNetwork: .mainnet)?.domain.name == "blah.tez")
+		XCTAssert(metadata1.primaryDomain(onNetwork: .testnet)?.domain.name == "blah.gho")
+		
+		
+		
+		let metadata2 = WalletMetadata(address: "tz1def456", hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		
+		XCTAssert(!metadata2.hasMainnetDomain())
+		XCTAssert(!metadata2.hasGhostnetDomain())
+	}
+	
+	func testMetadataList() {
+		let mainentDomain = TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.tez", address: "tz1abc123"))
+		let ghostnetDomain = TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.gho", address: "tz1abc123"))
+		let child = WalletMetadata(address: "tz1child", hdWalletGroupName: nil, type: .hd, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		let updatedWatch = WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "blah", backedUp: true)
+		
+		let hd: [WalletMetadata] = [
+			WalletMetadata(address: "tz1abc123", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [child], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		]
+		let social: [WalletMetadata] = [
+			WalletMetadata(address: "tz1def", hdWalletGroupName: nil, socialUsername: "test@gmail.com", socialType: .google, type: .social, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		]
+		let linear: [WalletMetadata] = [
+			WalletMetadata(address: "tz1ghi", hdWalletGroupName: nil, type: .regular, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		]
+		let watch: [WalletMetadata] = [
+			WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		]
+		
+		var list = WalletMetadataList(socialWallets: social, hdWallets: hd, linearWallets: linear, ledgerWallets: [], watchWallets: watch)
+		
+		let addresses = list.addresses()
+		XCTAssert(addresses == ["tz1def", "tz1abc123", "tz1child", "tz1ghi", "tz1jkl"], addresses.description)
+		
+		let allMeta = list.allMetadata()
+		XCTAssert(allMeta.count == 4, allMeta.count.description)
+		
+		let allSeedMeta = list.allMetadata(onlySeedBased: true)
+		XCTAssert(allSeedMeta.count == 2, allSeedMeta.count.description)
+		
+		let count = list.count()
+		XCTAssert(count == 5, count.description)
+		
+		let first = list.firstMetadata()
+		XCTAssert(first?.address == "tz1def", first?.address ?? "-")
+		
+		let metaForAddress = list.metadata(forAddress: "tz1jkl")
+		XCTAssert(metaForAddress?.address == "tz1jkl", metaForAddress?.address ?? "-")
+		
+		let _ = list.set(hdWalletGroupName: "Test", forAddress: "tz1abc123")
+		let updatedMeta = list.metadata(forAddress: "tz1abc123")
+		XCTAssert(updatedMeta?.hdWalletGroupName == "Test", updatedMeta?.hdWalletGroupName ?? "-")
+		
+		let _ = list.set(nickname: "Testy", forAddress: "tz1abc123")
+		let updatedMeta2 = list.metadata(forAddress: "tz1abc123")
+		XCTAssert(updatedMeta2?.walletNickname == "Testy", updatedMeta?.walletNickname ?? "-")
+		
+		let _ = list.set(mainnetDomain: mainentDomain, ghostnetDomain: ghostnetDomain, forAddress: "tz1abc123")
+		let updatedMeta3 = list.metadata(forAddress: "tz1abc123")
+		XCTAssert(updatedMeta3?.hasMainnetDomain() == true)
+		XCTAssert(updatedMeta3?.hasGhostnetDomain() == true)
+		
+		let _ = list.update(address: "tz1jkl", with: updatedWatch)
+		let updatedMeta4 = list.metadata(forAddress: "tz1jkl")
+		XCTAssert(updatedMeta4?.bas58EncodedPublicKey == "blah")
+	}
+	
+	func testWatchWallet() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		let watchWallet = WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		XCTAssert(walletCacheService.cacheWatchWallet(metadata: watchWallet))
+		
+		let list =  walletCacheService.readNonsensitive()
+		let watch = list.watchWallets
+		XCTAssert(watch.count == 1, watch.count.description)
+	}
 }

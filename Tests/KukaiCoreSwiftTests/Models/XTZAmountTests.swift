@@ -172,4 +172,24 @@ class XTZAmountTests: XCTestCase {
 		second = XTZAmount(fromNormalisedAmount: 17)
 		XCTAssert(first != second)
 	}
+	
+	func testDecoder() {
+		let decoder = JSONDecoder()
+		
+		let json1 = "{\"balance\": \"123456\", \"decimalPlaces\": 3}"
+		let amount1 = try? decoder.decode(XTZAmount.self, from: json1.data(using: .utf8) ?? Data())
+		XCTAssert(amount1?.description == "0.123456", amount1?.description ?? "-")
+		
+		let json2 = "{\"balance\": \"123456\"}"
+		let amount2 = try? decoder.decode(XTZAmount.self, from: json2.data(using: .utf8) ?? Data())
+		XCTAssert(amount2?.description == "0.123456", amount2?.description ?? "-")
+		
+		let json3 = "\"123456\""
+		let amount3 = try? decoder.decode(XTZAmount.self, from: json3.data(using: .utf8) ?? Data())
+		XCTAssert(amount3?.description == "0.123456", amount3?.description ?? "-")
+		
+		let json4 = "123456"
+		let amount4 = try? decoder.decode(XTZAmount.self, from: json4.data(using: .utf8) ?? Data())
+		XCTAssert(amount4?.description == "0.123456", amount4?.description ?? "-")
+	}
 }
