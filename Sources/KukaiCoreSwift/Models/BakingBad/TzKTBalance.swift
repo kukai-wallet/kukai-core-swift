@@ -203,6 +203,23 @@ public struct TzKTBalanceMetadata: Codable {
 		case thumbnail_uri
 	}
 	
+	public init(name: String?, symbol: String?, decimals: String, formats: [TzKTBalanceMetadataFormat]?, displayUri: String?, artifactUri: String?, thumbnailUri: String?, description: String?, mintingTool: String?, tags: [String]?, minter: String?, shouldPreferSymbol: Bool?, attributes: [Any]?, ttl: Int?) {
+		self.name = name
+		self.symbol = symbol
+		self.decimals = decimals
+		self.formats = formats
+		self.displayUri = displayUri
+		self.artifactUri = artifactUri
+		self.thumbnailUri = thumbnailUri
+		self.description = description
+		self.mintingTool = mintingTool
+		self.tags = tags
+		self.minter = minter
+		self.shouldPreferSymbol = shouldPreferSymbol
+		self.attributes = attributes
+		self.ttl = ttl
+	}
+	
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		decimals = try container.decode(String.self, forKey: .decimals)

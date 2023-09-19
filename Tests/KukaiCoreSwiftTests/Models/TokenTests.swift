@@ -41,5 +41,18 @@ class TokenTests: XCTestCase {
 		XCTAssert(xtzToken.isXTZ() == true)
 		XCTAssert(xtzToken.symbol == "XTZ")
 		XCTAssert(xtzToken.tokenContractAddress == nil)
+		
+		
+		XCTAssert(token.description == "{Symbol: T, Name: test1, Type: fungible, FaVersion: fa1_2, NFT count: 0}", token.description)
+		
+		let placeholder = Token.placeholder(fromNFT: nft, amount: .init(fromNormalisedAmount: 1, decimalPlaces: 0), thumbnailURL: nil)
+		XCTAssert(placeholder.name == "Unknown Token", placeholder.name ?? "-")
+		XCTAssert(placeholder.balance.description == "1", placeholder.balance.description)
+		
+		XCTAssert(token == token)
+		XCTAssert(token != token2)
+		
+		XCTAssert(token.id == "KT1abc", token.id)
+		XCTAssert(token2.id == "KT1abc:0", token2.id)
 	}
 }

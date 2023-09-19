@@ -43,6 +43,18 @@ class MediaProxySerivceTests: XCTestCase {
 		XCTAssert(url5?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url5?.absoluteString ?? "")
 		XCTAssert(url6?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url6?.absoluteString ?? "")
 		XCTAssert(url7?.absoluteString == "https://static.tcinfra.net/media/medium/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url7?.absoluteString ?? "")
+		
+		let url8 = MediaProxyService.thumbnailURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
+		let url9 = MediaProxyService.thumbnailURL(forNFT: MockConstants.tokenWithNFTs.nfts![0], keepGif: true)
+		
+		XCTAssert(url8?.absoluteString == "https://static.tcinfra.net/media/icon/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url8?.absoluteString ?? "-")
+		XCTAssert(url9?.absoluteString == "https://media_mobile.tcinfra.net/media/icon-keep-gif/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url9?.absoluteString ?? "-")
+		
+		let url10 = MediaProxyService.displayURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
+		let url11 = MediaProxyService.displayURL(forNFT: MockConstants.tokenWithNFTs.nfts![0], keepGif: true)
+		
+		XCTAssert(url10?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url10?.absoluteString ?? "-")
+		XCTAssert(url11?.absoluteString == "https://media_mobile.tcinfra.net/media/small-keep-gif/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url11?.absoluteString ?? "-")
 	}
 	
 	func testMediaTypeCheckerFromFormat() {

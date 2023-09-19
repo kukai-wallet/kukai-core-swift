@@ -83,4 +83,4 @@ You can see some of this functionality inside the repo's example iOS-Example pro
 
 # Documentation
 
-Compiled Swift Doc's can be found [here](https://kukai.app/kukai-core-swift/)
+Compiled Swift Doc's can be found [here](https://kukai-core-swift.kukai.app/)

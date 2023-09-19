@@ -255,6 +255,7 @@ class TzKTClientTests: XCTestCase {
 					
 					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
 					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
+					XCTAssert(account.nfts[0].thumbnailURL?.absoluteString == "https://services.tzkt.io/v1/avatars/KT1XRH2L7VFAMvQrAK17aTfrx71NL69gaBAm", account.nfts[0].thumbnailURL?.absoluteString ?? "-")
 					XCTAssert(account.nfts[0].nfts?[0].artifactURI?.absoluteString == "ipfs://QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURI?.absoluteString ?? "")
 					let keyValueAttributes1 = account.nfts[0].nfts?[0].metadata?.getKeyValuesFromAttributes() ?? []
 					XCTAssert(keyValueAttributes1.count == 5, "\(keyValueAttributes1.count)")
@@ -379,6 +380,27 @@ class TzKTClientTests: XCTestCase {
 				case .failure(let error):
 					XCTFail("Error: \(error)")
 			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 30)
+	}
+	
+	func testBakers() {
+		let expectation = XCTestExpectation(description: "tzkt-bakers")
+		
+		MockConstants.shared.tzktClient.bakers { result in
+			switch result {
+				case .success(let bakers):
+					XCTAssert(bakers.count == 40, bakers.count.description)
+					XCTAssert(bakers[0].name == "ECAD Labs Baker", bakers[0].name ?? "")
+					XCTAssert(bakers[0].address == "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP", bakers[0].address)
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
 			
 			expectation.fulfill()
 		}

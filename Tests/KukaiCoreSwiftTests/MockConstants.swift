@@ -119,6 +119,12 @@ public struct MockConstants {
 		tzktLastBakerRewardURL3.appendQueryItem(name: "type", value: "transaction")
 		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi")
 		
+		var tzktDelegatesURL = tzktURL.appendingPathComponent("v1/delegates")
+		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")
+		tzktDelegatesURL.appendQueryItem(name: "active", value: "true")
+		tzktDelegatesURL.appendQueryItem(name: "sort.desc", value: "stakingBalance")
+		tzktDelegatesURL.appendQueryItem(name: "limit", value: 10)
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -166,6 +172,7 @@ public struct MockConstants {
 			tzktLastBakerRewardURL: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL2: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL3: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
+			tzktDelegatesURL: (MockConstants.jsonStub(fromFilename: "tzkt_ghostnet-bakers"), MockConstants.http200),
 			
 			// Media proxy
 			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.ipfsResponseWithHeaders),
@@ -328,8 +335,9 @@ public struct MockConstants {
 	public static let tokenXTZ = Token.xtz()
 	public static let token3Decimals = Token(name: "Token 3 decimals", symbol: "TK3", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", tokenId: nil, nfts: nil, mintingTool: nil)
 	public static let token10Decimals = Token(name: "Token 10 decimals", symbol: "TK10", tokenType: .fungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", tokenId: 0, nfts: nil, mintingTool: nil)
+	public static let nftMetadata = TzKTBalanceMetadata(name: "NFT Name", symbol: "NFT", decimals: "0", formats: nil, displayUri: MediaProxySerivceTests.ipfsURIWithoutExtension, artifactUri: nil, thumbnailUri: MediaProxySerivceTests.ipfsURIWithExtension, description: "A sample description", mintingTool: nil, tags: nil, minter: nil, shouldPreferSymbol: nil, attributes: nil, ttl: nil)
 	public static let tokenWithNFTs = Token(name: "Token with NFTS", symbol: "T-NFT", tokenType: .nonfungible, faVersion: .fa2, balance: TokenAmount.zero(), thumbnailURL: nil, tokenContractAddress: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", tokenId: 0, nfts: [
-		NFT(fromTzKTBalance: TzKTBalance(balance: "1", token: TzKTBalanceToken(contract: TzKTAddress(alias: nil, address: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123"), tokenId: "4", standard: .fa2, totalSupply: "1", metadata: nil)))
+		NFT(fromTzKTBalance: TzKTBalance(balance: "1", token: TzKTBalanceToken(contract: TzKTAddress(alias: nil, address: "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123"), tokenId: "4", standard: .fa2, totalSupply: "1", metadata: MockConstants.nftMetadata)))
 	], mintingTool: nil)
 	
 	

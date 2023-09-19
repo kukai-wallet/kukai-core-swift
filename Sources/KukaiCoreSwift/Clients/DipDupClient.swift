@@ -194,11 +194,11 @@ public class DipDupClient {
 	 - parameter exchangeContract: The KT address of the dex contract to query data for
 	 - parameter completion: Block returning a GraphQL response or an KukaiError
 	 */
-	public func getChartDataFor(exchangeContract: String, completion: @escaping ((Result<GraphQLResponse<DipDupChartData>, KukaiError>) -> Void)) {
+	public func getChartDataFor(exchangeContract: String, nowDate: Date = Date(), completion: @escaping ((Result<GraphQLResponse<DipDupChartData>, KukaiError>) -> Void)) {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		
-		let now = Date().timeIntervalSince1970
+		let now = nowDate.timeIntervalSince1970
 		
 		let dayAgo = Date(timeIntervalSince1970: now - (60 * 60 * 24))
 		let weekAgo = Date(timeIntervalSince1970: now - (60 * 60 * 24 * 7))

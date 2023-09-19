@@ -68,11 +68,10 @@ class DipDupClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 10)
 	}
 	
-	/*
 	func testChartData() {
 		let expectation = XCTestExpectation(description: "dipdup-get-chart")
 		
-		MockConstants.shared.dipDupClient.getChartDataFor(exchangeContract: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc") { result in
+		MockConstants.shared.dipDupClient.getChartDataFor(exchangeContract: "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc", nowDate: Date(timeIntervalSince1970: 1695135)) { result in
 			guard let res = try? result.get() else {
 				XCTFail(result.getFailure().description)
 				expectation.fulfill()
@@ -98,5 +97,4 @@ class DipDupClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 10)
 	}
-	*/
 }
