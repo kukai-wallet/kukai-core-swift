@@ -97,6 +97,8 @@ public struct TzKTBaker: Codable, Hashable {
 		self.config = config
 	}
 	
+	/// Ghostnet has a different setup for bakers, but we need to display and interact with them the same way.
+	/// So this helper extract what it can from the API and creates semi-real baker objects to help users deal with Ghostnet
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
 		guard data.count == 4, let address = data[0] as? String, let balance = (data[2] as? NSNumber)?.decimalValue, let stakingBalance = (data[3] as? NSNumber)?.decimalValue else {
 			return nil
@@ -108,6 +110,7 @@ public struct TzKTBaker: Codable, Hashable {
 		return TzKTBaker(address: address, name: name, logo: nil, balance: normalisedBalance, stakingBalance: normalisedStakingBal, stakingCapacity: normalisedStakingBal, maxStakingBalance: normalisedStakingBal, freeSpace: normalisedStakingBal, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
 	}
 	
+	/// Convert con-chain data into a meaningful, readable object
 	public func rewardStruct() -> TzKTBakerConfigRewardStruct? {
 		guard let config = config, let rewardStructInt = config.latestRewardStruct() else {
 			return nil

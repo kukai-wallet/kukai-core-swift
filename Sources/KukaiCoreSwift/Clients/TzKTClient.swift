@@ -13,7 +13,7 @@ import Kingfisher
 import os.log
 
 
-/// TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, and transactions
+/// TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, transactions, bakers, account status etc
 public class TzKTClient {
 	
 	/// Unique Errors that TzKTClient can throw
@@ -22,6 +22,7 @@ public class TzKTClient {
 		case parseError(String)
 	}
 	
+	/// Constants needed for interacting with the API
 	public struct Constants {
 		public static let tokenBalanceQuerySize = 10000
 	}
@@ -41,8 +42,10 @@ public class TzKTClient {
 	private var addressesToWatch: [String] = []
 	private var newAddressesToWatch: [String] = []
 	
+	/// Is currently monitoring an address for update notifications
 	public var isListening = false
 	
+	/// Notifications of monitored addresses that have changed
 	@Published public var accountDidChange: [String] = []
 	
 	
@@ -923,6 +926,7 @@ public class TzKTClient {
 	
 	// MARK: - Transaction History
 	
+	/// Fetch all transactions, both account operations, and token transfers, and combine them into 1 response
 	public func fetchTransactions(forAddress address: String, limit: Int = 50, completion: @escaping (([TzKTTransaction]) -> Void)) {
 		let dispatchGroupTransactions = DispatchGroup()
 		dispatchGroupTransactions.enter()
@@ -1018,6 +1022,7 @@ public class TzKTClient {
 		self.tempTokenTransfers = []
 	}
 	
+	/// Group transactions into logical groups, so user doesn't see N enteries for 1 contract call resulting in many internal operations
 	public func groupTransactions(transactions: [TzKTTransaction], currentWalletAddress: String) -> [TzKTTransactionGroup] {
 		var tempTrans: [TzKTTransaction] = []
 		var groups: [TzKTTransactionGroup] = []
@@ -1081,6 +1086,7 @@ public class TzKTClient {
 	}
 }
 
+/// SingnalR implementation to support account monitoring webscokets
 extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidOpen(hubConnection: HubConnection) {

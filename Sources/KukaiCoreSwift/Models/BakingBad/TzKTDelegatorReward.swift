@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// An object containing info on the reward a delegator should receive from a baker
 public struct TzKTDelegatorReward: Codable {
 	
 	public let cycle: Int

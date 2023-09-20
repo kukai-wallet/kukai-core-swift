@@ -9,6 +9,7 @@ import UIKit
 import Kingfisher
 import SVGKit
 
+/// SVG image processor for Kingfisher library
 public struct SVGImgProcessor: ImageProcessor {
 	
 	public var identifier: String = "app.kukai.mobile.webpprocessor"

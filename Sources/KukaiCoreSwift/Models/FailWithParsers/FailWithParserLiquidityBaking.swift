@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Dedicated "FailWith" parser for the codes received from Liquidity Baking contract
 public struct FailWithParserLiquidityBaking: FailWithParser {
 	
 	public func parse(failWith: FailWith?) -> String? {

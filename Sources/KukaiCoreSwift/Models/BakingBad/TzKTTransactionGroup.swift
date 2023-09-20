@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Artifical object used to group related transactions into a more user friendly display
+/// For example, 1 contract call can reuslt in many transactions being returned. To avoid the users UI being clogged, we group all them into 1 group, so the user only needs to see 1 item for 1 action they performed
 public struct TzKTTransactionGroup: Codable, Hashable, Identifiable, CustomStringConvertible {
 	
 	// MARK: - Properties

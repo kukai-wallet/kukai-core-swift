@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// FA1.2 / FA2 token transafers are treated differently from transactions. This object is used when fetching data form the API, as a temporary placeholder, ultimately to be merged into the transactions
 public struct TzKTTokenTransfer: Codable {
 	public let id: Decimal
 	public var hash: String? // Doesn't come from API, but needed later, added during grouping / conversion phase

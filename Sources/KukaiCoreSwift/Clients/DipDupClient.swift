@@ -8,8 +8,8 @@
 import Foundation
 
 /**
- Class exposes functions to allow communication to the dedicated indexer platform DipDup ( https://dipdup.net/ ).
- DipDup is composed on many small, dedicated indexers, powered by GraphQL. This class tries to exposes userflow functions, allowing users to accomplish tasks without having to worry about the underlying complexities
+ This client exposes functions to allow communication to the indexer platform DipDup ( https://dipdup.net/ ).
+ DipDup is composed of many small, dedicated indexers, powered by GraphQL. This client tries to exposes userflow functions, allowing users to accomplish tasks without having to worry about the underlying complexities
  */
 public class DipDupClient {
 	

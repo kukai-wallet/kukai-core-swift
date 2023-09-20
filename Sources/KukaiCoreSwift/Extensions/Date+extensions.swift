@@ -9,6 +9,7 @@ import Foundation
 
 public extension Date {
 	
+	/// Helper to return strings like "15 seconds ago", "1 minute ago" etc, from a Date
 	func timeAgoDisplay() -> String {
 		let formatter = RelativeDateTimeFormatter()
 		formatter.unitsStyle = .full

@@ -49,6 +49,7 @@ public class TezosDomainsClient {
 	
 	// MARK: - Public single functions
 	
+	/// Get Tezos domain response for a given address
 	public func getDomainFor(address: String, url: URL? = nil, completion: @escaping ((Result<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>) -> Void)) {
 		let queryDict = ["query": "query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
@@ -56,6 +57,7 @@ public class TezosDomainsClient {
 		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self, completion: completion)
 	}
 	
+	/// Query both mainnet and ghostnet versions of Tezos domains to find all records for the given address
 	public func getMainAndGhostDomainFor(address: String, completion: @escaping (( Result<BothNetworkReverseRecord, KukaiError> ) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		dispatchGroup.enter()
@@ -99,6 +101,7 @@ public class TezosDomainsClient {
 		}
 	}
 	
+	/// Find the tz address of a given domain
 	public func getAddressFor(domain: String, completion: @escaping ((Result<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError>) -> Void)) {
 		let queryDict = ["query": "query {domain(name: \"\(domain)\") { name, address }}"]
 		let data = try? JSONEncoder().encode(queryDict)
@@ -110,6 +113,7 @@ public class TezosDomainsClient {
 	
 	// MARK: - Public bulk functions
 	
+	/// Bulk function for fetching domains for an array of addresses
 	public func getDomainsFor(addresses: [String], url: URL? = nil, completion: @escaping ((Result<GraphQLResponse<TezosDomainsDomainBulkResponse>, KukaiError>) -> Void)) {
 		var addressArray = ""
 		for add in addresses {
@@ -122,6 +126,7 @@ public class TezosDomainsClient {
 		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainBulkResponse>.self, completion: completion)
 	}
 	
+	/// Bulk function for fetching domains for an array of addresses, check ghostnet and mainnet for each
 	public func getMainAndGhostDomainsFor(addresses: [String], completion: @escaping (( Result<[String: BothNetworkReverseRecord], KukaiError> ) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		dispatchGroup.enter()
@@ -183,6 +188,7 @@ public class TezosDomainsClient {
 		}
 	}
 	
+	/// Bulk function to find all domains for a list of addresses
 	public func getAddressesFor(domains: [String], completion: @escaping ((Result<GraphQLResponse<TezosDomainsAddressBulkResponse>, KukaiError>) -> Void)) {
 		var domainsArray = ""
 		for dom in domains {

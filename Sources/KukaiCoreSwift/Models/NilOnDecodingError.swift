@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// property wrapper to easily handle a situation where we don't want decoding to fail for 1 property which may be problematic. Instead just default it to nil
 @propertyWrapper
 public struct NilOnDecodingError<Wrapped> {
 	

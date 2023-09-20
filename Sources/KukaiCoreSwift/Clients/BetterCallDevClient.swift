@@ -10,8 +10,8 @@ import Foundation
 import Kingfisher
 import os.log
 
-/// BetterCallDev (BCD) is an indexing/smart contract debugging tool, used for the Tezos blockchain.
-/// This class allows developers to interact with their API, to fetch data that would otherwise be impossible for a mobile app
+/// BetterCallDev (BCD) is an indexer/smart contract debugging tool, used for the Tezos blockchain.
+/// This class allows developers to interact with their API, to fetch data that would otherwise be impossible for a mobile app to fetch from the Tezos RPC
 public class BetterCallDevClient {
 	
 	/// Dedicated BCD errors

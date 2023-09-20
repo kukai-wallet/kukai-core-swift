@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import OSLog
 
 /// Extensions to make adding query items easier
 extension URL {
 	
+	/// Helper to append a String as a query param to a URL
 	mutating func appendQueryItem(name: String, value: String?) {
 		
 		guard var urlComponents = URLComponents(string: absoluteString) else { return }
@@ -28,9 +30,14 @@ extension URL {
 		urlComponents.queryItems = queryItems
 		
 		// Returns the url from new url components
-		self = urlComponents.url!
+		if let u = urlComponents.url {
+			self = u
+		} else {
+			os_log("Unable to appendQueryItem %@ to URL", log: .kukaiCoreSwift, type: .error, name)
+		}
 	}
 	
+	/// Helper to append a Int as a query param to a URL
 	mutating func appendQueryItem(name: String, value: Int) {
 		self.appendQueryItem(name: name, value: value.description)
 	}

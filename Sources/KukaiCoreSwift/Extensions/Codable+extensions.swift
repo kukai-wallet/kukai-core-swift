@@ -8,8 +8,10 @@
 
 import Foundation
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 private struct DummyCodable: Codable {}
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 struct JSONCodingKeys: CodingKey {
 	var stringValue: String
 	var intValue: Int?
@@ -24,6 +26,7 @@ struct JSONCodingKeys: CodingKey {
 	}
 }
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 extension KeyedDecodingContainer {
 	
 	func decode(_ type: [String: Any].Type, forKey key: K) throws -> [String: Any] {
@@ -108,6 +111,7 @@ extension KeyedDecodingContainer {
 	}
 }
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 extension UnkeyedDecodingContainer {
 	
 	mutating func decode(_ type: [[String: Any]].Type) throws -> [[String: Any]] {
@@ -180,6 +184,7 @@ extension UnkeyedDecodingContainer {
 	}
 }
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 extension KeyedEncodingContainerProtocol where Key == JSONCodingKeys {
 	
 	mutating func encode(_ value: [String: Any]) throws {
@@ -229,6 +234,7 @@ extension KeyedEncodingContainerProtocol where Key == JSONCodingKeys {
 	}
 }
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 extension KeyedEncodingContainerProtocol {
 	mutating func encode(_ value: [String: Any]?, forKey key: Key) throws {
 		guard let value = value else { return }
@@ -245,6 +251,7 @@ extension KeyedEncodingContainerProtocol {
 	}
 }
 
+/// Allowing the encoding/decoing of types containing `Any`, e.g. `[String: Any]`, `[Any]` etc. Necessary for third party APIs that have flexible responses
 extension UnkeyedEncodingContainer {
 	
 	mutating func encode(_ value: [Any]) throws {

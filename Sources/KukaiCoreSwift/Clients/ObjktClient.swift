@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Client for interacting with the API of the popular NFT marketplace, OBJKT.com
+/// Client exposes functions for fetching metadata, pricing, purchase offers, listing etc
 public class ObjktClient {
 	
 	/// The networking service used to fire requests
@@ -21,7 +23,10 @@ public class ObjktClient {
 	private static let collectionCacheKey = "objkt-collection-cache-key"
 	private static let tokenCacheKey = "objkt-token-cache-key"
 	
+	/// Cached metadata of NFT collections, e.g. name, thumbnailURL etc
 	public var collections: [String: ObjktCollection]
+	
+	/// Cached metadata of specific tokens, e.g. prices, offers etc
 	public var tokens: [String: ObjktTokenReponse]
 	
 	
@@ -46,6 +51,9 @@ public class ObjktClient {
 	
 	// MARK: - Public single functions
 	
+	/**
+	 Take in an array of contract addresses, and return a list of the ones that we currently have no metadata for
+	 */
 	public func unresolvedCollections(addresses: [String]) -> [String] {
 		
 		// OBJKT doesn't currently support testnet, easy solution to prevent unwanted requests / processing until a solution is found
@@ -64,6 +72,9 @@ public class ObjktClient {
 		return unresolved
 	}
 	
+	/**
+	 Search OBJKT to find metadata on the list of addresses provided
+	 */
 	public func resolveCollectionsAll(addresses: [String], completion: @escaping ((Result<Bool, KukaiError>) -> Void)) {
 		if addresses.count == 0 {
 			completion(Result.success(true))
@@ -114,6 +125,9 @@ public class ObjktClient {
 	
 	// MARK: - Public single functions
 	
+	/**
+	 Find the metadata of a list of contracts, used recurrisvely to find all collections while limited to request query size
+	 */
 	public func resolveCollectionsPage(addresses: ArraySlice<String>, completion: @escaping ((Result<GraphQLResponse<ObjktCollections>, KukaiError>) -> Void)) {
 		var addressArray = ""
 		for add in addresses {
@@ -126,6 +140,9 @@ public class ObjktClient {
 		self.networkService.request(url: self.config.objktApiURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktCollections>.self, completion: completion)
 	}
 	
+	/**
+	 Find the meatdata of a specific token
+	 */
 	public func resolveToken(address: String, tokenId: Decimal, forOwnerWalletAddress walletAddress: String, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
 		var query = """
 		query {
@@ -184,10 +201,16 @@ public class ObjktClient {
 		}
 	}
 	
+	/**
+	 Helper to fetch a specific token metadata from the cache
+	 */
 	public func tokenResponse(forAddress: String, tokenId: Int) -> ObjktTokenReponse? {
 		return tokens["\(forAddress):\(tokenId)"]
 	}
 	
+	/**
+	 Clear all the cached data
+	 */
 	public func deleteCache() {
 		self.collections = [:]
 		self.tokens = [:]

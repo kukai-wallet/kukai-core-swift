@@ -374,6 +374,7 @@ public class OperationFactory {
 	
 	// MARK: - Extractors
 	
+	/// Internal Struct to encapsulate helpers methods needed to extract critical information from an array of operations, needed for processing decisions like "do i display a send token screen, or a send NFt screen", fetching total XTZ sent in 1 action etc
 	public struct Extractor {
 		
 		/**
