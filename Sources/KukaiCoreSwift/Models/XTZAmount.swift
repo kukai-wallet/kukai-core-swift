@@ -80,9 +80,9 @@ public class XTZAmount: TokenAmount {
 			super.init(bigInt: BigInt(balanceString) ?? 0, decimalPlaces: XTZAmount.xtzDecimalPlaces)
 			
 		} catch {
-			// Attempt to parse the "RPC value" and default decimal palces to zero
 			let container = try decoder.singleValueContainer()
 			
+			// Else, attempt to parse the "RPC value" and default decimal palces to zero
 			if let balanceString = try? container.decode(String.self) {
 				super.init(bigInt: BigInt(balanceString) ?? 0, decimalPlaces: XTZAmount.xtzDecimalPlaces)
 				

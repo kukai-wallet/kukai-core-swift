@@ -1,0 +1,1 @@
+{"query":"query {token(limit: 100, offset: 200, where: {exchanges: {name: {_in: [\"lb\", \"quipuswap\"]}}}) {symbol,address,tokenId,exchanges(where: {name: {_in: [\"lb\", \"quipuswap\"]}}) {name,tezPool,tokenPool,address,sharesTotal,midPrice,token {address,decimals,symbol,tokenId,standard}}}}"}

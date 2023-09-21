@@ -4,40 +4,47 @@
 import PackageDescription
 
 let package = Package(
-    name: "KukaiCoreSwift",
-	platforms: [.iOS(.v14)],
-    products: [
-        .library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
-    ],
-    dependencies: [
-        .package(url: "https://github.com/attaswift/BigInt.git", from: "5.2.1"),
-		.package(name: "Sodium", url: "https://github.com/jedisct1/swift-sodium.git", from: "0.9.1"),
-		.package(name: "secp256k1", url: "https://github.com/Boilertalk/secp256k1.swift.git", from: "0.1.4"),
-		.package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.3.0"),
-		.package(name: "WalletCore", url: "https://github.com/hewigovens/wallet-core-spm", .revisionItem("f32880f28b2de1d500b86db6f4bd1fb6329e546b")),
-    ],
-    targets: [
-        .target(
+	name: "KukaiCoreSwift",
+	platforms: [
+		.iOS("15.0"),
+	],
+	products: [
+		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
+	],
+	dependencies: [
+		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.10"),
+		//.package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.6.2"),
+		.package(url: "https://github.com/simonmcl/Kingfisher.git", from: "1.0.0"),
+		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", from: "6.0.0"),
+		.package(url: "https://github.com/simonmcl/SVGKit", from: "3.0.3"),
+		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
+	],
+	targets: [
+		.target(
 			name: "KukaiCoreSwift",
 			dependencies: [
-				"BigInt",
-				"Sodium",
-				.product(name: "Clibsodium", package: "Sodium"),
-				"secp256k1",
+				"KukaiCryptoSwift",
 				"Kingfisher",
-				"WalletCore",
+				"SVGKit",
+				"CustomAuth",
+				"SignalRClient",
 			],
 			resources: [
-				.copy("Services/External")
+				.copy("Services/kukai-dex-calculations.js"),
+				.copy("Services/ledger_app_tezos.js"),
+				.copy("Services/taquito_local_forging.js")
 			]
 		),
 		
-        .testTarget(
+		.testTarget(
 			name: "KukaiCoreSwiftTests",
-			dependencies: ["KukaiCoreSwift"],
+			dependencies: [
+				"KukaiCoreSwift"
+			],
 			resources: [
-				.copy("Stubs")
+				.copy("Stubs"),
+				.copy("Services/MockData")
 			]
 		),
-    ]
+	]
 )

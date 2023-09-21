@@ -13,6 +13,7 @@ import os.log
 /// Taquito (https://github.com/ecadlabs/taquito) is a popular open source Tezos library written in Typescript and Javascript.
 /// Taquito is made up of many separate packages that deal with various aspects of Tezos RPC and Michelson.
 /// This serivce class is a wrapper around a small piece of the Taquito library to expose funtionality that would otherwise be time consuming/risky/dangerous to re-implement natively.
+/// The JS can now be found on each github release here: https://github.com/ecadlabs/taquito/releases/, by extracting the zip named "taquito-local-forging-vanilla.zip"
 public class TaquitoService {
 	
 	/// Pirvate local copy of a javascript context
@@ -30,8 +31,8 @@ public class TaquitoService {
 		case alreadyParsing
 	}
 	
-	private var lastForgeCompletionHandler: ((Result<String, ErrorResponse>) -> Void)? = nil
-	private var lastParseCompletionHandler: ((Result<OperationPayload, ErrorResponse>) -> Void)? = nil
+	private var lastForgeCompletionHandler: ((Result<String, KukaiError>) -> Void)? = nil
+	private var lastParseCompletionHandler: ((Result<OperationPayload, KukaiError>) -> Void)? = nil
 	
 	/// Public shared instace to avoid having multiple copies of the underlying `JSContext` created
 	public static let shared = TaquitoService()
@@ -46,19 +47,19 @@ public class TaquitoService {
 	private init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { [weak self] context, exception in
-			os_log("JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			os_log("Taquito JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
 			
 			if self?.isForging == true, let lastForge = self?.lastForgeCompletionHandler {
 				self?.isForging = false
-				lastForge(Result.failure(ErrorResponse.error(string: exception?.toString() ?? "", errorType: .internalApplicationError)))
+				lastForge(Result.failure(KukaiError.unknown(withString: exception?.toString() ?? "")))
 				
 			} else if self?.isParsing == true, let lastParse = self?.lastParseCompletionHandler {
 				self?.isParsing = false
-				lastParse(Result.failure(ErrorResponse.error(string: exception?.toString() ?? "", errorType: .internalApplicationError)))
+				lastParse(Result.failure(KukaiError.unknown(withString: exception?.toString() ?? "")))
 			}
 		}
 		
-		if let jsSourcePath = Bundle.module.url(forResource: "taquito_local_forging", withExtension: "js", subdirectory: "External") {
+		if let jsSourcePath = Bundle.module.url(forResource: "taquito_local_forging", withExtension: "js") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
 				self.jsContext.evaluateScript(jsSourceContents)
@@ -83,11 +84,11 @@ public class TaquitoService {
 	- parameter operationPayload: The payload to forge. Can be constructed using `OperationFactory.operationPayload(...)`.
 	- parameter completion: The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting hex string.
 	*/
-	public func forge(operationPayload: OperationPayload, completion: @escaping((Result<String, ErrorResponse>) -> Void)) {
+	public func forge(operationPayload: OperationPayload, completion: @escaping((Result<String, KukaiError>) -> Void)) {
 		if isForging {
 			// To avoid setting up a delgate pattern for something that should be synchronous, we only include 1 set of success/errors handlers inside the code at any 1 time
 			// Calling it multiple times at the same time could result in strange behaviour
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TaquitoServiceError.alreadyForging)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: TaquitoServiceError.alreadyForging)))
 			return
 		}
 		
@@ -109,7 +110,7 @@ public class TaquitoService {
 			os_log("JavascriptContext forge error: %@", log: .taquitoService, type: .error, result)
 			self?.isForging = false
 			self?.lastForgeCompletionHandler = nil
-			completion(Result.failure(ErrorResponse.error(string: result, errorType: .unknownError)))
+			completion(Result.failure(KukaiError.unknown(withString: result)))
 			return
 		}
 		let forgeErrorBlock = unsafeBitCast(forgeErrorHandler, to: AnyObject.self)
@@ -133,7 +134,7 @@ public class TaquitoService {
 			os_log("JavascriptContext forge error: %@", log: .taquitoService, type: .error, "\(error)")
 			isForging = false
 			lastForgeCompletionHandler = nil
-			completion(Result.failure(ErrorResponse.unknownParseError(error: error)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 			return
 		}
 	}
@@ -145,11 +146,11 @@ public class TaquitoService {
 	- parameter hex: The string that needs to be parsed into an `OperationPayload`.
 	- parameter completion: The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting object
 	*/
-	public func parse(hex: String, completion: @escaping((Result<OperationPayload, ErrorResponse>) -> Void)) {
+	public func parse(hex: String, completion: @escaping((Result<OperationPayload, KukaiError>) -> Void)) {
 		if isParsing {
 			// To avoid setting up a delgate pattern for something that should be synchronous, we only include 1 set of success/errors handlers inside the code at any 1 time
 			// Calling it multiple times at the same time could result in strange behaviour
-			completion(Result.failure(ErrorResponse.internalApplicationError(error: TaquitoServiceError.alreadyParsing)))
+			completion(Result.failure(KukaiError.internalApplicationError(error: TaquitoServiceError.alreadyParsing)))
 			return
 		}
 		
@@ -165,7 +166,7 @@ public class TaquitoService {
 			if let obj = try? JSONDecoder().decode(OperationPayload.self, from: result.data(using: .utf8) ?? Data()) {
 				completion(Result.success(obj))
 			} else {
-				completion(Result.failure(ErrorResponse.unknownError()))
+				completion(Result.failure(KukaiError.unknown()))
 			}
 			
 			return
@@ -177,7 +178,7 @@ public class TaquitoService {
 			os_log("JavascriptContext parse error: %@", log: .taquitoService, type: .error, result)
 			self?.lastParseCompletionHandler = nil
 			self?.isParsing = false
-			completion(Result.failure(ErrorResponse.error(string: result, errorType: .unknownError)))
+			completion(Result.failure(KukaiError.unknown(withString: result)))
 			return
 		}
 		let praseErrorBlock = unsafeBitCast(parseErrorHandler, to: AnyObject.self)

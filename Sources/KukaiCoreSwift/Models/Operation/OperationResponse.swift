@@ -80,7 +80,7 @@ public struct BalanceUpdate: Codable {
 public struct OperationResponseResult: Codable {
 	let status: String
 	let balanceUpdates: [BalanceUpdate]?
-	let consumedGas: String?
+	let consumedMilligas: String?
 	let storageSize: String?
 	let paidStorageSizeDiff: String?
 	let allocatedDestinationContract: Bool?
@@ -89,7 +89,7 @@ public struct OperationResponseResult: Codable {
 	private enum CodingKeys: String, CodingKey {
 		case status
 		case balanceUpdates = "balance_updates"
-		case consumedGas = "consumed_gas"
+		case consumedMilligas = "consumed_milligas"
 		case storageSize = "storage_size"
 		case paidStorageSizeDiff = "paid_storage_size_diff"
 		case allocatedDestinationContract = "allocated_destination_contract"
@@ -112,12 +112,63 @@ public struct OperationResponseInternalOperation: Codable {
 public struct OperationResponseInternalResultError: Codable, Equatable {
 	public let kind: String
 	public let id: String
+	public let contract: String?
+	public let expected: String?
+	public let found: String?
 	public let location: Int?
-	public let with: OperationResponseInternalResultErrorWith?
+	public let with: FailWith?
 }
 
-/// The error string, or micheline error object returned inside `OperationResponseInternalResultError`
-public struct OperationResponseInternalResultErrorWith: Codable, Equatable {
+/// The error string, error int (code), or micheline error object returned inside `FailWith`
+public struct FailWith: Codable, Equatable {
 	public let string: String?
+	public let int: String?
 	public let args: [[String: String]]?
+	
+	/// Pass in a dedicated FailWith parser (unique to each dApp) and have it convert the failWith data into an error message
+	func convertToHumanReadableMessage(parser: FailWithParser) -> String? {
+		return parser.parse(failWith: self)
+	}
+	
+	enum CodingKeys: String, CodingKey {
+		case string
+		case int
+		case args
+	}
+	
+	public init(string: String?, int: String?, args: [[String: String]]?) {
+		self.string = string
+		self.int = int
+		self.args = args
+	}
+	
+	private struct DummyCodable: Codable {}
+	
+	public init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		string = try container.decodeIfPresent(String.self, forKey: .string)
+		int = try container.decodeIfPresent(String.self, forKey: .int)
+		
+		// "args" is capable of being another complex Michelson type JSON object which would actually require "[String: Any]", but this opens up so many issues
+		// Currently i've only ever seen something not compliant with `[String: String]`, when it was supplying additional data. The error message was still String: String
+		// e.g. [string: "not enough balance", [args: ["147", "14"]]]
+		// In this case, telling the user that they have insufficnet token balance without the amounts, is sufficient until a better solution can be found
+		if container.allKeys.contains(.args) {
+			var argsArray = try? container.nestedUnkeyedContainer(forKey: .args)
+			var tempArgs: [[String: String]] = []
+			
+			while !(argsArray?.isAtEnd ?? true) {
+				if let dict = try? argsArray?.decode([String: String].self) {
+					tempArgs.append(dict)
+				} else {
+					let _ = try? argsArray?.decode(DummyCodable.self)
+				}
+			}
+			
+			args = tempArgs
+			
+		} else {
+			args = nil
+		}
+	}
 }

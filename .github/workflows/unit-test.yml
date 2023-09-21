@@ -14,15 +14,30 @@ on:
 # Checkout the code, and run mxcl's xcodebuild action to run the unit tests
 jobs:
   build:
-    runs-on: macOS-latest
+    runs-on: macos-12
     strategy:
       matrix:
         platform:
           - iOS
+        xcode:
+          - ^14
     steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: mxcl/xcodebuild@v1
+      - uses: actions/checkout@v3.1.0
+
+      - uses: mxcl/xcodebuild@v1.11.0
         with:
           platform: ${{ matrix.platform }}
+          xcode: ${{ matrix.xcode }}
           action: test
+          scheme: KukaiCoreSwift
           code-coverage: true
+          upload-logs: always
+      
+      #- name: Test
+      #  run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -enableCodeCoverage YES -resultBundlePath "../../xcode-$GITHUB_RUN_ID.xcresult"
+      #
+      #- name: Upload results
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: "results-$GITHUB_RUN_ID.xcresult"
+      #    path: "/Users/runner/work/xcode-$GITHUB_RUN_ID.xcresult"

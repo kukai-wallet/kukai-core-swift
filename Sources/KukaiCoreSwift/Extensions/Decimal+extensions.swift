@@ -19,4 +19,9 @@ public extension Decimal {
 		
 		return rounded
 	}
+	
+	/// Wrapper around the Objective-c code needed to return an `Int` from a decimal
+	func intValue() -> Int {
+		return NSDecimalNumber(decimal: self.rounded(scale: 0, roundingMode: .down)).intValue
+	}
 }

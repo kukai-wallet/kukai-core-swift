@@ -7,143 +7,175 @@
 //
 
 import Foundation
-import WalletCore
+import KukaiCryptoSwift
 import Sodium
 import os.log
 
 /**
-A Tezos Wallet used for signing transactions before sending to the Tezos network. This object holds the public and private key used to create the contained Tezos address.
-You should **NOT** store a copy of this class in a singleton or gloabl variable of any kind. it should be created as needed and nil'd when not.
-In order to help developers achieve this, use the `WalletCacheService` to store/retreive an encrypted copy of the wallet on disk, and recreate the `Wallet`.
+ Error types that can be passed by failable inits
+ */
+public enum HDWalletError: Error {
+	case invalidWalletCoreWallet
+}
 
-This wallet is a HD wallet, allowing the creation of many child wallets from the one base privateKey. It also follows the Bip39 stnadard for generation via a mnemonic.
-*/
+/**
+ A Tezos Wallet used for signing transactions before sending to the Tezos network. This object holds the public and private key used to create the contained Tezos address.
+ You should **NOT** store a copy of this class in a singleton or gloabl variable of any kind. it should be created as needed and nil'd when not.
+ In order to help developers achieve this, use the `WalletCacheService` to store/retreive an encrypted copy of the wallet on disk, and recreate the `Wallet`.
+ 
+ This wallet is a HD wallet, allowing the creation of many child wallets from the one base privateKey. It also follows the Bip39 stnadard for generation via a mnemonic.
+ */
 public class HDWallet: Wallet {
-	
-	
-	// MARK: - Constants
-	
-	/// The default derivation path used by this library
-	public static let defaultDerivationPath = "m/44'/1729'/0'/0'"
-	
-	
 	
 	// MARK: - Properties
 	
 	/// The underlying wallet type, set to `.hd`
-	public let type: WalletType = .hd
-	
-	/// The cryptographic seed string, used to generate the key pairs
-	public var seed: String
-	
-	/// An WalletCore object representing the PrivateKey used to generate the wallet
-	public var privateKey: WalletCore.PrivateKey
-	
-	/// An WalletCore object representing the PublicKey  used to generate the wallet address
-	public var publicKey: WalletCore.PublicKey
+	public let type: WalletType
 	
 	/// The public TZ1 address of the wallet
 	public var address: String
 	
+	/// An WalletCore object representing the PrivateKey used to generate the wallet
+	public var privateKey: PrivateKey
+	
+	/// An WalletCore object representing the PublicKey  used to generate the wallet address
+	public var publicKey: PublicKey
+	
 	/// The Bip39 mnemonic used to generate the wallet
-	public var mnemonic: String
+	public var mnemonic: Mnemonic
 	
 	/// The Bip44 derivationPath used to create the wallet
 	public var derivationPath: String
 	
-	/// A private instance of TrustWallet's Wallet object, used to generate the cryptographic seed string, only
-	private let internalTrustWallet: WalletCore.HDWallet
+	/// The passphrase used to create the wallet. Not accessible by design, only stored as needed to enable adding child wallets to HD
+	private var passphrase: String
 	
 	
 	
 	// MARK: - Init
 	
 	/**
-	Create a `HDWallet` from a `WalletCore.HDWallet` and a derivation path
-	*/
-	private init?(withInternalTrustWallet trustWallet: WalletCore.HDWallet, derivationPath: String) {
-		let escapedDerivationPath = derivationPath.replacingOccurrences(of: "'", with: "\'")
+	 Create a `HDWallet` by supplying a mnemonic string and a passphrase (or "" if none).
+	 - Parameter withMnemonic: A `Mnemonic` representing a BIP39 menmonic
+	 - Parameter passphrase: String contianing a passphrase, or empty string if none
+	 - Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
+	 */
+	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String, derivationPath: String = HD.defaultDerivationPath) {
+		guard let keyPair = KeyPair.hd(fromMnemonic: mnemonic, passphrase: passphrase, andDerivationPath: derivationPath), let pkh = keyPair.publicKey.publicKeyHash else {
+			return nil
+		}
 		
-		let key = trustWallet.getKey(coin: .tezos, derivationPath: escapedDerivationPath)
-		let tempAddress = CoinType.tezos.deriveAddress(privateKey: key)
-		
-		self.seed = trustWallet.seed.toHexString()
-		self.privateKey = key
-		self.publicKey = key.getPublicKeyEd25519()
-		self.address = tempAddress
-		self.mnemonic = trustWallet.mnemonic
+		self.type = .hd
+		self.address = pkh
+		self.privateKey = keyPair.privateKey
+		self.publicKey = keyPair.publicKey
+		self.mnemonic = mnemonic
 		self.derivationPath = derivationPath
-		
-		self.internalTrustWallet = trustWallet
+		self.passphrase = passphrase
+	}
+	
+	/**
+	 Create a `HDWallet` by asking for a mnemonic of a given number of words and a passphrase (or "" if none).
+	 - Parameter withMnemonicLength: `Mnemonic.NumberOfWords` the number of words to use when creating a mnemonic
+	 - Parameter passphrase: String contianing a passphrase, or empty string if none
+	 - Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
+	 */
+	public convenience init?(withMnemonicLength length: Mnemonic.NumberOfWords, passphrase: String, derivationPath: String = HD.defaultDerivationPath) {
+		if let mnemonic = try? Mnemonic(numberOfWords: length) {
+			self.init(withMnemonic: mnemonic, passphrase: passphrase, derivationPath: derivationPath)
+			
+		} else {
+			return nil
+		}
 	}
 	
 	/// Automatically scrub the memory of any sensitive data
 	deinit {
-		// WalletCore will already clean up private and publickey
-		seed = String(repeating: "0", count: seed.count)
-		address = String(repeating: "0", count: address.count)
-		mnemonic = String(repeating: "0", count: mnemonic.count)
+		privateKey.bytes = Array(repeating: 0, count: privateKey.bytes.count)
+		publicKey.bytes = Array(repeating: 0, count: publicKey.bytes.count)
 		derivationPath = String(repeating: "0", count: derivationPath.count)
+		passphrase = String(repeating: "0", count: passphrase.count)
+		mnemonic.scrub()
 	}
 	
+	
+	
+	// MARK: - Crypto Functions
+	
 	/**
-	Create a `HDWallet` by supplying a mnemonic string and a passphrase (or "" if none).
-	- Parameter withMnemonic: String contianing a Bip39 mnemonic
-	- Parameter passphrase: String contianing a passphrase, or empty string if none
-	- Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
-	*/
-	public static func create(withMnemonic mnemonic: String, passphrase: String, derivationPath: String = HDWallet.defaultDerivationPath) -> HDWallet? {
-		let internalTrustWallet = WalletCore.HDWallet(mnemonic: mnemonic, passphrase: passphrase)
+	 Sign a hex payload with the private key
+	 */
+	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
+		guard let bytes = Sodium.shared.utils.hex2bin(hex) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+			return
+		}
 		
-		return HDWallet(withInternalTrustWallet: internalTrustWallet, derivationPath: derivationPath)
-	}
-	
-	/**
-	Create a `HDWallet` by asking for a mnemonic of a given number of words and a passphrase (or "" if none).
-	- Parameter withMnemonic: String contianing a Bip39 mnemonic
-	- Parameter passphrase: String contianing a passphrase, or empty string if none
-	- Parameter derivationPath: Optional: use a different derivation path to the default `HDWallet.defaultDerivationPath`
-	*/
-	public static func create(withMnemonicLength length: MnemonicPhraseLength, passphrase: String, derivationPath: String = HDWallet.defaultDerivationPath) -> HDWallet? {
-		let internalTrustWallet = WalletCore.HDWallet(strength: Int32(length.rawValue), passphrase: passphrase)
+		var bytesToSign: [UInt8] = []
+		if isOperation {
+			bytesToSign = bytes.addOperationWatermarkAndHash() ?? []
+		} else {
+			bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
+		}
 		
-		return HDWallet(withInternalTrustWallet: internalTrustWallet, derivationPath: derivationPath)
+		guard let signature = privateKey.sign(bytes: bytesToSign) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+			return
+		}
+		
+		completion(Result.success(signature))
 	}
 	
-	
-	
-	// MARK: - Crypto functions
+	/**
+	 Return the curve used to create the key
+	 */
+	public func privateKeyCurve() -> EllipticalCurve {
+		return privateKey.signingCurve
+	}
 	
 	/**
-	Takes in a forged operation hex string, and signs it with the underlying privateKey.
-	- Returns: An array of `UInt8` bytes
-	*/
-	public func sign(_ hex: String) -> [UInt8]? {
-		guard let data = Data(hexString: hex) else {
+	 Get a Base58 encoded version of the public key, in order to reveal the address on the network
+	 */
+	public func publicKeyBase58encoded() -> String {
+		return publicKey.base58CheckRepresentation
+	}
+	
+	/**
+	 The default implementation in Ledger is to not give users the option to provide their own derivation path, but instead increment the "account" field by 1 each time.
+	 This function will create a new `HDWallet`, by taking the default derivation path and changing the account to the index supplied, and using the same key
+	 */
+	public func createChild(accountIndex: Int) -> HDWallet? {
+		let newDerivationPath = HD.defaultDerivationPath(withAccountIndex: accountIndex)
+		
+		guard let newWallet = HDWallet(withMnemonic: self.mnemonic, passphrase: self.passphrase, derivationPath: newDerivationPath) else {
 			return nil
 		}
 		
-		let watermarkedOperation = Prefix.Watermark.operation + data.bytes
-		let watermarkedHashBytes = Sodium.shared.genericHash.hash(message: watermarkedOperation, outputLength: 32) ?? []
-		let watermarkedData = Data(bytes: watermarkedHashBytes, count: watermarkedHashBytes.count)
-		let signedData = self.privateKey.sign(digest: watermarkedData, curve: .ed25519)
+		return newWallet
+	}
+	
+	/**
+	 This function will create a new `HDWallet`, by using the same key combined with the supplied derivationPath
+	 */
+	public func createChild(derivationPath: String) -> HDWallet? {
+		guard let newWallet = HDWallet(withMnemonic: self.mnemonic, passphrase: self.passphrase, derivationPath: derivationPath) else {
+			return nil
+		}
 		
-		return signedData?.bytes
+		return newWallet
 	}
+}
+
+extension HDWallet: Equatable {
 	
-	/**
-	Return the `EllipticalCurve` used to create the wallet
-	- Returns: The given elliptical curve
-	*/
-	public func privateKeyCurve() -> EllipticalCurve {
-		return EllipticalCurve.ed25519
+	public static func == (lhs: HDWallet, rhs: HDWallet) -> Bool {
+		return lhs.address == rhs.address
 	}
+}
+
+extension HDWallet: Hashable {
 	
-	/**
-	Get a  Base58 encoded version of the publicKey, used for performing a reveal operation
-	- Returns: String contianing a Base58 encoded publicKey
-	*/
-	public func publicKeyBase58encoded() -> String {
-		return Base58.encode(message: publicKey.data.bytes, prefix: Prefix.Keys.Ed25519.public)
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(address)
 	}
 }

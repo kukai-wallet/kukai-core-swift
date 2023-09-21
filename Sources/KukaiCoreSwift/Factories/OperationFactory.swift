@@ -38,20 +38,41 @@ public class OperationFactory {
 				return [OperationTransaction(amount: tokenAmount, source: from, destination: to)]
 			
 			case .fungible:
-				let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.transfer.rawValue
+				let michelson = sendTokenMichelson(forFaVersion: token.faVersion ?? .fa1_2, tokenAmount: tokenAmount, tokenId: token.tokenId ?? 0, to: to, from: from)
 				
-				let tokenAmountMichelson = MichelsonFactory.createInt(tokenAmount)
-				let destinationMicheslon = MichelsonFactory.createString(to)
-				let innerPair = MichelsonPair(args: [destinationMicheslon, tokenAmountMichelson])
-				let sourceMichelson = MichelsonFactory.createString(from)
-				let michelson = MichelsonPair(args: [sourceMichelson, innerPair])
-				
-				return [OperationSmartContractInvocation(source: from, destinationContract: token.tokenContractAddress ?? "", entrypoint: entrypoint, value: michelson)]
+				if (token.faVersion ?? .fa1_2) == .fa1_2 {
+					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", parameters: michelson)]
+					
+				} else {
+					return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: token.tokenContractAddress ?? "", parameters: michelson)]
+				}
 			
 			case .nonfungible:
-				// TODO: implement
+				// Can't send an entire NFT group, need to rethink this
+				os_log(.error, log: .kukaiCoreSwift, "Can't send an entire NFT group. Must send individual NFT's from token.nfts array, via the other sendOperation")
 				return []
 		}
+	}
+	
+	/**
+	 Create the operations necessary to send aan NFT
+	 - parameter : The amount of the given token to send.
+	 - parameter ofNft: The `NFT` type that will be sent.
+	 - parameter from: The address to deduct the funds from.
+	 - parameter to: The destination address that will recieve the funds.
+	 - returns: An array of `Operation` subclasses.
+	 */
+	public static func sendOperation(_ amount: Decimal, ofNft nft: NFT, from: String, to: String) -> [Operation] {
+		
+		// Return empty array if `amount` is a negaitve value
+		if amount < 0 {
+			os_log(.error, log: .kukaiCoreSwift, "Negative value passed to OperationFactory.sendOperation")
+			return []
+		}
+		
+		let michelson = sendTokenMichelson(forFaVersion: nft.faVersion, tokenAmount: TokenAmount(fromNormalisedAmount: amount, decimalPlaces: nft.decimalPlaces), tokenId: nft.tokenId, to: to, from: from)
+		
+		return [OperationTransaction(amount: TokenAmount.zero(), source: from, destination: nft.parentContract, parameters: michelson)]
 	}
 	
 	/**
@@ -73,94 +94,216 @@ public class OperationFactory {
 		return [OperationDelegation(source: address, delegate: nil)]
 	}
 	
-	/*
 	/**
-	Create the operations necessary to perform an exchange of XTZ for a given FA token, using Dexter
-	- parameter xxxxx: yyyyy
+	Create the operations necessary to perform an exchange of XTZ for a given FA token, using a given dex
+	- parameter withDex: Enum controling which dex to use to perform the swap
+	- parameter xtzAmount: The amount of XTZ to be swaped
+	- parameter minTokenAmount: The minimum token amount you will accept
+	- parameter wallet: The wallet signing the operation
+	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func dexterXtzToToken(xtzAmount: XTZAmount, minTokenAmount: TokenAmount, token: Token, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
+	public static func swapXtzToToken(withDex dex: DipDupExchange, xtzAmount: XTZAmount, minTokenAmount: TokenAmount, walletAddress: String, timeout: TimeInterval) -> [Operation] {
 		
-		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.xtzToToken.rawValue
-		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
-		
-		let timestampMichelson = MichelsonFactory.createString(dateString)
-		let minTokensToBuyMichelson = MichelsonFactory.createInt(minTokenAmount)
-		let innerPair = MichelsonPair(args: [minTokensToBuyMichelson, timestampMichelson])
-		let destinationMichelson = MichelsonFactory.createString(wallet.address)
-		let michelson = MichelsonPair (args: [destinationMichelson, innerPair])
-		
-		return [OperationSmartContractInvocation(source: wallet.address, amount: xtzAmount, destinationContract: token.dexterExchangeAddress ?? "", entrypoint: entrypoint, value: michelson)]
+		switch dex.name {
+			case .quipuswap:
+				let swapData = xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: minTokenAmount, walletAddress: walletAddress)
+				return [OperationTransaction(amount: xtzAmount, source: walletAddress, destination: dex.address, parameters: swapData)]
+				
+			case .lb:
+				let swapData = xtzToToken_lb_michelsonEntrypoint(minTokenAmount: minTokenAmount, walletAddress: walletAddress, timeout: timeout)
+				return [OperationTransaction(amount: xtzAmount, source: walletAddress, destination: dex.address, parameters: swapData)]
+				
+			case .unknown:
+				return []
+		}
 	}
 	
 	/**
-	Create the operations necessary to perform an exchange of a given FA token for XTZ, using Dexter
-	- parameter xxxxx: yyyyy
+	Create the operations necessary to perform an exchange of a given FA token for XTZ, using dex contracts
+	- parameter withDex: `DipDupExchange` instance providing information about the exchange
+	- parameter tokenAmount: The amount of Token to be swapped
+	- parameter minXTZAmount: The minimum xtz amount you will accept
+	- parameter wallet: The wallet signing the operation
+	- parameter timeout: Max amount of time to wait before asking the node to cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func dexterTokenToXTZ(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, token: Token, currentAllowance: TokenAmount, wallet: Wallet, timeout: TimeInterval) -> [Operation] {
-		guard let tokenAddress = token.tokenContractAddress, let dexterAddress = token.dexterExchangeAddress else {
-			os_log(.error, log: .kukaiCoreSwift, "Token `%@` doesn't have a `tokenContractAddress` and/or `dexterExchangeAddress`", token.symbol)
-			return []
+	public static func swapTokenToXTZ(withDex dex: DipDupExchange, tokenAmount: TokenAmount, minXTZAmount: XTZAmount, walletAddress: String, timeout: TimeInterval) -> [Operation] {
+		var operations: [Operation] = [
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), walletAddress: walletAddress),
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: tokenAmount, walletAddress: walletAddress)
+		]
+		
+		// Create entrypoint and michelson data depening on type of dex
+		switch dex.name {
+			case .quipuswap:
+				let swapData = tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, walletAddress: walletAddress)
+				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: dex.address, parameters: swapData))
+				
+			case .lb:
+				let swapData = tokenToXtz_lb_michelsonEntrypoint(tokenAmount: tokenAmount, minXTZAmount: minXTZAmount, walletAddress: walletAddress, timeout: timeout)
+				operations.append(OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: dex.address, parameters: swapData))
+				
+			case .unknown:
+				return []
 		}
 		
-		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.tokenToXtz.rawValue
-		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
-		
-		
-		// If the current allowance is zero, set the allowance tot he amount we are trying to send.
-		// Else, for secuirty, we must set the allowance to zero, then set the allwaonce to what we need.
-		var operations: [Operation] = []
-		if currentAllowance.toRpcDecimal() ?? 0 > 0 {
-			operations = [
-				dexterAllowanceOperation(tokenAddress: tokenAddress, spenderAddress: dexterAddress, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), wallet: wallet),
-				dexterAllowanceOperation(tokenAddress: tokenAddress, spenderAddress: dexterAddress, allowance: tokenAmount, wallet: wallet)
-			]
-			
-		} else {
-			operations = [ dexterAllowanceOperation(tokenAddress: tokenAddress, spenderAddress: dexterAddress, allowance: tokenAmount, wallet: wallet) ]
-		}
-		
-		// Create the michelson
-		let timestampMichelson = MichelsonFactory.createString(dateString)
-		let minMutezToBuyMichelson = MichelsonFactory.createInt(minXTZAmount)
-		let tokensToSellMichelson = MichelsonFactory.createInt(tokenAmount)
-		let amountInnerPair = MichelsonPair(args: [minMutezToBuyMichelson, timestampMichelson])
-		let amountPair = MichelsonPair(args: [tokensToSellMichelson, amountInnerPair])
-		
-		let destinationMichelson = MichelsonFactory.createString(wallet.address)
-		let ownerMichelson = MichelsonFactory.createString(wallet.address)
-		let addressPair = MichelsonPair(args: [ownerMichelson, destinationMichelson])
-		
-		let michelson = MichelsonPair(args: [addressPair, amountPair])
-		
-		
-		// Add the last operation to perform the swap
-		operations.append(OperationSmartContractInvocation(source: wallet.address, destinationContract: token.dexterExchangeAddress ?? "", entrypoint: entrypoint, value: michelson))
+		// Add a trailing approval operation
+		operations.append(allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), walletAddress: walletAddress))
 		
 		return operations
 	}
 	
-	/// Not implmented yet
-	public static func dexterTokenToToken() -> [Operation] {
-		return []
-	}
-	*/
-
+	
+	
+	// MARK: - Allowance (approve, update_operators)
+	
 	/**
-	Create the operations necessary to register an allowance, allowing another address to send FA tokens on your behalf.
+	Create an operation to call the entrypoint `approve`, to allow another address to spend some of your token (only FA1.2)
 	Used when interacting with smart contract applications like Dexter or QuipuSwap
-	- parameter xxxxx: yyyyy
+	- parameter tokenAddress: The address of the token contract
+	- parameter spenderAddress: The address that is being given permission to spend the users balance
+	- parameter allowance: The allowance to set for the given contract
+	- parameter wallet: The wallet signing the operation
+	 - returns: An `OperationTransaction` which will invoke a smart contract call
+	*/
+	public static func approveOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
+		let params: [String: Any] = [
+			"entrypoint": OperationTransaction.StandardEntrypoint.approve.rawValue,
+			"value": ["prim":"Pair", "args":[["string":spenderAddress], ["int":allowance.rpcRepresentation]]] as [String : Any]
+		]
+		
+		return OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: tokenAddress, parameters: params)
+	}
+	
+	/**
+	 Create an operation to call the entrypoint `update_operators`, to allow another address to spend some of your token (only FA2)
+	 Used when interacting with smart contract applications like Dexter or QuipuSwap
+	 - parameter tokenAddress: The address of the token contract
+	 - parameter spenderAddress: The address that is being given permission to spend the users balance
+	 - parameter allowance: The allowance to set for the given contract
+	 - parameter wallet: The wallet signing the operation
+	 - returns: An `OperationTransaction` which will invoke a smart contract call
+	 */
+	public static func updateOperatorsOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
+		let params: [String: Any] = [
+			"entrypoint": OperationTransaction.StandardEntrypoint.updateOperators.rawValue,
+			"value": [["prim": "Left","args": [["prim": "Pair","args": [["string": walletAddress] as [String: Any], ["prim": "Pair","args": [["string": spenderAddress], ["int": allowance.rpcRepresentation]]]]] as [String : Any]]]] as [[String: Any]]
+		]
+		
+		return OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: tokenAddress, parameters: params)
+	}
+	
+	/**
+	 Return the operation necessary to register an allowance (either calling `apporve` or `update_operators`) depending on the token standard version. Removing the need to check manually
+	 Used when interacting with smart contract applications like Dexter or QuipuSwap
+	 - parameter standard: The FA standard that the token conforms too
+	 - parameter tokenAddress: The address of the token contract
+	 - parameter spenderAddress: The address that is being given permission to spend the users balance
+	 - parameter allowance: The allowance to set for the given contract
+	 - parameter wallet: The wallet signing the operation
+	 - returns: An `OperationTransaction` which will invoke a smart contract call
+	 */
+	public static func allowanceOperation(standard: DipDupTokenStandard, tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
+		
+		switch standard {
+			case .fa12:
+				return approveOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, walletAddress: walletAddress)
+				
+			case .fa2:
+				return updateOperatorsOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, walletAddress: walletAddress)
+				
+			case .unknown:
+				return approveOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, walletAddress: walletAddress)
+		}
+	}
+	
+	
+	
+	// MARK: - Dex functions
+	
+	/**
+	Create the operations necessary to add liquidity to a dex contract. Use DexCalculationService to figure out the numbers required
+	- parameter withDex: `DipDupExchange` instance providing information about the exchange
+	- parameter xtz: The amount of XTZ to deposit
+	- parameter token: The amount of Token to deposit
+	- parameter minLiquidty: The minimum amount of liquidity tokens you will accept
+	- parameter isInitialLiquidity: Is this the xtzPool and tokenPool empty? If so, the operation needs to set the exchange rate for the dex. Some dex's require extra logic here
+	- parameter wallet: The wallet that will sign the operation
+	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func allowanceOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, wallet: Wallet) -> Operation {
-		let entrypoint = OperationSmartContractInvocation.StandardEntrypoint.approve.rawValue
+	public static func addLiquidity(withDex dex: DipDupExchange, xtz: XTZAmount, token: TokenAmount, minLiquidty: TokenAmount, isInitialLiquidity: Bool, walletAddress: String, timeout: TimeInterval) -> [Operation] {
+		var operations: [Operation] = [
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), walletAddress: walletAddress),
+			allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: token, walletAddress: walletAddress)
+		]
 		
-		let spenderMichelson = MichelsonFactory.createString(spenderAddress)
-		let allowanceMichelson = MichelsonFactory.createInt(allowance)
-		let michelson = MichelsonPair(args: [spenderMichelson, allowanceMichelson])
+		// Create entrypoint and michelson data depening on type of dex
+		switch dex.name {
+			case .quipuswap:
+				let swapData = addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: xtz, tokensToDeposit: token, isInitialLiquidity: isInitialLiquidity)
+				operations.append(OperationTransaction(amount: xtz, source: walletAddress, destination: dex.address, parameters: swapData))
+				
+			case .lb:
+				let swapData = addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: xtz, tokensToDeposit: token, minLiquidtyMinted: minLiquidty, walletAddress: walletAddress, timeout: timeout)
+				operations.append(OperationTransaction(amount: xtz, source: walletAddress, destination: dex.address, parameters: swapData))
+				
+			case .unknown:
+				return []
+		}
 		
-		return OperationSmartContractInvocation(source: wallet.address, destinationContract: tokenAddress, entrypoint: entrypoint, value: michelson)
+		// Add a trailing approval operation
+		operations.append(allowanceOperation(standard: dex.token.standard, tokenAddress: dex.token.address, spenderAddress: dex.address, allowance: TokenAmount.zeroBalance(decimalPlaces: 0), walletAddress: walletAddress))
+		
+		return operations
+	}
+	
+	/**
+	Create the operations necessary to remove liquidity from a dex contract, also withdraw pending rewards if applicable. Use DexCalculationService to figure out the numbers required
+	- parameter withDex: `DipDupExchange` instance providing information about the exchange
+	- parameter minXTZ: The minimum XTZ to accept in return for the burned amount of Liquidity
+	- parameter minToken: The minimum Token to accept in return for the burned amount of Liquidity
+	- parameter liquidityToBurn: The amount of Liqudity to burn
+	- parameter wallet: The wallet that will sign the operation
+	- parameter timeout: The timeout in seconds, before the dex contract should cancel the operation
+	- returns: An array of `Operation` subclasses.
+	*/
+	public static func removeLiquidity(withDex dex: DipDupExchange, minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, walletAddress: String, timeout: TimeInterval) -> [Operation] {
+		switch dex.name {
+			case .quipuswap:
+				let swapData = removeLiquidity_quipu_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn)
+				var removeAndWithdrawOperations: [Operation] = [OperationTransaction(amount: XTZAmount.zero(), source: walletAddress, destination: dex.address, parameters: swapData)]
+				removeAndWithdrawOperations.append(contentsOf: withdrawRewards(withDex: dex, walletAddress: walletAddress))
+				return removeAndWithdrawOperations
+				
+			case .lb:
+				let swapData = removeLiquidity_lb_michelsonEntrypoint(minXTZ: minXTZ, minToken: minToken, liquidityToBurn: liquidityToBurn, walletAddress: walletAddress, timeout: timeout)
+				return [OperationTransaction(amount: XTZAmount.zero(), source: walletAddress, destination: dex.address, parameters: swapData)]
+				
+			case .unknown:
+				return []
+		}
+	}
+	
+	/**
+	 Create the operations necessary to withdraw rewards from a dex contract. For example in quipuswap, XTZ provided as liquidity will earn baking rewards. This can been withdrawn at any time while leaving liquidity in palce
+	 - parameter withDex: `DipDupExchange` instance providing information about the exchange
+	 - parameter wallet: The wallet that will sign the operation
+	 - returns: An array of `Operation` subclasses.
+	 */
+	public static func withdrawRewards(withDex dex: DipDupExchange, walletAddress: String) -> [Operation] {
+		switch dex.name {
+			case .quipuswap:
+				let swapData = withdrawRewards_quipu_michelsonEntrypoint(walletAddress: walletAddress)
+				return [OperationTransaction(amount: XTZAmount.zero(), source: walletAddress, destination: dex.address, parameters: swapData)]
+				
+			case .lb:
+				return []
+				
+			case .unknown:
+				return []
+		}
 	}
 	
 	
@@ -174,13 +317,13 @@ public class OperationFactory {
 	- parameter withWallet: The `Wallet` instance that will be responsible for these operations.
 	- returns: An instance of `OperationPayload` that can be sent to the RPC
 	*/
-	public static func operationPayload(fromMetadata metadata: OperationMetadata, andOperations operations: [Operation], withWallet wallet: Wallet) -> OperationPayload {
+	public static func operationPayload(fromMetadata metadata: OperationMetadata, andOperations operations: [Operation], walletAddress: String, base58EncodedPublicKey: String) -> OperationPayload {
 		var ops = operations
 		
 		// If theres no manager key, we need to add a reveal operation first (unless one has been added already, such as from an estimation)
 		// Also ignore the need for a reveal if we are activating an account
 		if metadata.managerKey == nil && operations.first?.operationKind != .reveal && operations.first?.operationKind != .activate_account {
-			ops.insert(OperationReveal(wallet: wallet), at: 0)
+			ops.insert(OperationReveal(base58EncodedPublicKey: base58EncodedPublicKey, walletAddress: walletAddress), at: 0)
 		}
 		
 		// Add the counters to the operations
@@ -209,5 +352,252 @@ public class OperationFactory {
 		dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 		
 		return dateFormatter.string(from: Date().addingTimeInterval(nowPlusTimeInterval))
+	}
+	
+	public static func sendTokenMichelson(forFaVersion faVersion: FaVersion, tokenAmount: TokenAmount, tokenId: Decimal, to: String, from: String) -> [String: Any] {
+		switch faVersion {
+			case .fa1_2, .unknown:
+				return [
+					"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
+					"value": ["prim":"Pair","args":[["string":from] as [String : Any], ["prim":"Pair","args":[["string":to], ["int":tokenAmount.rpcRepresentation]]]]] as [String : Any]
+				]
+				
+			case .fa2:
+				return [
+					"entrypoint": OperationTransaction.StandardEntrypoint.transfer.rawValue,
+					"value": [["prim":"Pair","args":[["string":from], [["prim":"Pair","args":[["string":to] as [String : Any], ["prim":"Pair","args":[["int":"\(tokenId)"], ["int":tokenAmount.rpcRepresentation]]]]] as [String : Any]]] as [Any]] as [String : Any]]
+				]
+		}
+	}
+	
+	
+	
+	// MARK: - Extractors
+	
+	/// Internal Struct to encapsulate helpers methods needed to extract critical information from an array of operations, needed for processing decisions like "do i display a send token screen, or a send NFt screen", fetching total XTZ sent in 1 action etc
+	public struct Extractor {
+		
+		/**
+		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload
+		 */
+		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let michelsonDict = michelson as? [String: Any] {
+				// FA1.2
+				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
+				
+				if let str = rpcAmountString {
+					return (rpcAmount: str, tokenId: nil, destination: rpcDestinationString)
+				} else {
+					return nil
+				}
+				
+			} else if let michelsonArray = michelson as? [[String: Any]] {
+				// FA2
+				
+				let argsArray1 = michelsonArray[0].michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()
+				let rpcDestination = argsArray1?.michelsonString(atIndex: 0)
+				
+				let argsArray2 = argsArray1?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
+				let rpcAmountString = argsArray2?.michelsonInt(atIndex: 1)
+				let tokenId = argsArray2?.michelsonInt(atIndex: 0)
+				
+				if let str = rpcAmountString, let tId = tokenId, let dest = rpcDestination {
+					return (rpcAmount: str, tokenId: Decimal(string: tId), destination: dest)
+				} else {
+					return nil
+				}
+				
+			} else {
+				return nil
+			}
+		}
+		
+		/**
+		 Extract details from a payload in order to present to the user what it is they are trying to send
+		 */
+		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? [Any]()) {
+				let tokenContractAddress = transaction.destination
+				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId, destination: amountAndId.destination)
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Helper to  call `faTokenDetailsFrom(transaction: OperationTransaction)` on the first `OperationTransaction` in an array of operations. Allows to more easily parse an array of operations that may include `approval`'s or `update_operator` calls
+		 */
+		public static func faTokenDetailsFrom(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let op = operations.first(where: { $0 is OperationTransaction }) as? OperationTransaction {
+				return OperationFactory.Extractor.faTokenDetailsFrom(transaction: op)
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Return true if
+		 - contains 1 operation with a non-zero amount, with no parameters
+		 */
+		public static func isTezTransfer(operations: [Operation]) -> Bool {
+			if operations.count == 1, let op = operations.first as? OperationTransaction, op.amount != "0", op.parameters == nil {
+				return true
+			}
+			
+			return false
+		}
+		
+		/// Easy way to extract the first non-`approval` or `update_operator` transaction
+		public static func firstTransferEntrypointOperation(operations: [Operation]) -> OperationTransaction? {
+			for op in operations {
+				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
+				   entrypoint == OperationTransaction.StandardEntrypoint.transfer.rawValue {
+					return opTrans
+				}
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Return the entrypoint and address of the first operation, that doesn't equal `approve`, `update_operator` or `transfer`
+		 */
+		public static func isContractCall(operations: [Operation]) -> (entrypoint: String, address: String)? {
+			if let contractOp = firstContractCallOperation(operations: operations), let entrypoint = contractOp.parameters?["entrypoint"] as? String {
+				return (entrypoint: entrypoint, address: contractOp.destination)
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Return the first operation where entrypoint doesn't equal `approve`, `update_operator` or `transfer`
+		 */
+		public static func firstContractCallOperation(operations: [Operation]) -> OperationTransaction? {
+			for op in operations {
+				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
+				   (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue &&
+					entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue &&
+					entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue) {
+					return opTrans
+				}
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Run through list of operations and extract .amount from any OperationTransaction
+		 */
+		public static func totalXTZAmountForContractCall(operations: [Operation]) -> XTZAmount {
+			var amount = XTZAmount.zero()
+			
+			for op in operations {
+				if let opTrans = op as? OperationTransaction {
+					amount += (XTZAmount(fromRpcAmount: opTrans.amount) ?? .zero())
+				}
+			}
+			
+			return amount
+		}
+	}
+	
+	
+	
+	// MARK: - Private helpers
+	
+	
+	
+	// MARK: - xtzToToken
+	
+	private static func xtzToToken_lb_michelsonEntrypoint(minTokenAmount: TokenAmount, walletAddress: String, timeout: TimeInterval) -> [String: Any] {
+		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
+		
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.xtzToToken.rawValue,
+			"value": ["prim":"Pair", "args":[["string":walletAddress] as [String : Any], ["prim":"Pair", "args":[["int":minTokenAmount.rpcRepresentation], ["string":dateString]]]]] as [String : Any]
+		]
+	}
+	
+	private static func xtzToToken_quipu_michelsonEntrypoint(minTokenAmount: TokenAmount, walletAddress: String) -> [String: Any] {
+		
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.tezToTokenPayment.rawValue,
+			"value": ["prim": "Pair", "args": [["int": minTokenAmount.rpcRepresentation], ["string": walletAddress]]] as [String : Any]
+		]
+	}
+	
+	
+	
+	// MARK: - tokenToXtz
+	
+	private static func tokenToXtz_lb_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, walletAddress: String, timeout: TimeInterval) -> [String: Any] {
+		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.tokenToXtz.rawValue,
+			"value": ["prim":"Pair", "args": [["string": walletAddress] as [String : Any], ["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation] as [String : Any], ["prim": "Pair", "args":[["int":minXTZAmount.rpcRepresentation], ["string": dateString]]]]]]] as [String : Any]
+		]
+	}
+	
+	private static func tokenToXtz_quipu_michelsonEntrypoint(tokenAmount: TokenAmount, minXTZAmount: XTZAmount, walletAddress: String) -> [String: Any] {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.tokenToTezPayment.rawValue,
+			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": tokenAmount.rpcRepresentation], ["int": minXTZAmount.rpcRepresentation]]] as [String : Any], ["string": walletAddress]]] as [String : Any]
+		]
+	}
+	
+	
+	
+	// MARK: - Add liquidity
+	
+	private static func addLiquidity_lb_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, minLiquidtyMinted: TokenAmount, walletAddress: String, timeout: TimeInterval) -> [String: Any] {
+		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
+		
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.addLiquidity.rawValue,
+			"value": ["prim": "Pair", "args": [["string":walletAddress] as [String : Any], ["prim":"Pair", "args":[["int":minLiquidtyMinted.rpcRepresentation] as [String : Any] as [String : Any], ["prim":"Pair", "args":[["int":tokensToDeposit.rpcRepresentation], ["string":dateString]]]]]]] as [String : Any]
+		]
+	}
+	
+	private static func addLiquidity_quipu_michelsonEntrypoint(xtzToDeposit: XTZAmount, tokensToDeposit: TokenAmount, isInitialLiquidity: Bool) -> [String: Any] {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.investLiquidity.rawValue,
+			"value": ["int": tokensToDeposit.rpcRepresentation]
+		]
+	}
+	
+	
+	
+	// MARK: - Remove liquidity
+	
+	private static func removeLiquidity_lb_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount, walletAddress: String, timeout: TimeInterval) -> [String: Any] {
+		let liq = liquidityToBurn.rpcRepresentation
+		let xtz = minXTZ.rpcRepresentation
+		let token = minToken.rpcRepresentation
+		let dateString = createDexterTimestampString(nowPlusTimeInterval: timeout)
+		
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.removeLiquidity.rawValue,
+			"value": ["prim":"Pair","args":[["string":walletAddress] as [String : Any], ["prim":"Pair","args":[["int":liq] as [String : Any], ["prim":"Pair","args":[["int":xtz] as [String : Any], ["prim":"Pair","args":[["int":token], ["string":dateString]]]]]]]]] as [String : Any]
+		]
+	}
+	
+	private static func removeLiquidity_quipu_michelsonEntrypoint(minXTZ: XTZAmount, minToken: TokenAmount, liquidityToBurn: TokenAmount) -> [String: Any] {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.divestLiquidity.rawValue,
+			"value": ["prim": "Pair", "args": [["prim": "Pair", "args": [["int": minXTZ.rpcRepresentation], ["int": minToken.rpcRepresentation]]] as [String : Any], ["int": liquidityToBurn.rpcRepresentation]]] as [String : Any]
+		]
+	}
+	
+	
+	
+	// MARK: - Withdraw
+	
+	private static func withdrawRewards_quipu_michelsonEntrypoint(walletAddress: String) -> [String: Any]  {
+		return [
+			"entrypoint": OperationTransaction.StandardEntrypoint.withdrawProfit.rawValue,
+			"value": ["string": walletAddress]
+		]
 	}
 }

@@ -87,12 +87,12 @@ extension RPC where T == String {
 	}
 	
 	/// Creates an RPC to remotely forge an operation
-	public static func forge(operationPayload: OperationPayload, withMetadata metadata: OperationMetadata) -> RPC<String>? {
+	public static func forge(operationPayload: OperationPayload) -> RPC<String>? {
 		guard let payloadData = RPC.encodableToData(encodable: operationPayload) else {
 			return nil
 		}
 		
-		return RPC<String>(endpoint: "chains/main/blocks/\(metadata.branch)/helpers/forge/operations", payload: payloadData, responseType: String.self)
+		return RPC<String>(endpoint: "chains/main/blocks/head/helpers/forge/operations", payload: payloadData, responseType: String.self)
 	}
 	
 	/// Creates an RPC to inject an operation
@@ -110,6 +110,11 @@ extension RPC where T == BlockchainHead {
 	/// Creates an RPC to fetch the HEAD of the blockchain and parse it into an object to extract the pieces we are interested in.
 	public static func blockchainHead() -> RPC<BlockchainHead> {
 		return RPC<BlockchainHead>(endpoint: "chains/main/blocks/head", payload: nil, responseType: BlockchainHead.self)
+	}
+	
+	/// Creates an RPC to fetch the HEAD of 3 blocks previous and parse it into an object to extract the pieces we are interested in.
+	public static func blockchainHeadMinus3() -> RPC<BlockchainHead> {
+		return RPC<BlockchainHead>(endpoint: "chains/main/blocks/head~3", payload: nil, responseType: BlockchainHead.self)
 	}
 }
 
@@ -147,16 +152,16 @@ extension RPC where T == [OperationPayload] {
 			return nil
 		}
 		
-		return RPC<[OperationPayload]>(endpoint: "chains/main/blocks/\(metadata.branch)/helpers/parse/operations", payload: payloadData, responseType: [OperationPayload].self)
+		return RPC<[OperationPayload]>(endpoint: "chains/main/blocks/head/helpers/parse/operations", payload: payloadData, responseType: [OperationPayload].self)
 	}
 }
 
 extension RPC where T == [OperationResponse] {
 	
 	/// Creates an RPC to preapply an operation. This `OperationPayload` must have had its signature and protocol set
-	public static func preapply(operationPayload: OperationPayload, withMetadata metadata: OperationMetadata) -> RPC<[OperationResponse]>? {
+	public static func preapply(operationPayload: OperationPayload) -> RPC<[OperationResponse]>? {
 		if operationPayload.signature == nil || operationPayload.protocol == nil {
-			os_log(.error, log: .kukaiCoreSwift, "RPC preapply was passed and operationPayload without a signature and/or protocol")
+			os_log(.error, log: .kukaiCoreSwift, "RPC preapply was passed an operationPayload without a signature and/or protocol")
 			return nil
 		}
 		
@@ -164,7 +169,7 @@ extension RPC where T == [OperationResponse] {
 			return nil
 		}
 		
-		return RPC<[OperationResponse]>(endpoint: "chains/main/blocks/\(metadata.branch)/helpers/preapply/operations", payload: payloadData, responseType: [OperationResponse].self)
+		return RPC<[OperationResponse]>(endpoint: "chains/main/blocks/head/helpers/preapply/operations", payload: payloadData, responseType: [OperationResponse].self)
 	}
 }
 
@@ -180,10 +185,15 @@ extension RPC where T == OperationResponse {
 	}
 }
 
-extension RPC where T == MichelsonPair {
+extension RPC where T == Data {
 	
 	/// Creates an RPC to fetch a contracts Michelson storage
-	public static func contractStorage(contractAddress: String) -> RPC<MichelsonPair> {
-		return RPC<MichelsonPair>(endpoint: "chains/main/blocks/head/context/contracts/\(contractAddress)/storage", payload: nil, responseType: MichelsonPair.self)
+	public static func contractStorage(contractAddress: String) -> RPC<Data> {
+		return RPC<Data>(endpoint: "chains/main/blocks/head/context/contracts/\(contractAddress)/storage", payload: nil, responseType: Data.self)
+	}
+	
+	/// Creates an RPC to fetch the contents of the given big map
+	public static func bigMap(id: String) -> RPC<Data> {
+		return RPC<Data>(endpoint: "chains/main/blocks/head/context/big_maps/\(id)", payload: nil, responseType: Data.self)
 	}
 }

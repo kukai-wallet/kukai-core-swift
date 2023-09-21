@@ -9,7 +9,7 @@
 import Foundation
 
 /// Exposing underlying NSError properties not accessible to Swift Error without casting
-extension Error {
+public extension Error {
 	
 	/// Access NSError.code
 	var code: Int {

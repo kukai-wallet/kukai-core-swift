@@ -20,7 +20,7 @@ public struct OperationMetadata: Codable {
 	/// The current Tezos network chainID to use for `Operation`'s
 	public let chainID: String
 	
-	/// The current Tezos network branch to use for `Operation`'s
+	/// The current branch used by the head block, used for estiamting and running preapply, to ensure the latest state information is available
 	public let branch: String
 	
 	/// The current Tezos network protocol to use for `Operation`'s

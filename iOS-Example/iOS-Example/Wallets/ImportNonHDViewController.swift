@@ -14,6 +14,7 @@ class ImportNonHDViewController: UIViewController {
 	@IBOutlet weak var textview: UITextView!
 	@IBOutlet weak var importedAddressLabel: UILabel!
 	
+	/*
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -22,18 +23,20 @@ class ImportNonHDViewController: UIViewController {
 	}
 	
 	@IBAction func importTapped(_ sender: Any) {
-		let wallet = LinearWallet.create(withMnemonic: textview.text ?? "", passphrase: "")
+		let wallet = LinearWallet(withMnemonic: textview.text ?? "", passphrase: "")
 		
 		if let w = wallet {
 			importedAddressLabel.text = w.address
 			
 			let cacheService = WalletCacheService()
 			let _ = cacheService.deleteCacheAndKeys()
-			let _ = cacheService.cache(wallet: w, andPassphrase: nil)
+			let _ = cacheService.cache(wallet: w)
 			
 		} else {
 			let alert = UIAlertController(title: "Error", message: "An error occured creating the wallet object", preferredStyle: .alert)
+			alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 			self.present(alert, animated: true, completion: nil)
 		}
 	}
+	*/
 }

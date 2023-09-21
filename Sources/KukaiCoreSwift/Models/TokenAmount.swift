@@ -106,6 +106,7 @@ public class TokenAmount: Codable {
 	- parameter fromNormalisedAmount: A decimal containing an amount for the given token. Anything over the given decimal places for the token will be ignored.
 	*/
 	public init(fromNormalisedAmount normalisedAmount: Decimal, decimalPlaces: Int) {
+		let normalisedAmount = normalisedAmount.rounded(scale: decimalPlaces, roundingMode: .bankers)
 		let integerValue = BigInt(normalisedAmount.description) ?? 0
 		
 		// Convert decimalPlaces significant digits of decimals into integers to avoid having to deal with decimals.
@@ -369,5 +370,14 @@ extension TokenAmount: CustomStringConvertible {
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
 	public var description: String {
 		return normalisedRepresentation
+	}
+}
+
+extension TokenAmount: Hashable {
+	
+	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(rpcRepresentation)
+		hasher.combine(decimalPlaces)
 	}
 }

@@ -1,0 +1,94 @@
+[
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "1000",
+		"xtz_out": "11233127",
+		"price_impact": "0.7496250444444444"
+	},
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "100",
+		"xtz_out": "2041551",
+		"price_impact": "0.173396"
+	},
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "10",
+		"xtz_out": "222329",
+		"price_impact": "0.019684444444444504"
+	},
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "1",
+		"xtz_out": "22432",
+		"price_impact": "0.0019949827949828913"
+	},
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "240",
+		"xtz_out": "4346974",
+		"price_impact": "0.34935390681003586"
+	},
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "116",
+		"xtz_out": "2334277",
+		"price_impact": "0.19690469932297883"
+	},
+	{
+		"xtz_pool": "20000000",
+		"token_pool": "1000",
+		"token_in": "923",
+		"xtz_out": "10783119",
+		"price_impact": "0.7291990292945052"
+	},
+	{
+		"xtz_pool": "19500000",
+		"token_pool": "919",
+		"token_in": "100",
+		"xtz_out": "2154875",
+		"price_impact": "0.18647203697921322"
+	},
+	{
+		"xtz_pool": "17591539",
+		"token_pool": "1019",
+		"token_in": "81",
+		"xtz_out": "1476619",
+		"price_impact": "0.14171905985807354"
+	},
+	{
+		"xtz_pool": "29764960047",
+		"token_pool": "351871420",
+		"token_in": "110000000",
+		"xtz_out": "7076977193",
+		"price_impact": "0.419282568524572"
+	},
+	{
+		"xtz_pool": "5210275350",
+		"token_pool": "9597584059140809000",
+		"token_in": "12000000000000000000",
+		"xtz_out": "2892127448",
+		"price_impact": "0.8021677933837504"
+	},
+	{
+		"xtz_pool": "5836211738",
+		"token_pool": "32669725403",
+		"token_in": "112233000",
+		"xtz_out": "19949645",
+		"price_impact": "0.006828711995044867"
+	},
+	{
+		"xtz_pool": "169488009",
+		"token_pool": "59084008",
+		"token_in": "16700000",
+		"xtz_out": "37832388",
+		"price_impact": "0.39186068148674214"
+	}
+]
+

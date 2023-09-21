@@ -67,4 +67,30 @@ class DiskServiceTests: XCTestCase {
 		let url = DiskService.documentsDirectory()
 		XCTAssert(url != nil)
 	}
+	
+	func testBulk() {
+		let writeResult1 = DiskService.write(encodable: MockConstants.testCodableInstance, toFileName: "bulk-test-1")
+		XCTAssert(writeResult1)
+		
+		let writeResult2 = DiskService.write(encodable: MockConstants.testCodableInstance, toFileName: "bulk-test-2")
+		XCTAssert(writeResult2)
+		
+		let writeResult3 = DiskService.write(encodable: MockConstants.testCodableInstance, toFileName: "bulk-test-3")
+		XCTAssert(writeResult3)
+		
+		let writeResult4 = DiskService.write(encodable: MockConstants.testCodableInstance, toFileName: "something-else")
+		XCTAssert(writeResult4)
+		
+		let bulkSearchResult = DiskService.allFileNamesWith(prefix: "bulk-test")
+		XCTAssert(bulkSearchResult.count == 3)
+		
+		let bulkDelete = DiskService.delete(fileNames: bulkSearchResult)
+		XCTAssert(bulkDelete)
+		
+		let leftOverSearchResult = DiskService.allFileNamesWith(prefix: "something-else")
+		XCTAssert(leftOverSearchResult.count == 1)
+		
+		let deleteResult = DiskService.delete(fileName: "something-else")
+		XCTAssert(deleteResult)
+	}
 }

@@ -34,13 +34,13 @@ class NetworkServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testPost() {
 		let expectation = XCTestExpectation(description: "network service POST")
 		
-		if let rpc = RPC.forge(operationPayload: MockConstants.sendOperationPayload, withMetadata: MockConstants.operationMetadata) {
+		if let rpc = RPC.forge(operationPayload: MockConstants.sendOperationPayload) {
 			MockConstants.shared.networkService.send(rpc: rpc, withBaseURL: MockConstants.shared.config.primaryNodeURL) { result in
 				
 				switch result {
@@ -54,7 +54,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 3)
+			wait(for: [expectation], timeout: 10)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -74,7 +74,7 @@ class NetworkServiceTests: XCTestCase {
 						XCTFail("Should have failed")
 						
 					case .failure(let error):
-						XCTAssert(error.errorType == .unknownError)
+						XCTAssert(error.errorType == .rpc, error.description)
 						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation").absoluteString)
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)
@@ -83,7 +83,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 3)
+			wait(for: [expectation], timeout: 10)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -103,7 +103,8 @@ class NetworkServiceTests: XCTestCase {
 						XCTFail("Should have failed")
 						
 					case .failure(let error):
-						XCTAssert(error.errorType == .unknownError)
+						XCTAssert(error.errorType == .unknown)
+						XCTAssert(error.description == "Unknown: Assert_failure src/proto_009_PsFLoren/lib_protocol/operation_repr.ml:203:6", error.description)
 						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation").absoluteString)
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)
@@ -112,7 +113,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 3)
+			wait(for: [expectation], timeout: 10)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")

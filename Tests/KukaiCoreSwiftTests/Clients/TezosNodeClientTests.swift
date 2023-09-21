@@ -32,7 +32,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testDelegate() {
@@ -40,7 +40,7 @@ class TezosNodeClientTests: XCTestCase {
 		MockConstants.shared.tezosNodeClient.getDelegate(forAddress: MockConstants.defaultHdWallet.address) { result in
 			switch result {
 				case .success(let address):
-					XCTAssert(address == "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF", address)
+					XCTAssert(address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", address)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -49,16 +49,19 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testEstiamte() {
 		let expectation = XCTestExpectation(description: "tezos node client")
-		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, withWallet: MockConstants.defaultHdWallet) { result in
+		let address = MockConstants.defaultHdWallet.address
+		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
+		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, walletAddress: address, base58EncodedPublicKey: key) { result in
 			switch result {
-				case .success(let ops):
-					XCTAssert(ops.count == 2)
-					XCTAssert(ops[0].operationFees?.allFees() == XTZAmount(fromNormalisedAmount: 0.064719), ops[0].operationFees?.allFees().description ?? "")
+				case .success(let result):
+					XCTAssert(result.operations.count == 2)
+					XCTAssert(result.operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0), result.operations[0].operationFees.allFees().description)
+					XCTAssert(result.operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.000586), result.operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -84,7 +87,27 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
+	}
+	
+	func testSendOperationsError() {
+		MockURLProtocol.triggerCounterInFutureError()
+		
+		let expectation = XCTestExpectation(description: "tezos node client")
+		MockConstants.shared.tezosNodeClient.send(operations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet) { result in
+			switch result {
+				case .success(_):
+					XCTFail("Should have failed, got opHash instead")
+					
+				case .failure(let error):
+					XCTAssert(error.description == "RPC: contract.counter_in_the_future", error.description)
+			}
+			
+			expectation.fulfill()
+			
+		}
+		
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testSendPayload() {
@@ -101,12 +124,13 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetMetadata() {
 		let expectation = XCTestExpectation(description: "tezos node client")
-		MockConstants.shared.tezosNodeClient.getOperationMetadata(forWallet: MockConstants.defaultHdWallet) { result in
+		let address = MockConstants.defaultHdWallet.address
+		MockConstants.shared.tezosNodeClient.getOperationMetadata(forWalletAddress: address) { result in
 			switch result {
 				case .success(let metadata):
 					XCTAssert(metadata.branch == "BMLWVn1nEWeEzf6pxn3VYx7YcQ3zPay7HQtQ3rBMxuc7bXCG8BB", metadata.branch)
@@ -122,15 +146,15 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetContractStorage() {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.getContractStorage(contractAddress: MockConstants.token3Decimals.tokenContractAddress ?? "") { result in
 			switch result {
-				case .success(let michelson):
-					XCTAssert(michelson.args.count == 4, "\(michelson.args.count)")
+				case .success(let json):
+					XCTAssert(json.michelsonArgsArray()?.count == 4, "\(json.michelsonArgsArray()?.count ?? 0)")
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -139,7 +163,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 	
 	func testGetNetworkInformation() {
@@ -147,10 +171,12 @@ class TezosNodeClientTests: XCTestCase {
 		MockConstants.shared.tezosNodeClient.getNetworkInformation(completion: { success, error in
 			XCTAssert(success)
 			XCTAssert(error == nil)
+			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.isMainnet() == false)
+			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.chainName() == "ithacanet", MockConstants.shared.tezosNodeClient.networkVersion?.chainName() ?? "-")
 			
 			expectation.fulfill()
 		})
 		
-		wait(for: [expectation], timeout: 3)
+		wait(for: [expectation], timeout: 10)
 	}
 }

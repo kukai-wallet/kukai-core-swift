@@ -1,0 +1,1 @@
+{"query":"query {reverseRecord(address: \"tz1SUrXU6cxioeyURSxTgaxmpSWgQq4PMSov\") {id, address, owner, expiresAtUtc, domain { name, address}}}"}

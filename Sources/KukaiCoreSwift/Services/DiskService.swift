@@ -57,7 +57,7 @@ public class DiskService {
 			return write(data: encodedData, toFileName: toFileName)
 
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, "\(error)")
 			return false
 		}
 	}
@@ -83,7 +83,7 @@ public class DiskService {
 			return try Data(contentsOf: fileURL)
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to read from %@: %@", fromFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to read from %@: %@", fromFileName, "\(error)")
 			return nil
 		}
 	}
@@ -102,7 +102,7 @@ public class DiskService {
 			return try JSONDecoder().decode(T.self, from: data)
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to parse decodable from %@: %@", fromFileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to parse decodable from %@: %@", fromFileName, "\(error)")
 			return nil
 		}
 	}
@@ -125,9 +125,19 @@ public class DiskService {
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to delete file %@: %@", fileName, error.localizedDescription)
+			os_log(.error, log: .kukaiCoreSwift, "Failed to delete file %@: %@", fileName, "\(error)")
 			return false
 		}
+	}
+	
+	public static func delete(fileNames: [String]) -> Bool {
+		for fileName in fileNames {
+			if !DiskService.delete(fileName: fileName) {
+				return false
+			}
+		}
+		
+		return true
 	}
 	
 	
@@ -161,5 +171,24 @@ public class DiskService {
 		}
 		
 		return nil
+	}
+	
+	
+	/**
+	 Find all files in documents directory begining with prefix
+	 */
+	
+	public static func allFileNamesWith(prefix: String) -> [String] {
+		var tempStrings: [String] = []
+		
+		if let dir = documentsDirectory(), let contents = try? FileManager.default.contentsOfDirectory(atPath: dir.path) {
+			for filename in contents {
+				if filename.prefix(prefix.count) == prefix {
+					tempStrings.append(filename)
+				}
+			}
+		}
+		
+		return tempStrings
 	}
 }

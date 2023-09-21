@@ -15,6 +15,12 @@ public enum OperationKind: String, Codable {
 	case delegation
 	case origination
 	case activate_account
+	case endorsement
+	case seed_nonce_revelation
+	case double_endorsement_evidence
+	case double_baking_evidence
+	case proposals
+	case ballot
 	case unknown
 	
 	enum CodingKeys: CodingKey {

@@ -26,7 +26,7 @@ public struct OperationFees: Equatable {
 	public var transactionFee: XTZAmount
 	
 	/// Additional fees the account will have to pay in order to send this operation. Such as allocating space for an unrevealed account.
-	public var networkFees: [[NetworkFeeType: XTZAmount]] = []
+	public var networkFees: [NetworkFeeType: XTZAmount] = [:]
 	
 	/// The limit of gas (computation + CPU) this `Operation` should take. If it exceeds this value when running, the `Operation` will fail.
 	public var gasLimit: Int
@@ -47,19 +47,19 @@ public struct OperationFees: Equatable {
 	Add together all the network fees and transaction fees
 	*/
 	public func allNetworkFees() -> XTZAmount {
-		var total = XTZAmount.zero()
-		
-		networkFees.forEach { (fee) in
-			total += fee.values.reduce(XTZAmount.zero(), +)
-		}
-		
-		return total
+		return networkFees.values.reduce(XTZAmount.zero(), +)
 	}
 	
+	/**
+	 Creates an `OperationFees` object, with everything set to zero. Primarly used as a default / placeholder until an estimation can be performed
+	 */
+	public static func zero() -> OperationFees {
+		return OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
+	}
 	
 	/**
 	Get a default fees for each type of `Operation`. No guarentee these will succeed.
-	- parameter operationKing: enum to denote the type of `Operation`
+	- parameter operationKind: enum to denote the type of `Operation`
 	- returns: a `OperationFees` object with all the values set.
 	*/
 	public static func defaultFees(operationKind: OperationKind) -> OperationFees {
@@ -71,13 +71,16 @@ public struct OperationFees: Equatable {
 				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001410), gasLimit: 10500, storageLimit: 257)
 			
 			case .reveal:
-				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001268), gasLimit: 10000, storageLimit: 0)
+				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001268), gasLimit: 200, storageLimit: 0)
 				
 			case .activate_account:
 				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001268), gasLimit: 10000, storageLimit: 0)
 			
 			case .origination:
 				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001477), gasLimit: 10000, storageLimit: 257)
+				
+			default:
+				return OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.001410), gasLimit: 10500, storageLimit: 257)
 		}
 	}
 	

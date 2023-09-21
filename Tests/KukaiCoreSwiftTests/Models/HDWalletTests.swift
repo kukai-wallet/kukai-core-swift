@@ -20,50 +20,65 @@ class HDWalletTests: XCTestCase {
     }
 
 	func testCreateWithMnemonic() {
-		let wallet = HDWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: "")
+		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")
 		XCTAssert(wallet?.address == MockConstants.hdWallet.address, wallet?.address ?? "-")
-		XCTAssert(wallet?.privateKey.data.toHexString() == MockConstants.hdWallet.privateKey, wallet?.privateKey.data.toHexString() ?? "-")
-		XCTAssert(wallet?.publicKey.data.toHexString() == MockConstants.hdWallet.publicKey, wallet?.publicKey.data.toHexString() ?? "-")
+		XCTAssert(wallet?.privateKey.bytes.hexString == MockConstants.hdWallet.privateKey, wallet?.privateKey.bytes.hexString ?? "-")
+		XCTAssert(wallet?.publicKey.bytes.hexString == MockConstants.hdWallet.publicKey, wallet?.publicKey.bytes.hexString ?? "-")
 	}
 	
 	func testCreateWithMnemonicLength() {
-		let wallet1 = HDWallet.create(withMnemonicLength: .twelve, passphrase: "")
-		XCTAssert(wallet1?.mnemonic.components(separatedBy: " ").count == 12, "\(wallet1?.mnemonic.components(separatedBy: " ").count ?? -1)")
+		let wallet1 = HDWallet(withMnemonicLength: .twelve, passphrase: "")
+		XCTAssert(wallet1?.mnemonic.words.count == 12, "\(wallet1?.mnemonic.words.count ?? -1)")
 		
-		let wallet2 = HDWallet.create(withMnemonicLength: .fifteen, passphrase: "")
-		XCTAssert(wallet2?.mnemonic.components(separatedBy: " ").count == 15, "\(wallet2?.mnemonic.components(separatedBy: " ").count ?? -1)")
+		let wallet2 = HDWallet(withMnemonicLength: .fifteen, passphrase: "")
+		XCTAssert(wallet2?.mnemonic.words.count == 15, "\(wallet2?.mnemonic.words.count ?? -1)")
 		
-		let wallet3 = HDWallet.create(withMnemonicLength: .twentyFour, passphrase: "")
-		XCTAssert(wallet3?.mnemonic.components(separatedBy: " ").count == 24, "\(wallet3?.mnemonic.components(separatedBy: " ").count ?? -1)")
+		let wallet3 = HDWallet(withMnemonicLength: .twentyFour, passphrase: "")
+		XCTAssert(wallet3?.mnemonic.words.count == 24, "\(wallet3?.mnemonic.words.count ?? -1)")
 	}
 	
 	func testPassphrases() {
-		let wallet = HDWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)
+		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)
 		XCTAssert(wallet?.address == MockConstants.hdWallet_withPassphrase.address, wallet?.address ?? "-")
-		XCTAssert(wallet?.privateKey.data.toHexString() == MockConstants.hdWallet_withPassphrase.privateKey, wallet?.privateKey.data.toHexString() ?? "-")
-		XCTAssert(wallet?.publicKey.data.toHexString() == MockConstants.hdWallet_withPassphrase.publicKey, wallet?.publicKey.data.toHexString() ?? "-")
+		XCTAssert(wallet?.privateKey.bytes.hexString == MockConstants.hdWallet_withPassphrase.privateKey, wallet?.privateKey.bytes.hexString ?? "-")
+		XCTAssert(wallet?.publicKey.bytes.hexString == MockConstants.hdWallet_withPassphrase.publicKey, wallet?.publicKey.bytes.hexString ?? "-")
 	}
 	
 	func testDerivationPaths() {
-		let wallet1 = HDWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: "", derivationPath: MockConstants.hdWallet_non_hardened.derivationPath)
-		XCTAssert(wallet1?.address == MockConstants.hdWallet_non_hardened.address, wallet1?.address ?? "-")
-		XCTAssert(wallet1?.privateKey.data.toHexString() == MockConstants.hdWallet_non_hardened.privateKey, wallet1?.privateKey.data.toHexString() ?? "-")
-		XCTAssert(wallet1?.publicKey.data.toHexString() == MockConstants.hdWallet_non_hardened.publicKey, wallet1?.publicKey.data.toHexString() ?? "-")
-		
-		let wallet2 = HDWallet.create(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase, derivationPath: MockConstants.hdWallet_hardened_change.derivationPath)
-		XCTAssert(wallet2?.address == MockConstants.hdWallet_hardened_change.address, wallet2?.address ?? "-")
-		XCTAssert(wallet2?.privateKey.data.toHexString() == MockConstants.hdWallet_hardened_change.privateKey, wallet2?.privateKey.data.toHexString() ?? "-")
-		XCTAssert(wallet2?.publicKey.data.toHexString() == MockConstants.hdWallet_hardened_change.publicKey, wallet2?.publicKey.data.toHexString() ?? "-")
+		let wallet1 = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase, derivationPath: MockConstants.hdWallet_hardened_change.derivationPath)
+		XCTAssert(wallet1?.address == MockConstants.hdWallet_hardened_change.address, wallet1?.address ?? "-")
+		XCTAssert(wallet1?.privateKey.bytes.hexString == MockConstants.hdWallet_hardened_change.privateKey, wallet1?.privateKey.bytes.hexString ?? "-")
+		XCTAssert(wallet1?.publicKey.bytes.hexString == MockConstants.hdWallet_hardened_change.publicKey, wallet1?.publicKey.bytes.hexString ?? "-")
 	}
 	
 	func testSigning() {
 		let messageHex = MockConstants.messageToSign.data(using: .utf8)?.toHexString() ?? "-"
-		let signedData = MockConstants.defaultHdWallet.sign(messageHex)
-		XCTAssert(signedData?.toHexString() == MockConstants.hdWallet.signedData, signedData?.toHexString() ?? "-")
+		MockConstants.defaultHdWallet.sign(messageHex, isOperation: false) { result in
+			guard let signedData = try? result.get() else {
+				XCTFail("No signature: \(result.getFailure())")
+				return
+			}
+			
+			XCTAssert(signedData.toHexString() == MockConstants.hdWallet.signedData, signedData.toHexString())
+		}
 	}
 	
 	func testBase58Encoding() {
 		let encoded = MockConstants.defaultHdWallet.publicKeyBase58encoded()
 		XCTAssert(encoded == MockConstants.hdWallet.base58Encoded, encoded)
+	}
+	
+	func testChildWallets() {
+		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: "")
+		XCTAssert(wallet?.address == MockConstants.hdWallet.address, wallet?.address ?? "-")
+		
+		let child1 = wallet?.createChild(accountIndex: 1)
+		XCTAssert(child1?.address == MockConstants.hdWallet.childWalletAddresses[0], child1?.address ?? "-")
+		
+		let child2 = wallet?.createChild(accountIndex: 2)
+		XCTAssert(child2?.address == MockConstants.hdWallet.childWalletAddresses[1], child2?.address ?? "-")
+		
+		let child3 = wallet?.createChild(accountIndex: 3)
+		XCTAssert(child3?.address == MockConstants.hdWallet.childWalletAddresses[2], child3?.address ?? "-")
 	}
 }

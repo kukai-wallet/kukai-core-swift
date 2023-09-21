@@ -8,10 +8,12 @@
 
 import UIKit
 import KukaiCoreSwift
+import AVFoundation
 
 class NonFungibleChildTableViewController: UITableViewController {
 	
 	var parentNFT: Token? = nil
+	let mediaProxyService = MediaProxyService()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,13 +45,45 @@ class NonFungibleChildTableViewController: UITableViewController {
 		}
 		
 		if let ftCell = cell as? NonFungibleTokenCell {
-			//ftCell.iconView?.kf.setImage(with: token?.icon, options: [.processor( DownsamplingImageProcessor(size: CGSize(width: 30, height: 30)) )])
-			
+			MediaProxyService.load(url: nft.displayURL, to: ftCell.iconView, fromCache: MediaProxyService.temporaryImageCache(), fallback: UIImage(), downSampleSize: ftCell.iconView.frame.size)
 			ftCell.label.text = nft.name
 			ftCell.desc.text = nft.description
 		}
 		
 		return cell
 	}
-
+	
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let selectedNFT = parentNFT?.nfts?[indexPath.row] {
+			mediaProxyService.getMediaType(fromFormats: selectedNFT.metadata?.formats ?? [], orURL: selectedNFT.displayURL) { result in
+				guard let res = try? result.get() else {
+					print("Error: \(result.getFailure())")
+					return
+				}
+				
+				if res == .image {
+					self.performSegue(withIdentifier: "display-image", sender: selectedNFT)
+				} else {
+					self.performSegue(withIdentifier: "display-video", sender: selectedNFT)
+				}
+			}
+		}
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		guard let selectedNFT = sender as? NFT else {
+			print("can't parse sender as NFT")
+			return
+		}
+		
+		if segue.identifier == "display-video", let playerController = segue.destination as? DisplayVideoViewController {
+			playerController.contentURL = selectedNFT.artifactURL == nil ? selectedNFT.displayURL : selectedNFT.artifactURL
+			
+		} else if segue.identifier == "display-image", let imageController = segue.destination as? DisplayImageViewController, let contentURL = selectedNFT.displayURL {
+			imageController.contentURL = contentURL
+			
+		} else {
+			print("Unable to parse NFT data")
+		}
+	}
 }

@@ -1,0 +1,27 @@
+{
+	"contents": [
+		{
+			"kind": "transaction",
+			"metadata": {
+				"operation_result": {
+					"status": "failed",
+					"errors": [
+						{
+							"kind": "temporary",
+							"id": "proto.013-PtJakart.michelson_v1.runtime_error"
+						},
+						{
+							"id": "proto.013-PtJakart.michelson_v1.script_rejected",
+							"kind": "temporary",
+							"location": 171,
+							"with": {
+								"string": "Dex\/wrong-min-out"
+							}
+						}
+					]
+				}
+			},
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+		}
+	]
+}

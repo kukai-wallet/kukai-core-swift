@@ -14,20 +14,37 @@ public class ClientsAndData {
 	public static let shared = ClientsAndData()
 	
 	// Clients
-	let clientConfig: TezosNodeClientConfig
-	let tezosNodeClient: TezosNodeClient
-	let bcdClient: BetterCallDevClient
-	let tzktClient: TzKTClient
+	var clientConfig: TezosNodeClientConfig
+	var tezosNodeClient: TezosNodeClient
+	var bcdClient: BetterCallDevClient
+	var tzktClient: TzKTClient
+	var tezosDomainsClient: TezosDomainsClient
+	var torusAuthService: TorusAuthService
+	var dipDupClient: DipDupClient
 	
 	
 	// Data
 	var currentWalletAddress = ""
 	var account: Account? = nil
 	
+	
 	private init() {
-		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
+		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: .mainnet)
 		tezosNodeClient = TezosNodeClient(config: clientConfig)
+		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
 		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
-		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient)
+		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient, dipDupClient: dipDupClient)
+		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		torusAuthService = TorusAuthService(networkService: tezosNodeClient.networkService, verifiers: [:])
+	}
+	
+	public func updateNetwork(network: TezosNodeClientConfig.NetworkType) {
+		clientConfig = TezosNodeClientConfig(withDefaultsForNetworkType: network)
+		tezosNodeClient = TezosNodeClient(config: clientConfig)
+		dipDupClient = DipDupClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		bcdClient = BetterCallDevClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		tzktClient = TzKTClient(networkService: tezosNodeClient.networkService, config: clientConfig, betterCallDevClient: bcdClient, dipDupClient: dipDupClient)
+		tezosDomainsClient = TezosDomainsClient(networkService: tezosNodeClient.networkService, config: clientConfig)
+		torusAuthService = TorusAuthService(networkService: tezosNodeClient.networkService, verifiers: [:])
 	}
 }
