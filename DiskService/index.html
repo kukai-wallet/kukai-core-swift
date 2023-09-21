@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <a href="https://kukai-core-swift.kukai.app">
+        <a href="https://kukai-core-swift.kukai.app/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -25,7 +25,7 @@
     <nav>
         <div class="wrapper">
             <h2>On This Page</h2>
-            <ol><li><a href="#methods">Methods</a><ul><li class="function"><a href="#diskservice.write(data:tofilename:)">write(data:​to​File​Name:​)</a></li><li class="function"><a href="#diskservice.write(encodable:tofilename:)">write(encodable:​to​File​Name:​)</a></li><li class="function"><a href="#diskservice.readdata(fromfilename:)">read​Data(from​File​Name:​)</a></li><li class="function"><a href="#diskservice.read(type:fromfilename:)">read(type:​from​File​Name:​)</a></li><li class="function"><a href="#diskservice.delete(filename:)">delete(file​Name:​)</a></li><li class="function"><a href="#diskservice.documentsdirectory()">documents​Directory()</a></li><li class="function"><a href="#diskservice.exists(filename:)">exists(file​Name:​)</a></li></ul></li></ol>
+            <ol><li><a href="#methods">Methods</a><ul><li class="function"><a href="#diskservice.write(data:tofilename:)">write(data:​to​File​Name:​)</a></li><li class="function"><a href="#diskservice.write(encodable:tofilename:)">write(encodable:​to​File​Name:​)</a></li><li class="function"><a href="#diskservice.readdata(fromfilename:)">read​Data(from​File​Name:​)</a></li><li class="function"><a href="#diskservice.read(type:fromfilename:)">read(type:​from​File​Name:​)</a></li><li class="function"><a href="#diskservice.delete(filename:)">delete(file​Name:​)</a></li><li class="function"><a href="#diskservice.delete(filenames:)">delete(file​Names:​)</a></li><li class="function"><a href="#diskservice.documentsdirectory()">documents​Directory()</a></li><li class="function"><a href="#diskservice.exists(filename:)">exists(file​Name:​)</a></li><li class="function"><a href="#diskservice.allfilenameswith(prefix:)">all​File​Names​With(prefix:​)</a></li></ul></li></ol>
         </div>
     </nav>
 
@@ -122,6 +122,14 @@
   <p>Bool, indicating if the operation was successful</p>
 
 </div>
+<div role="article" class="function" id="diskservice.delete(filenames:)">
+    <h3>
+        <code><a href="#diskservice.delete(filenames:)">delete(file​Names:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">delete</span>(<span class="variable">fileNames</span>: [<span class="type">String</span>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+</div>
 <div role="article" class="function" id="diskservice.documentsdirectory()">
     <h3>
         <code><a href="#diskservice.documentsdirectory()">documents​Directory()</a></code>
@@ -146,6 +154,18 @@
 
 </div>
 </div>
+<div role="article" class="function" id="diskservice.allfilenameswith(prefix:)">
+    <h3>
+        <code><a href="#diskservice.allfilenameswith(prefix:)">all​File​Names​With(prefix:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">allFileNamesWith</span>(<span class="variable">prefix</span>: <span class="type">String</span>) -&gt; [<span class="type">String</span>]  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Find all files in documents directory begining with prefix</p>
+
+</div>
+</div>
     </section>
 
 
@@ -155,7 +175,7 @@
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-14T15:18:16+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2023-09-21T10:15:52+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

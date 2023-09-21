@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - OperationFactory.Extractor</title>
+    <link rel="stylesheet" type="text/css" href="https://kukai-core-swift.kukai.app/all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="https://kukai-core-swift.kukai.app/">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Member Of</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#operationfactory.extractor.tokenidandamountfromsendmichelson(michelson:)">token​IdAnd​Amount​From​Send​Michelson(michelson:​)</a></li><li class="function"><a href="#operationfactory.extractor.fatokendetailsfrom(transaction:)">fa​Token​Details​From(transaction:​)</a></li><li class="function"><a href="#operationfactory.extractor.fatokendetailsfrom(operations:)">fa​Token​Details​From(operations:​)</a></li><li class="function"><a href="#operationfactory.extractor.isteztransfer(operations:)">is​Tez​Transfer(operations:​)</a></li><li class="function"><a href="#operationfactory.extractor.firsttransferentrypointoperation(operations:)">first​Transfer​Entrypoint​Operation(operations:​)</a></li><li class="function"><a href="#operationfactory.extractor.iscontractcall(operations:)">is​Contract​Call(operations:​)</a></li><li class="function"><a href="#operationfactory.extractor.firstcontractcalloperation(operations:)">first​Contract​Call​Operation(operations:​)</a></li><li class="function"><a href="#operationfactory.extractor.totalxtzamountforcontractcall(operations:)">total​XTZAmount​For​Contract​Call(operations:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Structure</small>
+    <code class="name">Operation​Factory.​Extractor</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">struct</span> <span class="type">Extractor</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Internal Struct to encapsulate helpers methods needed to extract critical information from an array of operations, needed for processing decisions like &quot;do i display a send token screen, or a send NFt screen&quot;, fetching total XTZ sent in 1 action etc</p>
+
+</div>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Member Of</h3>
+<dl>
+    <dt class="class"><code><a href="https://kukai-core-swift.kukai.app/OperationFactory">OperationFactory</a></code></dt>
+<dd><p>Class responsible for creating operations necessary to perform a given action, and converting those operations into the single payload expected by the RPC.
+Although not every action requires more than one operation, all functions will return an array, for consistency.</p>
+</dd>
+</dl>
+</section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="operationfactory.extractor.tokenidandamountfromsendmichelson(michelson:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.tokenidandamountfromsendmichelson(michelson:)">token​IdAnd​Amount​From​Send​Michelson(michelson:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">tokenIdAndAmountFromSendMichelson</span>(<span class="variable">michelson</span>: <span class="keyword">Any</span>) -&gt; (<span class="variable">rpcAmount</span>: <span class="type">String</span>, <span class="variable">tokenId</span>: <span class="type">Decimal</span>?, <span class="variable">destination</span>: <span class="type">String</span>)?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload</p>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.fatokendetailsfrom(transaction:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.fatokendetailsfrom(transaction:)">fa​Token​Details​From(transaction:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">faTokenDetailsFrom</span>(<span class="variable">transaction</span>: <a href="https://kukai-core-swift.kukai.app/OperationTransaction"><span class="type">OperationTransaction</span></a>) -&gt; (<span class="variable">tokenContract</span>: <span class="type">String</span>, <span class="variable">rpcAmount</span>: <span class="type">String</span>, <span class="variable">tokenId</span>: <span class="type">Decimal</span>?, <span class="variable">destination</span>: <span class="type">String</span>)?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Extract details from a payload in order to present to the user what it is they are trying to send</p>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.fatokendetailsfrom(operations:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.fatokendetailsfrom(operations:)">fa​Token​Details​From(operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">faTokenDetailsFrom</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>]) -&gt; (<span class="variable">tokenContract</span>: <span class="type">String</span>, <span class="variable">rpcAmount</span>: <span class="type">String</span>, <span class="variable">tokenId</span>: <span class="type">Decimal</span>?, <span class="variable">destination</span>: <span class="type">String</span>)?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Helper to  call <code>faTokenDetailsFrom(transaction: OperationTransaction)</code> on the first <code>OperationTransaction</code> in an array of operations. Allows to more easily parse an array of operations that may include <code>approval</code>'s or <code>update_operator</code> calls</p>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.isteztransfer(operations:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.isteztransfer(operations:)">is​Tez​Transfer(operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">isTezTransfer</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>]) -&gt; <span class="type">Bool</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Return true if</p>
+
+</div>
+<div class="discussion">
+    <ul>
+<li>
+<p>contains 1 operation with a non-zero amount, with no parameters</p>
+</li>
+</ul>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.firsttransferentrypointoperation(operations:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.firsttransferentrypointoperation(operations:)">first​Transfer​Entrypoint​Operation(operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">firstTransferEntrypointOperation</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>]) -&gt; <a href="https://kukai-core-swift.kukai.app/OperationTransaction"><span class="type">OperationTransaction</span></a>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Easy way to extract the first non-<code>approval</code> or <code>update_operator</code> transaction</p>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.iscontractcall(operations:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.iscontractcall(operations:)">is​Contract​Call(operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">isContractCall</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>]) -&gt; (<span class="variable">entrypoint</span>: <span class="type">String</span>, <span class="variable">address</span>: <span class="type">String</span>)?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Return the entrypoint and address of the first operation, that doesn't equal <code>approve</code>, <code>update_operator</code> or <code>transfer</code></p>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.firstcontractcalloperation(operations:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.firstcontractcalloperation(operations:)">first​Contract​Call​Operation(operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">firstContractCallOperation</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>]) -&gt; <a href="https://kukai-core-swift.kukai.app/OperationTransaction"><span class="type">OperationTransaction</span></a>?  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Return the first operation where entrypoint doesn't equal <code>approve</code>, <code>update_operator</code> or <code>transfer</code></p>
+
+</div>
+</div>
+<div role="article" class="function" id="operationfactory.extractor.totalxtzamountforcontractcall(operations:)">
+    <h3>
+        <code><a href="#operationfactory.extractor.totalxtzamountforcontractcall(operations:)">total​XTZAmount​For​Contract​Call(operations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">totalXTZAmountForContractCall</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>]) -&gt; <a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Run through list of operations and extract .amount from any OperationTransaction</p>
+
+</div>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2023-09-21T10:15:50+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

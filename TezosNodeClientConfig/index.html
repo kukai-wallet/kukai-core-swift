@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <a href="https://kukai-core-swift.kukai.app">
+        <a href="https://kukai-core-swift.kukai.app/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -25,7 +25,7 @@
     <nav>
         <div class="wrapper">
             <h2>On This Page</h2>
-            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#tezosnodeclientconfig.init(withdefaultsfornetworktype:)">init(with​Defaults​For​Network​Type:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#tezosnodeclientconfig.primarynodeurl">primary​Node​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.parsenodeurl">parse​Node​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.forgingtype">forging​Type</a></li><li class="variable"><a href="#tezosnodeclientconfig.tezoschainname">tezos​Chain​Name</a></li><li class="variable"><a href="#tezosnodeclientconfig.tzkturl">tzkt​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.bettercalldevurl">better​Call​Dev​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.urlsession">url​Session</a></li><li class="variable"><a href="#tezosnodeclientconfig.networktype">network​Type</a></li><li class="variable"><a href="#tezosnodeclientconfig.loggingconfig">logging​Config</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#tezosnodeclientconfig.configwithlocalforge(primarynodeurl:tezoschainname:tzkturl:bettercalldevurl:urlsession:networktype:)">config​With​Local​Forge(primary​Node​URL:​tezos​Chain​Name:​tzkt​URL:​better​Call​Dev​URL:​url​Session:​network​Type:​)</a></li><li class="function"><a href="#tezosnodeclientconfig.configwithremoteforge(primarynodeurl:parsenodeurl:tezoschainname:tzkturl:bettercalldevurl:urlsession:networktype:)">config​With​Remote​Forge(primary​Node​URL:​parse​Node​URL:​tezos​Chain​Name:​tzkt​URL:​better​Call​Dev​URL:​url​Session:​network​Type:​)</a></li></ul></li></ol>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#tezosnodeclientconfig.init(withdefaultsfornetworktype:)">init(with​Defaults​For​Network​Type:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#tezosnodeclientconfig.primarynodeurl">primary​Node​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.parsenodeurl">parse​Node​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.forgingtype">forging​Type</a></li><li class="variable"><a href="#tezosnodeclientconfig.tzkturl">tzkt​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.bettercalldevurl">better​Call​Dev​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.tezosdomainsurl">tezos​Domains​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.objktapiurl">objkt​Api​URL</a></li><li class="variable"><a href="#tezosnodeclientconfig.urlsession">url​Session</a></li><li class="variable"><a href="#tezosnodeclientconfig.networktype">network​Type</a></li><li class="variable"><a href="#tezosnodeclientconfig.loggingconfig">logging​Config</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#tezosnodeclientconfig.configwithlocalforge(primarynodeurl:tzkturl:bettercalldevurl:tezosdomainsurl:objktapiurl:urlsession:networktype:)">config​With​Local​Forge(primary​Node​URL:​tzkt​URL:​better​Call​Dev​URL:​tezos​Domains​URL:​objkt​Api​URL:​url​Session:​network​Type:​)</a></li><li class="function"><a href="#tezosnodeclientconfig.configwithremoteforge(primarynodeurl:parsenodeurl:tzkturl:bettercalldevurl:tezosdomainsurl:objktapiurl:urlsession:networktype:)">config​With​Remote​Forge(primary​Node​URL:​parse​Node​URL:​tzkt​URL:​better​Call​Dev​URL:​tezos​Domains​URL:​objkt​Api​URL:​url​Session:​network​Type:​)</a></li></ul></li></ol>
         </div>
     </nav>
 
@@ -136,18 +136,6 @@
 
 </div>
 </div>
-<div role="article" class="variable" id="tezosnodeclientconfig.tezoschainname">
-    <h3>
-        <code><a href="#tezosnodeclientconfig.tezoschainname">tezos​Chain​Name</a></code>
-    </h3>
-    <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">tezosChainName</span>: <a href="https://kukai-core-swift.kukai.app/TezosChainName"><span class="type">TezosChainName</span></a></body></html></code></pre>
-</div>
-<div class="summary" role="doc-abstract">
-    <p>Which chain to use for inDEXter queries</p>
-
-</div>
-</div>
 <div role="article" class="variable" id="tezosnodeclientconfig.tzkturl">
     <h3>
         <code><a href="#tezosnodeclientconfig.tzkturl">tzkt​URL</a></code>
@@ -169,6 +157,30 @@
 </div>
 <div class="summary" role="doc-abstract">
     <p>The URL to use for <code>BetterCallDevClient</code></p>
+
+</div>
+</div>
+<div role="article" class="variable" id="tezosnodeclientconfig.tezosdomainsurl">
+    <h3>
+        <code><a href="#tezosnodeclientconfig.tezosdomainsurl">tezos​Domains​URL</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">tezosDomainsURL</span>: <span class="type">URL</span></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The URL to use for <code>TezosDomainsClient</code></p>
+
+</div>
+</div>
+<div role="article" class="variable" id="tezosnodeclientconfig.objktapiurl">
+    <h3>
+        <code><a href="#tezosnodeclientconfig.objktapiurl">objkt​Api​URL</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">let</span> <span class="variable">objktApiURL</span>: <span class="type">URL</span></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>The URL to use for <code>TezosDomainsClient</code></p>
 
 </div>
 </div>
@@ -212,12 +224,12 @@
     <section id="methods">
         <h2>Methods</h2>
 
-        <div role="article" class="function" id="tezosnodeclientconfig.configwithlocalforge(primarynodeurl:tezoschainname:tzkturl:bettercalldevurl:urlsession:networktype:)">
+        <div role="article" class="function" id="tezosnodeclientconfig.configwithlocalforge(primarynodeurl:tzkturl:bettercalldevurl:tezosdomainsurl:objktapiurl:urlsession:networktype:)">
     <h3>
-        <code><a href="#tezosnodeclientconfig.configwithlocalforge(primarynodeurl:tezoschainname:tzkturl:bettercalldevurl:urlsession:networktype:)">config​With​Local​Forge(primary​Node​URL:​tezos​Chain​Name:​tzkt​URL:​better​Call​Dev​URL:​url​Session:​network​Type:​)</a></code>
+        <code><a href="#tezosnodeclientconfig.configwithlocalforge(primarynodeurl:tzkturl:bettercalldevurl:tezosdomainsurl:objktapiurl:urlsession:networktype:)">config​With​Local​Forge(primary​Node​URL:​tzkt​URL:​better​Call​Dev​URL:​tezos​Domains​URL:​objkt​Api​URL:​url​Session:​network​Type:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">configWithLocalForge</span>(<span class="variable">primaryNodeURL</span>: <span class="type">URL</span>, <span class="variable">tezosChainName</span>: <a href="https://kukai-core-swift.kukai.app/TezosChainName"><span class="type">TezosChainName</span></a>, <span class="variable">tzktURL</span>: <span class="type">URL</span>, <span class="variable">betterCallDevURL</span>: <span class="type">URL</span>, <span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">networkType</span>: <span class="type">NetworkType</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">configWithLocalForge</span>(<span class="variable">primaryNodeURL</span>: <span class="type">URL</span>, <span class="variable">tzktURL</span>: <span class="type">URL</span>, <span class="variable">betterCallDevURL</span>: <span class="type">URL</span>, <span class="variable">tezosDomainsURL</span>: <span class="type">URL</span>, <span class="variable">objktApiURL</span>: <span class="type">URL</span>, <span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">networkType</span>: <span class="type">NetworkType</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Creates an instance of <code>TezosNodeClientConfig</code> with only the required properties needed when using local forge.</p>
@@ -249,12 +261,6 @@
 </td>
 </tr>
 <tr>
-    <th>tezos​Chain​Name</th>
-    <td><code class="type">Tezos​Chain​Name</code></td>
-    <td><p>The chain name used by services such Better call dev, when deciding which network to use</p>
-</td>
-</tr>
-<tr>
     <th>tzkt​URL</th>
     <td><code class="type">URL</code></td>
     <td><p>The URL to use for <code>TzKTClient</code>.</p>
@@ -281,12 +287,12 @@
   </tbody>
 </table>
 </div>
-<div role="article" class="function" id="tezosnodeclientconfig.configwithremoteforge(primarynodeurl:parsenodeurl:tezoschainname:tzkturl:bettercalldevurl:urlsession:networktype:)">
+<div role="article" class="function" id="tezosnodeclientconfig.configwithremoteforge(primarynodeurl:parsenodeurl:tzkturl:bettercalldevurl:tezosdomainsurl:objktapiurl:urlsession:networktype:)">
     <h3>
-        <code><a href="#tezosnodeclientconfig.configwithremoteforge(primarynodeurl:parsenodeurl:tezoschainname:tzkturl:bettercalldevurl:urlsession:networktype:)">config​With​Remote​Forge(primary​Node​URL:​parse​Node​URL:​tezos​Chain​Name:​tzkt​URL:​better​Call​Dev​URL:​url​Session:​network​Type:​)</a></code>
+        <code><a href="#tezosnodeclientconfig.configwithremoteforge(primarynodeurl:parsenodeurl:tzkturl:bettercalldevurl:tezosdomainsurl:objktapiurl:urlsession:networktype:)">config​With​Remote​Forge(primary​Node​URL:​parse​Node​URL:​tzkt​URL:​better​Call​Dev​URL:​tezos​Domains​URL:​objkt​Api​URL:​url​Session:​network​Type:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">configWithRemoteForge</span>(<span class="variable">primaryNodeURL</span>: <span class="type">URL</span>, <span class="variable">parseNodeURL</span>: <span class="type">URL</span>, <span class="variable">tezosChainName</span>: <a href="https://kukai-core-swift.kukai.app/TezosChainName"><span class="type">TezosChainName</span></a>, <span class="variable">tzktURL</span>: <span class="type">URL</span>, <span class="variable">betterCallDevURL</span>: <span class="type">URL</span>, <span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">networkType</span>: <span class="type">NetworkType</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">configWithRemoteForge</span>(<span class="variable">primaryNodeURL</span>: <span class="type">URL</span>, <span class="variable">parseNodeURL</span>: <span class="type">URL</span>, <span class="variable">tzktURL</span>: <span class="type">URL</span>, <span class="variable">betterCallDevURL</span>: <span class="type">URL</span>, <span class="variable">tezosDomainsURL</span>: <span class="type">URL</span>, <span class="variable">objktApiURL</span>: <span class="type">URL</span>, <span class="variable">urlSession</span>: <span class="type">URLSession</span>, <span class="variable">networkType</span>: <span class="type">NetworkType</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Creates an instance of <code>TezosNodeClientConfig</code> with the required properties for remote forging. Note: function will casue a <code>fatalError</code> is users attempt to set <code>primaryNodeURL</code> and  <code>parseNodeURL</code> to the same destination</p>
@@ -321,12 +327,6 @@
     <th>parse​Node​URL</th>
     <td><code class="type">URL</code></td>
     <td><p>The URL to use to parse and verify a remote forge. Must be a different server to primary node.</p>
-</td>
-</tr>
-<tr>
-    <th>tezos​Chain​Name</th>
-    <td><code class="type">Tezos​Chain​Name</code></td>
-    <td><p>The chain name used by services such Better call dev, when deciding which network to use</p>
 </td>
 </tr>
 <tr>
@@ -365,7 +365,7 @@
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-14T15:18:15+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2023-09-21T10:15:51+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

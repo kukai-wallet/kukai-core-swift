@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <a href="https://kukai-core-swift.kukai.app">
+        <a href="https://kukai-core-swift.kukai.app/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -25,7 +25,7 @@
     <nav>
         <div class="wrapper">
             <h2>On This Page</h2>
-            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#feeestimatorservice.init(config:operationservice:networkservice:)">init(config:​operation​Service:​network​Service:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#feeestimatorservice.defaultsignature">default​Signature</a></li><li class="variable"><a href="#feeestimatorservice.defaultsignaturehex">default​Signature​Hex</a></li><li class="variable"><a href="#feeestimatorservice.config">config</a></li><li class="variable"><a href="#feeestimatorservice.operationservice">operation​Service</a></li><li class="variable"><a href="#feeestimatorservice.networkservice">network​Service</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#feeestimatorservice.estimate(operations:operationmetadata:constants:withwallet:completion:)">estimate(operations:​operation​Metadata:​constants:​with​Wallet:​completion:​)</a></li><li class="function"><a href="#feeestimatorservice.extractfees(fromoperationresponse:forgedhash:withconstants:)">extract​Fees(from​Operation​Response:​forged​Hash:​with​Constants:​)</a></li></ul></li></ol>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#feeestimatorservice.init(config:operationservice:networkservice:)">init(config:​operation​Service:​network​Service:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#feeestimatorservice.defaultsignature">default​Signature</a></li><li class="variable"><a href="#feeestimatorservice.defaultsignaturehex">default​Signature​Hex</a></li><li class="variable"><a href="#feeestimatorservice.config">config</a></li><li class="variable"><a href="#feeestimatorservice.operationservice">operation​Service</a></li><li class="variable"><a href="#feeestimatorservice.networkservice">network​Service</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#feeestimatorservice.estimate(operations:operationmetadata:constants:walletaddress:base58encodedpublickey:completion:)">estimate(operations:​operation​Metadata:​constants:​wallet​Address:​base58Encoded​Public​Key:​completion:​)</a></li><li class="function"><a href="#feeestimatorservice.extractfees(fromoperationresponse:forgedhash:withconstants:)">extract​Fees(from​Operation​Response:​forged​Hash:​with​Constants:​)</a></li><li class="function"><a href="#feeestimatorservice.feeforgas(_:)">fee​For​Gas(_:​)</a></li><li class="function"><a href="#feeestimatorservice.feeforstorage(_:numberofoperations:)">fee​For​Storage(_:​number​OfOperations:​)</a></li><li class="function"><a href="#feeestimatorservice.feeforburn(_:withconstants:)">fee​For​Burn(_:​with​Constants:​)</a></li><li class="function"><a href="#feeestimatorservice.nanoteztoxtz(_:)">nano​Tezto​XTZ(_:​)</a></li><li class="function"><a href="#feeestimatorservice.fee(forgaslimit:forgedhexstring:numberofoperations:)">fee(for​Gas​Limit:​forged​Hex​String:​number​OfOperations:​)</a></li><li class="function"><a href="#feeestimatorservice.addgassafetymarginto(gasused:)">add​Gas​Safety​Margin​To(gas​Used:​)</a></li></ul></li></ol>
         </div>
     </nav>
 
@@ -55,6 +55,8 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
 <dt class="enumeration"><code><a href="https://kukai-core-swift.kukai.app/FeeEstimatorService_FeeEstimatorServiceError">FeeEstimatorService.FeeEstimatorServiceError</a></code></dt>
 <dd><p>Various possible errors that can occur during an Estimation</p>
 </dd>
+<dt class="structure"><code><a href="https://kukai-core-swift.kukai.app/FeeEstimatorService_EstimationResult">FeeEstimatorService.EstimationResult</a></code></dt>
+<dd></dd>
 </dl>
 </section>
     <section id="initializers">
@@ -161,15 +163,16 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
     <section id="methods">
         <h2>Methods</h2>
 
-        <div role="article" class="function" id="feeestimatorservice.estimate(operations:operationmetadata:constants:withwallet:completion:)">
+        <div role="article" class="function" id="feeestimatorservice.estimate(operations:operationmetadata:constants:walletaddress:base58encodedpublickey:completion:)">
     <h3>
-        <code><a href="#feeestimatorservice.estimate(operations:operationmetadata:constants:withwallet:completion:)">estimate(operations:​operation​Metadata:​constants:​with​Wallet:​completion:​)</a></code>
+        <code><a href="#feeestimatorservice.estimate(operations:operationmetadata:constants:walletaddress:base58encodedpublickey:completion:)">estimate(operations:​operation​Metadata:​constants:​wallet​Address:​base58Encoded​Public​Key:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">estimate</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <span class="variable">operationMetadata</span>: <a href="https://kukai-core-swift.kukai.app/OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">constants</span>: <a href="https://kukai-core-swift.kukai.app/NetworkConstants"><span class="type">NetworkConstants</span></a>, <span class="variable">withWallet</span> <span class="variable">wallet</span>: <a href="https://kukai-core-swift.kukai.app/Wallet"><span class="type">Wallet</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">estimate</span>(<span class="variable">operations</span>: [<a href="https://kukai-core-swift.kukai.app/Operation"><span class="type">Operation</span></a>], <span class="variable">operationMetadata</span>: <a href="https://kukai-core-swift.kukai.app/OperationMetadata"><span class="type">OperationMetadata</span></a>, <span class="variable">constants</span>: <a href="https://kukai-core-swift.kukai.app/NetworkConstants"><span class="type">NetworkConstants</span></a>, <span class="variable">walletAddress</span>: <span class="type">String</span>, <span class="variable">base58EncodedPublicKey</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<span class="type">EstimationResult</span>, <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
-    <p>Pass in an array of <code>Operation</code> subclasses (use <code>OperationFacotry</code> to create) to have the library estimate the cost of sending the transaction. Function will use local or remote forging based off config passed in.</p>
+    <p>Pass in an array of <code>Operation</code> subclasses (use <code>OperationFacotry</code> to create) to have the library estimate the cost of sending the transaction. Function will use local or remote forging based off config passed in.
+If the supplied operations contain suggested fees (e.g. from a dApp) this function will estimate the fee and pick which ever is higher</p>
 
 </div>
 <h4>Parameters</h4>
@@ -203,13 +206,13 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
 </tr>
 <tr>
     <th>with​Wallet</th>
-    <td><code class="type">Wallet</code></td>
+    <td></td>
     <td><p>The <code>Wallet</code> object used for signing the transaction.</p>
 </td>
 </tr>
 <tr>
     <th>completion</th>
-    <td><code class="type">@escaping ((Result&lt;[Operation], Error​Response&gt;) -&gt; Void)</code></td>
+    <td><code class="type">@escaping ((Result&lt;Estimation​Result, Kukai​Error&gt;) -&gt; Void)</code></td>
     <td><p>A callback containing the same operations passed in, modified to include fees.</p>
 </td>
 </tr>
@@ -256,6 +259,70 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
   <p>An array of <code>OperationFees</code></p>
 
 </div>
+<div role="article" class="function" id="feeestimatorservice.feeforgas(_:)">
+    <h3>
+        <code><a href="#feeestimatorservice.feeforgas(_:)">fee​For​Gas(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">feeForGas</span>(<span class="keyword">_</span> <span class="variable">gas</span>: <span class="type">Int</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Calculate the fee to add for the given amount of gas</p>
+
+</div>
+</div>
+<div role="article" class="function" id="feeestimatorservice.feeforstorage(_:numberofoperations:)">
+    <h3>
+        <code><a href="#feeestimatorservice.feeforstorage(_:numberofoperations:)">fee​For​Storage(_:​number​OfOperations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">feeForStorage</span>(<span class="keyword">_</span> <span class="variable">forgedHexString</span>: <span class="type">String</span>, <span class="variable">numberOfOperations</span>: <span class="type">Int</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Calculate the fee to add based on the size of the forged string</p>
+
+</div>
+</div>
+<div role="article" class="function" id="feeestimatorservice.feeforburn(_:withconstants:)">
+    <h3>
+        <code><a href="#feeestimatorservice.feeforburn(_:withconstants:)">fee​For​Burn(_:​with​Constants:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">feeForBurn</span>(<span class="keyword">_</span> <span class="variable">burn</span>: <span class="type">Int</span>, <span class="variable">withConstants</span> <span class="variable">contants</span>: <a href="https://kukai-core-swift.kukai.app/NetworkConstants"><span class="type">NetworkConstants</span></a>) -&gt; <a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Calculate the fee to add based on how many bytes of storage where needed</p>
+
+</div>
+</div>
+<div role="article" class="function" id="feeestimatorservice.nanoteztoxtz(_:)">
+    <h3>
+        <code><a href="#feeestimatorservice.nanoteztoxtz(_:)">nano​Tezto​XTZ(_:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">nanoTeztoXTZ</span>(<span class="keyword">_</span> <span class="variable">nanoTez</span>: <span class="type">NanoTez</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Most calcualtions are documented in NanoTez, which is not accpeted by the network RPC calls. Needs to be converted to Mutez / XTZ</p>
+
+</div>
+</div>
+<div role="article" class="function" id="feeestimatorservice.fee(forgaslimit:forgedhexstring:numberofoperations:)">
+    <h3>
+        <code><a href="#feeestimatorservice.fee(forgaslimit:forgedhexstring:numberofoperations:)">fee(for​Gas​Limit:​forged​Hex​String:​number​OfOperations:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">fee</span>(<span class="variable">forGasLimit</span> <span class="variable">gasLimit</span>: <span class="type">Int</span>, <span class="variable">forgedHexString</span>: <span class="type">String</span>, <span class="variable">numberOfOperations</span>: <span class="type">Int</span>) -&gt; <a href="https://kukai-core-swift.kukai.app/XTZAmount"><span class="type">XTZAmount</span></a>  </body></html></code></pre>
+</div>
+</div>
+<div role="article" class="function" id="feeestimatorservice.addgassafetymarginto(gasused:)">
+    <h3>
+        <code><a href="#feeestimatorservice.addgassafetymarginto(gasused:)">add​Gas​Safety​Margin​To(gas​Used:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">addGasSafetyMarginTo</span>(<span class="variable">gasUsed</span>: <span class="type">Int</span>) -&gt; <span class="type">Int</span>  </body></html></code></pre>
+</div>
+</div>
     </section>
 
 
@@ -265,7 +332,7 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-14T15:18:15+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2023-09-21T10:15:52+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

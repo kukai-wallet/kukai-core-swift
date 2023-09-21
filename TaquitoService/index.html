@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <a href="https://kukai-core-swift.kukai.app">
+        <a href="https://kukai-core-swift.kukai.app/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -42,7 +42,8 @@
 <div class="summary" role="doc-abstract">
     <p>Taquito (https://github.com/ecadlabs/taquito) is a popular open source Tezos library written in Typescript and Javascript.
 Taquito is made up of many separate packages that deal with various aspects of Tezos RPC and Michelson.
-This serivce class is a wrapper around a small piece of the Taquito library to expose funtionality that would otherwise be time consuming/risky/dangerous to re-implement natively.</p>
+This serivce class is a wrapper around a small piece of the Taquito library to expose funtionality that would otherwise be time consuming/risky/dangerous to re-implement natively.
+The JS can now be found on each github release here: https://github.com/ecadlabs/taquito/releases/, by extracting the zip named &quot;taquito-local-forging-vanilla.zip&quot;</p>
 
 </div>
 <section id="relationships">
@@ -79,7 +80,7 @@ This serivce class is a wrapper around a small piece of the Taquito library to e
         <code><a href="#taquitoservice.forge(operationpayload:completion:)">forge(operation​Payload:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">forge</span>(<span class="variable">operationPayload</span>: <a href="https://kukai-core-swift.kukai.app/OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span>((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">forge</span>(<span class="variable">operationPayload</span>: <a href="https://kukai-core-swift.kukai.app/OperationPayload"><span class="type">OperationPayload</span></a>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span>((<span class="type">Result</span>&lt;<span class="type">String</span>, <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Wrapper around the node package @taquito/local-forging's forge method. Giving the ability to locally forge an <code>OperationPayload</code> without using an RPC, and avoiding the need to do an RPC parse against a second server.
@@ -106,7 +107,7 @@ See package: https://github.com/ecadlabs/taquito/tree/master/packages/taquito-lo
 </tr>
 <tr>
     <th>completion</th>
-    <td><code class="type">@escaping((Result&lt;String, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><code class="type">@escaping((Result&lt;String, Kukai​Error&gt;) -&gt; Void)</code></td>
     <td><p>The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting hex string.</p>
 </td>
 </tr>
@@ -118,7 +119,7 @@ See package: https://github.com/ecadlabs/taquito/tree/master/packages/taquito-lo
         <code><a href="#taquitoservice.parse(hex:completion:)">parse(hex:​completion:​)</a></code>
     </h3>
     <div class="declaration">
-<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">hex</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span>((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/OperationPayload"><span class="type">OperationPayload</span></a>, <a href="https://kukai-core-swift.kukai.app/ErrorResponse"><span class="type">ErrorResponse</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">parse</span>(<span class="variable">hex</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span>((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/OperationPayload"><span class="type">OperationPayload</span></a>, <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
 </div>
 <div class="summary" role="doc-abstract">
     <p>Wrapper around the node package @taquito/local-forging's prase method. Giving the ability to locally parse a hex string back into an <code>OperationPayload</code>, without the need to use an RPC on a tezos node.
@@ -145,7 +146,7 @@ See package: https://github.com/ecadlabs/taquito/tree/master/packages/taquito-lo
 </tr>
 <tr>
     <th>completion</th>
-    <td><code class="type">@escaping((Result&lt;Operation​Payload, Error​Response&gt;) -&gt; Void)</code></td>
+    <td><code class="type">@escaping((Result&lt;Operation​Payload, Kukai​Error&gt;) -&gt; Void)</code></td>
     <td><p>The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting object</p>
 </td>
 </tr>
@@ -161,7 +162,7 @@ See package: https://github.com/ecadlabs/taquito/tree/master/packages/taquito-lo
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-14T15:18:15+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2023-09-21T10:15:51+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>

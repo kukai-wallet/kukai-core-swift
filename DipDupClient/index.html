@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaiCoreSwift - DipDupClient</title>
+    <link rel="stylesheet" type="text/css" href="https://kukai-core-swift.kukai.app/all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="https://kukai-core-swift.kukai.app/">
+            <strong>
+                KukaiCoreSwift
+            </strong>
+            <span>Documentation</span>
+        </a>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#dipdupclient.init(networkservice:config:)">init(network​Service:​config:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#dipdupclient.dexmaxquerysize">dex​Max​Query​Size</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#dipdupclient.getexchangesandtokens(limit:offset:completion:)">get​Exchanges​And​Tokens(limit:​offset:​completion:​)</a></li><li class="function"><a href="#dipdupclient.getallexchangesandtokens(completion:)">get​All​Exchanges​And​Tokens(completion:​)</a></li><li class="function"><a href="#dipdupclient.getliquidityfor(address:completion:)">get​Liquidity​For(address:​completion:​)</a></li><li class="function"><a href="#dipdupclient.getchartdatafor(exchangecontract:nowdate:completion:)">get​Chart​Data​For(exchange​Contract:​now​Date:​completion:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Dip​Dup​Client</code>
+</h1>
+
+<div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">DipDupClient</span>  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>This client exposes functions to allow communication to the indexer platform DipDup ( https://dipdup.net/ ).
+DipDup is composed of many small, dedicated indexers, powered by GraphQL. This client tries to exposes userflow functions, allowing users to accomplish tasks without having to worry about the underlying complexities</p>
+
+</div>
+
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="dipdupclient.init(networkservice:config:)">
+    <h3>
+        <code><a href="#dipdupclient.init(networkservice:config:)">init(network​Service:​config:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">networkService</span>: <a href="https://kukai-core-swift.kukai.app/NetworkService"><span class="type">NetworkService</span></a>, <span class="variable">config</span>: <a href="https://kukai-core-swift.kukai.app/TezosNodeClientConfig"><span class="type">TezosNodeClientConfig</span></a>)  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Init a <code>DipDupClient</code> with a <code>NetworkService</code> and a <code>TezosNodeClientConfig</code>.</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>network​Service</th>
+    <td><code class="type">Network​Service</code></td>
+    <td><p><code>NetworkService</code> used to manage network communication.</p>
+</td>
+</tr>
+<tr>
+    <th>config</th>
+    <td><code class="type">Tezos​Node​Client​Config</code></td>
+    <td><p><code>TezosNodeClientConfig</code> used to apss in settings.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="dipdupclient.dexmaxquerysize">
+    <h3>
+        <code><a href="#dipdupclient.dexmaxquerysize">dex​Max​Query​Size</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">let</span> <span class="variable">dexMaxQuerySize</span> = <span class="number literal">100</span></body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Max enteries to return per request</p>
+
+</div>
+</div>
+    </section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="dipdupclient.getexchangesandtokens(limit:offset:completion:)">
+    <h3>
+        <code><a href="#dipdupclient.getexchangesandtokens(limit:offset:completion:)">get​Exchanges​And​Tokens(limit:​offset:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getExchangesAndTokens</span>(<span class="variable">limit</span>: <span class="type">Int</span> = <span class="variable">DipDupClient</span>.<span class="variable">dexMaxQuerySize</span>, <span class="variable">offset</span>: <span class="type">Int</span> = <span class="number literal">0</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/GraphQLResponse"><span class="type">GraphQLResponse</span></a>&lt;<a href="https://kukai-core-swift.kukai.app/DipDupExchangesAndTokensResponse"><span class="type">DipDupExchangesAndTokensResponse</span></a>&gt;, <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Get a list of all the tokens available and on what excahnges (including their prices and pool data)</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>limit</th>
+    <td><code class="type">Int</code></td>
+    <td><p>Int, How many results to reuturn 100 Max)</p>
+</td>
+</tr>
+<tr>
+    <th>offset</th>
+    <td><code class="type">Int</code></td>
+    <td><p>Int, How many positions to move the cursor</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Graph​QLResponse&lt;Dip​Dup​Exchanges​And​Tokens​Response&gt;, Kukai​Error&gt;) -&gt; Void)</code></td>
+    <td><p>Block returning a GraphQL response or an KukaiError</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="dipdupclient.getallexchangesandtokens(completion:)">
+    <h3>
+        <code><a href="#dipdupclient.getallexchangesandtokens(completion:)">get​All​Exchanges​And​Tokens(completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getAllExchangesAndTokens</span>(<span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;[<a href="https://kukai-core-swift.kukai.app/DipDupExchangesAndTokens"><span class="type">DipDupExchangesAndTokens</span></a>], <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Recurrsively call <code>getExchangesAndTokens(...)</code> until we have found all the tokens</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;[Dip​Dup​Exchanges​And​Tokens], Kukai​Error&gt;) -&gt; Void)</code></td>
+    <td><p>Block returning a GraphQL response or an KukaiError</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="dipdupclient.getliquidityfor(address:completion:)">
+    <h3>
+        <code><a href="#dipdupclient.getliquidityfor(address:completion:)">get​Liquidity​For(address:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getLiquidityFor</span>(<span class="variable">address</span>: <span class="type">String</span>, <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/GraphQLResponse"><span class="type">GraphQLResponse</span></a>&lt;<a href="https://kukai-core-swift.kukai.app/DipDupPosition"><span class="type">DipDupPosition</span></a>&gt;, <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Query a given addresses liquidity token balances</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>address</th>
+    <td><code class="type">String</code></td>
+    <td><p>The TZ address to query for</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Graph​QLResponse&lt;Dip​Dup​Position&gt;, Kukai​Error&gt;) -&gt; Void)</code></td>
+    <td><p>Block returning a GraphQL response or an KukaiError</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+<div role="article" class="function" id="dipdupclient.getchartdatafor(exchangecontract:nowdate:completion:)">
+    <h3>
+        <code><a href="#dipdupclient.getchartdatafor(exchangecontract:nowdate:completion:)">get​Chart​Data​For(exchange​Contract:​now​Date:​completion:​)</a></code>
+    </h3>
+    <div class="declaration">
+<pre class="highlight"><code><html><body><span class="keyword">public</span> <span class="keyword">func</span> <span class="function">getChartDataFor</span>(<span class="variable">exchangeContract</span>: <span class="type">String</span>, <span class="variable">nowDate</span>: <span class="type">Date</span> = <span class="variable">Date</span>(), <span class="variable">completion</span>: <span class="attribute">@</span><span class="attribute">escaping</span> ((<span class="type">Result</span>&lt;<a href="https://kukai-core-swift.kukai.app/GraphQLResponse"><span class="type">GraphQLResponse</span></a>&lt;<a href="https://kukai-core-swift.kukai.app/DipDupChartData"><span class="type">DipDupChartData</span></a>&gt;, <a href="https://kukai-core-swift.kukai.app/KukaiError"><span class="type">KukaiError</span></a>&gt;) -&gt; <span class="type">Void</span>))  </body></html></code></pre>
+</div>
+<div class="summary" role="doc-abstract">
+    <p>Query a given contract address for pricing data for the given token</p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>exchange​Contract</th>
+    <td><code class="type">String</code></td>
+    <td><p>The KT address of the dex contract to query data for</p>
+</td>
+</tr>
+<tr>
+    <th>completion</th>
+    <td><code class="type">@escaping ((Result&lt;Graph​QLResponse&lt;Dip​Dup​Chart​Data&gt;, Kukai​Error&gt;) -&gt; Void)</code></td>
+    <td><p>Block returning a GraphQL response or an KukaiError</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2023-09-21T10:15:51+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+</p>
+    </footer>
+</body>
+</html>

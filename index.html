@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <a href="https://kukai-core-swift.kukai.app">
+        <a href="https://kukai-core-swift.kukai.app/">
             <strong>
                 KukaiCoreSwift
             </strong>
@@ -40,8 +40,37 @@
     </a>
 </dt>
 <dd>
-    <p>BetterCallDev (BCD) is an indexing/smart contract debugging tool, used for the Tezos blockchain.
-This class allows developers to interact with their API, to fetch data that would otherwise be impossible for a mobile app</p>
+    <p>BetterCallDev (BCD) is an indexer/smart contract debugging tool, used for the Tezos blockchain.
+This class allows developers to interact with their API, to fetch data that would otherwise be impossible for a mobile app to fetch from the Tezos RPC</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/DipDupClient" title="class - DipDupClient">
+        Dip​Dup​Client
+    </a>
+</dt>
+<dd>
+    <p>This client exposes functions to allow communication to the indexer platform DipDup ( https://dipdup.net/ ).
+DipDup is composed of many small, dedicated indexers, powered by GraphQL. This client tries to exposes userflow functions, allowing users to accomplish tasks without having to worry about the underlying complexities</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/ObjktClient" title="class - ObjktClient">
+        Objkt​Client
+    </a>
+</dt>
+<dd>
+    <p>Client for interacting with the API of the popular NFT marketplace, OBJKT.com
+Client exposes functions for fetching metadata, pricing, purchase offers, listing etc</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsClient" title="class - TezosDomainsClient">
+        Tezos​Domains​Client
+    </a>
+</dt>
+<dd>
+    <p>A client class allowing integration with the tezos domains GraphQL API. See more here: https://tezos.domains/</p>
 
 </dd>
 <dt class="class">
@@ -61,17 +90,7 @@ It will also convert amounts from the network into <code>Token</code> objects to
     </a>
 </dt>
 <dd>
-    <p>TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, and transactions</p>
-
-</dd>
-<dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/MichelsonFactory" title="class - MichelsonFactory">
-        Michelson​Factory
-    </a>
-</dt>
-<dd>
-    <p>A temporary factory class (until a better solution can be found) with some helper methods for parsing / Creating Michelson objects.
-Also includes quicker functions to just extract values from raw JSON, useful for processing transaction history without having to implement the entire Michelson spec</p>
+    <p>TzKT is an indexer for Tezos, who's API allows developers to query details about wallets, transactions, bakers, account status etc</p>
 
 </dd>
 <dt class="class">
@@ -94,15 +113,6 @@ Although not every action requires more than one operation, all functions will r
 
 </dd>
 <dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/TzKTTransaction" title="class - TzKTTransaction">
-        TzKTTransaction
-    </a>
-</dt>
-<dd>
-    <p>A model matching the response that comes back from TzKT's API: <code>v1/accounts/&lt;address&gt;/operations</code></p>
-
-</dd>
-<dt class="class">
     <a href="https://kukai-core-swift.kukai.app/HDWallet" title="class - HDWallet">
         HDWallet
     </a>
@@ -114,41 +124,14 @@ In order to help developers achieve this, use the <code>WalletCacheService</code
 
 </dd>
 <dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/LinearWallet" title="class - LinearWallet">
-        Linear​Wallet
+    <a href="https://kukai-core-swift.kukai.app/LedgerWallet" title="class - LedgerWallet">
+        Ledger​Wallet
     </a>
 </dt>
 <dd>
-    <p>A Tezos Wallet used for signing transactions before sending to the Tezos network. This object holds the public and private key used to create the contained Tezos address.
-You should <strong>NOT</strong> store a copy of this class in a singleton or gloabl variable of any kind. it should be created as needed and nil'd when not.
-In order to help developers achieve this, use the <code>WalletCacheService</code> to store/retreive an encrypted copy of the wallet on disk, and recreate the <code>Wallet</code>.</p>
+    <p>A Tezos wallet class, used to cache infomration regarding the paired ledger device used to sign the payload.
+This class can only be created by fetching data from a Ledger device and supplying this data to the constructor.</p>
 
-</dd>
-<dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/AbstractMichelson" title="class - AbstractMichelson">
-        Abstract​Michelson
-    </a>
-</dt>
-<dd>
-    <p>Base Michelson type, only used for polymorphism inside <code>MichelsonPair</code> objects</p>
-
-</dd>
-<dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/MichelsonValue" title="class - MichelsonValue">
-        Michelson​Value
-    </a>
-</dt>
-<dd>
-    <p>A polymophic warpper around a key value pair, used in conjuction with <code>MichelsonPair</code> to leverage automatice JSON serialisation through <code>Codable</code></p>
-
-</dd>
-<dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/MichelsonPair" title="class - MichelsonPair">
-        Michelson​Pair
-    </a>
-</dt>
-<dd>
-    
 </dd>
 <dt class="class">
     <a href="https://kukai-core-swift.kukai.app/Operation" title="class - Operation">
@@ -169,12 +152,48 @@ In order to help developers achieve this, use the <code>WalletCacheService</code
 
 </dd>
 <dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/OperationBallot" title="class - OperationBallot">
+        Operation​Ballot
+    </a>
+</dt>
+<dd>
+    <p>Operation to submit a ballot on an upcoming proposal</p>
+
+</dd>
+<dt class="class">
     <a href="https://kukai-core-swift.kukai.app/OperationDelegation" title="class - OperationDelegation">
         Operation​Delegation
     </a>
 </dt>
 <dd>
     <p><code>Operation</code> subclass for delegating an account to a baker</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/OperationDoubleBakingEvidence" title="class - OperationDoubleBakingEvidence">
+        Operation​Double​Baking​Evidence
+    </a>
+</dt>
+<dd>
+    <p>Operation to report a baking of baking the same block twice</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/OperationDoubleEndorsementEvidence" title="class - OperationDoubleEndorsementEvidence">
+        Operation​Double​Endorsement​Evidence
+    </a>
+</dt>
+<dd>
+    <p>Operation to report a baker trying to endorse a block twice</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/OperationEndorsement" title="class - OperationEndorsement">
+        Operation​Endorsement
+    </a>
+</dt>
+<dd>
+    <p>Operation for endorsing a block</p>
 
 </dd>
 <dt class="class">
@@ -187,6 +206,14 @@ In order to help developers achieve this, use the <code>WalletCacheService</code
 
 </dd>
 <dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/OperationProposals" title="class - OperationProposals">
+        Operation​Proposals
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="class">
     <a href="https://kukai-core-swift.kukai.app/OperationReveal" title="class - OperationReveal">
         Operation​Reveal
     </a>
@@ -196,12 +223,12 @@ In order to help developers achieve this, use the <code>WalletCacheService</code
 
 </dd>
 <dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/OperationSmartContractInvocation" title="class - OperationSmartContractInvocation">
-        Operation​Smart​Contract​Invocation
+    <a href="https://kukai-core-swift.kukai.app/OperationSeedNonceRevelation" title="class - OperationSeedNonceRevelation">
+        Operation​Seed​Nonce​Revelation
     </a>
 </dt>
 <dd>
-    <p><code>Operation</code> subclass for calling an entrypoint of a smart contract on the Tezos network</p>
+    <p>Operation to reveal seed nonce to blockchain</p>
 
 </dd>
 <dt class="class">
@@ -221,6 +248,17 @@ In order to help developers achieve this, use the <code>WalletCacheService</code
 <dd>
     <p>A generic class representing an RPC call to the Tezos network.
 A type must be passed in when creating an instance of this object, this will be used by the network layer to parse the response and detect errors.</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/RegularWallet" title="class - RegularWallet">
+        Regular​Wallet
+    </a>
+</dt>
+<dd>
+    <p>A Tezos Wallet used for signing transactions before sending to the Tezos network. This object holds the public and private key used to create the contained Tezos address.
+You should <strong>NOT</strong> store a copy of this class in a singleton or gloabl variable of any kind. it should be created as needed and nil'd when not.
+In order to help developers achieve this, use the <code>WalletCacheService</code> to store/retreive an encrypted copy of the wallet on disk, and recreate the <code>Wallet</code>.</p>
 
 </dd>
 <dt class="class">
@@ -244,12 +282,14 @@ This class is used to encapsulate a <code>BigInt</code> and provide all the nece
 
 </dd>
 <dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/WalletCacheItem" title="class - WalletCacheItem">
-        Wallet​Cache​Item
+    <a href="https://kukai-core-swift.kukai.app/TorusWallet" title="class - TorusWallet">
+        Torus​Wallet
     </a>
 </dt>
 <dd>
-    <p>A model to represent a <code>Wallet</code> in the encrypted cache</p>
+    <p>A Tezos Wallet used for signing transactions before sending to the Tezos network. This object holds the public and private key used to create the contained Tezos address.
+You should <strong>NOT</strong> store a copy of this class in a singleton or gloabl variable of any kind. it should be created as needed and nil'd when not.
+In order to help developers achieve this, use the <code>WalletCacheService</code> to store/retreive an encrypted copy of the wallet on disk, and recreate the <code>Wallet</code>.</p>
 
 </dd>
 <dt class="class">
@@ -263,12 +303,21 @@ It also serves as a means to more quickly create <code>TokenAmount</code>'s conf
 
 </dd>
 <dt class="class">
-    <a href="https://kukai-core-swift.kukai.app/DexterCalculationService" title="class - DexterCalculationService">
-        Dexter​Calculation​Service
+    <a href="https://kukai-core-swift.kukai.app/DAppHelperService" title="class - DAppHelperService">
+        DApp​Helper​Service
     </a>
 </dt>
 <dd>
-    <p>Wrapper around the Dexter JS library for performing calculations: https://gitlab.com/camlcase-dev/dexter-calculations/</p>
+    <p>A Helper service to simply combine multiple calls from other services, and/or map to specific responses, in order to expose a piece of functionality provided by a dApp</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/DexCalculationService" title="class - DexCalculationService">
+        Dex​Calculation​Service
+    </a>
+</dt>
+<dd>
+    <p>Wrapper around the kukai-dex-calculations JS library for performing calculations: https://github.com/kukai-wallet/kukai-dex-calculations</p>
 
 </dd>
 <dt class="class">
@@ -300,6 +349,32 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
 
 </dd>
 <dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/LedgerService" title="class - LedgerService">
+        Ledger​Service
+    </a>
+</dt>
+<dd>
+    <p>A service class to wrap up all the complicated interactions with CoreBluetooth and the modified version of ledgerjs, needed to communicate with a Ledger Nano X.</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/MediaProxyService" title="class - MediaProxyService">
+        Media​Proxy​Service
+    </a>
+</dt>
+<dd>
+    <p>A service class for interacting with the TC infrastructure to proxy NFT images, videos and audio files</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/ContentTypeCheckingImageDownloader" title="class - ContentTypeCheckingImageDownloader">
+        Content​Type​Checking​Image​Downloader
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="class">
     <a href="https://kukai-core-swift.kukai.app/NetworkService" title="class - NetworkService">
         Network​Service
     </a>
@@ -325,7 +400,20 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
 <dd>
     <p>Taquito (https://github.com/ecadlabs/taquito) is a popular open source Tezos library written in Typescript and Javascript.
 Taquito is made up of many separate packages that deal with various aspects of Tezos RPC and Michelson.
-This serivce class is a wrapper around a small piece of the Taquito library to expose funtionality that would otherwise be time consuming/risky/dangerous to re-implement natively.</p>
+This serivce class is a wrapper around a small piece of the Taquito library to expose funtionality that would otherwise be time consuming/risky/dangerous to re-implement natively.
+The JS can now be found on each github release here: https://github.com/ecadlabs/taquito/releases/, by extracting the zip named &quot;taquito-local-forging-vanilla.zip&quot;</p>
+
+</dd>
+<dt class="class">
+    <a href="https://kukai-core-swift.kukai.app/TorusAuthService" title="class - TorusAuthService">
+        Torus​Auth​Service
+    </a>
+</dt>
+<dd>
+    <p>TorusAuthService is a wrapper around the SDK provided by: https://tor.us/ to allow the creation of <code>TorusWallet</code>'s.
+This allows users to create a wallet from their social media accounts without having to use a seed phrase / mnemonic.
+TorusAuthService allows Tezos apps to leverage this service for a number of providers, and also has the ability to query the network for someone else's wallet address,
+based on their social profile. This allows you to send XTZ or tokens to your friend based on their twitter username for example</p>
 
 </dd>
 <dt class="class">
@@ -334,9 +422,9 @@ This serivce class is a wrapper around a small piece of the Taquito library to e
     </a>
 </dt>
 <dd>
-    <p>A service class used to store and retrieve <code>Wallet</code> objects such as <code>LinearWallet</code> and <code>HDWallet</code> from the devices disk.
+    <p>A service class used to store and retrieve <code>Wallet</code> objects such as <code>RegularWallet</code>, <code>HDWallet</code>, <code>LedgerWallet</code> and <code>TorusWallet</code> from the devices disk.
 This class will use the secure enclave (keychain if not available) to generate a key used to encrypt the contents locally, and retrieve.
-The class can be used to take the decrypted JSON and convert it back into Wallet classes, ready to be used.</p>
+This class will also store non senstiivve &quot;metadata&quot; about wallets, to allow storage of UI related data users might want to add, without cluttering up the wallet objects themselves</p>
 
 </dd>
         </dl>
@@ -345,30 +433,30 @@ The class can be used to take the decrypted JSON and convert it back into Wallet
         <h2>Structures</h2>
         <dl>
             <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/BetterCallDevClient_Constants" title="structure - BetterCallDevClient.Constants">
-        Better​Call​Dev​Client.​Constants
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsClient_BothNetworkReverseRecord" title="structure - TezosDomainsClient.BothNetworkReverseRecord">
+        Tezos​Domains​Client.​Both​Network​Reverse​Record
     </a>
 </dt>
 <dd>
-    <p>Constants for dealing with BCD API and cached data</p>
+    <p>Object to wrap up a response fomr both networks</p>
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/PublicKey" title="structure - PublicKey">
-        Public​Key
+    <a href="https://kukai-core-swift.kukai.app/TzKTClient_Constants" title="structure - TzKTClient.Constants">
+        TzKTClient.​Constants
     </a>
 </dt>
 <dd>
-    <p>A struct representing a PublicKey for <code>LinearWallet</code> classes</p>
+    <p>Constants needed for interacting with the API</p>
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/SecretKey" title="structure - SecretKey">
-        Secret​Key
+    <a href="https://kukai-core-swift.kukai.app/OperationFactory_Extractor" title="structure - OperationFactory.Extractor">
+        Operation​Factory.​Extractor
     </a>
 </dt>
 <dd>
-    <p>A struct representing a PrivateKey for <code>LinearWallet</code> classes</p>
+    <p>Internal Struct to encapsulate helpers methods needed to extract critical information from an array of operations, needed for processing decisions like &quot;do i display a send token screen, or a send NFt screen&quot;, fetching total XTZ sent in 1 action etc</p>
 
 </dd>
 <dt class="structure">
@@ -382,21 +470,21 @@ This struct abstract the developer away from knowing all these details, and inst
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/BetterCallDevAccount" title="structure - BetterCallDevAccount">
-        Better​Call​Dev​Account
+    <a href="https://kukai-core-swift.kukai.app/AggregateRewardInformation" title="structure - AggregateRewardInformation">
+        Aggregate​Reward​Information
     </a>
 </dt>
 <dd>
-    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/account/&lt;network&gt;/&lt;address&gt;</code></p>
+    <p>Object ot abstract away a significatn amount of logic involved in computing  estimated reward payments from a baker</p>
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/BetterCallDevContract" title="structure - BetterCallDevContract">
-        Better​Call​Dev​Contract
+    <a href="https://kukai-core-swift.kukai.app/RewardDetails" title="structure - RewardDetails">
+        Reward​Details
     </a>
 </dt>
 <dd>
-    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/contract/&lt;network&gt;/&lt;address&gt;</code></p>
+    <p>An individual payment record denoting some payment in the past or future</p>
 
 </dd>
 <dt class="structure">
@@ -418,21 +506,217 @@ This struct abstract the developer away from knowing all these details, and inst
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/BetterCallDevTokenBalances" title="structure - BetterCallDevTokenBalances">
-        Better​Call​Dev​Token​Balances
+    <a href="https://kukai-core-swift.kukai.app/DipDupChartData" title="structure - DipDupChartData">
+        Dip​Dup​Chart​Data
     </a>
 </dt>
 <dd>
-    <p>A model matching the response that comes back from BetterCallDev's API: <code>v1/account/&lt;network&gt;/&lt;address&gt;/token_balances</code></p>
+    <p>Struct to hold 4 arrays of data, each one mapping to a different timeline of data, to allow the display of graphs</p>
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/BetterCallDevTokenBalance" title="structure - BetterCallDevTokenBalance">
-        Better​Call​Dev​Token​Balance
+    <a href="https://kukai-core-swift.kukai.app/DipDupChartObject" title="structure - DipDupChartObject">
+        Dip​Dup​Chart​Object
     </a>
 </dt>
 <dd>
-    <p>A model matching the internal array type that comes back from BetterCallDev's API: <code>v1/account/&lt;network&gt;/&lt;address&gt;/token_balances</code></p>
+    <p>Structure holding a data slice</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DipDupExchangesAndTokensResponse" title="structure - DipDupExchangesAndTokensResponse">
+        Dip​Dup​Exchanges​And​Tokens​Response
+    </a>
+</dt>
+<dd>
+    <p>Wrapper object to map to network response type</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DipDupExchangesAndTokens" title="structure - DipDupExchangesAndTokens">
+        Dip​Dup​Exchanges​And​Tokens
+    </a>
+</dt>
+<dd>
+    <p>Wrapper object to map to network response type</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DipDupExchange" title="structure - DipDupExchange">
+        Dip​Dup​Exchange
+    </a>
+</dt>
+<dd>
+    <p>A DipDup Exchange object with all the necessary pieces for checking liquidity and performing Swaps</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DipDupPosition" title="structure - DipDupPosition">
+        Dip​Dup​Position
+    </a>
+</dt>
+<dd>
+    <p>Wrapper object to match network response type</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DipDupPositionData" title="structure - DipDupPositionData">
+        Dip​Dup​Position​Data
+    </a>
+</dt>
+<dd>
+    <p>A position on DipDup corresponds to liquidity token ownership. Each of these objects represents an amount of Liquidity tokens in an exchange for the given address</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DipDupToken" title="structure - DipDupToken">
+        Dip​Dup​Token
+    </a>
+</dt>
+<dd>
+    <p>DipDup representation of a Token</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTAccount" title="structure - TzKTAccount">
+        TzKTAccount
+    </a>
+</dt>
+<dd>
+    <p>Model mapping to TzKT.io's Account object</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTAccountDelegate" title="structure - TzKTAccountDelegate">
+        TzKTAccount​Delegate
+    </a>
+</dt>
+<dd>
+    <p>Model mapping to TzKT.io's Account.Delegate Object</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTAddress" title="structure - TzKTAddress">
+        TzKTAddress
+    </a>
+</dt>
+<dd>
+    <p>Details about a given contract</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBaker" title="structure - TzKTBaker">
+        TzKTBaker
+    </a>
+</dt>
+<dd>
+    <p>Data representing a baker from TzKT or Baking-Bad</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerConfig" title="structure - TzKTBakerConfig">
+        TzKTBaker​Config
+    </a>
+</dt>
+<dd>
+    <p>The bakers config file for details on when fees, min delegation etc change</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerConfigDoubleValue" title="structure - TzKTBakerConfigDoubleValue">
+        TzKTBaker​Config​Double​Value
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerConfigIntValue" title="structure - TzKTBakerConfigIntValue">
+        TzKTBaker​Config​Int​Value
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerConfigRewardStruct" title="structure - TzKTBakerConfigRewardStruct">
+        TzKTBaker​Config​Reward​Struct
+    </a>
+</dt>
+<dd>
+    <p>Baker config payout flags</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBalance" title="structure - TzKTBalance">
+        TzKTBalance
+    </a>
+</dt>
+<dd>
+    <p>Model mapping to the Balance object returned from the new TzKT API, resulting from the merge of BCD and TzKT</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBalanceToken" title="structure - TzKTBalanceToken">
+        TzKTBalance​Token
+    </a>
+</dt>
+<dd>
+    <p>Model encapsulating information about the token itself</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBalanceMetadata" title="structure - TzKTBalanceMetadata">
+        TzKTBalance​Metadata
+    </a>
+</dt>
+<dd>
+    <p>Metadata object for the token</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBalanceMetadataAttributeKeyValue" title="structure - TzKTBalanceMetadataAttributeKeyValue">
+        TzKTBalance​Metadata​Attribute​Key​Value
+    </a>
+</dt>
+<dd>
+    <p>Wrapper / Helper to extract metadata attribute content</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBalanceMetadataFormat" title="structure - TzKTBalanceMetadataFormat">
+        TzKTBalance​Metadata​Format
+    </a>
+</dt>
+<dd>
+    <p>Object containing information about the various formats the media is available in</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTBalanceMetadataDimensions" title="structure - TzKTBalanceMetadataDimensions">
+        TzKTBalance​Metadata​Dimensions
+    </a>
+</dt>
+<dd>
+    <p>Object containing information about the dimensions of a given piece of media</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTCycle" title="structure - TzKTCycle">
+        TzKTCycle
+    </a>
+</dt>
+<dd>
+    <p>The blockchain is broken down into cycles that last 2.7 days. Baker payment logic resolves around cycles instead of blocks</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTDelegatorReward" title="structure - TzKTDelegatorReward">
+        TzKTDelegator​Reward
+    </a>
+</dt>
+<dd>
+    <p>An object containing info on the reward a delegator should receive from a baker</p>
 
 </dd>
 <dt class="structure">
@@ -454,20 +738,32 @@ This struct abstract the developer away from knowing all these details, and inst
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/TzKTTransaction_TransactionLocation" title="structure - TzKTTransaction.TransactionLocation">
-        TzKTTransaction.​Transaction​Location
+    <a href="https://kukai-core-swift.kukai.app/TzKTTokenTransfer" title="structure - TzKTTokenTransfer">
+        TzKTToken​Transfer
     </a>
 </dt>
 <dd>
-    
+    <p>FA1.2 / FA2 token transafers are treated differently from transactions. This object is used when fetching data form the API, as a temporary placeholder, ultimately to be merged into the transactions</p>
+
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/TzKTTransaction_TransactionParameter" title="structure - TzKTTransaction.TransactionParameter">
-        TzKTTransaction.​Transaction​Parameter
+    <a href="https://kukai-core-swift.kukai.app/TzKTTransaction" title="structure - TzKTTransaction">
+        TzKTTransaction
     </a>
 </dt>
 <dd>
-    
+    <p>A model matching the response that comes back from TzKT's API: <code>v1/accounts/&lt;address&gt;/operations</code></p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TzKTTransactionGroup" title="structure - TzKTTransactionGroup">
+        TzKTTransaction​Group
+    </a>
+</dt>
+<dd>
+    <p>Artifical object used to group related transactions into a more user friendly display
+For example, 1 contract call can reuslt in many transactions being returned. To avoid the users UI being clogged, we group all them into 1 group, so the user only needs to see 1 item for 1 action they performed</p>
+
 </dd>
 <dt class="structure">
     <a href="https://kukai-core-swift.kukai.app/BlockchainHead" title="structure - BlockchainHead">
@@ -515,6 +811,270 @@ This struct abstract the developer away from knowing all these details, and inst
 
 </dd>
 <dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeLedgerKey" title="structure - QuipuswapExchangeLedgerKey">
+        Quipuswap​Exchange​Ledger​Key
+    </a>
+</dt>
+<dd>
+    <p>The gneric container object holding the raw data</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeLedger" title="structure - QuipuswapExchangeLedger">
+        Quipuswap​Exchange​Ledger
+    </a>
+</dt>
+<dd>
+    <p>The unique data inside the Ledger BigMap</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeStorageResponse" title="structure - QuipuswapExchangeStorageResponse">
+        Quipuswap​Exchange​Storage​Response
+    </a>
+</dt>
+<dd>
+    <p>Network wrapper object</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeStorage" title="structure - QuipuswapExchangeStorage">
+        Quipuswap​Exchange​Storage
+    </a>
+</dt>
+<dd>
+    <p>Unique Quipuswap contract storage object</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeUserRewardsKey" title="structure - QuipuswapExchangeUserRewardsKey">
+        Quipuswap​Exchange​User​Rewards​Key
+    </a>
+</dt>
+<dd>
+    <p>The gneric container object holding the raw data</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeUserRewards" title="structure - QuipuswapExchangeUserRewards">
+        Quipuswap​Exchange​User​Rewards
+    </a>
+</dt>
+<dd>
+    <p>The unique data inside the User Rewards BigMap</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/FailWithParserLiquidityBaking" title="structure - FailWithParserLiquidityBaking">
+        Fail​With​Parser​Liquidity​Baking
+    </a>
+</dt>
+<dd>
+    <p>Dedicated &quot;FailWith&quot; parser for the codes received from Liquidity Baking contract</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/GraphQLError" title="structure - GraphQLError">
+        Graph​QLError
+    </a>
+</dt>
+<dd>
+    <p>GraphQL error object</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/GraphQLResponse" title="structure - GraphQLResponse">
+        Graph​QLResponse
+    </a>
+</dt>
+<dd>
+    <p>Simple model object to wrap a GraphQL response to expose a Codable response without having to use large GraphQL libraries</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktCollections" title="structure - ObjktCollections">
+        Objkt​Collections
+    </a>
+</dt>
+<dd>
+    <p>GarpQL bulk response for a group of collections</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktCollection" title="structure - ObjktCollection">
+        Objkt​Collection
+    </a>
+</dt>
+<dd>
+    <p>Single collection item</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktCreator" title="structure - ObjktCreator">
+        Objkt​Creator
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktTokenReponse" title="structure - ObjktTokenReponse">
+        Objkt​Token​Reponse
+    </a>
+</dt>
+<dd>
+    <p>GarpQL response for required data for a given token</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktToken" title="structure - ObjktToken">
+        Objkt​Token
+    </a>
+</dt>
+<dd>
+    <p>Single token item</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktAttribute" title="structure - ObjktAttribute">
+        Objkt​Attribute
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktAttributeData" title="structure - ObjktAttributeData">
+        Objkt​Attribute​Data
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktAttributeCounts" title="structure - ObjktAttributeCounts">
+        Objkt​Attribute​Counts
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktSale" title="structure - ObjktSale">
+        Objkt​Sale
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktListing" title="structure - ObjktListing">
+        Objkt​Listing
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktEvent" title="structure - ObjktEvent">
+        Objkt​Event
+    </a>
+</dt>
+<dd>
+    <p>Single event item</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/ObjktFa" title="structure - ObjktFa">
+        Objkt​Fa
+    </a>
+</dt>
+<dd>
+    <p>Single FA item</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsAddressBulkResponse" title="structure - TezosDomainsAddressBulkResponse">
+        Tezos​Domains​Address​Bulk​Response
+    </a>
+</dt>
+<dd>
+    <p>Response object wrapper for querying an address in bulk</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsDomains" title="structure - TezosDomainsDomains">
+        Tezos​Domains​Domains
+    </a>
+</dt>
+<dd>
+    <p>Object containing an array of domains</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsAddressResponse" title="structure - TezosDomainsAddressResponse">
+        Tezos​Domains​Address​Response
+    </a>
+</dt>
+<dd>
+    <p>Response object wrapper for querying an address</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsDomain" title="structure - TezosDomainsDomain">
+        Tezos​Domains​Domain
+    </a>
+</dt>
+<dd>
+    <p>Domain object containing details about the domain</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsDomainResponse" title="structure - TezosDomainsDomainResponse">
+        Tezos​Domains​Domain​Response
+    </a>
+</dt>
+<dd>
+    <p>Response object wrapper for querying a reverse record</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsDomainBulkResponse" title="structure - TezosDomainsDomainBulkResponse">
+        Tezos​Domains​Domain​Bulk​Response
+    </a>
+</dt>
+<dd>
+    <p>Response object wrapper for querying a reverse record in bulk</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsReverseRecords" title="structure - TezosDomainsReverseRecords">
+        Tezos​Domains​Reverse​Records
+    </a>
+</dt>
+<dd>
+    <p>Object containing an array of reverse records</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/TezosDomainsReverseRecord" title="structure - TezosDomainsReverseRecord">
+        Tezos​Domains​Reverse​Record
+    </a>
+</dt>
+<dd>
+    <p>Object containing all the info of the tezos domains record</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/LiquidityBakingData" title="structure - LiquidityBakingData">
+        Liquidity​Baking​Data
+    </a>
+</dt>
+<dd>
+    <p>Wrapper object to hold onto all the necessary data in order to work with liquidity baking contract (swap, add or remove liqudity)</p>
+
+</dd>
+<dt class="structure">
     <a href="https://kukai-core-swift.kukai.app/NFT" title="structure - NFT">
         NFT
     </a>
@@ -540,6 +1100,40 @@ This struct abstract the developer away from knowing all these details, and inst
 <dd>
     <p>The version of the Tezos code being run by the given node</p>
 
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/NilOnDecodingError" title="structure - NilOnDecodingError">
+        Nil​OnDecoding​Error
+    </a>
+</dt>
+<dd>
+    <p>property wrapper to easily handle a situation where we don't want decoding to fail for 1 property which may be problematic. Instead just default it to nil</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/OperationBlockHeader" title="structure - OperationBlockHeader">
+        Operation​Block​Header
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/OperationDoubleEndorsementEvidence_InlinedEndorsement" title="structure - OperationDoubleEndorsementEvidence.InlinedEndorsement">
+        Operation​Double​Endorsement​Evidence.​Inlined​Endorsement
+    </a>
+</dt>
+<dd>
+    <p>Internal struct used to amtch expected struct of data</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/OperationDoubleEndorsementEvidence_InlinedEndorsement_Content" title="structure - OperationDoubleEndorsementEvidence.InlinedEndorsement.Content">
+        Operation​Double​Endorsement​Evidence.​Inlined​Endorsement.​Content
+    </a>
+</dt>
+<dd>
+    
 </dd>
 <dt class="structure">
     <a href="https://kukai-core-swift.kukai.app/OperationFees" title="structure - OperationFees">
@@ -632,12 +1226,12 @@ This struct abstract the developer away from knowing all these details, and inst
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/OperationResponseInternalResultErrorWith" title="structure - OperationResponseInternalResultErrorWith">
-        Operation​Response​Internal​Result​Error​With
+    <a href="https://kukai-core-swift.kukai.app/FailWith" title="structure - FailWith">
+        Fail​With
     </a>
 </dt>
 <dd>
-    <p>The error string, or micheline error object returned inside <code>OperationResponseInternalResultError</code></p>
+    <p>The error string, error int (code), or micheline error object returned inside <code>FailWith</code></p>
 
 </dd>
 <dt class="structure">
@@ -650,31 +1244,67 @@ This struct abstract the developer away from knowing all these details, and inst
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/WalletUtils" title="structure - WalletUtils">
-        Wallet​Utils
+    <a href="https://kukai-core-swift.kukai.app/SVGImgProcessor" title="structure - SVGImgProcessor">
+        SVGImg​Processor
     </a>
 </dt>
 <dd>
-    <p>A collection of utility functions, not unique to any given wallet type</p>
+    <p>SVG image processor for Kingfisher library</p>
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/DexterCalculationResult" title="structure - DexterCalculationResult">
-        Dexter​Calculation​Result
+    <a href="https://kukai-core-swift.kukai.app/OperationSubscription" title="structure - OperationSubscription">
+        Operation​Subscription
     </a>
 </dt>
 <dd>
-    <p>A struct to hold all the necessary calculations for a Dexter trade</p>
+    <p>Object for sending a request through SignalR to listen to operations for a given account</p>
 
 </dd>
 <dt class="structure">
-    <a href="https://kukai-core-swift.kukai.app/ErrorResponse" title="structure - ErrorResponse">
-        Error​Response
+    <a href="https://kukai-core-swift.kukai.app/DAppHelperService_Quipuswap" title="structure - DAppHelperService.Quipuswap">
+        DApp​Helper​Service.​Quipuswap
     </a>
 </dt>
 <dd>
-    <p>This library deals with Errors in many forms that are cumbersome to handle in client applications if passed directly.
-This object seeks to wrap up all the necessary data into a single source of truth and provide access to all the necessary pieces of information</p>
+    <p>All functions related to Quipuswap</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DexSwapCalculationResult" title="structure - DexSwapCalculationResult">
+        Dex​Swap​Calculation​Result
+    </a>
+</dt>
+<dd>
+    <p>A struct to hold all the necessary calculations for a dex trade</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DexAddCalculationResult" title="structure - DexAddCalculationResult">
+        Dex​Add​Calculation​Result
+    </a>
+</dt>
+<dd>
+    <p>A struct to hold all the necessary calculations for adding liquidity to a dex contract</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DexRemoveCalculationResult" title="structure - DexRemoveCalculationResult">
+        Dex​Remove​Calculation​Result
+    </a>
+</dt>
+<dd>
+    <p>A struct to hold all the necessary calculations for removing liquidity from a dex contract</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/KukaiError" title="structure - KukaiError">
+        Kukai​Error
+    </a>
+</dt>
+<dd>
+    <p>A struct conforming to <code>Error</code>, attempting to handle errors from all sources (RPC, network, OS, other services/components/libraries), without the implementing code having to deal with each layer themselves.
+Comes with helpers to extract meaning from RPC errors, optionally includes all the network data that caused the error for easier retrieval, and a fallback human readbale <code>description</code> to ensure something useful is always shown to the user.</p>
 
 </dd>
 <dt class="structure">
@@ -684,6 +1314,66 @@ This object seeks to wrap up all the necessary data into a single source of trut
 </dt>
 <dd>
     <p>Constants needed to compute a fee</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/FeeEstimatorService_EstimationResult" title="structure - FeeEstimatorService.EstimationResult">
+        Fee​Estimator​Service.​Estimation​Result
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/DApp" title="structure - DApp">
+        DApp
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/OfflineConstants" title="structure - OfflineConstants">
+        Offline​Constants
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/OperationService_LedgerPayloadPrepResponse" title="structure - OperationService.LedgerPayloadPrepResponse">
+        Operation​Service.​Ledger​Payload​Prep​Response
+    </a>
+</dt>
+<dd>
+    <p>Used to return a bunch of formatted data, to make interacting with ledger sign operation easier</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/SubverifierWrapper" title="structure - SubverifierWrapper">
+        Subverifier​Wrapper
+    </a>
+</dt>
+<dd>
+    <p>SDK requires information about the verifer that can't be stored inside the verifier, add a wrapper object to allow passing of all the data</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/WalletMetadataList" title="structure - WalletMetadataList">
+        Wallet​Metadata​List
+    </a>
+</dt>
+<dd>
+    <p>Container to store groups of WalletMetadata based on type</p>
+
+</dd>
+<dt class="structure">
+    <a href="https://kukai-core-swift.kukai.app/WalletMetadata" title="structure - WalletMetadata">
+        Wallet​Metadata
+    </a>
+</dt>
+<dd>
+    <p>Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together</p>
 
 </dd>
         </dl>
@@ -719,61 +1409,57 @@ This object seeks to wrap up all the necessary data into a single source of trut
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix" title="enumeration - Prefix">
-        Prefix
+    <a href="https://kukai-core-swift.kukai.app/ResultExtensionError" title="enumeration - ResultExtensionError">
+        Result​Extension​Error
     </a>
 </dt>
 <dd>
-    <p>Prefixes needed to add to hex strings to denote elliptical curves</p>
+    
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/DipDupExchangeName" title="enumeration - DipDupExchangeName">
+        Dip​Dup​Exchange​Name
+    </a>
+</dt>
+<dd>
+    <p>Enum to wrap up the available types of Exchange on DipDup</p>
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix_Watermark" title="enumeration - Prefix.Watermark">
-        Prefix.​Watermark
+    <a href="https://kukai-core-swift.kukai.app/DipDupTokenStandard" title="enumeration - DipDupTokenStandard">
+        Dip​Dup​Token​Standard
     </a>
 </dt>
 <dd>
-    
+    <p>Wrapping up the FA standards into an enum</p>
+
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix_Keys" title="enumeration - Prefix.Keys">
-        Prefix.​Keys
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerHealth" title="enumeration - TzKTBakerHealth">
+        TzKTBaker​Health
     </a>
 </dt>
 <dd>
-    
+    <p>The stability of the bakers server</p>
+
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix_Keys_Ed25519" title="enumeration - Prefix.Keys.Ed25519">
-        Prefix.​Keys.​Ed25519
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerAccuracy" title="enumeration - TzKTBakerAccuracy">
+        TzKTBaker​Accuracy
     </a>
 </dt>
 <dd>
-    
+    <p>The accuracy of the bakers payments</p>
+
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix_Keys_P256" title="enumeration - Prefix.Keys.P256">
-        Prefix.​Keys.​P256
+    <a href="https://kukai-core-swift.kukai.app/TzKTBakerTiming" title="enumeration - TzKTBakerTiming">
+        TzKTBaker​Timing
     </a>
 </dt>
 <dd>
-    
-</dd>
-<dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix_Keys_Secp256k1" title="enumeration - Prefix.Keys.Secp256k1">
-        Prefix.​Keys.​Secp256k1
-    </a>
-</dt>
-<dd>
-    
-</dd>
-<dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/Prefix_Address" title="enumeration - Prefix.Address">
-        Prefix.​Address
-    </a>
-</dt>
-<dd>
-    
+    <p>The reliability of the bakers payouts</p>
+
 </dd>
 <dt class="enumeration">
     <a href="https://kukai-core-swift.kukai.app/TzKTTransaction_TransactionStatus" title="enumeration - TzKTTransaction.TransactionStatus">
@@ -826,31 +1512,47 @@ This object seeks to wrap up all the necessary data into a single source of trut
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/MichelsonConstant" title="enumeration - MichelsonConstant">
-        Michelson​Constant
+    <a href="https://kukai-core-swift.kukai.app/BiometricType" title="enumeration - BiometricType">
+        Biometric​Type
     </a>
 </dt>
 <dd>
-    <p>Michelson constants used to denote types and values</p>
+    
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/CurrentDevice" title="enumeration - CurrentDevice">
+        Current​Device
+    </a>
+</dt>
+<dd>
+    <p>Enum used to get details about the current device's capabilities</p>
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/MichelsonParseError" title="enumeration - MichelsonParseError">
-        Michelson​Parse​Error
+    <a href="https://kukai-core-swift.kukai.app/HDWalletError" title="enumeration - HDWalletError">
+        HDWallet​Error
     </a>
 </dt>
 <dd>
-    <p>Custom Errors that can be returned by the decode or encode functions</p>
+    <p>Error types that can be passed by failable inits</p>
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/TezosChainName" title="enumeration - TezosChainName">
-        Tezos​Chain​Name
+    <a href="https://kukai-core-swift.kukai.app/OperationBallot_Ballot" title="enumeration - OperationBallot.Ballot">
+        Operation​Ballot.​Ballot
     </a>
 </dt>
 <dd>
-    <p>A enum representing the chain name for Tezos nodes, denoting the protocol version being run or mainnet</p>
+    <p>Enum matching the available ballot options</p>
 
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/OperationBlockHeader_CodingKeys" title="enumeration - OperationBlockHeader.CodingKeys">
+        Operation​Block​Header.​Coding​Keys
+    </a>
+</dt>
+<dd>
+    
 </dd>
 <dt class="enumeration">
     <a href="https://kukai-core-swift.kukai.app/OperationFees_NetworkFeeType" title="enumeration - OperationFees.NetworkFeeType">
@@ -869,6 +1571,14 @@ This object seeks to wrap up all the necessary data into a single source of trut
 <dd>
     <p>Enum representing the various kinds of supported <code>Operation</code>'s</p>
 
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/OperationTransactionError" title="enumeration - OperationTransactionError">
+        Operation​Transaction​Error
+    </a>
+</dt>
+<dd>
+    
 </dd>
 <dt class="enumeration">
     <a href="https://kukai-core-swift.kukai.app/FaVersion" title="enumeration - FaVersion">
@@ -907,30 +1617,21 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/MnemonicPhraseLength" title="enumeration - MnemonicPhraseLength">
-        Mnemonic​Phrase​Length
+    <a href="https://kukai-core-swift.kukai.app/WalletError" title="enumeration - WalletError">
+        Wallet​Error
     </a>
 </dt>
 <dd>
-    <p>Helper enum used to choose the number of words for a mnemonic</p>
+    <p>Possible error types that can occur when using the LedgerWallet</p>
 
 </dd>
 <dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/EllipticalCurve" title="enumeration - EllipticalCurve">
-        Elliptical​Curve
+    <a href="https://kukai-core-swift.kukai.app/KukaiError_ErrorType" title="enumeration - KukaiError.ErrorType">
+        Kukai​Error.​Error​Type
     </a>
 </dt>
 <dd>
-    <p>Distingush between ed25519 (TZ1...) and secp256k1 (TZ2...) curves for creating and using wallet addresses</p>
-
-</dd>
-<dt class="enumeration">
-    <a href="https://kukai-core-swift.kukai.app/ErrorResponseType" title="enumeration - ErrorResponseType">
-        Error​Response​Type
-    </a>
-</dt>
-<dd>
-    <p>High level error types, used to quickly categoise Tezos or system errors, in order to display error messages to user</p>
+    <p>Categories of errors that are possible</p>
 
 </dd>
 <dt class="enumeration">
@@ -943,6 +1644,76 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 
 </dd>
 <dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/LedgerService_GeneralErrorCodes" title="enumeration - LedgerService.GeneralErrorCodes">
+        Ledger​Service.​General​Error​Codes
+    </a>
+</dt>
+<dd>
+    <p>General Ledger error codes, pulled from the source, and some additional ones added for native swift issues</p>
+
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/LedgerService_TezosAppErrorCodes" title="enumeration - LedgerService.TezosAppErrorCodes">
+        Ledger​Service.​Tezos​App​Error​Codes
+    </a>
+</dt>
+<dd>
+    <p>Dedicated error codes pulled from the Ledger tezos app</p>
+
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/MediaProxyServiceError" title="enumeration - MediaProxyServiceError">
+        Media​Proxy​Service​Error
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/CacheType" title="enumeration - CacheType">
+        Cache​Type
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/MediaProxyService_Format" title="enumeration - MediaProxyService.Format">
+        Media​Proxy​Service.​Format
+    </a>
+</dt>
+<dd>
+    <p>Enum denoting the avaialble sizes for media</p>
+
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/MediaProxyService_Source" title="enumeration - MediaProxyService.Source">
+        Media​Proxy​Service.​Source
+    </a>
+</dt>
+<dd>
+    <p>Supported source types for proxied media</p>
+
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/MediaProxyService_MediaType" title="enumeration - MediaProxyService.MediaType">
+        Media​Proxy​Service.​Media​Type
+    </a>
+</dt>
+<dd>
+    <p>Supported media types</p>
+
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/MediaProxyService_AggregatedMediaType" title="enumeration - MediaProxyService.AggregatedMediaType">
+        Media​Proxy​Service.​Aggregated​Media​Type
+    </a>
+</dt>
+<dd>
+    <p>Helper to parse a collection of media types to understand its contents</p>
+
+</dd>
+<dt class="enumeration">
     <a href="https://kukai-core-swift.kukai.app/NetworkService_NetworkError" title="enumeration - NetworkService.NetworkError">
         Network​Service.​Network​Error
     </a>
@@ -950,6 +1721,22 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 <dd>
     <p>Errors that can be returned by the <code>NetworkService</code></p>
 
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/DAppCategory" title="enumeration - DAppCategory">
+        DApp​Category
+    </a>
+</dt>
+<dd>
+    
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/DAppAccessType" title="enumeration - DAppAccessType">
+        DApp​Access​Type
+    </a>
+</dt>
+<dd>
+    
 </dd>
 <dt class="enumeration">
     <a href="https://kukai-core-swift.kukai.app/OperationService_OperationServiceError" title="enumeration - OperationService.OperationServiceError">
@@ -969,12 +1756,39 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
     <p>Unique TaquitoService errors</p>
 
 </dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/TorusAuthProvider" title="enumeration - TorusAuthProvider">
+        Torus​Auth​Provider
+    </a>
+</dt>
+<dd>
+    <p>List of providers currently supported and available on the Tezos network</p>
+
+</dd>
+<dt class="enumeration">
+    <a href="https://kukai-core-swift.kukai.app/TorusAuthError" title="enumeration - TorusAuthError">
+        Torus​Auth​Error
+    </a>
+</dt>
+<dd>
+    <p>Custom TorusAuthService errors that cna be thrown</p>
+
+</dd>
         </dl>
     </section>
     <section id="protocols">
         <h2>Protocols</h2>
         <dl>
             <dt class="protocol">
+    <a href="https://kukai-core-swift.kukai.app/FailWithParser" title="protocol - FailWithParser">
+        Fail​With​Parser
+    </a>
+</dt>
+<dd>
+    <p>Protocol to allow defining multiple dedicated structs, one for each dApp, that knows how to convert the specific failWith cases into more human readable error messages</p>
+
+</dd>
+<dt class="protocol">
     <a href="https://kukai-core-swift.kukai.app/Wallet" title="protocol - Wallet">
         Wallet
     </a>
@@ -998,6 +1812,24 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 
 </dd>
 <dt class="typealias">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeLedgerKeyResponse" title="typealias - QuipuswapExchangeLedgerKeyResponse">
+        Quipuswap​Exchange​Ledger​Key​Response
+    </a>
+</dt>
+<dd>
+    <p>Wrapper object around the network response</p>
+
+</dd>
+<dt class="typealias">
+    <a href="https://kukai-core-swift.kukai.app/QuipuswapExchangeUserRewardsKeyResponse" title="typealias - QuipuswapExchangeUserRewardsKeyResponse">
+        Quipuswap​Exchange​User​Rewards​Key​Response
+    </a>
+</dt>
+<dd>
+    <p>Wrapper object around the network response</p>
+
+</dd>
+<dt class="typealias">
     <a href="https://kukai-core-swift.kukai.app/NanoTez" title="typealias - NanoTez">
         Nano​Tez
     </a>
@@ -1012,15 +1844,23 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
     <h2>Extensions</h2>
     <dl>
     <dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/AnyPublisher">AnyPublisher</a>
+</dt>
+<dd></dd>
+<dt class="extension">
     <a href="https://kukai-core-swift.kukai.app/Array">Array</a>
 </dt>
 <dd></dd>
 <dt class="extension">
-    <a href="https://kukai-core-swift.kukai.app/Base58">Base58</a>
+    <a href="https://kukai-core-swift.kukai.app/Collection">Collection</a>
 </dt>
 <dd></dd>
 <dt class="extension">
-    <a href="https://kukai-core-swift.kukai.app/Data">Data</a>
+    <a href="https://kukai-core-swift.kukai.app/Date">Date</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/DateFormatter">DateFormatter</a>
 </dt>
 <dd></dd>
 <dt class="extension">
@@ -1028,7 +1868,31 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 </dt>
 <dd></dd>
 <dt class="extension">
-    <a href="https://kukai-core-swift.kukai.app/Sodium">Sodium</a>
+    <a href="https://kukai-core-swift.kukai.app/Dictionary">Dictionary</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/Error">Error</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/KeyedDecodingContainer">KeyedDecodingContainer</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/Publisher">Publisher</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/Result">Result</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/String">String</a>
+</dt>
+<dd></dd>
+<dt class="extension">
+    <a href="https://kukai-core-swift.kukai.app/Thread">Thread</a>
 </dt>
 <dd></dd>
     </dl>
@@ -1038,7 +1902,7 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
 
     <footer>
         <p>
-    Generated on <time datetime="2022-02-14T15:18:16+0000">February 14, 2022</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
+    Generated on <time datetime="2023-09-21T10:15:51+0000">September 21, 2023</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-rc.1</span>.
 </p>
     </footer>
 </body>
