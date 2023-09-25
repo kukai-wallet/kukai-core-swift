@@ -33,6 +33,11 @@ jobs:
           code-coverage: true
           upload-logs: always
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: "swift"
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
