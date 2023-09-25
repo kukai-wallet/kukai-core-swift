@@ -24,6 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3.1.0
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: "swift"
+
       - uses: mxcl/xcodebuild@v1.11.0
         with:
           platform: ${{ matrix.platform }}
@@ -32,6 +37,11 @@ jobs:
           scheme: KukaiCoreSwift
           code-coverage: true
           upload-logs: always
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:swift"
       
       #- name: Test
       #  run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -enableCodeCoverage YES -resultBundlePath "../../xcode-$GITHUB_RUN_ID.xcresult"
