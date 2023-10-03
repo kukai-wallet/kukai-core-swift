@@ -30,12 +30,20 @@ public struct KukaiError: CustomStringConvertible, Error {
 		/// Internal application errors are errors from other services, components, libraiers etc, wrapped up so that they don't require extra parsing
 		case internalApplication
 		
+		/// For situations where the wrong model is returned. This can happen sometimes unexpectedily in GraphQL based APIs, instead of returning an error, it will just return a partial object missing non-optional fields
+		case decodingError
+		
+		/// For clients to catch known errors, sometimes handled in odd ways, enabling the easy return of a String. E.g. GraphQL throwing a malformed object response for a situation that should be a 404
+		case knownError
+		
 		/// Used as a fallback for strange edge cases where we can't easily idenitfiy the issue
 		case unknown
 	}
 	
 	/// The error category
 	public let errorType: ErrorType
+	
+	public let knownErrorMessage: String?
 	
 	/// Optional error subType coming from another source (the OS, URLSession, another library etc)
 	public let subType: Error?
@@ -64,27 +72,38 @@ public struct KukaiError: CustomStringConvertible, Error {
 	
 	/// Create a KukaiError from an RPC string (will not be validated). You can use the string extension `.removeLeadingProtocolFromRPCError()` to strip the leading poriton of the error
 	public static func rpcError(rpcErrorString: String, andFailWith: FailWith?) -> KukaiError {
-		return KukaiError(errorType: .rpc, subType: nil, rpcErrorString: rpcErrorString, failWith: andFailWith, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		return KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: rpcErrorString, failWith: andFailWith, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	/// Create a KukaiError denoting a sytem issue from the OS, by passing in the system Error type
 	public static func systemError(subType: Error) -> KukaiError {
-		return KukaiError(errorType: .system, subType: subType, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		return KukaiError(errorType: .system, knownErrorMessage: nil, subType: subType, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	/// Create a KukaiError denoting a network issue, by passing in the HTTP status code
 	public static func networkError(statusCode: Int) -> KukaiError {
-		return KukaiError(errorType: .network(statusCode), subType: nil, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		return KukaiError(errorType: .network(statusCode), knownErrorMessage: nil, subType: nil, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	/// Create a KukaiError denoting an issue from some other component or library, by passing in the error that piece of code returned
 	public static func internalApplicationError(error: Error) -> KukaiError {
-		return KukaiError(errorType: .internalApplication, subType: error, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		return KukaiError(errorType: .internalApplication, knownErrorMessage: nil, subType: error, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
+	/// Create a KukaiError denoting an issue from some other component or library, by passing in the error that piece of code returned
+	public static func decodingError(error: Error) -> KukaiError {
+		return KukaiError(errorType: .decodingError, knownErrorMessage: nil, subType: error, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	}
+	
+	/// Create a KukaiError allowing a client to simply provide the required error message.
+	/// E.g. In situations where GraphQL returns a malformed object instead of an error, resulting in a decodingError, a client can catch that, supress it, and instead reutrn an error explaining that this record couldn't be found
+	public static func knownErrorMessage(_ message: String) -> KukaiError {
+		return KukaiError(errorType: .knownError, knownErrorMessage: message, subType: nil, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	/// Create an unknown KukaiError
 	public static func unknown(withString: String? = nil) -> KukaiError {
-		return KukaiError(errorType: .unknown, subType: nil, rpcErrorString: withString, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		return KukaiError(errorType: .unknown, knownErrorMessage: nil, subType: nil, rpcErrorString: withString, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	
@@ -124,9 +143,15 @@ public struct KukaiError: CustomStringConvertible, Error {
 					
 				case .internalApplication:
 					if let subType = subType {
-						return "Internal Application: \(subType)"
+						return "Internal Application Error: \(subType.localizedDescription)"
 					}
-					return "Internal Application: Unknown"
+					return "Internal Application Error: Unknown"
+				
+				case .decodingError:
+					return "Decoding error: The service returned an unexpected response, please check any information you've supplied is correct"
+					
+				case .knownError:
+					return knownErrorMessage ?? "Unknown"
 					
 				case .unknown:
 					if let rpcErrorString = rpcErrorString {
@@ -163,7 +188,7 @@ public class ErrorHandlingService {
 	/// Convert an `OperationResponseInternalResultError` into a `KukaiError` and optionally log it to the central logger
 	public static func fromOperationError(_ opError: OperationResponseInternalResultError, andLog: Bool = true) -> KukaiError {
 		let errorWithoutProtocol = opError.id.removeLeadingProtocolFromRPCError()
-		var errorToReturn = KukaiError(errorType: .rpc, subType: nil, rpcErrorString: errorWithoutProtocol, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		var errorToReturn = KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: errorWithoutProtocol, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 		
 		if (errorWithoutProtocol == "michelson_v1.runtime_error" || errorWithoutProtocol == "michelson_v1.script_rejected"), let withError = opError.with {
 			

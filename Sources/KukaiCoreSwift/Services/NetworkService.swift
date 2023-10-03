@@ -122,7 +122,7 @@ public class NetworkService {
 			} catch (let error) {
 				
 				/// RPC annoyingly returns multiple different types of responses for error situations. When requesting an `OperationResponse` it may sometimes return one with an error inside, or return a new object in an array `[OperationResponse]` with errors inside
-				/// We try to catch an issue where network client was expecting 1 object, but got back an array of objects with errors inside. We attempt to parse the new object looking for errors instead of unnecessariyl throwing DecodingError.typeMistach(...) errors
+				/// We try to catch an issue where network client was expecting 1 object, but got back an array of objects with errors inside. We attempt to parse the new object looking for errors instead of unnecessarily throwing DecodingError.typeMistach(...) errors
 				if error is DecodingError,
 				   let parsedResponse = try? JSONDecoder().decode([OperationResponse].self, from: d),
 				   let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode)
@@ -142,10 +142,18 @@ public class NetworkService {
 					DispatchQueue.main.async { completion(Result.failure( errorToReturn )) }
 				}
 				
-				/// If those don't work, just return the oringal error
+				/// If those don't work, just return the original error
 				else
 				{
-					DispatchQueue.main.async { completion(Result.failure( KukaiError.internalApplicationError(error: error) )) }
+					DispatchQueue.main.async {
+						if error is DecodingError {
+							// Specifically tag DecodingErrors, as can be an issue with GraphQL that clients want to more easily catch
+							completion(Result.failure( KukaiError.decodingError(error: error) ))
+							
+						} else {
+							completion(Result.failure( KukaiError.internalApplicationError(error: error) ))
+						}
+					}
 				}
 				
 				return
