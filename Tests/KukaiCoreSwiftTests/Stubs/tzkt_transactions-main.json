@@ -956,4 +956,40 @@
         },
         "status": "applied"
     },
+    {
+        "type": "transaction",
+        "id": 79977452142592,
+        "level": 1672991,
+        "timestamp": "2021-09-07T09:00:04Z",
+        "block": "BLPBkQ99cXZ61QBHdNMkEwwVUxiDAp6pD1eiAtUfQjznT2zsR6k",
+        "hash": "opC815T6zqTUtzQktPBBeLAB1eRnvuR5ETZDoLPGgAb3698wwFK",
+        "counter": 24120639,
+        "sender": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "gasLimit": 60559,
+        "gasUsed": 0,
+        "storageLimit": 67,
+        "storageUsed": 0,
+        "bakerFee": 6332,
+        "storageFee": 0,
+        "allocationFee": 0,
+        "target": {
+            "alias": "PixelPotus 2.0",
+            "address": "KT1WGDVRnff4rmGzJUbdCRAJBmYt12BrPzdD"
+        },
+        "targetCodeHash": 1680699034,
+        "amount": 0,
+        "parameter": {
+            "entrypoint": "claim",
+            "value": "{}"
+        },
+        "status": "failed",
+        "errors": [
+            {
+                "type": "gas_exhausted.operation"
+            }
+        ],
+        "hasInternals": false
+    }
 ]

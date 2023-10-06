@@ -26,7 +26,7 @@ final class TzKTTransactionTests: XCTestCase {
 			"value": "{\"to\": \"tz1eDdsp1d27kortm5LuoRqD6aKrdxmTiTSQ\", \"from\": \"tz1Z8E2gMHLXFcGGzW68B5e1Vk49FpHQd7xc\", \"value\": \"500000000000000000\"}"
 		]
 		
-		var transaction = TzKTTransaction(type: .transaction, id: 123, level: 123, timestamp: "", hash: "", counter: 123, initiater: TzKTAddress(alias: nil, address: "tz1abc"), sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: transferTokenParameters, status: .applied, hasInternals: false, tokenTransfersCount: 0)
+		var transaction = TzKTTransaction(type: .transaction, id: 123, level: 123, timestamp: "", hash: "", counter: 123, initiater: TzKTAddress(alias: nil, address: "tz1abc"), sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: transferTokenParameters, status: .applied, hasInternals: false, tokenTransfersCount: 0, errors: nil)
 		transaction.processAdditionalData(withCurrentWalletAddress: "tz1abc")
 		
 		let token = transaction.getFaTokenTransferData()
@@ -42,7 +42,7 @@ final class TzKTTransactionTests: XCTestCase {
 			"entrypoint": "transfer",
 			"value": "{\"to\": \"tz1eDdsp1d27kortm5LuoRqD6aKrdxmTiTSQ\", \"from\": \"tz1Z8E2gMHLXFcGGzW68B5e1Vk49FpHQd7xc\", \"value\": \"500000000000000000\"}"
 		]
-		let transaction1 = TzKTTransaction(type: .transaction, id: 1, level: 1, timestamp: "", hash: "", counter: 1, initiater: nil, sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "tz1abc"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: dictParams, status: .confirmed, hasInternals: false, tokenTransfersCount: nil)
+		let transaction1 = TzKTTransaction(type: .transaction, id: 1, level: 1, timestamp: "", hash: "", counter: 1, initiater: nil, sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "tz1abc"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: dictParams, status: .confirmed, hasInternals: false, tokenTransfersCount: nil, errors: nil)
 		let dict = transaction1.parameterValueAsDict()
 		let dictValue1 = dict?["to"] as? String
 		XCTAssert(dictValue1 == "tz1eDdsp1d27kortm5LuoRqD6aKrdxmTiTSQ", dictValue1 ?? "-")
@@ -53,7 +53,7 @@ final class TzKTTransactionTests: XCTestCase {
 			"entrypoint": "transfer",
 			"value": "[\"test\", 123, 14.7]"
 		]
-		let transaction2 = TzKTTransaction(type: .transaction, id: 1, level: 1, timestamp: "", hash: "", counter: 1, initiater: nil, sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "tz1abc"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: arrayParams, status: .confirmed, hasInternals: false, tokenTransfersCount: nil)
+		let transaction2 = TzKTTransaction(type: .transaction, id: 1, level: 1, timestamp: "", hash: "", counter: 1, initiater: nil, sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "tz1abc"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: arrayParams, status: .confirmed, hasInternals: false, tokenTransfersCount: nil, errors: nil)
 		let array = transaction2.parameterValueAsArray()
 		let arrayValue1 = array?[0] as? String
 		let arrayValue2 = array?[1] as? Int
@@ -67,7 +67,7 @@ final class TzKTTransactionTests: XCTestCase {
 			"entrypoint": "transfer",
 			"value": "[{\"key\": \"value\"}, {\"key\": 123}, {\"key\": 14.7}]"
 		]
-		let transaction3 = TzKTTransaction(type: .transaction, id: 1, level: 1, timestamp: "", hash: "", counter: 1, initiater: nil, sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "tz1abc"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: arrayOfDictParams, status: .confirmed, hasInternals: false, tokenTransfersCount: nil)
+		let transaction3 = TzKTTransaction(type: .transaction, id: 1, level: 1, timestamp: "", hash: "", counter: 1, initiater: nil, sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "tz1abc"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: arrayOfDictParams, status: .confirmed, hasInternals: false, tokenTransfersCount: nil, errors: nil)
 		let arryOfDict = transaction3.parameterValueAsArrayOfDictionary()
 		let arryOfDictValue1 = (arryOfDict?[0] as? [String: String])?["key"] as? String
 		let arryOfDictValue2 = (arryOfDict?[1] as? [String: Int])?["key"] as? Int
@@ -93,7 +93,7 @@ final class TzKTTransactionTests: XCTestCase {
 			"value": "{\"to\": \"tz1eDdsp1d27kortm5LuoRqD6aKrdxmTiTSQ\", \"from\": \"tz1Z8E2gMHLXFcGGzW68B5e1Vk49FpHQd7xc\", \"value\": \"500000000000000000\"}"
 		]
 		
-		var transaction = TzKTTransaction(type: .transaction, id: 123, level: 123, timestamp: "", hash: "", counter: 123, initiater: TzKTAddress(alias: nil, address: "tz1abc"), sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: transferTokenParameters, status: .applied, hasInternals: false, tokenTransfersCount: 0)
+		var transaction = TzKTTransaction(type: .transaction, id: 123, level: 123, timestamp: "", hash: "", counter: 123, initiater: TzKTAddress(alias: nil, address: "tz1abc"), sender: TzKTAddress(alias: nil, address: "tz1abc"), bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: TzKTAddress(alias: nil, address: "KT1GG8Zd5rUp1XV8nMPRBY2tSyVn6NR5F4Q1"), prevDelegate: nil, newDelegate: nil, amount: .zero(), parameter: transferTokenParameters, status: .applied, hasInternals: false, tokenTransfersCount: 0, errors: nil)
 		transaction.processAdditionalData(withCurrentWalletAddress: "tz1abc")
 		
 		if let json = try? JSONEncoder().encode(transaction), let jsonString = String(data: json, encoding: .utf8) {

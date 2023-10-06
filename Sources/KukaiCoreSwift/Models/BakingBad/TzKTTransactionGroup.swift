@@ -16,6 +16,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable, CustomStrin
 	public var groupType: TzKTTransaction.TransactionSubType
 	public let hash: String
 	public let transactions: [TzKTTransaction]
+	public let status: TzKTTransaction.TransactionStatus
 	
 	public var primaryToken: Token? = nil
 	public var secondaryToken: Token? = nil
@@ -35,6 +36,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable, CustomStrin
 		self.hash = first.hash
 		self.transactions = transactions
 		self.groupType = .unknown
+		self.status = first.status
 		
 		
 		if transactions.count == 1 {
