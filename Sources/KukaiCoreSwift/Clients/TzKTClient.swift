@@ -915,7 +915,7 @@ public class TzKTClient {
 	 - parameter forToken: The token address who's image you are looking for.
 	 */
 	public static func avatarURL(forToken token: String) -> URL? {
-		guard let imageURL = URL(string: "https://services.tzkt.io/v1/avatars/\(token)") else {
+		guard let imageURL = URL(string: "https://services.tzkt.io/v1/logos/\(token).png") else {
 			return nil
 		}
 		
