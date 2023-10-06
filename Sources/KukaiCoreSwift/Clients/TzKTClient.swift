@@ -941,6 +941,7 @@ public class TzKTClient {
 		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction")
 		urlMain.appendQueryItem(name: "micheline", value: 1)
 		urlMain.appendQueryItem(name: "limit", value: limit)
+		urlMain.appendQueryItem(name: "status", value: "failed") // TODO: temporary test
 		
 		networkService.request(url: urlMain, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self) { [weak self] (result) in
 			switch result {
