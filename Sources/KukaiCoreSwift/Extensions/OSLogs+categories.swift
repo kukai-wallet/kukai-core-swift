@@ -13,6 +13,7 @@ extension OSLog {
 	private static var subsystem = Bundle.main.bundleIdentifier ?? "app.kukai.kukai-core-swift"
 	
 	static let kukaiCoreSwift = OSLog(subsystem: subsystem, category: "KukaiCoreSwift")
+	static let walletCache = OSLog(subsystem: subsystem, category: "WalletCache")
 	static let kukaiCoreSwiftError = OSLog(subsystem: subsystem, category: "KukaiCoreSwift-error")
 	static let keychain = OSLog(subsystem: subsystem, category: "KukaiCoreSwift-keychain")
 	static let network = OSLog(subsystem: subsystem, category: "KukaiCoreSwift-network")
