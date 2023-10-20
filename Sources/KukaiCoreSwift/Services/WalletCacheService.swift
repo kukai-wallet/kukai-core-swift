@@ -696,11 +696,13 @@ extension WalletCacheService {
 			if let key = try loadKey() {
 				privateKey = key
 				publicKey = SecKeyCopyPublicKey(key)
+				os_log(.default, log: .walletCache, "loadOrCreateKeys - loaded")
 				
 			} else {
 				let keyTuple = try createKeys()
 				self.publicKey = keyTuple.public
 				self.privateKey = keyTuple.private
+				os_log(.default, log: .walletCache, "loadOrCreateKeys - created")
 			}
 			
 			return true
@@ -753,27 +755,27 @@ extension WalletCacheService {
 		]
 		
 		if CurrentDevice.hasSecureEnclave {
-			os_log(.debug, log: .keychain, "createKeys - Using secure enclave")
+			os_log(.default, log: .keychain, "createKeys - Using secure enclave")
 			commonKeyAttributes[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
 			commonKeyAttributes[kSecPrivateKeyAttrs as String] = privateKeyAttributes
 			privateKeyAttributes[kSecAttrAccessControl as String] = privateKeyAccessControl
 		} else {
-			os_log(.debug, log: .keychain, "createKeys - unable to use secure enclave")
+			os_log(.default, log: .keychain, "createKeys - unable to use secure enclave")
 		}
 		
 		guard let privateKey = SecKeyCreateRandomKey(commonKeyAttributes as CFDictionary, &error) else {
 			if let err = error {
-				os_log(.debug, log: .keychain, "createKeys - createRandom returned error")
+				os_log(.default, log: .keychain, "createKeys - createRandom returned error")
 				throw err.takeRetainedValue() as Error
 				
 			} else {
-				os_log(.debug, log: .keychain, "createKeys - createRandom errored for unknown reason")
+				os_log(.default, log: .keychain, "createKeys - createRandom errored for unknown reason")
 				throw WalletCacheError.unableToCreatePrivateKey
 			}
 		}
 		
 		guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
-			os_log(.debug, log: .keychain, "createKeys - copy public failed")
+			os_log(.default, log: .keychain, "createKeys - copy public failed")
 			throw WalletCacheError.unableToCreatePrivateKey
 		}
 		
@@ -829,20 +831,20 @@ extension WalletCacheService {
 		]
 		
 		if CurrentDevice.hasSecureEnclave {
-			os_log(.debug, log: .walletCache, "loadKey - Using secure enclave")
+			os_log(.default, log: .walletCache, "loadKey - Using secure enclave")
 			query[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
 			
 		} else {
-			os_log(.debug, log: .walletCache, "loadKey - unable to use secure enclave")
+			os_log(.default, log: .walletCache, "loadKey - unable to use secure enclave")
 		}
 		
 		var key: CFTypeRef?
 		if SecItemCopyMatching(query as CFDictionary, &key) == errSecSuccess {
-			os_log(.debug, log: .walletCache, "loadKey - returning key")
+			os_log(.default, log: .walletCache, "loadKey - returning key")
 			return (key as! SecKey)
 		}
 		
-		os_log(.debug, log: .walletCache, "loadKey - returning nil")
+		os_log(.error, log: .walletCache, "loadKey - returning nil")
 		return nil
 	}
 	
@@ -902,7 +904,7 @@ extension WalletCacheService {
 	public func decrypt(_ cipherText: Data) throws -> String {
 		
 		guard let privateKey = privateKey, SecKeyIsAlgorithmSupported(privateKey, .decrypt, WalletCacheService.encryptionAlgorithm) else {
-			os_log(.debug, log: .walletCache, "decrypt - can't find key")
+			os_log(.error, log: .walletCache, "decrypt - can't find key")
 			throw WalletCacheError.noPrivateKeyFound
 		}
 		
@@ -910,11 +912,11 @@ extension WalletCacheService {
 		guard let clearText = SecKeyCreateDecryptedData(privateKey, WalletCacheService.encryptionAlgorithm, cipherText as CFData, &error) as Data?,
 			  let textAsString = String(data: clearText, encoding: .utf8) else {
 			if let err = error {
-				os_log(.debug, log: .walletCache, "decrypt - decryptData failed with error")
+				os_log(.error, log: .walletCache, "decrypt - decryptData failed with error")
 				throw err.takeRetainedValue() as Error
 				
 			} else {
-				os_log(.debug, log: .walletCache, "decrypt - decryptData failed for unknown reason")
+				os_log(.error, log: .walletCache, "decrypt - decryptData failed for unknown reason")
 				throw WalletCacheError.unableToDecrypt
 				
 			}
