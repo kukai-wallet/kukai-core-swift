@@ -20,11 +20,6 @@ public enum BiometricType {
 /// Enum used to get details about the current device's capabilities
 public enum CurrentDevice {
 	
-	/// Does the current device have a secure enclave
-	public static var hasSecureEnclave: Bool {
-		return !isSimulator && biometricTypeSupported() != .none
-	}
-	
 	/// Is the current device a simulator
 	public static var isSimulator: Bool {
 		return TARGET_OS_SIMULATOR == 1

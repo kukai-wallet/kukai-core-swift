@@ -19,7 +19,6 @@ class CurrentDeviceTests: XCTestCase {
 	}
 	
 	func testCurrentDevice() {
-		XCTAssert(CurrentDevice.hasSecureEnclave == false)
 		XCTAssert(CurrentDevice.isSimulator == true)
 	}
 	
