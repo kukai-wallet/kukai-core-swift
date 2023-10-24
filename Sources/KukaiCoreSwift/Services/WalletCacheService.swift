@@ -690,7 +690,6 @@ extension WalletCacheService {
 		}
 		
 		
-		
 		/// Else create the real keys
 		do {
 			if let key = try loadKey() {
@@ -727,7 +726,7 @@ extension WalletCacheService {
 	fileprivate func createKeys() throws -> (public: SecKey, private: SecKey?) {
 		var error: Unmanaged<CFError>?
 		
-		let privateKeyAccessControl: SecAccessControlCreateFlags = CurrentDevice.hasSecureEnclave ?  [.privateKeyUsage] : []
+		let privateKeyAccessControl: SecAccessControlCreateFlags = [.privateKeyUsage]
 		guard let privateKeyAccess = SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, privateKeyAccessControl, &error) else {
 			if let err = error {
 				os_log(.error, log: .walletCache, "createKeys - createWithFlags returned error")
@@ -742,26 +741,19 @@ extension WalletCacheService {
 		let context = LAContext()
 		context.interactionNotAllowed = false
 		
-		var privateKeyAttributes: [String: Any] = [
+		let privateKeyAttributes: [String: Any] = [
 			kSecAttrApplicationTag as String: WalletCacheService.applicationKey,
 			kSecAttrIsPermanent as String: true,
 			kSecUseAuthenticationContext as String: context,
-			kSecAttrAccessControl as String: privateKeyAccess
+			kSecAttrAccessControl as String: privateKeyAccessControl
 		]
-		var commonKeyAttributes: [String: Any] = [
+		
+		let commonKeyAttributes: [String: Any] = [
+			kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
 			kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
 			kSecAttrKeySizeInBits as String: 256,
 			kSecPrivateKeyAttrs as String: privateKeyAttributes
 		]
-		
-		if CurrentDevice.hasSecureEnclave {
-			os_log(.default, log: .keychain, "createKeys - Using secure enclave")
-			commonKeyAttributes[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
-			commonKeyAttributes[kSecPrivateKeyAttrs as String] = privateKeyAttributes
-			privateKeyAttributes[kSecAttrAccessControl as String] = privateKeyAccessControl
-		} else {
-			os_log(.default, log: .keychain, "createKeys - unable to use secure enclave")
-		}
 		
 		guard let privateKey = SecKeyCreateRandomKey(commonKeyAttributes as CFDictionary, &error) else {
 			if let err = error {
@@ -827,16 +819,9 @@ extension WalletCacheService {
 			kSecClass as String: kSecClassKey,
 			kSecAttrApplicationTag as String: WalletCacheService.applicationKey,
 			kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-			kSecReturnRef as String: true
+			kSecReturnRef as String: true,
+			kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave
 		]
-		
-		if CurrentDevice.hasSecureEnclave {
-			os_log(.default, log: .walletCache, "loadKey - Using secure enclave")
-			query[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
-			
-		} else {
-			os_log(.default, log: .walletCache, "loadKey - unable to use secure enclave")
-		}
 		
 		var key: CFTypeRef?
 		if SecItemCopyMatching(query as CFDictionary, &key) == errSecSuccess {
