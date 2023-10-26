@@ -641,7 +641,7 @@ public class TzKTClient {
 		signalrConnection?.on(method: "accounts", callback: { [weak self] argumentExtractor in
 			do {
 				let obj = try argumentExtractor.getArgument(type: AccountSubscriptionResponse.self)
-				os_log("Incoming object parsed: %@", log: .tzkt, type: .debug, "\(obj)")
+				os_log("Incoming object parsed: %@", log: .tzkt, type: .default, "\(obj)")
 				
 				if let data = obj.data {
 					var changedAddress: [String] = []
@@ -667,7 +667,7 @@ public class TzKTClient {
 	 Close the websocket from `listenForAccountChanges`
 	 */
 	public func stopListeningForAccountChanges() {
-		os_log(.debug, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
+		os_log(.default, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
 		signalrConnection?.stop()
 		isListening = false
 	}
@@ -1098,13 +1098,13 @@ extension TzKTClient: HubConnectionDelegate {
 				os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
 				self?.signalrConnection?.stop()
 			} else {
-				os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .debug)
+				os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .default)
 			}
 		}
 	}
 	
 	public func connectionDidClose(error: Error?) {
-		os_log("SignalR connection closed: %@", log: .tzkt, type: .debug, String(describing: error))
+		os_log("SignalR connection closed: %@", log: .tzkt, type: .default, String(describing: error))
 		
 		if newAddressesToWatch.count > 0 {
 			self.listenForAccountChanges(addresses: newAddressesToWatch)

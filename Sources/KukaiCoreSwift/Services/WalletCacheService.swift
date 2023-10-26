@@ -596,7 +596,7 @@ public class WalletCacheService {
 	 */
 	public func readFromDiskAndDecrypt() -> [String: Wallet]? {
 		guard let data = DiskService.readData(fromFileName: WalletCacheService.sensitiveCacheFileName) else {
-			os_log(.info, log: .walletCache, "readFromDiskAndDecrypt - no cache file found, returning empty")
+			os_log(.default, log: .walletCache, "readFromDiskAndDecrypt - no cache file found, returning empty")
 			return [:] // No such file
 		}
 		

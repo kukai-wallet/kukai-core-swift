@@ -84,7 +84,7 @@ public class OperationService {
 					case .success(let hash):
 						
 						// With a successful Parse, we can continue on to Sign, Preapply (to check for errors) and if no errors, inject the operation
-						os_log(.debug, log: .kukaiCoreSwift, "Remote parse successful")
+						os_log(.default, log: .kukaiCoreSwift, "Remote parse successful")
 						self?.signPreapplyAndInject(wallet: wallet, forgedHash: hash, operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
 						
 					case .failure(let parseError):

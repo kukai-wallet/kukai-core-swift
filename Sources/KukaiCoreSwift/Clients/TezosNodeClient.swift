@@ -317,7 +317,7 @@ public class TezosNodeClient {
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
 			guard let url = self?.config.primaryNodeURL else {
-				os_log(.debug, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
+				os_log(.default, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
 				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
@@ -338,7 +338,7 @@ public class TezosNodeClient {
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
 			guard let url = self?.config.primaryNodeURL else {
-				os_log(.debug, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
+				os_log(.default, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
 				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}

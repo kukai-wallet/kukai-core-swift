@@ -227,9 +227,9 @@ public class NetworkService {
 		let dataString = NetworkService.dataToStringStippingMichelsonContractCode(data: responseData)
 		
 		if isPost {
-			os_log(.debug, log: .network, "Request Succeeded to: %@ \nRequest Body: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, dataString)
+			os_log(.default, log: .network, "Request Succeeded to: %@ \nRequest Body: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, dataString)
 		} else {
-			os_log(.debug, log: .network, "Request Succeeded to: %@ \nResponse: %@ \n_", fullURL.absoluteString, dataString)
+			os_log(.default, log: .network, "Request Succeeded to: %@ \nResponse: %@ \n_", fullURL.absoluteString, dataString)
 		}
 	}
 	
@@ -237,7 +237,7 @@ public class NetworkService {
 	public static func logRequestStart(loggingConfig: LoggingConfig?, fullURL: URL) {
 		if !(loggingConfig?.logNetworkFailures ?? false) && !(loggingConfig?.logNetworkSuccesses ?? false) { return }
 		
-		os_log(.debug, log: .network, "Sending request to: %@", fullURL.absoluteString)
+		os_log(.default, log: .network, "Sending request to: %@", fullURL.absoluteString)
 	}
 	
 	/**

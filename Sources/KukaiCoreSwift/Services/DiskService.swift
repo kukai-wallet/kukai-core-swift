@@ -38,7 +38,7 @@ public class DiskService {
 		do {
 			try data.write(to: fileURL)
 			
-			os_log(.debug, log: .kukaiCoreSwift, "Serialised encodable to: %@", toFileName)
+			os_log(.default, log: .kukaiCoreSwift, "Serialised encodable to: %@", toFileName)
 			return true
 			
 		} catch (let error) {
