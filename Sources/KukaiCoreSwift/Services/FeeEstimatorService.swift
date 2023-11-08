@@ -38,6 +38,7 @@ public class FeeEstimatorService {
 		case invalidNumberOfFeesReturned
 		case failedToCopyOperations
 		case estimationRemoteError(errors: [OperationResponseInternalResultError]?)
+		case unsupportedWalletAddressPrefix
 	}
 	
 	public struct EstimationResult: Codable {
@@ -99,6 +100,11 @@ public class FeeEstimatorService {
 			}
 		}
 		
+		guard let ellipticalCurve = EllipticalCurve.fromAddress(walletAddress) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.unsupportedWalletAddressPrefix)))
+			return
+		}
+		
 		switch self.config.forgingType {
 			case .local:
 				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
@@ -107,7 +113,7 @@ public class FeeEstimatorService {
 									  operationMetadata: operationMetadata,
 									  preparedOperationsCopy: preparedOperationsCopy,
 									  constants: constants,
-									  signingCurve: EllipticalCurve.fromAddress(walletAddress),
+									  signingCurve: ellipticalCurve,
 									  originalRemoteOps: originalRemoteOps,
 									  completion: completion)
 				}
@@ -119,7 +125,7 @@ public class FeeEstimatorService {
 									  operationMetadata: operationMetadata,
 									  preparedOperationsCopy: preparedOperationsCopy,
 									  constants: constants,
-									  signingCurve: EllipticalCurve.fromAddress(walletAddress),
+									  signingCurve: ellipticalCurve,
 									  originalRemoteOps: originalRemoteOps,
 									  completion: completion)
 				}
