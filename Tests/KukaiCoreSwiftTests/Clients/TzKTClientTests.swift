@@ -59,7 +59,7 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
 			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
-			XCTAssert(groups.count == 17, "\(groups.count)")
+			XCTAssert(groups.count == 18, "\(groups.count)")
 			
 			for (index, group) in groups.enumerated() {
 				
@@ -214,6 +214,12 @@ class TzKTClientTests: XCTestCase {
 						XCTAssert(group.transactions.first?.prevDelegate?.alias == " Baking Benjamins", group.transactions.first?.prevDelegate?.alias ?? "-")
 						XCTAssert(group.transactions.first?.newDelegate?.alias == "ECAD Labs Baker", group.transactions.first?.newDelegate?.alias ?? "-")
 						
+					case 17:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "opC815T6zqTUtzQktPBBeLAB1eRnvuR5ETZDoLPGgAb3698wwFK", group.hash)
+						XCTAssert(group.status == .failed, group.status.rawValue)
+						
 					default:
 						XCTFail("Missing test for transaction")
 				}
@@ -255,7 +261,7 @@ class TzKTClientTests: XCTestCase {
 					
 					XCTAssert(account.nfts[0].nfts?.count == 1, "\(account.nfts[0].nfts?.count ?? -1)")
 					XCTAssert(account.nfts[0].nfts?[0].name == "Taco Mooncake", account.nfts[0].nfts?[0].name ?? "")
-					XCTAssert(account.nfts[0].thumbnailURL?.absoluteString == "https://services.tzkt.io/v1/avatars/KT1XRH2L7VFAMvQrAK17aTfrx71NL69gaBAm", account.nfts[0].thumbnailURL?.absoluteString ?? "-")
+					XCTAssert(account.nfts[0].thumbnailURL?.absoluteString == "https://services.tzkt.io/v1/logos/KT1XRH2L7VFAMvQrAK17aTfrx71NL69gaBAm.png", account.nfts[0].thumbnailURL?.absoluteString ?? "-")
 					XCTAssert(account.nfts[0].nfts?[0].artifactURI?.absoluteString == "ipfs://QmeDXtDWpPBeG41izwVYoYbFseczshGMR9JEtm6dc8d83Q", account.nfts[0].nfts?[0].artifactURI?.absoluteString ?? "")
 					let keyValueAttributes1 = account.nfts[0].nfts?[0].metadata?.getKeyValuesFromAttributes() ?? []
 					XCTAssert(keyValueAttributes1.count == 5, "\(keyValueAttributes1.count)")
@@ -319,7 +325,7 @@ class TzKTClientTests: XCTestCase {
 	func testAvatarURL() {
 		let url = TzKTClient.avatarURL(forToken: "KT1abc123")
 		
-		XCTAssert(url?.absoluteString == "https://services.tzkt.io/v1/avatars/KT1abc123", url?.absoluteString ?? "-")
+		XCTAssert(url?.absoluteString == "https://services.tzkt.io/v1/logos/KT1abc123.png", url?.absoluteString ?? "-")
 	}
 	
 	func testEstimateRewards() {

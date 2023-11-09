@@ -97,7 +97,7 @@ public class TaquitoService {
 		
 		// Assign callback handlers for internal JS promise success and error states
 		let forgeSuccessHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			os_log("JavascriptContext forge successful", log: .taquitoService, type: .debug)
+			os_log("JavascriptContext forge successful", log: .taquitoService, type: .default)
 			self?.isForging = false
 			self?.lastForgeCompletionHandler = nil
 			completion(Result.success(result))
@@ -159,7 +159,7 @@ public class TaquitoService {
 		
 		// Assign callback handlers for internal JS promise success and error states
 		let parseSuccessHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			os_log("JavascriptContext parse successful", log: .taquitoService, type: .debug)
+			os_log("JavascriptContext parse successful", log: .taquitoService, type: .default)
 			self?.lastParseCompletionHandler = nil
 			self?.isParsing = false
 			

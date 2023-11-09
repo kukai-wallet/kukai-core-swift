@@ -11,6 +11,10 @@ import XCTest
 
 class ErrorHandlingServiceTests: XCTestCase {
 	
+	enum CodingKeysTest: CodingKey {
+		case testKey
+	}
+	
 	func testStaticConstrutors() {
 		let error1 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: nil)
 		XCTAssert(error1.rpcErrorString == "testing RPC string", error1.rpcErrorString ?? "-")
@@ -26,11 +30,21 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let error4 = KukaiError.internalApplicationError(error: URLError(URLError.unknown))
 		XCTAssert(error4.rpcErrorString == nil, error4.rpcErrorString ?? "-")
-		XCTAssert(error4.description == "Internal Application: Error Domain=NSURLErrorDomain Code=-1 \"(null)\"", error4.description)
+		XCTAssert(error4.description == "Internal Application Error: The operation couldn’t be completed. (NSURLErrorDomain error -1.)", error4.description)
 		
 		let error5 = KukaiError.systemError(subType: URLError(URLError.unknown))
 		XCTAssert(error5.rpcErrorString == nil, error5.rpcErrorString ?? "-")
 		XCTAssert(error5.description == "System: Error Domain=NSURLErrorDomain Code=-1 \"(null)\"", error5.description)
+		
+		let context = DecodingError.Context(codingPath: [CodingKeysTest.testKey], debugDescription: "coding-key-test description")
+		let decodingError = DecodingError.typeMismatch(String.self, context)
+		let error6 = KukaiError.decodingError(error: decodingError)
+		XCTAssert(error6.rpcErrorString == nil, error6.rpcErrorString ?? "-")
+		XCTAssert(error6.description == "Decoding error: The service returned an unexpected response, please check any information you've supplied is correct", error6.description)
+		
+		let error7 = KukaiError.knownErrorMessage("Something that explains a known issue to a user")
+		XCTAssert(error7.rpcErrorString == nil, error7.rpcErrorString ?? "-")
+		XCTAssert(error7.description == "Something that explains a known issue to a user", error7.description)
 	}
 	
 	func testSystemParsers() {

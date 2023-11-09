@@ -200,7 +200,7 @@ public class TorusAuthService: NSObject {
 		Task { @MainActor in
 			do {
 				let data = try await torus.triggerLogin()
-				os_log("Torus returned succesful data", log: .torus, type: .debug)
+				os_log("Torus returned succesful data", log: .torus, type: .default)
 				
 				var username: String? = nil
 				var userId: String? = nil

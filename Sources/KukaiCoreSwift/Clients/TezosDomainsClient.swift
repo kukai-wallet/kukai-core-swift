@@ -54,7 +54,15 @@ public class TezosDomainsClient {
 		let queryDict = ["query": "query {reverseRecord(address: \"\(address)\") {id, address, owner, expiresAtUtc, domain { name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self, completion: completion)
+		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainResponse>.self) { result in
+			guard result.getFailure().errorType == .decodingError else {
+				completion(result)
+				return
+			}
+			
+			completion(Result.failure(KukaiError.knownErrorMessage("Domain can't be found for address \"\(address)\"")))
+			return
+		}
 	}
 	
 	/// Query both mainnet and ghostnet versions of Tezos domains to find all records for the given address
@@ -106,7 +114,15 @@ public class TezosDomainsClient {
 		let queryDict = ["query": "query {domain(name: \"\(domain)\") { name, address }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressResponse>.self, completion: completion)
+		self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressResponse>.self) { result in
+			guard result.getFailure().errorType == .decodingError else {
+				completion(result)
+				return
+			}
+			
+			completion(Result.failure(KukaiError.knownErrorMessage("Address can't be found for domain \"\(domain)\"")))
+			return
+		}
 	}
 	
 	
@@ -123,7 +139,15 @@ public class TezosDomainsClient {
 		let queryDict = ["query": "query { reverseRecords(where: { address: { in: [\(addressArray)] } }) { items { id, address, owner, expiresAtUtc, domain { name, address }}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainBulkResponse>.self, completion: completion)
+		self.networkService.request(url: url ?? self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsDomainBulkResponse>.self) { result in
+			guard result.getFailure().errorType == .decodingError else {
+				completion(result)
+				return
+			}
+			
+			completion(Result.failure(KukaiError.knownErrorMessage("Domain can't be found for addresses")))
+			return
+		}
 	}
 	
 	/// Bulk function for fetching domains for an array of addresses, check ghostnet and mainnet for each
@@ -198,6 +222,14 @@ public class TezosDomainsClient {
 		let queryDict = ["query": "query { domains(where: { name: { in: [\(domainsArray)] } }) { items {name, address}}}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressBulkResponse>.self, completion: completion)
+		self.networkService.request(url: self.config.tezosDomainsURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<TezosDomainsAddressBulkResponse>.self) { result in
+			guard result.getFailure().errorType == .decodingError else {
+				completion(result)
+				return
+			}
+			
+			completion(Result.failure(KukaiError.knownErrorMessage("Addresses can't be found for domains")))
+			return
+		}
 	}
 }
