@@ -20,8 +20,8 @@ public class DiskService {
 	Write an instance of `Data` to a given fileName
 	- Returns: Bool, indicating if the operation was successful
 	*/
-	public static func write(data: Data, toFileName: String) -> Bool {
-		guard let dir = documentsDirectory() else {
+	public static func write(data: Data, toFileName: String, isExcludedFromBackup: Bool = true) -> Bool {
+		guard let dir = documentsDirectory(isExcludedFromBackup: isExcludedFromBackup) else {
 			os_log(.error, log: .kukaiCoreSwift, "Failed to find documents directory")
 			return false
 		}
@@ -51,10 +51,10 @@ public class DiskService {
 	Write an instance of an object conforming to `Encodable` to a fileName
 	- Returns: Bool, indicating if the operation was successful
 	*/
-	public static func write<T: Encodable>(encodable: T, toFileName: String) -> Bool {
+	public static func write<T: Encodable>(encodable: T, toFileName: String, isExcludedFromBackup: Bool = true) -> Bool {
 		do {
 			let encodedData = try JSONEncoder().encode(encodable)
-			return write(data: encodedData, toFileName: toFileName)
+			return write(data: encodedData, toFileName: toFileName, isExcludedFromBackup: isExcludedFromBackup)
 
 		} catch (let error) {
 			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, "\(error)")
@@ -147,10 +147,15 @@ public class DiskService {
 	/**
 	Get the URL to the devices documents directory, if possible
 	*/
-	public static func documentsDirectory() -> URL? {
+	public static func documentsDirectory(isExcludedFromBackup: Bool = true) -> URL? {
 		do {
 			// Need to create the documents directory on github actions
-			return try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+			var url = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+			var resourceValues = URLResourceValues()
+			resourceValues.isExcludedFromBackup = isExcludedFromBackup
+			try url.setResourceValues(resourceValues)
+			
+			return url
 			
 		} catch (let error) {
 			os_log(.error, log: .kukaiCoreSwift, "Error fetching documents directory:  %@", "\(error)")
