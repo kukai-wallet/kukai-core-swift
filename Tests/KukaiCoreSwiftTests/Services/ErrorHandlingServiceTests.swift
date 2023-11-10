@@ -34,7 +34,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let error5 = KukaiError.systemError(subType: URLError(URLError.unknown))
 		XCTAssert(error5.rpcErrorString == nil, error5.rpcErrorString ?? "-")
-		XCTAssert(error5.description == "System: Error Domain=NSURLErrorDomain Code=-1 \"(null)\"", error5.description)
+		XCTAssert(error5.description == "System: The operation couldn’t be completed. (NSURLErrorDomain error -1.)", error5.description)
 		
 		let context = DecodingError.Context(codingPath: [CodingKeysTest.testKey], debugDescription: "coding-key-test description")
 		let decodingError = DecodingError.typeMismatch(String.self, context)
@@ -55,7 +55,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let error1 = ErrorHandlingService.searchForSystemError(data: sameplData, response: successURLResponse, networkError: URLError(URLError.notConnectedToInternet), requestURL: requestURL, requestData: nil)
 		XCTAssert(error1?.errorType == .system)
-		XCTAssert(error1?.description == "System: Error Domain=NSURLErrorDomain Code=-1009 \"(null)\"", error1?.description ?? "-")
+		XCTAssert(error1?.description == "System: The operation couldn’t be completed. (NSURLErrorDomain error -1009.)", error1?.description ?? "-")
 		XCTAssert(error1?.httpStatusCode == 400)
 		
 		let errorURLResponse = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 400, httpVersion: nil, headerFields: nil)
