@@ -134,7 +134,11 @@ public struct KukaiError: CustomStringConvertible, Error {
 					
 				case .system:
 					if let subType = subType {
-						return "System: \(subType)"
+						if let errString = checkErrorForKnownCase(subType) {
+							return errString
+						} else {
+							return "System: \(subType.localizedDescription)"
+						}
 					}
 					return "System: Unknown"
 					
@@ -160,6 +164,14 @@ public struct KukaiError: CustomStringConvertible, Error {
 					return "Unknown"
 			}
 		}
+	}
+	
+	public func checkErrorForKnownCase(_ err: Error) -> String? {
+		if err.domain == "NSURLErrorDomain" && err.code == -1001 {
+			return "The request timed out. Please check your connection and try again"
+		}
+		
+		return nil
 	}
 }
 
