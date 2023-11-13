@@ -5,22 +5,27 @@ on:
       - main
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v4.1.1
         with:
           ref: main
-      - name: Swift Doc
-        uses: SwiftDocOrg/swift-doc@1.0.0-rc.1
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          inputs: "Sources"
-          module-name: KukaiCoreSwift
-          format: "html"
-          output: "Documentation"
-          base-url: "https://kukai-core-swift.kukai.app/"
+          ruby-version: 3.0
+
+      - name: Install Jazzy
+        run: gem install jazzy
+  
+      - name: Run Jazzy docs
+        run: jazzy --root-url https://kukai-core-swift.kukai.app/ --output Documentation
+      
       - name: Update Permissions
-        run: 'sudo chown --recursive $USER Documentation'
+        run: 'sudo chown -R $USER Documentation'
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
