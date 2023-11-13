@@ -41,12 +41,11 @@ public class RegularWallet: Wallet {
 	
 	/**
 	 Attempt to create an instance of a `RegularWallet` from an encoded string containing a private key
-	 - parameter withBase58String: String containing the Base58 encoded private key, prefixed with the curve's secret
-	 - parameter ellipticalCurve: The ellipcatical curve used to create the key
+	 - parameter secp256k1WithBase58String: String containing the Base58 encoded private key, prefixed with the curve's secret
 	 - parameter type: WalletType indicating the top most type of wallet
 	 */
-	public init?(withBase58String: String, ellipticalCurve: EllipticalCurve, type: WalletType) {
-		guard let privateKey = PrivateKey(withBase58String, signingCurve: ellipticalCurve),
+	public init?(secp256k1WithBase58String base58String: String, type: WalletType) {
+		guard let privateKey = PrivateKey(base58String, signingCurve: .secp256k1),
 			  let pubKey = KeyPair.secp256k1PublicKey(fromPrivateKeyBytes: privateKey.bytes),
 			  let tempAddress = pubKey.publicKeyHash else {
 			os_log("Failed to construct private/public key", log: .kukaiCoreSwift, type: .error)
@@ -64,10 +63,9 @@ public class RegularWallet: Wallet {
 	 Create a `RegularWallet` by supplying a `Mnemonic` and a passphrase (or "" if none).
 	 - Parameter withMnemonic: A `Mnemonic` representing a BIP39 menmonic
 	 - Parameter passphrase: String contianing a passphrase, or empty string if none
-	 - Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	 */
-	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String/*, ellipticalCurve: EllipticalCurve = .ed25519*/) {
-		guard let keyPair = KeyPair.regular(fromMnemonic: mnemonic, passphrase: passphrase/*, andSigningCurve: ellipticalCurve*/), let pkh = keyPair.publicKey.publicKeyHash else {
+	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String) {
+		guard let keyPair = KeyPair.regular(fromMnemonic: mnemonic, passphrase: passphrase), let pkh = keyPair.publicKey.publicKeyHash else {
 			return nil
 		}
 		
@@ -82,11 +80,10 @@ public class RegularWallet: Wallet {
 	 Create a `RegularWallet` by asking for a mnemonic of a given number of words and a passphrase (or "" if none).
 	 - Parameter withMnemonicLength: `Mnemonic.NumberOfWords` the number of words to use when creating a mnemonic
 	 - Parameter passphrase: String contianing a passphrase, or empty string if none
-	 - Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	 */
-	public convenience init?(withMnemonicLength length: Mnemonic.NumberOfWords, passphrase: String/*, ellipticalCurve: EllipticalCurve = .ed25519*/) {
+	public convenience init?(withMnemonicLength length: Mnemonic.NumberOfWords, passphrase: String) {
 		if let mnemonic = try? Mnemonic(numberOfWords: length) {
-			self.init(withMnemonic: mnemonic, passphrase: passphrase/*, ellipticalCurve: ellipticalCurve*/)
+			self.init(withMnemonic: mnemonic, passphrase: passphrase)
 			
 		} else {
 			return nil

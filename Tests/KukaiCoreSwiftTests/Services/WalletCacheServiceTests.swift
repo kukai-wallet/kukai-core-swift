@@ -129,16 +129,6 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 	}
 	
-	func testCurves() {
-		/*let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
-		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false))
-		
-		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address)
-		XCTAssert(wallet1 != nil)
-		XCTAssert(wallet1?.address == MockConstants.linearWalletSecp256k1.address, wallet1?.address ?? "-")
-		XCTAssert(walletCacheService.deleteAllCacheAndKeys())*/
-	}
-	
 	func testDerivationPaths() {
 		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase, derivationPath: MockConstants.hdWallet_hardened_change.derivationPath)!
 		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false))

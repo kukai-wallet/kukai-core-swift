@@ -59,7 +59,7 @@ public class TorusWallet: RegularWallet {
 		self.socialUserId = userId
 		self.socialProfilePictureURL = URL(string: profilePicture ?? "")
 		
-		super.init(withBase58String: base58encode, ellipticalCurve: .secp256k1, type: .social)
+		super.init(secp256k1WithBase58String: base58encode, type: .social)
 	}
 	
 	
