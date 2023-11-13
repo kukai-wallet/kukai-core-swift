@@ -66,8 +66,8 @@ public class RegularWallet: Wallet {
 	 - Parameter passphrase: String contianing a passphrase, or empty string if none
 	 - Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	 */
-	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String, ellipticalCurve: EllipticalCurve = .ed25519) {
-		guard let keyPair = KeyPair.regular(fromMnemonic: mnemonic, passphrase: passphrase, andSigningCurve: ellipticalCurve), let pkh = keyPair.publicKey.publicKeyHash else {
+	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String/*, ellipticalCurve: EllipticalCurve = .ed25519*/) {
+		guard let keyPair = KeyPair.regular(fromMnemonic: mnemonic, passphrase: passphrase/*, andSigningCurve: ellipticalCurve*/), let pkh = keyPair.publicKey.publicKeyHash else {
 			return nil
 		}
 		
@@ -84,9 +84,9 @@ public class RegularWallet: Wallet {
 	 - Parameter passphrase: String contianing a passphrase, or empty string if none
 	 - Parameter ellipticalCurve: Optional: Choose the `EllipticalCurve` used to generate the wallet address
 	 */
-	public convenience init?(withMnemonicLength length: Mnemonic.NumberOfWords, passphrase: String, ellipticalCurve: EllipticalCurve = .ed25519) {
+	public convenience init?(withMnemonicLength length: Mnemonic.NumberOfWords, passphrase: String/*, ellipticalCurve: EllipticalCurve = .ed25519*/) {
 		if let mnemonic = try? Mnemonic(numberOfWords: length) {
-			self.init(withMnemonic: mnemonic, passphrase: passphrase, ellipticalCurve: ellipticalCurve)
+			self.init(withMnemonic: mnemonic, passphrase: passphrase/*, ellipticalCurve: ellipticalCurve*/)
 			
 		} else {
 			return nil

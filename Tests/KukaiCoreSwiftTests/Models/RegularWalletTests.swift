@@ -45,15 +45,17 @@ class RegularWalletTests: XCTestCase {
 	}
 	
 	func testCurves() {
-		let wallet1 = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .ed25519)
+		let wallet1 = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: ""/*, ellipticalCurve: .ed25519*/)
 		XCTAssert(wallet1?.address == MockConstants.linearWalletEd255519.address, wallet1?.address ?? "-")
 		XCTAssert(wallet1?.privateKey.bytes.toHexString() == MockConstants.linearWalletEd255519.privateKey, wallet1?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(wallet1?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, wallet1?.publicKey.bytes.toHexString() ?? "-")
 		
+		/*
 		let wallet2 = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)
 		XCTAssert(wallet2?.address == MockConstants.linearWalletSecp256k1.address, wallet2?.address ?? "-")
 		XCTAssert(wallet2?.privateKey.bytes.toHexString() == MockConstants.linearWalletSecp256k1.privateKey, wallet2?.privateKey.bytes.toHexString() ?? "-")
 		XCTAssert(wallet2?.publicKey.bytes.toHexString() == MockConstants.linearWalletSecp256k1.publicKey, wallet2?.publicKey.bytes.toHexString() ?? "-")
+		*/
 	}
 	
 	func testSigning() {

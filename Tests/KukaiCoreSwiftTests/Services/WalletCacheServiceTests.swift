@@ -130,13 +130,13 @@ class WalletCacheServiceTests: XCTestCase {
 	}
 	
 	func testCurves() {
-		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
+		/*let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: "", ellipticalCurve: .secp256k1)!
 		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false))
 		
 		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address)
 		XCTAssert(wallet1 != nil)
 		XCTAssert(wallet1?.address == MockConstants.linearWalletSecp256k1.address, wallet1?.address ?? "-")
-		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())*/
 	}
 	
 	func testDerivationPaths() {
