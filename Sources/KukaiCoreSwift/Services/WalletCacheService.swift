@@ -26,295 +26,6 @@ enum WalletCacheError: Error {
 	case unableToDecrypt
 }
 
-/// Container to store groups of WalletMetadata based on type
-public struct WalletMetadataList: Codable, Hashable {
-	public var socialWallets: [WalletMetadata]
-	public var hdWallets: [WalletMetadata]
-	public var linearWallets: [WalletMetadata]
-	public var ledgerWallets: [WalletMetadata]
-	public var watchWallets: [WalletMetadata]
-	
-	public init(socialWallets: [WalletMetadata], hdWallets: [WalletMetadata], linearWallets: [WalletMetadata], ledgerWallets: [WalletMetadata], watchWallets: [WalletMetadata]) {
-		self.socialWallets = socialWallets
-		self.hdWallets = hdWallets
-		self.linearWallets = linearWallets
-		self.ledgerWallets = ledgerWallets
-		self.watchWallets = watchWallets
-	}
-	
-	public func isEmpty() -> Bool {
-		return socialWallets.isEmpty && hdWallets.isEmpty && linearWallets.isEmpty && ledgerWallets.isEmpty && watchWallets.isEmpty
-	}
-	
-	public func firstMetadata() -> WalletMetadata? {
-		if socialWallets.count > 0 {
-			return socialWallets.first
-			
-		} else if hdWallets.count > 0 {
-			return hdWallets.first
-			
-		} else if linearWallets.count > 0 {
-			return linearWallets.first
-			
-		} else if ledgerWallets.count > 0 {
-			return ledgerWallets.first
-			
-		} else if watchWallets.count > 0 {
-			return watchWallets.first
-		}
-		
-		return nil
-	}
-	
-	public func metadata(forAddress address: String) -> WalletMetadata? {
-		for metadata in socialWallets {
-			if metadata.address == address { return metadata }
-		}
-		
-		for metadata in hdWallets {
-			if metadata.address == address { return metadata }
-			
-			for childMetadata in metadata.children {
-				if childMetadata.address == address { return childMetadata }
-			}
-		}
-		
-		for metadata in linearWallets {
-			if metadata.address == address { return metadata }
-		}
-		
-		for metadata in ledgerWallets {
-			if metadata.address == address { return metadata }
-		}
-		
-		for metaData in watchWallets {
-			if metaData.address == address { return metaData }
-		}
-		
-		return nil
-	}
-	
-	public mutating func update(address: String, with newMetadata: WalletMetadata) -> Bool {
-		for (index, metadata) in socialWallets.enumerated() {
-			if metadata.address == address { socialWallets[index] = newMetadata; return true }
-		}
-		
-		for (index, metadata) in hdWallets.enumerated() {
-			if metadata.address == address { hdWallets[index] = newMetadata; return true }
-			
-			for (childIndex, childMetadata) in metadata.children.enumerated() {
-				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return true }
-			}
-		}
-		
-		for (index, metadata) in linearWallets.enumerated() {
-			if metadata.address == address { linearWallets[index] = newMetadata; return true }
-		}
-		
-		for (index, metadata) in ledgerWallets.enumerated() {
-			if metadata.address == address { ledgerWallets[index] = newMetadata; return true }
-		}
-		
-		for (index, metadata) in watchWallets.enumerated() {
-			if metadata.address == address { watchWallets[index] = newMetadata; return true }
-		}
-		
-		return false
-	}
-	
-	public mutating func set(mainnetDomain: TezosDomainsReverseRecord?, ghostnetDomain: TezosDomainsReverseRecord?, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
-		
-		if let mainnet = mainnetDomain {
-			meta?.mainnetDomains = [mainnet]
-		}
-		
-		if let ghostnet = ghostnetDomain {
-			meta?.ghostnetDomains = [ghostnet]
-		}
-		
-		if let meta = meta, update(address: address, with: meta) {
-			return true
-		}
-		
-		return false
-	}
-	
-	public mutating func set(nickname: String?, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
-		meta?.walletNickname = nickname
-		
-		if let meta = meta, update(address: address, with: meta) {
-			return true
-		}
-		
-		return false
-	}
-	
-	public mutating func set(hdWalletGroupName: String, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
-		meta?.hdWalletGroupName = hdWalletGroupName
-		
-		if let meta = meta, update(address: address, with: meta) {
-			return true
-		}
-		
-		return false
-	}
-	
-	public func count() -> Int {
-		var total = (socialWallets.count + linearWallets.count + ledgerWallets.count + watchWallets.count)
-		
-		for wallet in hdWallets {
-			total += (1 + wallet.children.count)
-		}
-		
-		return total
-	}
-	
-	public func addresses() -> [String] {
-		var temp: [String] = []
-		
-		for metadata in socialWallets {
-			temp.append(metadata.address)
-		}
-		
-		for metadata in hdWallets {
-			temp.append(metadata.address)
-			
-			for childMetadata in metadata.children {
-				temp.append(childMetadata.address)
-			}
-		}
-		
-		for metadata in linearWallets {
-			temp.append(metadata.address)
-		}
-		
-		for metadata in ledgerWallets {
-			temp.append(metadata.address)
-		}
-		
-		for metadata in watchWallets {
-			temp.append(metadata.address)
-		}
-		
-		return temp
-	}
-	
-	public func allMetadata(onlySeedBased: Bool = false) -> [WalletMetadata] {
-		var temp: [WalletMetadata] = []
-		
-		if !onlySeedBased {
-			for metadata in socialWallets {
-				temp.append(metadata)
-			}
-		}
-		
-		for metadata in hdWallets {
-			temp.append(metadata)
-		}
-		
-		for metadata in linearWallets {
-			temp.append(metadata)
-		}
-		
-		if !onlySeedBased {
-			for metadata in ledgerWallets {
-				temp.append(metadata)
-			}
-		}
-		
-		if !onlySeedBased {
-			for metadata in watchWallets {
-				temp.append(metadata)
-			}
-		}
-		
-		return temp
-	}
-}
-
-/// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
-public struct WalletMetadata: Codable, Hashable {
-	public var address: String
-	public var hdWalletGroupName: String?
-	public var walletNickname: String?
-	public var socialUsername: String?
-	public var mainnetDomains: [TezosDomainsReverseRecord]?
-	public var ghostnetDomains: [TezosDomainsReverseRecord]?
-	public var socialType: TorusAuthProvider?
-	public var type: WalletType
-	public var children: [WalletMetadata]
-	public var isChild: Bool
-	public var isWatchOnly: Bool
-	public var bas58EncodedPublicKey: String
-	public var backedUp: Bool
-	
-	public func hasMainnetDomain() -> Bool {
-		return (mainnetDomains ?? []).count > 0
-	}
-	
-	public func hasGhostnetDomain() -> Bool {
-		return (ghostnetDomains ?? []).count > 0
-	}
-	
-	public func hasDomain(onNetwork network: TezosNodeClientConfig.NetworkType) -> Bool {
-		if network == .mainnet {
-			return hasMainnetDomain()
-		} else {
-			return hasGhostnetDomain()
-		}
-	}
-	
-	public func primaryMainnetDomain() -> TezosDomainsReverseRecord? {
-		if let domains = mainnetDomains {
-			return domains.first
-		}
-		
-		return nil
-	}
-	
-	public func primaryGhostnetDomain() -> TezosDomainsReverseRecord? {
-		if let domains = ghostnetDomains {
-			return domains.first
-		}
-		
-		return nil
-	}
-	
-	public func primaryDomain(onNetwork network: TezosNodeClientConfig.NetworkType) -> TezosDomainsReverseRecord? {
-		if network == .mainnet {
-			return primaryMainnetDomain()
-		} else {
-			return primaryGhostnetDomain()
-		}
-	}
-	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
-		self.address = address
-		self.hdWalletGroupName = hdWalletGroupName
-		self.walletNickname = walletNickname
-		self.socialUsername = socialUsername
-		self.mainnetDomains = mainnetDomains
-		self.ghostnetDomains = ghostnetDomains
-		self.socialType = socialType
-		self.type = type
-		self.children = children
-		self.isChild = isChild
-		self.isWatchOnly = isWatchOnly
-		self.bas58EncodedPublicKey = bas58EncodedPublicKey
-		self.backedUp = backedUp
-	}
-	
-	public static func == (lhs: WalletMetadata, rhs: WalletMetadata) -> Bool {
-		return lhs.address == rhs.address
-	}
-	
-	public func hash(into hasher: inout Hasher) {
-		hasher.combine(address)
-	}
-}
 
 
 /**
@@ -339,10 +50,10 @@ public class WalletCacheService {
 	fileprivate static let applicationKey = "app.kukai.kukai-core-swift.walletcache.encryption"
 	
 	/// The filename where the wallet data will be stored, encrypted
-	fileprivate static let sensitiveCacheFileName = "kukai-core-wallets.txt"
+	fileprivate static let walletCacheFileName = "kukai-core-wallets.txt"
 	
 	/// The filename where the public wallet data and in app metadata will be stored, unencrypted
-	fileprivate static let nonsensitiveCacheFileName = "kukai-core-wallets-metadata.txt"
+	fileprivate static let metadataCacheFileName = "kukai-core-wallets-metadata.txt"
 	
 	
 	
@@ -372,7 +83,7 @@ public class WalletCacheService {
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
 	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt(), existingWallets[wallet.address] == nil else {
+		guard let existingWallets = readWalletsFromDiskAndDecrypt(), existingWallets[wallet.address] == nil else {
 			os_log(.error, log: .walletCache, "cache - Unable to cache wallet, as can't decrypt existing wallets")
 			return false
 		}
@@ -385,7 +96,7 @@ public class WalletCacheService {
 		var newWallets = existingWallets
 		newWallets[wallet.address] = wallet
 		
-		var newMetadata = readNonsensitive()
+		var newMetadata = readMetadataFromDiskAndDecrypt()
 		if let index = childOfIndex {
 			if index >= newMetadata.hdWallets.count {
 				os_log(.error, log: .walletCache, "WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"%@\", when there are currently only \"%@\" items", index, newMetadata.hdWallets.count)
@@ -418,16 +129,16 @@ public class WalletCacheService {
 			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 		}
 		
-		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
+		return encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata)
 	}
 	/**
 	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
 	 */
 	public func cacheWatchWallet(metadata: WalletMetadata) -> Bool {
-		var list = readNonsensitive()
+		var list = readMetadataFromDiskAndDecrypt()
 		list.watchWallets.append(metadata)
 		
-		return writeNonsensitive(list)
+		return encryptAndWriteMetadataToDisk(list)
 	}
 	
 	/**
@@ -437,7 +148,7 @@ public class WalletCacheService {
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
 	public func deleteWallet(withAddress: String, parentIndex: Int?) -> Bool {
-		guard let existingWallets = readFromDiskAndDecrypt() else {
+		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
 			os_log(.error, log: .walletCache, "Unable to fetch wallets")
 			return false
 		}
@@ -445,7 +156,7 @@ public class WalletCacheService {
 		var newWallets = existingWallets
 		newWallets.removeValue(forKey: withAddress)
 		
-		var newMetadata = readNonsensitive()
+		var newMetadata = readMetadataFromDiskAndDecrypt()
 		if let hdWalletIndex = parentIndex {
 			guard hdWalletIndex < newMetadata.hdWallets.count, let childIndex = newMetadata.hdWallets[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
 				os_log(.error, log: .walletCache, "Unable to locate wallet")
@@ -481,17 +192,17 @@ public class WalletCacheService {
 			}
 		}
 		
-		return encryptAndWriteToDisk(wallets: newWallets) && writeNonsensitive(newMetadata)
+		return encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata)
 	}
 	
 	/**
 	 Clear a watch wallet meatadata obj from the metadata cache only, does not affect actual wallet cache
 	 */
 	public func deleteWatchWallet(address: String) -> Bool {
-		var list = readNonsensitive()
+		var list = readMetadataFromDiskAndDecrypt()
 		list.watchWallets.removeAll(where: { $0.address == address })
 		
-		return writeNonsensitive(list)
+		return encryptAndWriteMetadataToDisk(list)
 	}
 	
 	/**
@@ -499,7 +210,7 @@ public class WalletCacheService {
 	 - Returns: Optional object confirming to `Wallet` protocol
 	 */
 	public func fetchWallet(forAddress address: String) -> Wallet? {
-		guard let cacheItems = readFromDiskAndDecrypt() else {
+		guard let cacheItems = readWalletsFromDiskAndDecrypt() else {
 			os_log(.error, log: .walletCache, "Unable to read wallet items")
 			return nil
 		}
@@ -521,7 +232,7 @@ public class WalletCacheService {
 			try? deleteKey()
 		}
 		
-		return DiskService.delete(fileName: WalletCacheService.sensitiveCacheFileName) && DiskService.delete(fileName: WalletCacheService.nonsensitiveCacheFileName)
+		return DiskService.delete(fileName: WalletCacheService.walletCacheFileName) && DiskService.delete(fileName: WalletCacheService.metadataCacheFileName)
 	}
 	
 	
@@ -534,7 +245,7 @@ public class WalletCacheService {
 	 Take a dictionary of `Wallet` objects with their addresses as the key, serialise to JSON, encrypt and then write to disk
 	 - Returns: Bool, indicating if the process was successful
 	 */
-	public func encryptAndWriteToDisk(wallets: [String: Wallet]) -> Bool {
+	public func encryptAndWriteWalletsToDisk(wallets: [String: Wallet]) -> Bool {
 		do {
 			
 			/// Because `Wallet` is a generic protocl, `JSONEncoder` can't be called on an array of it.
@@ -577,7 +288,7 @@ public class WalletCacheService {
 			guard loadOrCreateKeys(),
 				  let plaintext = String(data: jsonData, encoding: .utf8),
 				  let ciphertextData = try? encrypt(plaintext),
-				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.sensitiveCacheFileName) else {
+				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.walletCacheFileName) else {
 				os_log(.error, log: .walletCache, "encryptAndWriteToDisk - Unable to save wallet items")
 				return false
 			}
@@ -594,16 +305,16 @@ public class WalletCacheService {
 	 Go to the file on disk (if present), decrypt its contents and retrieve a dictionary of `Wallet's with the key being the wallet address
 	 - Returns: A dictionary of `Wallet` if present on disk
 	 */
-	public func readFromDiskAndDecrypt() -> [String: Wallet]? {
-		guard let data = DiskService.readData(fromFileName: WalletCacheService.sensitiveCacheFileName) else {
-			os_log(.default, log: .walletCache, "readFromDiskAndDecrypt - no cache file found, returning empty")
+	public func readWalletsFromDiskAndDecrypt() -> [String: Wallet]? {
+		guard let data = DiskService.readData(fromFileName: WalletCacheService.walletCacheFileName) else {
+			os_log(.default, log: .walletCache, "readWalletsFromDiskAndDecrypt - no cache file found, returning empty")
 			return [:] // No such file
 		}
 		
 		guard loadOrCreateKeys(),
 			  let plaintext = try? decrypt(data),
 			  let plaintextData = plaintext.data(using: .utf8) else {
-			os_log(.error, log: .walletCache, "readFromDiskAndDecrypt - Unable to read wallet items")
+			os_log(.error, log: .walletCache, "readWalletsFromDiskAndDecrypt - Unable to read wallet items")
 			return nil
 		}
 		
@@ -613,13 +324,13 @@ public class WalletCacheService {
 			/// Once we have that, we simply call `JSONDecode` for each obj, with the correct class and put in an array
 			var wallets: [String: Wallet] = [:]
 			guard let jsonDict = try JSONSerialization.jsonObject(with: plaintextData, options: .allowFragments) as? [String: [String: Any]] else {
-				os_log(.error, log: .walletCache, "readFromDiskAndDecrypt - JSON did not conform to expected format")
+				os_log(.error, log: .walletCache, "readWalletsFromDiskAndDecrypt - JSON did not conform to expected format")
 				return [:]
 			}
 			
 			for jsonObj in jsonDict.values {
 				guard let type = WalletType(rawValue: (jsonObj["type"] as? String) ?? "") else {
-					os_log("readFromDiskAndDecrypt - Unable to parse wallet object of type: %@", log: .walletCache, type: .error, (jsonObj["type"] as? String) ?? "")
+					os_log("readWalletsFromDiskAndDecrypt - Unable to parse wallet object of type: %@", log: .walletCache, type: .error, (jsonObj["type"] as? String) ?? "")
 					continue
 				}
 				
@@ -647,7 +358,7 @@ public class WalletCacheService {
 			return wallets
 			
 		} catch (let error) {
-			os_log(.error, log: .walletCache, "readFromDiskAndDecrypt - Unable to read wallet items: %@", "\(error)")
+			os_log(.error, log: .walletCache, "readWalletsFromDiskAndDecrypt - Unable to read wallet items: %@", "\(error)")
 			return nil
 		}
 	}
@@ -655,15 +366,53 @@ public class WalletCacheService {
 	/**
 	 Write an ordered array of `WalletMetadata` to disk, replacing existing file if exists
 	 */
-	public func writeNonsensitive(_ metadata: WalletMetadataList) -> Bool {
-		return DiskService.write(encodable: metadata, toFileName: WalletCacheService.nonsensitiveCacheFileName)
+	public func encryptAndWriteMetadataToDisk(_ metadata: WalletMetadataList) -> Bool {
+		do {
+			let jsonData = try JSONEncoder().encode(metadata)
+			
+			/// Take the JSON blob, encrypt and store on disk
+			guard loadOrCreateKeys(),
+				  let plaintext = String(data: jsonData, encoding: .utf8),
+				  let ciphertextData = try? encrypt(plaintext),
+				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.metadataCacheFileName) else {
+				os_log(.error, log: .walletCache, "encryptAndWriteMetadataToDisk - Unable to save wallet items")
+				return false
+			}
+			
+			return true
+			
+		} catch (let error) {
+			os_log(.error, log: .walletCache, "encryptAndWriteToDisk - Unable to save wallet items: %@", "\(error)")
+			return false
+		}
 	}
 	
 	/**
 	 Return an ordered array of `WalletMetadata` if present on disk
 	 */
-	public func readNonsensitive() -> WalletMetadataList {
-		return DiskService.read(type: WalletMetadataList.self, fromFileName: WalletCacheService.nonsensitiveCacheFileName) ?? WalletMetadataList(socialWallets: [], hdWallets: [], linearWallets: [], ledgerWallets: [], watchWallets: [])
+	public func readMetadataFromDiskAndDecrypt() -> WalletMetadataList {
+		let emptyWalletList = WalletMetadataList(socialWallets: [], hdWallets: [], linearWallets: [], ledgerWallets: [], watchWallets: [])
+		
+		guard let data = DiskService.readData(fromFileName: WalletCacheService.metadataCacheFileName) else {
+			os_log(.default, log: .walletCache, "readMetadataFromDiskAndDecrypt - no cache file found, returning empty")
+			return emptyWalletList // No such file
+		}
+		
+		guard loadOrCreateKeys(),
+			  let plaintext = try? decrypt(data),
+			  let plaintextData = plaintext.data(using: .utf8) else {
+			os_log(.error, log: .walletCache, "readMetadataFromDiskAndDecrypt - Unable to read wallet items")
+			return emptyWalletList
+		}
+		
+		do {
+			let metadata = try JSONDecoder().decode(WalletMetadataList.self, from: plaintextData)
+			return metadata
+			
+		} catch (let error) {
+			os_log(.error, log: .walletCache, "readMetadataFromDiskAndDecrypt - Unable to read wallet items: %@", "\(error)")
+			return emptyWalletList
+		}
 	}
 }
 
