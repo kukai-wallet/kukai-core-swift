@@ -411,7 +411,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 									   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 									   subVerifierDetails: [],
 									   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
-									   loglevel: .info,
+									   loglevel: .error,
 									   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 				
 				Task { @MainActor in
