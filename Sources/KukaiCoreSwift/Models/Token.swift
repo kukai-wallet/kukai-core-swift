@@ -114,7 +114,7 @@ public class Token: Codable, CustomStringConvertible {
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
-			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name ?? tokenContractAddress ?? "")
+			Logger.kukaiCoreSwift.error("Error: FA2 tokens require having a tokenId set, \(name ?? tokenContractAddress ?? "")")
 		}
 	}
 	
@@ -139,7 +139,8 @@ public class Token: Codable, CustomStringConvertible {
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
-			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name ?? tokenContractAddress ?? "")
+			weak var weakSelf = self
+			Logger.kukaiCoreSwift.error("Error: FA2 tokens require having a tokenId set, \(weakSelf?.name ?? weakSelf?.tokenContractAddress ?? "")")
 		}
 	}
 	
@@ -164,7 +165,8 @@ public class Token: Codable, CustomStringConvertible {
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
-			os_log("Error: FA2 tokens require having a tokenId set, %@", log: .kukaiCoreSwift, type: .error, name ?? tokenContractAddress ?? "")
+			weak var weakSelf = self
+			Logger.kukaiCoreSwift.error("Error: FA2 tokens require having a tokenId set, \(weakSelf?.name ?? weakSelf?.tokenContractAddress ?? "")")
 		}
 	}
 	

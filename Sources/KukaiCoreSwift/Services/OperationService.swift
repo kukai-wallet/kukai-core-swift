@@ -84,7 +84,7 @@ public class OperationService {
 					case .success(let hash):
 						
 						// With a successful Parse, we can continue on to Sign, Preapply (to check for errors) and if no errors, inject the operation
-						os_log(.default, log: .kukaiCoreSwift, "Remote parse successful")
+						Logger.kukaiCoreSwift.info("Remote parse successful")
 						self?.signPreapplyAndInject(wallet: wallet, forgedHash: hash, operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
 						
 					case .failure(let parseError):
@@ -197,7 +197,7 @@ public class OperationService {
 	public func remoteForge(operationPayload: OperationPayload, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		
 		guard let rpc = RPC.forge(operationPayload: operationPayload) else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to create forge RPC, cancelling event")
+			Logger.kukaiCoreSwift.error("Unable to create forge RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.unableToSetupForge)))
 			return
 		}
@@ -208,7 +208,7 @@ public class OperationService {
 					completion(Result.success(string))
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Unable to remote forge: %@", "\(error)")
+					Logger.kukaiCoreSwift.error("Unable to remote forge: \(error)")
 					completion(Result.failure(error))
 			}
 		}
@@ -243,7 +243,7 @@ public class OperationService {
 		
 		// Continue with parse
 		guard let rpc = RPC.parse(hashToParse: remoteForgedHash, metadata: operationMetadata) else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to create parse RPC, cancelling event")
+			Logger.kukaiCoreSwift.error("Unable to create parse RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.unableToSetupParse)))
 			return
 		}
@@ -259,7 +259,7 @@ public class OperationService {
 					}
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Unable to remote forge: %@", "\(error)")
+					Logger.kukaiCoreSwift.error("Unable to remote forge: \(error)")
 					completion(Result.failure(error))
 			}
 		}
@@ -274,7 +274,7 @@ public class OperationService {
 	public func preapply(operationPayload: OperationPayload, completion: @escaping ((Result<[OperationResponse], KukaiError>) -> Void)) {
 		
 		guard let rpc = RPC.preapply(operationPayload: operationPayload) else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to create preapply RPC, cancelling event")
+			Logger.kukaiCoreSwift.error("Unable to create preapply RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.unableToSetupPreapply)))
 			return
 		}
@@ -285,7 +285,7 @@ public class OperationService {
 					completion(Result.success(operationResponse))
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Preapply returned an error: %@", "\(error)")
+					Logger.kukaiCoreSwift.error("Preapply returned an error: \(error)")
 					completion(Result.failure(error))
 			}
 		}
@@ -321,7 +321,7 @@ public class OperationService {
 		
 		// Continue on with the injection
 		guard let rpc = RPC.inject(signedBytes: signedBytes) else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to create inject RPC, cancelling event")
+			Logger.kukaiCoreSwift.error("Unable to create inject RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.unableToSetupInject)))
 			return
 		}

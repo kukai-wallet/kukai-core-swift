@@ -71,7 +71,7 @@ public class DexCalculationService {
 	private init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { context, exception in
-			os_log("Dex calculation JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			Logger.kukaiCoreSwift.error("Dex calculation JSContext exception: \(exception?.toString() ?? "")")
 		}
 		
 		if let jsSourcePath = Bundle.module.url(forResource: "kukai-dex-calculations", withExtension: "js") {
@@ -80,7 +80,7 @@ public class DexCalculationService {
 				self.jsContext.evaluateScript(jsSourceContents)
 				
 			} catch (let error) {
-				os_log("Error parsing Dex calculation javascript file: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
+				Logger.kukaiCoreSwift.error("Error parsing Dex calculation javascript file: \(error)")
 			}
 		}
 	}
@@ -238,7 +238,7 @@ public class DexCalculationService {
 		let token = tokenAmount.rpcRepresentation
 		
 		guard slippage >= 0, slippage <= 1 else {
-			os_log("slippage value supplied to `xtzToTokenMinimumReturn` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			Logger.kukaiCoreSwift.error("slippage value supplied to `xtzToTokenMinimumReturn` was not between 0 and 1: \(slippage)")
 			return nil
 		}
 		
@@ -403,7 +403,7 @@ public class DexCalculationService {
 		let xtz = xtzAmount.rpcRepresentation
 		
 		guard slippage >= 0, slippage <= 1 else {
-			os_log("slippage value supplied to `tokenToXtzMinimumReturn` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			Logger.kukaiCoreSwift.error("slippage value supplied to `tokenToXtzMinimumReturn` was not between 0 and 1: \(slippage)")
 			return nil
 		}
 		
@@ -545,7 +545,7 @@ public class DexCalculationService {
 	*/
 	public func addLiquidityReturn(xtzToDeposit: XTZAmount, xtzPool: XTZAmount, totalLiquidity: TokenAmount, slippage: Double, dex: DipDupExchangeName) -> (expected: TokenAmount, minimum: TokenAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
-			os_log("slippage value supplied to `addLiquidityReturn` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			Logger.kukaiCoreSwift.error("slippage value supplied to `addLiquidityReturn` was not between 0 and 1: \(slippage)")
 			return nil
 		}
 		
@@ -629,7 +629,7 @@ public class DexCalculationService {
 	*/
 	public func removeLiquidityTokenReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, tokenPool: TokenAmount, slippage: Double) -> (expected: TokenAmount, minimum: TokenAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
-			os_log("slippage value supplied to `removeLiquidityTokenReceived` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			Logger.kukaiCoreSwift.error("slippage value supplied to `removeLiquidityTokenReceived` was not between 0 and 1: \(slippage)")
 			return nil
 		}
 		
@@ -664,7 +664,7 @@ public class DexCalculationService {
 	*/
 	public func removeLiquidityXtzReceived(liquidityBurned: TokenAmount, totalLiquidity: TokenAmount, xtzPool: XTZAmount, slippage: Double, dex: DipDupExchangeName) -> (expected: XTZAmount, minimum: XTZAmount)? {
 		guard slippage >= 0, slippage <= 1 else {
-			os_log("slippage value supplied to `removeLiquidityXtzReceived` was not between 0 and 1: %@", log: .kukaiCoreSwift, type: .error, slippage)
+			Logger.kukaiCoreSwift.error("slippage value supplied to `removeLiquidityXtzReceived` was not between 0 and 1: \(slippage)")
 			return nil
 		}
 		

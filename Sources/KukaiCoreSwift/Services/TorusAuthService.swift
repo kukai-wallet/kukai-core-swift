@@ -200,7 +200,7 @@ public class TorusAuthService: NSObject {
 		Task { @MainActor in
 			do {
 				let data = try await torus.triggerLogin()
-				os_log("Torus returned succesful data", log: .torus, type: .default)
+				Logger.torus.info("Torus returned succesful data")
 				
 				var username: String? = nil
 				var userId: String? = nil
@@ -244,14 +244,14 @@ public class TorusAuthService: NSObject {
 				
 				// Create wallet with details and return
 				guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
-					os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
+					Logger.torus.error("Error torus contained no, or invlaid private key")
 					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 					return
 				}
 				
 				completion(Result.success(wallet))
 			} catch {
-				os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
+				Logger.torus.error("Error logging in: \(error)")
 				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 				return
 			}
@@ -310,7 +310,7 @@ public class TorusAuthService: NSObject {
 					  let pubY = data.y,
 					  let bytesX = Sodium.shared.utils.hex2bin(pubX),
 					  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
-					os_log("Finding address - no valid pub key x and y returned", log: .torus, type: .error)
+					Logger.torus.error("Finding address - no valid pub key x and y returned")
 					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 					return
 				}
@@ -326,7 +326,7 @@ public class TorusAuthService: NSObject {
 				
 				// Run Blake2b hashing on public key
 				guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
-					os_log("Finding address - generating hash failed", log: .torus, type: .error)
+					Logger.torus.error("Finding address - generating hash failed")
 					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.cryptoError)))
 					return
 				}
@@ -336,7 +336,7 @@ public class TorusAuthService: NSObject {
 				completion(Result.success(tz2Address))
 				
 			} catch {
-				os_log("Error logging in: %@", log: .torus, type: .error, "\(error)")
+				Logger.torus.error("Error logging in: \(error)")
 				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
 				return
 			}
@@ -419,7 +419,7 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 						let data = try await tdsdk.getAggregateTorusKey(verifier: verifierWrapper.aggregateVerifierName ?? "", verifierId: sub, idToken: token, subVerifierDetails: verifierWrapper.subverifier)
 						
 						guard let privateKeyString = data["privateKey"] as? String, let wallet = TorusWallet(authProvider: .apple, username: displayName, userId: userIdentifier, profilePicture: nil, torusPrivateKey: privateKeyString) else {
-							os_log("Error torus contained no, or invlaid private key", log: .torus, type: .error)
+							Logger.torus.error("Error torus contained no, or invlaid private key")
 							self.createWalletCompletion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 							return
 						}

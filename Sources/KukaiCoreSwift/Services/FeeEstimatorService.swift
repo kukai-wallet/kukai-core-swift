@@ -159,7 +159,7 @@ public class FeeEstimatorService {
 	/// Breaking out part of the estimation process to keep code cleaner
 	private func estimate(runOperationPayload: RunOperationPayload, preparedOperationsCopy: [Operation], constants: NetworkConstants, forgedHex: String, originalRemoteOps: [Operation], completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
 		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
-			os_log(.error, log: .kukaiCoreSwift, "Unable to create runOperation RPC, cancelling event")
+			Logger.kukaiCoreSwift.error("Unable to create runOperation RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
 			return
 		}

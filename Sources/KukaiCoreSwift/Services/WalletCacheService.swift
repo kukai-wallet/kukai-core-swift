@@ -84,12 +84,12 @@ public class WalletCacheService {
 	 */
 	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) -> Bool {
 		guard let existingWallets = readWalletsFromDiskAndDecrypt(), existingWallets[wallet.address] == nil else {
-			os_log(.error, log: .walletCache, "cache - Unable to cache wallet, as can't decrypt existing wallets")
+			Logger.walletCache.error("cache - Unable to cache wallet, as can't decrypt existing wallets")
 			return false
 		}
 		
 		guard existingWallets[wallet.address] == nil else {
-			os_log(.error, log: .walletCache, "cache - Unable to cache wallet, as wallet has no address")
+			Logger.walletCache.error("cache - Unable to cache wallet, as wallet has no address")
 			return false
 		}
 		
@@ -99,7 +99,7 @@ public class WalletCacheService {
 		var newMetadata = readMetadataFromDiskAndDecrypt()
 		if let index = childOfIndex {
 			if index >= newMetadata.hdWallets.count {
-				os_log(.error, log: .walletCache, "WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"%@\", when there are currently only \"%@\" items", index, newMetadata.hdWallets.count)
+				Logger.walletCache.error("WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"\(index)\", when there are currently only \"\(newMetadata.hdWallets.count)\" items")
 				return false
 			}
 			
@@ -149,7 +149,7 @@ public class WalletCacheService {
 	 */
 	public func deleteWallet(withAddress: String, parentIndex: Int?) -> Bool {
 		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
-			os_log(.error, log: .walletCache, "Unable to fetch wallets")
+			Logger.walletCache.error("Unable to fetch wallets")
 			return false
 		}
 		
@@ -159,7 +159,7 @@ public class WalletCacheService {
 		var newMetadata = readMetadataFromDiskAndDecrypt()
 		if let hdWalletIndex = parentIndex {
 			guard hdWalletIndex < newMetadata.hdWallets.count, let childIndex = newMetadata.hdWallets[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
-				os_log(.error, log: .walletCache, "Unable to locate wallet")
+				Logger.walletCache.error("Unable to locate wallet")
 				return false
 			}
 			
@@ -187,7 +187,7 @@ public class WalletCacheService {
 				let _ = newMetadata.ledgerWallets.remove(at: index)
 				
 			} else {
-				os_log(.error, log: .walletCache, "Unable to locate wallet")
+				Logger.walletCache.error("Unable to locate wallet")
 				return false
 			}
 		}
@@ -211,7 +211,7 @@ public class WalletCacheService {
 	 */
 	public func fetchWallet(forAddress address: String) -> Wallet? {
 		guard let cacheItems = readWalletsFromDiskAndDecrypt() else {
-			os_log(.error, log: .walletCache, "Unable to read wallet items")
+			Logger.walletCache.error("Unable to read wallet items")
 			return nil
 		}
 		
@@ -289,14 +289,14 @@ public class WalletCacheService {
 				  let plaintext = String(data: jsonData, encoding: .utf8),
 				  let ciphertextData = try? encrypt(plaintext),
 				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.walletCacheFileName) else {
-				os_log(.error, log: .walletCache, "encryptAndWriteToDisk - Unable to save wallet items")
+				Logger.walletCache.error("encryptAndWriteToDisk - Unable to save wallet items")
 				return false
 			}
 			
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .walletCache, "encryptAndWriteToDisk - Unable to save wallet items: %@", "\(error)")
+			Logger.walletCache.error("encryptAndWriteToDisk - Unable to save wallet items: \(error)")
 			return false
 		}
 	}
@@ -307,14 +307,14 @@ public class WalletCacheService {
 	 */
 	public func readWalletsFromDiskAndDecrypt() -> [String: Wallet]? {
 		guard let data = DiskService.readData(fromFileName: WalletCacheService.walletCacheFileName) else {
-			os_log(.default, log: .walletCache, "readWalletsFromDiskAndDecrypt - no cache file found, returning empty")
+			Logger.walletCache.info("readWalletsFromDiskAndDecrypt - no cache file found, returning empty")
 			return [:] // No such file
 		}
 		
 		guard loadOrCreateKeys(),
 			  let plaintext = try? decrypt(data),
 			  let plaintextData = plaintext.data(using: .utf8) else {
-			os_log(.error, log: .walletCache, "readWalletsFromDiskAndDecrypt - Unable to read wallet items")
+			Logger.walletCache.error("readWalletsFromDiskAndDecrypt - Unable to read wallet items")
 			return nil
 		}
 		
@@ -324,13 +324,13 @@ public class WalletCacheService {
 			/// Once we have that, we simply call `JSONDecode` for each obj, with the correct class and put in an array
 			var wallets: [String: Wallet] = [:]
 			guard let jsonDict = try JSONSerialization.jsonObject(with: plaintextData, options: .allowFragments) as? [String: [String: Any]] else {
-				os_log(.error, log: .walletCache, "readWalletsFromDiskAndDecrypt - JSON did not conform to expected format")
+				Logger.walletCache.error("readWalletsFromDiskAndDecrypt - JSON did not conform to expected format")
 				return [:]
 			}
 			
 			for jsonObj in jsonDict.values {
 				guard let type = WalletType(rawValue: (jsonObj["type"] as? String) ?? "") else {
-					os_log("readWalletsFromDiskAndDecrypt - Unable to parse wallet object of type: %@", log: .walletCache, type: .error, (jsonObj["type"] as? String) ?? "")
+					Logger.walletCache.error("readWalletsFromDiskAndDecrypt - Unable to parse wallet object of type: \((jsonObj["type"] as? String) ?? "")")
 					continue
 				}
 				
@@ -358,7 +358,7 @@ public class WalletCacheService {
 			return wallets
 			
 		} catch (let error) {
-			os_log(.error, log: .walletCache, "readWalletsFromDiskAndDecrypt - Unable to read wallet items: %@", "\(error)")
+			Logger.walletCache.error("readWalletsFromDiskAndDecrypt - Unable to read wallet items: \(error)")
 			return nil
 		}
 	}
@@ -375,14 +375,14 @@ public class WalletCacheService {
 				  let plaintext = String(data: jsonData, encoding: .utf8),
 				  let ciphertextData = try? encrypt(plaintext),
 				  DiskService.write(data: ciphertextData, toFileName: WalletCacheService.metadataCacheFileName) else {
-				os_log(.error, log: .walletCache, "encryptAndWriteMetadataToDisk - Unable to save wallet items")
+				Logger.walletCache.error("encryptAndWriteMetadataToDisk - Unable to save wallet items")
 				return false
 			}
 			
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .walletCache, "encryptAndWriteToDisk - Unable to save wallet items: %@", "\(error)")
+			Logger.walletCache.error("encryptAndWriteToDisk - Unable to save wallet items: \(error)")
 			return false
 		}
 	}
@@ -394,14 +394,14 @@ public class WalletCacheService {
 		let emptyWalletList = WalletMetadataList(socialWallets: [], hdWallets: [], linearWallets: [], ledgerWallets: [], watchWallets: [])
 		
 		guard let data = DiskService.readData(fromFileName: WalletCacheService.metadataCacheFileName) else {
-			os_log(.default, log: .walletCache, "readMetadataFromDiskAndDecrypt - no cache file found, returning empty")
+			Logger.walletCache.info("readMetadataFromDiskAndDecrypt - no cache file found, returning empty")
 			return emptyWalletList // No such file
 		}
 		
 		guard loadOrCreateKeys(),
 			  let plaintext = try? decrypt(data),
 			  let plaintextData = plaintext.data(using: .utf8) else {
-			os_log(.error, log: .walletCache, "readMetadataFromDiskAndDecrypt - Unable to read wallet items")
+			Logger.walletCache.error("readMetadataFromDiskAndDecrypt - Unable to read wallet items")
 			return emptyWalletList
 		}
 		
@@ -410,7 +410,7 @@ public class WalletCacheService {
 			return metadata
 			
 		} catch (let error) {
-			os_log(.error, log: .walletCache, "readMetadataFromDiskAndDecrypt - Unable to read wallet items: %@", "\(error)")
+			Logger.walletCache.error("readMetadataFromDiskAndDecrypt - Unable to read wallet items: \(error)")
 			return emptyWalletList
 		}
 	}
@@ -430,7 +430,7 @@ extension WalletCacheService {
 		
 		/// Can't use the secure enclave when running unit tests in SPM. For now, hacky workaround to just just mock ones
 		if Thread.current.isRunningXCTest {
-			os_log(.error, log: .walletCache, "loadOrCreateKeys - loading mocks")
+			Logger.walletCache.error("loadOrCreateKeys - loading mocks")
 			let keyTuple = loadMockKeys()
 			self.publicKey = keyTuple.public
 			self.privateKey = keyTuple.private
@@ -444,19 +444,19 @@ extension WalletCacheService {
 			if let key = try loadKey() {
 				privateKey = key
 				publicKey = SecKeyCopyPublicKey(key)
-				os_log(.default, log: .walletCache, "loadOrCreateKeys - loaded")
+				Logger.walletCache.info("loadOrCreateKeys - loaded")
 				
 			} else {
 				let keyTuple = try createKeys()
 				self.publicKey = keyTuple.public
 				self.privateKey = keyTuple.private
-				os_log(.default, log: .walletCache, "loadOrCreateKeys - created")
+				Logger.walletCache.info("loadOrCreateKeys - created")
 			}
 			
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .walletCache, "loadOrCreateKeys - Unable to load or create keys: %@", "\(error)")
+			Logger.walletCache.error("loadOrCreateKeys - Unable to load or create keys: \(error)")
 			return false
 		}
 	}
@@ -479,11 +479,11 @@ extension WalletCacheService {
 		let privateKeyAccessControl: SecAccessControlCreateFlags = !CurrentDevice.isSimulator ?  [.privateKeyUsage] : []
 		guard let privateKeyAccess = SecAccessControlCreateWithFlags(kCFAllocatorDefault, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, privateKeyAccessControl, &error) else {
 			if let err = error {
-				os_log(.error, log: .walletCache, "createKeys - createWithFlags returned error")
+				Logger.walletCache.error("createKeys - createWithFlags returned error")
 				throw err.takeRetainedValue() as Error
 				
 			} else {
-				os_log(.error, log: .walletCache, "createKeys - createWithFlags failed for unknown reason")
+				Logger.walletCache.error("createKeys - createWithFlags failed for unknown reason")
 				throw WalletCacheError.unableToAccessEnclaveOrKeychain
 			}
 		}
@@ -505,27 +505,27 @@ extension WalletCacheService {
 		
 		// If not simulator, use secure encalve
 		if !CurrentDevice.isSimulator {
-			os_log(.default, log: .keychain, "createKeys - Using secure enclave")
+			Logger.walletCache.info("createKeys - Using secure enclave")
 			commonKeyAttributes[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
 			commonKeyAttributes[kSecPrivateKeyAttrs as String] = privateKeyAttributes
 			privateKeyAttributes[kSecAttrAccessControl as String] = privateKeyAccessControl
 		} else {
-			os_log(.default, log: .keychain, "createKeys - unable to use secure enclave")
+			Logger.walletCache.info("createKeys - unable to use secure enclave")
 		}
 		
 		guard let privateKey = SecKeyCreateRandomKey(commonKeyAttributes as CFDictionary, &error) else {
 			if let err = error {
-				os_log(.default, log: .keychain, "createKeys - createRandom returned error")
+				Logger.walletCache.info("createKeys - createRandom returned error")
 				throw err.takeRetainedValue() as Error
 				
 			} else {
-				os_log(.default, log: .keychain, "createKeys - createRandom errored for unknown reason")
+				Logger.walletCache.info("createKeys - createRandom errored for unknown reason")
 				throw WalletCacheError.unableToCreatePrivateKey
 			}
 		}
 		
 		guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
-			os_log(.default, log: .keychain, "createKeys - copy public failed")
+			Logger.walletCache.info("createKeys - copy public failed")
 			throw WalletCacheError.unableToCreatePrivateKey
 		}
 		
@@ -582,20 +582,20 @@ extension WalletCacheService {
 		
 		// If not simulator, use secure encalve
 		if !CurrentDevice.isSimulator {
-			os_log(.default, log: .walletCache, "loadKey - Using secure enclave")
+			Logger.walletCache.info("loadKey - Using secure enclave")
 			query[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave
 			
 		} else {
-			os_log(.default, log: .walletCache, "loadKey - unable to use secure enclave")
+			Logger.walletCache.info("loadKey - unable to use secure enclave")
 		}
 		
 		var key: CFTypeRef?
 		if SecItemCopyMatching(query as CFDictionary, &key) == errSecSuccess {
-			os_log(.default, log: .walletCache, "loadKey - returning key")
+			Logger.walletCache.info("loadKey - returning key")
 			return (key as! SecKey)
 		}
 		
-		os_log(.error, log: .walletCache, "loadKey - returning nil")
+		Logger.walletCache.error("loadKey - returning nil")
 		return nil
 	}
 	
@@ -607,7 +607,7 @@ extension WalletCacheService {
 		let result = SecItemDelete(query as CFDictionary)
 		
 		if result != errSecSuccess {
-			os_log(.error, log: .keychain, "Error removing keys. OSSatus - %@", "\(result)")
+			Logger.walletCache.error("Error removing keys. OSSatus - ˘\(result)")
 			throw WalletCacheError.unableToDeleteKey
 		}
 	}
@@ -620,12 +620,12 @@ extension WalletCacheService {
 	*/
 	public func encrypt(_ string: String) throws -> Data {
 		guard let data = string.data(using: .utf8) else {
-			os_log(.error, log: .walletCache, "encrypt - can't turn string to data")
+			Logger.walletCache.error("encrypt - can't turn string to data")
 			throw WalletCacheError.unableToParseAsUTF8Data
 		}
 		
 		guard let pubKey = self.publicKey, SecKeyIsAlgorithmSupported(pubKey, .encrypt, WalletCacheService.encryptionAlgorithm) else {
-			os_log(.error, log: .walletCache, "encrypt - can't find public key")
+			Logger.walletCache.error("encrypt - can't find public key")
 			throw WalletCacheError.noPublicKeyFound
 		}
 		
@@ -634,11 +634,11 @@ extension WalletCacheService {
 		//guard let cipherText = SecKeyCreateEncryptedData(pubKey, .rsaEncryptionOAEPSHA512AESGCM, data as CFData, &error) as Data? else {
 		guard let cipherText = SecKeyCreateEncryptedData(pubKey, WalletCacheService.encryptionAlgorithm, data as CFData, &error) as Data? else {
 			if let err = error {
-				os_log(.error, log: .walletCache, "encrypt - createEncryptedData failed with error")
+				Logger.walletCache.error("encrypt - createEncryptedData failed with error")
 				throw err.takeRetainedValue() as Error
 				
 			} else {
-				os_log(.error, log: .walletCache, "encrypt - createEncryptedData failed with unknown error")
+				Logger.walletCache.error("encrypt - createEncryptedData failed with unknown error")
 				throw WalletCacheError.unableToEncrypt
 			}
 		}
@@ -655,7 +655,7 @@ extension WalletCacheService {
 	public func decrypt(_ cipherText: Data) throws -> String {
 		
 		guard let privateKey = privateKey, SecKeyIsAlgorithmSupported(privateKey, .decrypt, WalletCacheService.encryptionAlgorithm) else {
-			os_log(.error, log: .walletCache, "decrypt - can't find key")
+			Logger.walletCache.error("decrypt - can't find key")
 			throw WalletCacheError.noPrivateKeyFound
 		}
 		
@@ -663,11 +663,11 @@ extension WalletCacheService {
 		guard let clearText = SecKeyCreateDecryptedData(privateKey, WalletCacheService.encryptionAlgorithm, cipherText as CFData, &error) as Data?,
 			  let textAsString = String(data: clearText, encoding: .utf8) else {
 			if let err = error {
-				os_log(.error, log: .walletCache, "decrypt - decryptData failed with error")
+				Logger.walletCache.error("decrypt - decryptData failed with error")
 				throw err.takeRetainedValue() as Error
 				
 			} else {
-				os_log(.error, log: .walletCache, "decrypt - decryptData failed for unknown reason")
+				Logger.walletCache.error("decrypt - decryptData failed for unknown reason")
 				throw WalletCacheError.unableToDecrypt
 				
 			}

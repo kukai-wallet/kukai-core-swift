@@ -9,17 +9,17 @@ import Foundation
 import os.log
 
 /// Extension to OSLog to create some custom categories for logging
-extension OSLog {
+public extension Logger {
 	private static var subsystem = Bundle.main.bundleIdentifier ?? "app.kukai.kukai-core-swift"
 	
-	static let kukaiCoreSwift = OSLog(subsystem: subsystem, category: "KukaiCoreSwift")
-	static let walletCache = OSLog(subsystem: subsystem, category: "WalletCache")
-	static let kukaiCoreSwiftError = OSLog(subsystem: subsystem, category: "KukaiCoreSwift-error")
-	static let keychain = OSLog(subsystem: subsystem, category: "KukaiCoreSwift-keychain")
-	static let network = OSLog(subsystem: subsystem, category: "KukaiCoreSwift-network")
-	static let bcd = OSLog(subsystem: subsystem, category: "BetterCallDev")
-	static let tzkt = OSLog(subsystem: subsystem, category: "TzKT")
-	static let taquitoService = OSLog(subsystem: subsystem, category: "TaquitoService")
-	static let torus = OSLog(subsystem: subsystem, category: "Torus")
-	static let ledger = OSLog(subsystem: subsystem, category: "Ledger")
+	static let kukaiCoreSwift = Logger(subsystem: subsystem, category: "KukaiCoreSwift")
+	static let walletCache = Logger(subsystem: subsystem, category: "WalletCache")
+	static let kukaiCoreSwiftError = Logger(subsystem: subsystem, category: "KukaiCoreSwift-error")
+	static let keychain = Logger(subsystem: subsystem, category: "KukaiCoreSwift-keychain")
+	static let network = Logger(subsystem: subsystem, category: "KukaiCoreSwift-network")
+	static let bcd = Logger(subsystem: subsystem, category: "BetterCallDev")
+	static let tzkt = Logger(subsystem: subsystem, category: "TzKT")
+	static let taquitoService = Logger(subsystem: subsystem, category: "TaquitoService")
+	static let torus = Logger(subsystem: subsystem, category: "Torus")
+	static let ledger = Logger(subsystem: subsystem, category: "Ledger")
 }

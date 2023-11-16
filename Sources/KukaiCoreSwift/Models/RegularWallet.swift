@@ -48,7 +48,7 @@ public class RegularWallet: Wallet {
 		guard let privateKey = PrivateKey(base58String, signingCurve: .secp256k1),
 			  let pubKey = KeyPair.secp256k1PublicKey(fromPrivateKeyBytes: privateKey.bytes),
 			  let tempAddress = pubKey.publicKeyHash else {
-			os_log("Failed to construct private/public key", log: .kukaiCoreSwift, type: .error)
+			Logger.kukaiCoreSwift.error("Failed to construct private/public key")
 			return nil
 		}
 		

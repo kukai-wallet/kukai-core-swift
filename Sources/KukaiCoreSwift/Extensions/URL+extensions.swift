@@ -33,7 +33,7 @@ extension URL {
 		if let u = urlComponents.url {
 			self = u
 		} else {
-			os_log("Unable to appendQueryItem %@ to URL", log: .kukaiCoreSwift, type: .error, name)
+			Logger.kukaiCoreSwift.error("Unable to appendQueryItem \(name) to URL")
 		}
 	}
 	

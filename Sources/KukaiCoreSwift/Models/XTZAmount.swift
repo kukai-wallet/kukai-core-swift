@@ -46,7 +46,7 @@ public class XTZAmount: TokenAmount {
 	*/
 	public convenience init?(fromNormalisedAmount normalisedAmount: String, decimalPlaces: Int) {
 		guard let decimal = Decimal(string: normalisedAmount.replacingOccurrences(of: (Locale.current.decimalSeparator ?? "."), with: ".")) else {
-			os_log(.error, log: .kukaiCoreSwift, "Can't set balance as can't parse string")
+			Logger.kukaiCoreSwift.error("Can't set balance as can't parse string")
 			return nil
 		}
 		

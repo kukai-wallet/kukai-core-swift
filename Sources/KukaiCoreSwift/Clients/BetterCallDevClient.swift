@@ -71,7 +71,7 @@ public class BetterCallDevClient {
 					completion(nil, nil)
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Parse error: %@", "\(error)")
+					Logger.kukaiCoreSwift.error("Parse error: \(error)")
 					completion(nil, KukaiError.internalApplicationError(error: error))
 			}
 		}

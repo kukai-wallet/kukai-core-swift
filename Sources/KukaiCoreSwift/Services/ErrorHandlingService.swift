@@ -290,7 +290,7 @@ public class ErrorHandlingService {
 	// MARK: - Logging
 	
 	private class func logAndCallback(withKukaiError kukaiError: KukaiError) {
-		os_log(.error, log: .kukaiCoreSwift, "%@", kukaiError.description)
+		Logger.kukaiCoreSwift.error("\(kukaiError.description)")
 		
 		if let closure = ErrorHandlingService.shared.errorEventClosure {
 			closure(kukaiError)

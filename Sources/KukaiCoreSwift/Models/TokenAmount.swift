@@ -85,7 +85,7 @@ public class TokenAmount: Codable {
 	*/
 	public init?(fromRpcAmount rpcAmount: String, decimalPlaces: Int) {
 		guard CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: rpcAmount)) else {
-			os_log(.error, log: .kukaiCoreSwift, "Can't set balance on a Token of tokenType.empty, or pass in a string with non digit characters. Entered: %@", rpcAmount)
+			Logger.kukaiCoreSwift.error("Can't set balance on a Token of tokenType.empty, or pass in a string with non digit characters. Entered: \(rpcAmount)")
 			return nil
 		}
 		
@@ -126,7 +126,7 @@ public class TokenAmount: Codable {
 	*/
 	public convenience init?(fromNormalisedAmount normalisedAmount: String, decimalPlaces: Int) {
 		guard let decimal = Decimal(string: normalisedAmount.replacingOccurrences(of: (Locale.current.decimalSeparator ?? "."), with: ".")) else {
-			os_log(.error, log: .kukaiCoreSwift, "Can't set balance as can't parse string")
+			Logger.kukaiCoreSwift.error("Can't set balance as can't parse string")
 			return nil
 		}
 		
@@ -277,7 +277,7 @@ public class TokenAmount: Codable {
 		let result = (lhs.decimalPlaces == rhs.decimalPlaces)
 		
 		if !result {
-			os_log(.error, log: .kukaiCoreSwift, "Arithmetic function is not possible between tokens with different decimal places. Ignoring operation.")
+			Logger.kukaiCoreSwift.error("Arithmetic function is not possible between tokens with different decimal places. Ignoring operation.")
 		}
 		
 		return result

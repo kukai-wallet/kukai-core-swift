@@ -607,7 +607,7 @@ public class TzKTClient {
 					completion(operations, nil)
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Parse error: %@", "\(error)")
+					Logger.tzkt.error("Parse error: \(error)")
 					completion(nil, KukaiError.internalApplicationError(error: error))
 			}
 		}
@@ -636,12 +636,11 @@ public class TzKTClient {
 			signalrConnection = HubConnectionBuilder(url: url).build()
 		}
 		
-		
 		// Register for SignalR operation events
 		signalrConnection?.on(method: "accounts", callback: { [weak self] argumentExtractor in
 			do {
 				let obj = try argumentExtractor.getArgument(type: AccountSubscriptionResponse.self)
-				os_log("Incoming object parsed: %@", log: .tzkt, type: .default, "\(obj)")
+				Logger.tzkt.info("Incoming object parsed: \(String(describing: obj))")
 				
 				if let data = obj.data {
 					var changedAddress: [String] = []
@@ -653,7 +652,7 @@ public class TzKTClient {
 				}
 				
 			} catch (let error) {
-				os_log("Failed to parse incoming websocket data: %@", log: .tzkt, type: .error, "\(error)")
+				Logger.tzkt.error("Failed to parse incoming websocket data: \(error)")
 				self?.signalrConnection?.stop()
 				self?.isListening = false
 				//completion(false, error, KukaiError.internalApplicationError(error: error))
@@ -667,7 +666,7 @@ public class TzKTClient {
 	 Close the websocket from `listenForAccountChanges`
 	 */
 	public func stopListeningForAccountChanges() {
-		os_log(.default, log: .kukaiCoreSwift, "Cancelling listenForAccountChanges")
+		Logger.tzkt.info("Cancelling listenForAccountChanges")
 		signalrConnection?.stop()
 		isListening = false
 	}
@@ -949,7 +948,7 @@ public class TzKTClient {
 					dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Parse error 1: %@", "\(error)")
+					Logger.tzkt.error("Parse error 1: \(error)")
 					dispatchGroupTransactions.leave()
 			}
 		}
@@ -969,7 +968,7 @@ public class TzKTClient {
 					dispatchGroupTransactions.leave()
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Parse error 2: %@", "\(error)")
+					Logger.tzkt.error("Parse error 2: \(error)")
 					dispatchGroupTransactions.leave()
 			}
 		}
@@ -1095,16 +1094,16 @@ extension TzKTClient: HubConnectionDelegate {
 		let subscription = AccountSubscription(addresses: addressesToWatch)
 		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
 			if let error = error {
-				os_log("Subscribe to account changes failed: %@", log: .tzkt, type: .error, "\(error)")
+				Logger.tzkt.error("Subscribe to account changes failed: \(error)")
 				self?.signalrConnection?.stop()
 			} else {
-				os_log("Subscribe to account changes succeeded, waiting for objects", log: .tzkt, type: .default)
+				Logger.tzkt.info("Subscribe to account changes succeeded, waiting for objects")
 			}
 		}
 	}
 	
 	public func connectionDidClose(error: Error?) {
-		os_log("SignalR connection closed: %@", log: .tzkt, type: .default, String(describing: error))
+		Logger.tzkt.error("SignalR connection closed: \(error)")
 		
 		if newAddressesToWatch.count > 0 {
 			self.listenForAccountChanges(addresses: newAddressesToWatch)
@@ -1113,6 +1112,6 @@ extension TzKTClient: HubConnectionDelegate {
 	}
 	
 	public func connectionDidFailToOpen(error: Error) {
-		os_log("Failed to open SignalR connection to listen for changes: %@", log: .tzkt, type: .error, "\(error)")
+		Logger.tzkt.error("Failed to open SignalR connection to listen for changes: \(error)")
 	}
 }
