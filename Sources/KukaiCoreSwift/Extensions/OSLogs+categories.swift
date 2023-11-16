@@ -22,4 +22,7 @@ public extension Logger {
 	static let taquitoService = Logger(subsystem: subsystem, category: "TaquitoService")
 	static let torus = Logger(subsystem: subsystem, category: "Torus")
 	static let ledger = Logger(subsystem: subsystem, category: "Ledger")
+	
+	/// Used by the app importing this library
+	static let app = Logger(subsystem: subsystem, category: "app")
 }
