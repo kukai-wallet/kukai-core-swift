@@ -51,11 +51,11 @@ class ErrorHandlingServiceTests: XCTestCase {
 		let requestURL = URL(string: "http://google.com")!
 		
 		let successURLResponse = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 400, httpVersion: nil, headerFields: nil)
-		let sameplData = "The Internet connection appears to be offline.".data(using: .utf8) ?? Data()
+		let sampleData = "The Internet connection appears to be offline.".data(using: .utf8) ?? Data()
 		
-		let error1 = ErrorHandlingService.searchForSystemError(data: sameplData, response: successURLResponse, networkError: URLError(URLError.notConnectedToInternet), requestURL: requestURL, requestData: nil)
+		let error1 = ErrorHandlingService.searchForSystemError(data: sampleData, response: successURLResponse, networkError: URLError(URLError.notConnectedToInternet), requestURL: requestURL, requestData: nil)
 		XCTAssert(error1?.errorType == .system)
-		XCTAssert(error1?.description == "System: The operation couldn’t be completed. (NSURLErrorDomain error -1009.)", error1?.description ?? "-")
+		XCTAssert(error1?.description == "Your device is unable to access the internet. Please check your connection and try again", error1?.description ?? "-")
 		XCTAssert(error1?.httpStatusCode == 400)
 		
 		let errorURLResponse = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 400, httpVersion: nil, headerFields: nil)
@@ -63,6 +63,29 @@ class ErrorHandlingServiceTests: XCTestCase {
 		XCTAssert(error2?.httpStatusCode == 400)
 		XCTAssert(error2?.subType is URLError)
 		XCTAssert((error2?.subType as? URLError)?.code == URLError.notConnectedToInternet)
+	}
+	
+	func testNetworkParsers() {
+		let requestURL = URL(string: "http://google.com")!
+		let errorURLResponse1 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 400, httpVersion: nil, headerFields: nil)
+		let error1 = ErrorHandlingService.searchForSystemError(data: nil, response: errorURLResponse1, networkError: nil, requestURL: requestURL, requestData: nil)
+		XCTAssert(error1?.httpStatusCode == 400)
+		XCTAssert(error1?.description == "HTTP Status 400 \nYour device/network is unable to communicate with: http://google.com", error1?.description ?? "-")
+		
+		let errorURLResponse2 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 403, httpVersion: nil, headerFields: nil)
+		let error2 = ErrorHandlingService.searchForSystemError(data: nil, response: errorURLResponse2, networkError: nil, requestURL: requestURL, requestData: nil)
+		XCTAssert(error2?.httpStatusCode == 403)
+		XCTAssert(error2?.description == "HTTP Status 403 \nYour device/network is unable to communicate with: http://google.com", error2?.description ?? "-")
+		
+		let errorURLResponse3 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 502, httpVersion: nil, headerFields: nil)
+		let error3 = ErrorHandlingService.searchForSystemError(data: nil, response: errorURLResponse3, networkError: nil, requestURL: requestURL, requestData: nil)
+		XCTAssert(error3?.httpStatusCode == 502)
+		XCTAssert(error3?.description == "HTTP Status 502 \nThe server at the following URL is having trouble processing this request: http://google.com", error3?.description ?? "-")
+		
+		let errorURLResponse4 = HTTPURLResponse(url: URL(string: "http://google.com")!, statusCode: 399, httpVersion: nil, headerFields: nil)
+		let error4 = ErrorHandlingService.searchForSystemError(data: nil, response: errorURLResponse4, networkError: nil, requestURL: requestURL, requestData: nil)
+		XCTAssert(error4?.httpStatusCode == 399)
+		XCTAssert(error4?.description == "HTTP Status 399 \nUnable to communicate with: http://google.com", error4?.description ?? "-")
 	}
 	
 	func testOperationResponseParserIDString() {

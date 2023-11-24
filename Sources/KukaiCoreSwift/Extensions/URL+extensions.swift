@@ -41,4 +41,12 @@ extension URL {
 	mutating func appendQueryItem(name: String, value: Int) {
 		self.appendQueryItem(name: name, value: value.description)
 	}
+	
+	func absoluteStringByTrimmingQuery() -> String? {
+		if var urlcomponents = URLComponents(url: self, resolvingAgainstBaseURL: false) {
+			urlcomponents.query = nil
+			return urlcomponents.string
+		}
+		return nil
+	}
 }
