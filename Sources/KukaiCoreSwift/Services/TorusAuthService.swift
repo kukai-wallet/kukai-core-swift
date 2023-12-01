@@ -129,7 +129,7 @@ public class TorusAuthService: NSObject {
 		self.verifiers = verifiers
 		
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: .MAINNET, urlSession: networkService.urlSession)
-		self.torusUtils = TorusUtils(loglevel: .info, urlSession: networkService.urlSession)
+		self.torusUtils = TorusUtils(loglevel: .error, urlSession: networkService.urlSession)
 	}
 	
 	
@@ -157,7 +157,7 @@ public class TorusAuthService: NSObject {
 							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 							   subVerifierDetails: [verifierWrapper.subverifier],
 							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
-							   loglevel: .info,
+							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
 							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 			
@@ -166,7 +166,7 @@ public class TorusAuthService: NSObject {
 							   aggregateVerifier: verifierWrapper.subverifier.clientId,
 							   subVerifierDetails: [verifierWrapper.subverifier],
 							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
-							   loglevel: .info,
+							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
 							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
 		}
