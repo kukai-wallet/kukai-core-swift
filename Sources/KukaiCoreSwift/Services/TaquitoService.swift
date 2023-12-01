@@ -47,7 +47,7 @@ public class TaquitoService {
 	private init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { [weak self] context, exception in
-			os_log("Taquito JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			Logger.taquitoService.error("Taquito JSContext exception: \(exception?.toString() ?? "")")
 			
 			if self?.isForging == true, let lastForge = self?.lastForgeCompletionHandler {
 				self?.isForging = false
@@ -66,7 +66,7 @@ public class TaquitoService {
 				self.jsContext.evaluateScript("var forger = new taquito_local_forging.LocalForger();")
 				
 			} catch (let error) {
-				os_log("Error parsing dexter javascript file: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
+				Logger.taquitoService.error("Error parsing dexter javascript file: \(error)")
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class TaquitoService {
 		
 		// Assign callback handlers for internal JS promise success and error states
 		let forgeSuccessHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			os_log("JavascriptContext forge successful", log: .taquitoService, type: .default)
+			Logger.taquitoService.info("JavascriptContext forge successful")
 			self?.isForging = false
 			self?.lastForgeCompletionHandler = nil
 			completion(Result.success(result))
@@ -107,7 +107,7 @@ public class TaquitoService {
 		jsContext.setObject(forgeSuccessBlock, forKeyedSubscript: "forgeSuccessHandler" as (NSCopying & NSObjectProtocol))
 		
 		let forgeErrorHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			os_log("JavascriptContext forge error: %@", log: .taquitoService, type: .error, result)
+			Logger.taquitoService.error("JavascriptContext forge error: \(result)")
 			self?.isForging = false
 			self?.lastForgeCompletionHandler = nil
 			completion(Result.failure(KukaiError.unknown(withString: result)))
@@ -131,7 +131,7 @@ public class TaquitoService {
 				""")
 			
 		} catch (let error) {
-			os_log("JavascriptContext forge error: %@", log: .taquitoService, type: .error, "\(error)")
+			Logger.taquitoService.error("JavascriptContext forge error: \(error)")
 			isForging = false
 			lastForgeCompletionHandler = nil
 			completion(Result.failure(KukaiError.internalApplicationError(error: error)))
@@ -159,7 +159,7 @@ public class TaquitoService {
 		
 		// Assign callback handlers for internal JS promise success and error states
 		let parseSuccessHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			os_log("JavascriptContext parse successful", log: .taquitoService, type: .default)
+			Logger.taquitoService.info("JavascriptContext parse successful")
 			self?.lastParseCompletionHandler = nil
 			self?.isParsing = false
 			
@@ -175,7 +175,7 @@ public class TaquitoService {
 		jsContext.setObject(parseSuccessBlock, forKeyedSubscript: "parseSuccessHandler" as (NSCopying & NSObjectProtocol))
 		
 		let parseErrorHandler: @convention(block) (String) -> Void = { [weak self] (result) in
-			os_log("JavascriptContext parse error: %@", log: .taquitoService, type: .error, result)
+			Logger.taquitoService.error("JavascriptContext parse error: \(result)")
 			self?.lastParseCompletionHandler = nil
 			self?.isParsing = false
 			completion(Result.failure(KukaiError.unknown(withString: result)))

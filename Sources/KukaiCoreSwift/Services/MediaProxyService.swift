@@ -317,7 +317,7 @@ public class MediaProxyService: NSObject {
 		imageView.kf.indicatorType = .activity
 		imageView.kf.setImage(with: url, options: processors) { result in
 			guard let res = try? result.get() else {
-				os_log("Error fetching: %@, Error: %@", log: .kukaiCoreSwift, type: .error, url.absoluteString, String(describing: try? result.getError()))
+				Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: try? result.getError()))")
 				imageView.image = fallback
 				if let comp = completion { comp(nil) }
 				return
@@ -366,7 +366,7 @@ public class MediaProxyService: NSObject {
 					}
 					
 				case .failure(let error):
-					os_log("Error downloading + caching image: %@", log: .kukaiCoreSwift, type: .default, "\(error)")
+					Logger.kukaiCoreSwift.error("Error downloading + caching image: \(error)")
 					completion(nil)
 			}
 		}
@@ -400,7 +400,7 @@ public class MediaProxyService: NSObject {
 					completion(value.image?.size)
 					
 				case .failure(let error):
-					os_log("Error fetching from cache: %@", log: .kukaiCoreSwift, type: .default, "\(error)")
+					Logger.kukaiCoreSwift.error("Error fetching from cache: \(error)")
 					completion(nil)
 			}
 		}

@@ -157,7 +157,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private override init() {
 		jsContext = JSContext()
 		jsContext.exceptionHandler = { context, exception in
-			os_log("Ledger JSContext exception: %@", log: .kukaiCoreSwift, type: .error, exception?.toString() ?? "")
+			Logger.ledger.error("Ledger JSContext exception: \(exception?.toString() ?? "")")
 		}
 		
 		
@@ -168,7 +168,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				self.jsContext.evaluateScript(jsSourceContents)
 				
 			} catch (let error) {
-				os_log("Error parsing Ledger javascript file: %@", log: .kukaiCoreSwift, type: .error, "\(error)")
+				Logger.ledger.error("Error parsing Ledger javascript file: \(error)")
 			}
 		}
 		
@@ -177,7 +177,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		// Register a native function, to be passed into the js functions, that will write chunks of data to the device
 		let nativeWriteHandler: @convention(block) (String, Int) -> Void = { [weak self] (apdu, expectedNumberOfAPDUs) in
-			os_log("Inside nativeWriteHandler", log: .ledger, type: .default)
+			Logger.ledger.info("Inside nativeWriteHandler")
 			
 			// Keep track of the number of times its called for each request
 			self?.counter += 1
@@ -358,7 +358,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-		os_log("centralManagerDidUpdateState", log: .ledger, type: .default)
+		Logger.ledger.info("centralManagerDidUpdateState")
 		self.bluetoothSetup = (central.state == .poweredOn)
 	}
 	
@@ -367,7 +367,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		// If we have been requested to connect to a speicific UUID, only listen for that one and connect immediately if found
 		if let requested = self.requestedUUID, peripheral.identifier.uuidString == requested {
-			os_log("Found requested ledger UUID, connecting ...", log: .ledger, type: .default)
+			Logger.ledger.info("Found requested ledger UUID, connecting ...")
 			
 			self.connectedDevice = peripheral
 			self.centralManager?.connect(peripheral, options: ["requestMTU": 156])
@@ -375,7 +375,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		// Else if we haven't been requested to find a specific one, store each unique device and fire a delegate callback, until scan stopped manually
 		} else if self.requestedUUID == nil, deviceList[peripheral.identifier.uuidString] == nil {
-			os_log("Found a new ledger device. Name: %@, UUID: %@", log: .ledger, type: .default, peripheral.name ?? "-", peripheral.identifier.uuidString)
+			Logger.ledger.info("Found a new ledger device. Name: \(peripheral.name ?? "-"), UUID: \(peripheral.identifier.uuidString)")
 			
 			self.deviceList[peripheral.identifier.uuidString] = peripheral.name ?? ""
 		}
@@ -383,7 +383,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-		os_log("Connected to %@, %@", log: .ledger, type: .default, peripheral.name ?? "", peripheral.identifier.uuidString)
+		Logger.ledger.info("Connected to \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
 		
 		// record the connected device and set LedgerService as the delegate. Don't report successfully connected to ledgerService.delegate until
 		// we have received the callbacks for services and characteristics. Otherwise we can't use the device
@@ -394,7 +394,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-		os_log("Failed to connect to %@, %@", log: .ledger, type: .default, peripheral.name ?? "", peripheral.identifier.uuidString)
+		Logger.ledger.info("Failed to connect to \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
 		self.connectedDevice = nil
 		self.deviceConnectedPublisher.send(false)
 	}
@@ -402,7 +402,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
 		guard let services = peripheral.services else {
-			os_log("Unable to locate services for: %@, %@. Error: %@", log: .ledger, type: .default, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
+			Logger.ledger.info("Unable to locate services for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
 			self.deviceConnectedPublisher.send(false)
 			return
@@ -419,7 +419,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 		guard let characteristics = service.characteristics else {
-			os_log("Unable to locate characteristics for: %@, %@. Error: %@", log: .ledger, type: .default, peripheral.name ?? "", peripheral.identifier.uuidString, "\(String(describing: error))")
+			Logger.ledger.info("Unable to locate characteristics for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
 			self.deviceConnectedPublisher.send(false)
 			return
@@ -427,16 +427,16 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		for characteristic in characteristics {
 			if characteristic.uuid == LedgerNanoXConstant.writeUUID {
-				os_log("Located write characteristic", log: .ledger, type: .default)
+				Logger.ledger.info("Located write characteristic")
 				writeCharacteristic = characteristic
 				
 			} else if characteristic.uuid == LedgerNanoXConstant.notifyUUID {
-				os_log("Located notify characteristic", log: .ledger, type: .default)
+				Logger.ledger.info("Located notify characteristic")
 				notifyCharacteristic = characteristic
 			}
 			
 			if let _ = writeCharacteristic, let notify = notifyCharacteristic {
-				os_log("Registering for notifications on notify characteristic", log: .ledger, type: .default)
+				Logger.ledger.info("Registering for notifications on notify characteristic")
 				peripheral.setNotifyValue(true, for: notify)
 				
 				self.deviceConnectedPublisher.send(true)
@@ -448,11 +448,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
 		if let err = error {
-			os_log("Error during write: %@", log: .ledger, type: .default, "\( err )")
+			Logger.ledger.error("Error during write: \(err)")
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			
 		} else {
-			os_log("Successfully wrote to write characteristic", log: .ledger, type: .default)
+			Logger.ledger.info("Successfully wrote to write characteristic")
 		}
 	}
 	
@@ -462,7 +462,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			return
 		}
 		
-		os_log("Receiveing value from notify characteristic", log: .ledger, type: .default)
+		Logger.ledger.info("Receiveing value from notify characteristic")
 		
 		
 		// Extract the payload, convert it to an APDU so the result can be extracted
@@ -486,7 +486,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		
 		
 		if resultString.count <= 6 {
-			os_log("Received APDU Status code", log: .ledger, type: .default)
+			Logger.ledger.info("Received APDU Status code")
 			receivedAPDU_statusCode.send(resultString)
 			
 			if resultString == LedgerService.successCode {
@@ -496,7 +496,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			return
 			
 		} else {
-			os_log("Received APDU Payload", log: .ledger, type: .default)
+			Logger.ledger.info("Received APDU Payload")
 			receivedAPDU_payload.send(resultString)
 			return
 		}
@@ -519,7 +519,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			.collect()
 			.sink { [weak self] apdus in
 				guard let self = self, let writeChar = self.writeCharacteristic else {
-					os_log("setupWriteSubject - couldn't find self/write", log: .ledger, type: .error)
+					Logger.ledger.error("setupWriteSubject - couldn't find self/write")
 					return
 					
 				}
@@ -537,7 +537,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				// This allows us to run the code for + send each APDU and wait a response from the device, before moving to the next APDU.
 				// This allows us to catch errors when they first occur, and return immeidately, instead of firing error for each APDU packet, causing UI issues
 				guard let concatenatedPublishers = futures.concatenatePublishers() else {
-					os_log("setupWriteSubject - unable to create concatenatedPublishers", log: .ledger, type: .error)
+					Logger.ledger.error("setupWriteSubject - unable to create concatenatedPublishers")
 					return
 				}
 				
@@ -550,12 +550,12 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 						
 						guard let res = try? concatenatedResult.get() else {
 							let error = (try? concatenatedResult.getError()) ?? KukaiError.unknown()
-							os_log("setupWriteSubject - received error: %@", log: .ledger, type: .default, "\(error)")
+							Logger.ledger.error("setupWriteSubject - received error: \(error)")
 							self.returnKukaiErrorToPublisher(kukaiError: error)
 							return
 						}
 						
-						os_log("setupWriteSubject - received value: %@", log: .ledger, type: .default, "\( res )")
+						Logger.ledger.info("setupWriteSubject - received value: \(res)")
 						switch self.requestType {
 							case .address:
 								self.convertAPDUToAddress(payload: res)
@@ -564,7 +564,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 								self.convertAPDUToSignature(payload: res)
 							
 							case .none:
-								os_log("Received a value, but no request type set", log: .ledger, type: .error)
+								Logger.ledger.error("Received a value, but no request type set")
 						}
 					}
 					.store(in: &self.bag_writer)
@@ -577,7 +577,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		return Deferred {
 			Future<String?, KukaiError> { [weak self] promise in
 				guard let self = self else {
-					os_log("sendAPDU - couldn't find self", log: .ledger, type: .error)
+					Logger.ledger.error("sendAPDU - couldn't find self")
 					promise(.failure(KukaiError.unknown()))
 					return
 				}
@@ -588,7 +588,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 					if component != "" {
 						let data = (try? Data(hexString: component)) ?? Data()
 						
-						os_log("sendAPDU - writing payload", log: .ledger, type: .default)
+						Logger.ledger.info("sendAPDU - writing payload")
 						self.connectedDevice?.writeValue(data, for: writeCharacteristic, type: .withResponse)
 					}
 				}
@@ -597,11 +597,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				// Listen for responses
 				self.receivedAPDU_statusCode.sink { statusCode in
 					if statusCode == LedgerService.successCode {
-						os_log("sendAPDU - received success statusCode", log: .ledger, type: .default)
+						Logger.ledger.info("sendAPDU - received success statusCode")
 						promise(.success(nil))
 						
 					} else {
-						os_log("sendAPDU - received error statusCode: %@", log: .ledger, type: .error, statusCode)
+						Logger.ledger.error("sendAPDU - received error statusCode: \(statusCode)")
 						promise(.failure( self.kukaiErrorFrom(statusCode: statusCode) ))
 						
 					}
@@ -610,7 +610,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				
 				
 				self.receivedAPDU_payload.sink { payload in
-					os_log("sendAPDU - received payload: %@", log: .ledger, type: .default, payload)
+					Logger.ledger.info("sendAPDU - received payload: \(payload)")
 					promise(.success(payload))
 				}
 				.store(in: &self.bag_apdu)
@@ -626,18 +626,18 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 		
 		guard let dict = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoAddress(\"\(payload)\")").toObject() as? [String: String] else {
-			os_log("Didn't receive address object", log: .ledger, type: .error)
+			Logger.ledger.error("Didn't receive address object")
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			return
 		}
 		
 		guard let address = dict["address"], let publicKey = dict["publicKey"] else {
 			if let err = dict["error"] {
-				os_log("Internal script error: %@", log: .ledger, type: .error, err)
+				Logger.ledger.error("Internal script error: \(err)")
 				returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 				
 			} else {
-				os_log("Unknown error", log: .ledger, type: .error)
+				Logger.ledger.error("Unknown error")
 				returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			}
 			return
@@ -654,7 +654,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 		
 		guard let resultHex = jsContext.evaluateScript("ledger_app_tezos.convertAPDUtoSignature(\"\(payload)\").signature").toString() else {
-			os_log("Didn't receive signature", log: .ledger, type: .error)
+			Logger.ledger.error("Didn't receive signature")
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 			return
 		}
@@ -664,14 +664,14 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			self.signaturePublisher.send(completion: .finished)
 			
 		} else {
-			os_log("Unknown error. APDU: %@", log: .ledger, type: .error, resultHex)
+			Logger.ledger.error("Unknown error. APDU: \(resultHex)")
 			returnErrorToPublisher(statusCode: GeneralErrorCodes.UNKNOWN.rawValue)
 		}
 	}
 	
 	/// Create and error response from a statusCode
 	private func kukaiErrorFrom(statusCode: String) -> KukaiError {
-		os_log("Error parsing data. statusCode: %@", log: .ledger, type: .error, statusCode)
+		Logger.ledger.error("Error parsing data. statusCode: \(statusCode)")
 		
 		var code = GeneralErrorCodes.UNKNOWN.rawValue
 		var type: Error = GeneralErrorCodes.UNKNOWN
@@ -685,7 +685,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			type = generalCode
 		}
 		
-		os_log("Ledger error code: %@", log: .ledger, type: .error, code)
+		Logger.ledger.error("Ledger error code: \(code)")
 		return KukaiError.internalApplicationError(error: type)
 	}
 	
@@ -705,7 +705,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				self.signaturePublisher.send(completion: .failure(kukaiError))
 			
 			case .none:
-				os_log("Requesting error for unknown requestType: %@", log: .ledger, type: .error, "\(kukaiError)")
+				Logger.ledger.error("Requesting error for unknown requestType: \(kukaiError)")
 		}
 	}
 }

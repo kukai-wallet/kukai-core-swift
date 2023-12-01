@@ -28,7 +28,7 @@ public class OperationFactory {
 		
 		// Return empty array if `TokenAmount` is a negaitve value
 		if tokenAmount < TokenAmount.zeroBalance(decimalPlaces: tokenAmount.decimalPlaces) {
-			os_log(.error, log: .kukaiCoreSwift, "Negative value passed to OperationFactory.sendOperation")
+			Logger.kukaiCoreSwift.error("Negative value passed to OperationFactory.sendOperation")
 			return []
 		}
 		
@@ -49,7 +49,7 @@ public class OperationFactory {
 			
 			case .nonfungible:
 				// Can't send an entire NFT group, need to rethink this
-				os_log(.error, log: .kukaiCoreSwift, "Can't send an entire NFT group. Must send individual NFT's from token.nfts array, via the other sendOperation")
+				Logger.kukaiCoreSwift.error("Can't send an entire NFT group. Must send individual NFT's from token.nfts array, via the other sendOperation")
 				return []
 		}
 	}
@@ -66,7 +66,7 @@ public class OperationFactory {
 		
 		// Return empty array if `amount` is a negaitve value
 		if amount < 0 {
-			os_log(.error, log: .kukaiCoreSwift, "Negative value passed to OperationFactory.sendOperation")
+			Logger.kukaiCoreSwift.error("Negative value passed to OperationFactory.sendOperation")
 			return []
 		}
 		

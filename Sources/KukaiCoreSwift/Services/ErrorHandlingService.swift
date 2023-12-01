@@ -81,8 +81,8 @@ public struct KukaiError: CustomStringConvertible, Error {
 	}
 	
 	/// Create a KukaiError denoting a network issue, by passing in the HTTP status code
-	public static func networkError(statusCode: Int) -> KukaiError {
-		return KukaiError(errorType: .network(statusCode), knownErrorMessage: nil, subType: nil, rpcErrorString: nil, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	public static func networkError(statusCode: Int, requestURL: URL) -> KukaiError {
+		return KukaiError(errorType: .network(statusCode), knownErrorMessage: nil, subType: nil, rpcErrorString: nil, failWith: nil, requestURL: requestURL, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	/// Create a KukaiError denoting an issue from some other component or library, by passing in the error that piece of code returned
@@ -134,12 +134,20 @@ public struct KukaiError: CustomStringConvertible, Error {
 					
 				case .system:
 					if let subType = subType {
-						return "System: \(subType)"
+						if let errString = checkErrorForKnownCase(subType) {
+							return errString
+						} else {
+							return "System: \(subType.localizedDescription)"
+						}
 					}
 					return "System: Unknown"
 					
 				case .network(let statusCode):
-					return "Network: \(statusCode)"
+					guard let url = self.requestURL else {
+						return "HTTP Status \(statusCode) \nUnknown error occured"
+					}
+					
+					return messageForNetworkStatusCode(statusCode: statusCode, url: url)
 					
 				case .internalApplication:
 					if let subType = subType {
@@ -159,6 +167,36 @@ public struct KukaiError: CustomStringConvertible, Error {
 					}
 					return "Unknown"
 			}
+		}
+	}
+	
+	public func checkErrorForKnownCase(_ err: Error) -> String? {
+		if err.domain == "NSURLErrorDomain" {
+			if err.code == -1001 {
+				return "The request timed out. Please check your connection and try again"
+				
+			} else if err.code == -1009 {
+				return "Your device is unable to access the internet. Please check your connection and try again"
+			}
+			
+			return nil
+		}
+		
+		return nil
+	}
+	
+	public func messageForNetworkStatusCode(statusCode: Int, url: URL) -> String {
+		if statusCode == 403 {
+			return "HTTP Status \(statusCode) \nYour device/network is unable to communicate with: \(url.absoluteStringByTrimmingQuery() ?? url.absoluteString)"
+			
+		} else if statusCode >= 400 && statusCode <= 499 {
+			return "HTTP Status \(statusCode) \nYour device/network is unable to communicate with: \(url.absoluteStringByTrimmingQuery() ?? url.absoluteString)"
+			
+		} else if statusCode >= 500 {
+			return "HTTP Status \(statusCode) \nThe server at the following URL is having trouble processing this request: \(url.absoluteStringByTrimmingQuery() ?? url.absoluteString)"
+			
+		} else {
+			return "HTTP Status \(statusCode) \nUnable to communicate with: \(url.absoluteStringByTrimmingQuery() ?? url.absoluteString)"
 		}
 	}
 }
@@ -255,7 +293,7 @@ public class ErrorHandlingService {
 			
 			// HTTP 500's can also be sent by the RPC for specific RPC errors, such as counter in the future. So first check if we can parse the response to an RPC error
 			// If not, then return a generic HTTP != 200 error
-			var errorToReturn = KukaiError.networkError(statusCode: httpResponse.statusCode)
+			var errorToReturn = KukaiError.networkError(statusCode: httpResponse.statusCode, requestURL: requestURL)
 			if let d = data,
 				let errorArray = try? JSONDecoder().decode([OperationResponseInternalResultError].self, from: d),
 				let lastError = errorArray.last,
@@ -278,7 +316,7 @@ public class ErrorHandlingService {
 	// MARK: - Logging
 	
 	private class func logAndCallback(withKukaiError kukaiError: KukaiError) {
-		os_log(.error, log: .kukaiCoreSwift, "%@", kukaiError.description)
+		Logger.kukaiCoreSwift.error("\(kukaiError.description)")
 		
 		if let closure = ErrorHandlingService.shared.errorEventClosure {
 			closure(kukaiError)

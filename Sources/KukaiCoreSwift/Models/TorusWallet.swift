@@ -48,7 +48,7 @@ public class TorusWallet: RegularWallet {
 	*/
 	public init?(authProvider: TorusAuthProvider, username: String?, userId: String?, profilePicture: String?, torusPrivateKey: String) {
 		guard let bytes = Sodium.shared.utils.hex2bin(torusPrivateKey) else {
-			os_log("Unable to convert hex to binary", log: .torus, type: .error)
+			Logger.torus.error("Unable to convert hex to binary")
 			return nil
 		}
 		
@@ -59,7 +59,7 @@ public class TorusWallet: RegularWallet {
 		self.socialUserId = userId
 		self.socialProfilePictureURL = URL(string: profilePicture ?? "")
 		
-		super.init(withBase58String: base58encode, ellipticalCurve: .secp256k1, type: .social)
+		super.init(secp256k1WithBase58String: base58encode, type: .social)
 	}
 	
 	

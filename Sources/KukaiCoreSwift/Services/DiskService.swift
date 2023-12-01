@@ -22,7 +22,7 @@ public class DiskService {
 	*/
 	public static func write(data: Data, toFileName: String, isExcludedFromBackup: Bool = true) -> Bool {
 		guard let dir = documentsDirectory(isExcludedFromBackup: isExcludedFromBackup) else {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to find documents directory")
+			Logger.kukaiCoreSwift.error("Failed to find documents directory")
 			return false
 		}
 		
@@ -30,7 +30,7 @@ public class DiskService {
 		
 		// delete any old file first
 		if !delete(fileName: toFileName) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to clear old file")
+			Logger.kukaiCoreSwift.error("Failed to clear old file")
 			return false
 		}
 		
@@ -38,11 +38,11 @@ public class DiskService {
 		do {
 			try data.write(to: fileURL)
 			
-			os_log(.default, log: .kukaiCoreSwift, "Serialised encodable to: %@", toFileName)
+			Logger.kukaiCoreSwift.info("Serialised encodable to: \(toFileName)")
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, "\(error)")
+			Logger.kukaiCoreSwift.error("Failed to write to \(toFileName): \((error))")
 			return false
 		}
 	}
@@ -57,7 +57,7 @@ public class DiskService {
 			return write(data: encodedData, toFileName: toFileName, isExcludedFromBackup: isExcludedFromBackup)
 
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to write to %@: %@", toFileName, "\(error)")
+			Logger.kukaiCoreSwift.error("Failed to write to \(toFileName): \(error)")
 			return false
 		}
 	}
@@ -72,7 +72,7 @@ public class DiskService {
 	*/
 	public static func readData(fromFileName: String) -> Data? {
 		guard let dir = documentsDirectory() else {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to find documents directory")
+			Logger.kukaiCoreSwift.error("Failed to find documents directory")
 			return nil
 		}
 		
@@ -83,7 +83,7 @@ public class DiskService {
 			return try Data(contentsOf: fileURL)
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to read from %@: %@", fromFileName, "\(error)")
+			Logger.kukaiCoreSwift.error("Failed to read from \(fromFileName): \(error)")
 			return nil
 		}
 	}
@@ -102,7 +102,7 @@ public class DiskService {
 			return try JSONDecoder().decode(T.self, from: data)
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to parse decodable from %@: %@", fromFileName, "\(error)")
+			Logger.kukaiCoreSwift.error("Failed to parse decodable from \(fromFileName): \(error)")
 			return nil
 		}
 	}
@@ -125,7 +125,7 @@ public class DiskService {
 			return true
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Failed to delete file %@: %@", fileName, "\(error)")
+			Logger.kukaiCoreSwift.error("Failed to delete file \(fileName): \(error)")
 			return false
 		}
 	}
@@ -158,7 +158,7 @@ public class DiskService {
 			return url
 			
 		} catch (let error) {
-			os_log(.error, log: .kukaiCoreSwift, "Error fetching documents directory:  %@", "\(error)")
+			Logger.kukaiCoreSwift.error("Error fetching documents directory: \(error)")
 			return nil
 		}
 	}

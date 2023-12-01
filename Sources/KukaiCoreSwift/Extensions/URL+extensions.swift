@@ -33,12 +33,20 @@ extension URL {
 		if let u = urlComponents.url {
 			self = u
 		} else {
-			os_log("Unable to appendQueryItem %@ to URL", log: .kukaiCoreSwift, type: .error, name)
+			Logger.kukaiCoreSwift.error("Unable to appendQueryItem \(name) to URL")
 		}
 	}
 	
 	/// Helper to append a Int as a query param to a URL
 	mutating func appendQueryItem(name: String, value: Int) {
 		self.appendQueryItem(name: name, value: value.description)
+	}
+	
+	func absoluteStringByTrimmingQuery() -> String? {
+		if var urlcomponents = URLComponents(url: self, resolvingAgainstBaseURL: false) {
+			urlcomponents.query = nil
+			return urlcomponents.string
+		}
+		return nil
 	}
 }

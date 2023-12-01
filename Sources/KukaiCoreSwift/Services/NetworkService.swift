@@ -213,9 +213,9 @@ public class NetworkService {
 		let dataString = NetworkService.dataToStringStippingMichelsonContractCode(data: responseData)
 		
 		if isPost {
-			os_log(.error, log: .network, "Request Failed to: %@ \nRequest Body: %@ \nError: %@ \nStatusCode: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, String(describing: error), "\(String(describing: statusCode))", dataString)
+			Logger.network.error("Request Failed to: \(fullURL.absoluteString) \nRequest Body: \(payloadString) \nError: \(String(describing: error)) \nStatusCode: \(String(describing: statusCode)) \nResponse: \(dataString) \n_")
 		} else {
-			os_log(.error, log: .network, "Request Failed to: %@ \nError: %@ \nResponse: %@ \n_", fullURL.absoluteString, String(describing: error), dataString)
+			Logger.network.error("Request Failed to: \(fullURL.absoluteString) \nError: \(String(describing: error)) \nResponse: \(dataString) \n_")
 		}
 	}
 	
@@ -227,9 +227,9 @@ public class NetworkService {
 		let dataString = NetworkService.dataToStringStippingMichelsonContractCode(data: responseData)
 		
 		if isPost {
-			os_log(.default, log: .network, "Request Succeeded to: %@ \nRequest Body: %@ \nResponse: %@ \n_", fullURL.absoluteString, payloadString, dataString)
+			Logger.network.info("Request Succeeded to: \(fullURL.absoluteString) \nRequest Body: \(payloadString) \nResponse: \(dataString) \n_")
 		} else {
-			os_log(.default, log: .network, "Request Succeeded to: %@ \nResponse: %@ \n_", fullURL.absoluteString, dataString)
+			Logger.network.info("Request Succeeded to: \(fullURL.absoluteString) \nResponse: \(dataString) \n_")
 		}
 	}
 	
@@ -237,7 +237,7 @@ public class NetworkService {
 	public static func logRequestStart(loggingConfig: LoggingConfig?, fullURL: URL) {
 		if !(loggingConfig?.logNetworkFailures ?? false) && !(loggingConfig?.logNetworkSuccesses ?? false) { return }
 		
-		os_log(.default, log: .network, "Sending request to: %@", fullURL.absoluteString)
+		Logger.network.info("Sending request to: \(fullURL.absoluteString)")
 	}
 	
 	/**

@@ -137,7 +137,7 @@ public class TezosNodeClient {
 					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
 					
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Unable to fetch metadata: %@", "\(error)")
+					Logger.kukaiCoreSwift.error("Unable to fetch metadata: \(error)")
 					completion(Result.failure(error))
 			}
 		}
@@ -160,7 +160,7 @@ public class TezosNodeClient {
 					self?.send(operationPayload: operationPayload, operationMetadata: metadata, withWallet: wallet, completion: completion)
 				
 				case .failure(let error):
-					os_log(.error, log: .kukaiCoreSwift, "Unable to fetch metadata: %@", "\(error)")
+					Logger.kukaiCoreSwift.error("Unable to fetch metadata: \(error)")
 					completion(Result.failure(error))
 			}
 		}
@@ -317,7 +317,7 @@ public class TezosNodeClient {
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
 			guard let url = self?.config.primaryNodeURL else {
-				os_log(.default, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
+				Logger.kukaiCoreSwift.info("Invalid server url: \(self?.config.primaryNodeURL.absoluteString ?? "nil")")
 				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
@@ -338,7 +338,7 @@ public class TezosNodeClient {
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
 			guard let url = self?.config.primaryNodeURL else {
-				os_log(.default, log: .kukaiCoreSwift, "Invalid server url: %@", self?.config.primaryNodeURL.absoluteString ?? "nil")
+				Logger.kukaiCoreSwift.info("Invalid server url: \(self?.config.primaryNodeURL.absoluteString ?? "nil")")
 				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
