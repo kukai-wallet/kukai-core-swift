@@ -1,0 +1,8 @@
+root_url: https://kukai-core-swift.kukai.app/
+output: Documentation
+swift_build_tool: xcodebuild
+xcodebuild_arguments:
+  - "-scheme"
+  - "KukaiCoreSwift"
+  - "-destination"
+  - "platform=iOS Simulator,OS=16.4,name=iPhone 14 Pro"
