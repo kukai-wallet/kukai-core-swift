@@ -44,7 +44,7 @@ public class WalletCacheService {
 	fileprivate var privateKey: SecKey?
 	
 	/// The algorithm used by the enclave or keychain
-	fileprivate static var encryptionAlgorithm = SecKeyAlgorithm.eciesEncryptionCofactorX963SHA256AESGCM
+	fileprivate static var encryptionAlgorithm = SecKeyAlgorithm.eciesEncryptionCofactorVariableIVX963SHA256AESGCM
 	
 	/// The application key used to identify the encryption keys
 	fileprivate static let applicationKey = "app.kukai.kukai-core-swift.walletcache.encryption"
