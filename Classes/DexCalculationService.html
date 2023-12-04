@@ -1,0 +1,2808 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DexCalculationService Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/DexCalculationService" class="dashAnchor"></a>
+    <a title="DexCalculationService Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fkukai-core-swift.kukai.app%2Fdocsets%2F.xml"><img src="../img/dash.png" alt="Dash"/>Install in Dash</a></p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        DexCalculationService Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ContentTypeCheckingImageDownloader.html">ContentTypeCheckingImageDownloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DAppHelperService.html">DAppHelperService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DAppHelperService/Quipuswap.html">– Quipuswap</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DexCalculationService.html">DexCalculationService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DipDupClient.html">DipDupClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DiskService.html">DiskService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ErrorHandlingService.html">ErrorHandlingService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService.html">FeeEstimatorService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService/FeeConstants.html">– FeeConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService/FeeEstimatorServiceError.html">– FeeEstimatorServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService/EstimationResult.html">– EstimationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HDWallet.html">HDWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerService.html">LedgerService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerService/GeneralErrorCodes.html">– GeneralErrorCodes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerService/TezosAppErrorCodes.html">– TezosAppErrorCodes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerWallet.html">LedgerWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService.html">MediaProxyService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/Format.html">– Format</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/Source.html">– Source</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/MediaType.html">– MediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/AggregatedMediaType.html">– AggregatedMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkService.html">NetworkService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkService/NetworkError.html">– NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ObjktClient.html">ObjktClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Operation.html">Operation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationActivateAccount.html">OperationActivateAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationBallot.html">OperationBallot</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationBallot/Ballot.html">– Ballot</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDelegation.html">OperationDelegation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDoubleBakingEvidence.html">OperationDoubleBakingEvidence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDoubleEndorsementEvidence.html">OperationDoubleEndorsementEvidence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDoubleEndorsementEvidence/InlinedEndorsement.html">– InlinedEndorsement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationEndorsement.html">OperationEndorsement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationFactory.html">OperationFactory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationFactory/Extractor.html">– Extractor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationOrigination.html">OperationOrigination</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationProposals.html">OperationProposals</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationReveal.html">OperationReveal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationSeedNonceRevelation.html">OperationSeedNonceRevelation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationService.html">OperationService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationService/OperationServiceError.html">– OperationServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationService/LedgerPayloadPrepResponse.html">– LedgerPayloadPrepResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationTransaction.html">OperationTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RPC.html">RPC</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RegularWallet.html">RegularWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TaquitoService.html">TaquitoService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TaquitoService/TaquitoServiceError.html">– TaquitoServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosDomainsClient.html">TezosDomainsClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosDomainsClient/BothNetworkReverseRecord.html">– BothNetworkReverseRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosNodeClient.html">TezosNodeClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosNodeClient/TezosNodeClientError.html">– TezosNodeClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Token.html">Token</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Token/TokenType.html">– TokenType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TokenAmount.html">TokenAmount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TokenAmount/TokenAmountError.html">– TokenAmountError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TorusAuthService.html">TorusAuthService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TorusWallet.html">TorusWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TzKTClient.html">TzKTClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TzKTClient/TzKTServiceError.html">– TzKTServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TzKTClient/Constants.html">– Constants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/XTZAmount.html">XTZAmount</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/BiometricType.html">BiometricType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CacheType.html">CacheType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CurrentDevice.html">CurrentDevice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DAppAccessType.html">DAppAccessType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DAppCategory.html">DAppCategory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FaVersion.html">FaVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/HDWalletError.html">HDWalletError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaProxyServiceError.html">MediaProxyServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OperationKind.html">OperationKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OperationTransactionError.html">OperationTransactionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ResultExtensionError.html">ResultExtensionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TorusAuthError.html">TorusAuthError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TorusAuthProvider.html">TorusAuthProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTBakerAccuracy.html">TzKTBakerAccuracy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTBakerHealth.html">TzKTBakerHealth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTBakerTiming.html">TzKTBakerTiming</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WalletError.html">WalletError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WalletType.html">WalletType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/AnyPublisher.html">AnyPublisher</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Collection.html">Collection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/DateFormatter.html">DateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Error.html">Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/KeyedDecodingContainer.html">KeyedDecodingContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:14KukaiCoreSwift16LossyCodableListV">LossyCodableList</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSImage.html">NSImage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Publisher.html">Publisher</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Result.html">Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Thread.html">Thread</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/FailWithParser.html">FailWithParser</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Wallet.html">Wallet</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/Account.html">Account</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AggregateRewardInformation.html">AggregateRewardInformation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift13BalanceUpdateV">BalanceUpdate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BetterCallDevOperation.html">BetterCallDevOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BetterCallDevOperationError.html">BetterCallDevOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BlockchainHead.html">BlockchainHead</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift4DAppV">DApp</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DexAddCalculationResult.html">DexAddCalculationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DexRemoveCalculationResult.html">DexRemoveCalculationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DexSwapCalculationResult.html">DexSwapCalculationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupChartData.html">DipDupChartData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupChartObject.html">DipDupChartObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupExchange.html">DipDupExchange</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupExchangesAndTokens.html">DipDupExchangesAndTokens</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupExchangesAndTokensResponse.html">DipDupExchangesAndTokensResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupPosition.html">DipDupPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupPositionData.html">DipDupPositionData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupToken.html">DipDupToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FailWith.html">FailWith</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FailWithParserLiquidityBaking.html">FailWithParserLiquidityBaking</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/GraphQLError.html">GraphQLError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/GraphQLResponse.html">GraphQLResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KukaiError.html">KukaiError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KukaiError/ErrorType.html">– ErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LiquidityBakingData.html">LiquidityBakingData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LoggingConfig.html">LoggingConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NFT.html">NFT</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkConstants.html">NetworkConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkVersion.html">NetworkVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NilOnDecodingError.html">NilOnDecodingError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktAttribute.html">ObjktAttribute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktAttributeCounts.html">ObjktAttributeCounts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktAttributeData.html">ObjktAttributeData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktCollection.html">ObjktCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktCollections.html">ObjktCollections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktCreator.html">ObjktCreator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktEvent.html">ObjktEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktFa.html">ObjktFa</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktListing.html">ObjktListing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktSale.html">ObjktSale</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktToken.html">ObjktToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktTokenReponse.html">ObjktTokenReponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16OfflineConstantsV">OfflineConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationBlockHeader.html">OperationBlockHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationBlockHeader/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationFees.html">OperationFees</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationFees/NetworkFeeType.html">– NetworkFeeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationMetadata.html">OperationMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationPayload.html">OperationPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationResponse.html">OperationResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift24OperationResponseContentV">OperationResponseContent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift025OperationResponseInternalD0V">OperationResponseInternalOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationResponseInternalResultError.html">OperationResponseInternalResultError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift25OperationResponseMetadataV">OperationResponseMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift23OperationResponseResultV">OperationResponseResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift21OperationSubscriptionV">OperationSubscription</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeLedger.html">QuipuswapExchangeLedger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeLedgerKey.html">QuipuswapExchangeLedgerKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeStorage.html">QuipuswapExchangeStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeStorageResponse.html">QuipuswapExchangeStorageResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeUserRewards.html">QuipuswapExchangeUserRewards</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeUserRewardsKey.html">QuipuswapExchangeUserRewardsKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/RewardDetails.html">RewardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift19RunOperationPayloadV">RunOperationPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SVGImgProcessor.html">SVGImgProcessor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SubverifierWrapper.html">SubverifierWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsAddressBulkResponse.html">TezosDomainsAddressBulkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsAddressResponse.html">TezosDomainsAddressResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomain.html">TezosDomainsDomain</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomainBulkResponse.html">TezosDomainsDomainBulkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomainResponse.html">TezosDomainsDomainResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomains.html">TezosDomainsDomains</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsReverseRecord.html">TezosDomainsReverseRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsReverseRecords.html">TezosDomainsReverseRecords</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig.html">TezosNodeClientConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/NetworkType.html">– NetworkType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTAccountDelegate.html">TzKTAccountDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTAddress.html">TzKTAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBaker.html">TzKTBaker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfig.html">TzKTBakerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfigDoubleValue.html">TzKTBakerConfigDoubleValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfigIntValue.html">TzKTBakerConfigIntValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfigRewardStruct.html">TzKTBakerConfigRewardStruct</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalance.html">TzKTBalance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadata.html">TzKTBalanceMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadataAttributeKeyValue.html">TzKTBalanceMetadataAttributeKeyValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadataDimensions.html">TzKTBalanceMetadataDimensions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadataFormat.html">TzKTBalanceMetadataFormat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceToken.html">TzKTBalanceToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTCycle.html">TzKTCycle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction.html">TzKTTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/TransactionStatus.html">– TransactionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/TransactionType.html">– TransactionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/TransactionSubType.html">– TransactionSubType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction.html#/s:14KukaiCoreSwift15TzKTTransactionV16TransactionErrorV">– TransactionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:14KukaiCoreSwift7NanoTeza">NanoTez</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:14KukaiCoreSwift34QuipuswapExchangeLedgerKeyResponsea">QuipuswapExchangeLedgerKeyResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:14KukaiCoreSwift39QuipuswapExchangeUserRewardsKeyResponsea">QuipuswapExchangeUserRewardsKeyResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/UIImage">UIImage</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>DexCalculationService</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">DexCalculationService</span></code></pre>
+
+                </div>
+              </div>
+            <p>Wrapper around the kukai-dex-calculations JS library for performing calculations: <a href="https://github.com/kukai-wallet/kukai-dex-calculations">https://github.com/kukai-wallet/kukai-dex-calculations</a></p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC6sharedACvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/shared" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC6sharedACvpZ">shared</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Public shared instace to avoid having multiple copies of the underlying <code>JSContext</code> created</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span><span class="p">:</span> <span class="kt">DexCalculationService</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/User%20flow%20functions"></a>
+                <a name="//apple_ref/swift/Section/User flow functions" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/User%20flow%20functions"></a>
+                  <h3 class="section-name"><span>User flow functions</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC19calculateXtzToToken03xtzI4Sell0K4Pool05tokenM011maxSlippage3dexAA0d4SwapE6ResultVSgAA9XTZAmountC_AnA0J6AmountCSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/calculateXtzToToken(xtzToSell:xtzPool:tokenPool:maxSlippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC19calculateXtzToToken03xtzI4Sell0K4Pool05tokenM011maxSlippage3dexAA0d4SwapE6ResultVSgAA9XTZAmountC_AnA0J6AmountCSdAA18DipDupExchangeNameOtF">calculateXtzToToken(xtzToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>maxSlippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A helper function to create all the necessary calculations for a xtzToToken exchange, to perform the operation and display the info to the user in a confirmation screen.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">calculateXtzToToken</span><span class="p">(</span><span class="nv">xtzToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">maxSlippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/DexSwapCalculationResult.html">DexSwapCalculationResult</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex contract holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex contract holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxSlippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Structs/DexSwapCalculationResult.html">DexSwapCalculationResult</a></code> containing the results of all the necessary calculations.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC19calculateTokenToXTZ05tokenI4Sell7xtzPool0kN011maxSlippage3dexAA0d4SwapE6ResultVSgAA0H6AmountC_AA9XTZAmountCANSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/calculateTokenToXTZ(tokenToSell:xtzPool:tokenPool:maxSlippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC19calculateTokenToXTZ05tokenI4Sell7xtzPool0kN011maxSlippage3dexAA0d4SwapE6ResultVSgAA0H6AmountC_AA9XTZAmountCANSdAA18DipDupExchangeNameOtF">calculateTokenToXTZ(tokenToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>maxSlippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A helper function to create all the necessary calculations for a tokenToXtz exchange, to perform the operation and display the info to the user in a confirmation screen.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">calculateTokenToXTZ</span><span class="p">(</span><span class="nv">tokenToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">maxSlippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/DexSwapCalculationResult.html">DexSwapCalculationResult</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex contract holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex contract holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxSlippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Structs/DexSwapCalculationResult.html">DexSwapCalculationResult</a></code> containing the results of all the necessary calculations.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC21calculateAddLiquidity3xtz0J4Pool05tokenK005totalI011maxSlippage3dexAA0dhE6ResultVSgAA9XTZAmountC_AoA11TokenAmountCAQSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/calculateAddLiquidity(xtz:xtzPool:tokenPool:totalLiquidity:maxSlippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC21calculateAddLiquidity3xtz0J4Pool05tokenK005totalI011maxSlippage3dexAA0dhE6ResultVSgAA9XTZAmountC_AoA11TokenAmountCAQSdAA18DipDupExchangeNameOtF">calculateAddLiquidity(xtz:<wbr>xtzPool:<wbr>tokenPool:<wbr>totalLiquidity:<wbr>maxSlippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A helper function to create all the necessary calculations for adding liquidity, with an XTZ input</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">calculateAddLiquidity</span><span class="p">(</span><span class="nv">xtz</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">totalLiquidity</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">maxSlippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/DexAddCalculationResult.html">DexAddCalculationResult</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtz</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of XTZ to deposit</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total XTZ held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total token held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ttotal liquidity held in the liquidity contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxSlippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>(tokenRequired: TokenAmount, liquidity: TokenAmount)</code> containing the results of all the necessary calculations.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC21calculateAddLiquidity5token7xtzPool0jL005totalI011maxSlippage3dexAA0dhE6ResultVSgAA11TokenAmountC_AA9XTZAmountCA2OSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/calculateAddLiquidity(token:xtzPool:tokenPool:totalLiquidity:maxSlippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC21calculateAddLiquidity5token7xtzPool0jL005totalI011maxSlippage3dexAA0dhE6ResultVSgAA11TokenAmountC_AA9XTZAmountCA2OSdAA18DipDupExchangeNameOtF">calculateAddLiquidity(token:<wbr>xtzPool:<wbr>tokenPool:<wbr>totalLiquidity:<wbr>maxSlippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A helper function to create all the necessary calculations for adding liquidity, with an Token input</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">calculateAddLiquidity</span><span class="p">(</span><span class="nv">token</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">totalLiquidity</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">maxSlippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/DexAddCalculationResult.html">DexAddCalculationResult</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>token</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of Token to deposit</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total XTZ held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total token held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ttotal liquidity held in the liquidity contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxSlippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>(xtzRequired: XTZAmount, liquidity: TokenAmount)</code> containing the results of all the necessary calculations.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC24calculateRemoveLiquidity15liquidityBurned05totalI07xtzPool05tokenN011maxSlippage3dexAA0dhE6ResultVSgAA11TokenAmountC_AoA9XTZAmountCAOSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/calculateRemoveLiquidity(liquidityBurned:totalLiquidity:xtzPool:tokenPool:maxSlippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC24calculateRemoveLiquidity15liquidityBurned05totalI07xtzPool05tokenN011maxSlippage3dexAA0dhE6ResultVSgAA11TokenAmountC_AoA9XTZAmountCAOSdAA18DipDupExchangeNameOtF">calculateRemoveLiquidity(liquidityBurned:<wbr>totalLiquidity:<wbr>xtzPool:<wbr>tokenPool:<wbr>maxSlippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A helper function to create all the necessary calculations for removing liquidity, to return everything the user will get out</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">calculateRemoveLiquidity</span><span class="p">(</span><span class="nv">liquidityBurned</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">totalLiquidity</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">maxSlippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/DexRemoveCalculationResult.html">DexRemoveCalculationResult</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>liquidityBurned</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of Liquidity tokens the user wants to burn or sell</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total volume of liquidity held in the contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The xtz pool held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The token pool held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxSlippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>(xtz: XTZAmount, token: TokenAmount)</code> containing the results of all the necessary calculations.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC8settings03forD0Sd3fee_Sd4burnSb14includeSubsidytAA18DipDupExchangeNameO_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/settings(forDex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC8settings03forD0Sd3fee_Sd4burnSb14includeSubsidytAA18DipDupExchangeNameO_tFZ">settings(forDex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">settings</span><span class="p">(</span><span class="n">forDex</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">fee</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">burn</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">includeSubsidy</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/XTZ%20To%20Token"></a>
+                <a name="//apple_ref/swift/Section/XTZ To Token" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/XTZ%20To%20Token"></a>
+                  <h3 class="section-name"><span>XTZ To Token</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC24xtzToTokenExpectedReturn0gH4Sell0G4Pool05tokenM03dexAA0I6AmountCSgAA9XTZAmountC_AmjA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenExpectedReturn(xtzToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC24xtzToTokenExpectedReturn0gH4Sell0G4Pool05tokenM03dexAA0I6AmountCSgAA9XTZAmountC_AmjA18DipDupExchangeNameOtF">xtzToTokenExpectedReturn(xtzToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> expected to be returned for the supplied <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code>, given the dex contract xtzPool and tokenPool.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenExpectedReturn</span><span class="p">(</span><span class="nv">xtzToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> containing the amount the user can expect in return for their XTZ</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC23xtzToTokenMinimumReturn11tokenAmount8slippageAA0iM0CSgAH_SdtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenMinimumReturn(tokenAmount:slippage:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC23xtzToTokenMinimumReturn11tokenAmount8slippageAA0iM0CSgAH_SdtF">xtzToTokenMinimumReturn(tokenAmount:<wbr>slippage:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The minimum possible <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> returned, taking into account slippage.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenMinimumReturn</span><span class="p">(</span><span class="nv">tokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">slippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> returned from <code>xtzToTokenExpectedReturn()</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>slippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A double value between 0 and 1, indicating the maximum percentage of slippage a user will accept.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> containing the minimum amount the user can expect in return for their XTZ</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC24xtzToTokenRequiredXtzFor11tokenAmount0G4Pool0mO03dexAA9XTZAmountCSgAA0iN0C_AjmA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenRequiredXtzFor(tokenAmount:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC24xtzToTokenRequiredXtzFor11tokenAmount0G4Pool0mO03dexAA9XTZAmountCSgAA0iN0C_AjmA18DipDupExchangeNameOtF">xtzToTokenRequiredXtzFor(tokenAmount:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> required in order to receive the supplied <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenRequiredXtzFor</span><span class="p">(</span><span class="nv">tokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> the user wants to receive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> containing the amount of XTZ required in order to recieve the amount of token.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/XTZ%20To%20Token%20Rates"></a>
+                <a name="//apple_ref/swift/Section/XTZ To Token Rates" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/XTZ%20To%20Token%20Rates"></a>
+                  <h3 class="section-name"><span>XTZ To Token Rates</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC22xtzToTokenExchangeRate0gH4Sell0G4Pool05tokenM03dexSo9NSDecimalaSgAA9XTZAmountC_AmA0I6AmountCAA06DipDupJ4NameOtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenExchangeRate(xtzToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC22xtzToTokenExchangeRate0gH4Sell0G4Pool05tokenM03dexSo9NSDecimalaSgAA9XTZAmountC_AmA0I6AmountCAA06DipDupJ4NameOtF">xtzToTokenExchangeRate(xtzToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The exchange rate for a given trade, taking into account slippage and fees</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenExchangeRate</span><span class="p">(</span><span class="nv">xtzToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the exchange rate from 1 XTZ to the requested <code><a href="../Classes/Token.html">Token</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC29xtzToTokenExchangeRateDisplay0gH4Sell0G4Pool05tokenN03dexSo9NSDecimalaSgAA9XTZAmountC_AmA0I6AmountCAA06DipDupJ4NameOtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenExchangeRateDisplay(xtzToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC29xtzToTokenExchangeRateDisplay0gH4Sell0G4Pool05tokenN03dexSo9NSDecimalaSgAA9XTZAmountC_AmA0I6AmountCAA06DipDupJ4NameOtF">xtzToTokenExchangeRateDisplay(xtzToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The exchange rate for a given trade, taking into account slippage and fees, formatted and truncated for easier display in the UI.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenExchangeRateDisplay</span><span class="p">(</span><span class="nv">xtzToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the exchange rate from 1 XTZ to the requested <code><a href="../Classes/Token.html">Token</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC20xtzToTokenMarketRate0G4Pool05tokenL0So9NSDecimalaSgAA9XTZAmountC_AA0I6AmountCtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenMarketRate(xtzPool:tokenPool:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC20xtzToTokenMarketRate0G4Pool05tokenL0So9NSDecimalaSgAA9XTZAmountC_AA0I6AmountCtF">xtzToTokenMarketRate(xtzPool:<wbr>tokenPool:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Before a user has entered in an amount to trade, its useful to show them the base exchange rate, ignoring slippage.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenMarketRate</span><span class="p">(</span><span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the exchange rate from 1 XTZ to the requested <code><a href="../Classes/Token.html">Token</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC21xtzToTokenPriceImpact0gH4Sell0G4Pool05tokenM03dexSo9NSDecimalaSgAA9XTZAmountC_AmA0I6AmountCAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/xtzToTokenPriceImpact(xtzToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC21xtzToTokenPriceImpact0gH4Sell0G4Pool05tokenM03dexSo9NSDecimalaSgAA9XTZAmountC_AmA0I6AmountCAA18DipDupExchangeNameOtF">xtzToTokenPriceImpact(xtzToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calcualte the percentage the price impact the given trade would incur. Since this is already taken into account for the other functions, this function returns in the scale of 0 - 100, for display purposes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">xtzToTokenPriceImpact</span><span class="p">(</span><span class="nv">xtzToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the slippage percentage, 0 - 100.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Token%20to%20XTZ"></a>
+                <a name="//apple_ref/swift/Section/Token to XTZ" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Token%20to%20XTZ"></a>
+                  <h3 class="section-name"><span>Token to XTZ</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC24tokenToXtzExpectedReturn0gH4Sell7xtzPool0gN03dexAA9XTZAmountCSgAA11TokenAmountC_AjmA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzExpectedReturn(tokenToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC24tokenToXtzExpectedReturn0gH4Sell7xtzPool0gN03dexAA9XTZAmountCSgAA11TokenAmountC_AjmA18DipDupExchangeNameOtF">tokenToXtzExpectedReturn(tokenToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> expected to be returned for the supplied <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code>, given the dex contracts xtzPool and tokenPool.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzExpectedReturn</span><span class="p">(</span><span class="nv">tokenToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> containing the amount the user can expect in return for their <code><a href="../Classes/Token.html">Token</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC23tokenToXtzMinimumReturn9xtzAmount8slippageAA9XTZAmountCSgAH_SdtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzMinimumReturn(xtzAmount:slippage:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC23tokenToXtzMinimumReturn9xtzAmount8slippageAA9XTZAmountCSgAH_SdtF">tokenToXtzMinimumReturn(xtzAmount:<wbr>slippage:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The minimum possible <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> returned, taking into account slippage.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzMinimumReturn</span><span class="p">(</span><span class="nv">xtzAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">slippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> returned from <code>tokenToXtzExpectedReturn()</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>slippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A double value between 0 and 1, indicating the maximum percentage of slippage a user will accept.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> containing the minimum amount the user can expect in return for their Token</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC26tokenToXtzRequiredTokenFor9xtzAmount0M4Pool0gO03dexAA0kN0CSgAA9XTZAmountC_AmjA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzRequiredTokenFor(xtzAmount:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC26tokenToXtzRequiredTokenFor9xtzAmount0M4Pool0gO03dexAA0kN0CSgAA9XTZAmountC_AmjA18DipDupExchangeNameOtF">tokenToXtzRequiredTokenFor(xtzAmount:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> required in order to receive the supplied <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzRequiredTokenFor</span><span class="p">(</span><span class="nv">xtzAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> the user wants to receive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> containing the amount of <code><a href="../Classes/Token.html">Token</a></code> required in order to recieve the amount of XTZ.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/XTZ%20To%20Token%20Rates2"></a>
+                <a name="//apple_ref/swift/Section/XTZ To Token Rates" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/XTZ%20To%20Token%20Rates2"></a>
+                  <h3 class="section-name"><span>XTZ To Token Rates</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC22tokenToXtzExchangeRate0gH4Sell7xtzPool0gN03dexSo9NSDecimalaSgAA11TokenAmountC_AA9XTZAmountCAmA06DipDupJ4NameOtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzExchangeRate(tokenToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC22tokenToXtzExchangeRate0gH4Sell7xtzPool0gN03dexSo9NSDecimalaSgAA11TokenAmountC_AA9XTZAmountCAmA06DipDupJ4NameOtF">tokenToXtzExchangeRate(tokenToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The exchange rate for a given trade, taking into account slippage and fees</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzExchangeRate</span><span class="p">(</span><span class="nv">tokenToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the exchange rate from 1 of the given <code><a href="../Classes/Token.html">Token</a></code> to XTZ</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC29tokenToXtzExchangeRateDisplay0gH4Sell7xtzPool0gO03dexSo9NSDecimalaSgAA11TokenAmountC_AA9XTZAmountCAmA06DipDupJ4NameOtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzExchangeRateDisplay(tokenToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC29tokenToXtzExchangeRateDisplay0gH4Sell7xtzPool0gO03dexSo9NSDecimalaSgAA11TokenAmountC_AA9XTZAmountCAmA06DipDupJ4NameOtF">tokenToXtzExchangeRateDisplay(tokenToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The exchange rate for a given trade, taking into account slippage and fees, formatted and truncated for easier display in the UI.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzExchangeRateDisplay</span><span class="p">(</span><span class="nv">tokenToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the exchange rate from 1 of the given <code><a href="../Classes/Token.html">Token</a></code> to XTZ</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC20tokenToXtzMarketRate7xtzPool0gM0So9NSDecimalaSgAA9XTZAmountC_AA11TokenAmountCtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzMarketRate(xtzPool:tokenPool:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC20tokenToXtzMarketRate7xtzPool0gM0So9NSDecimalaSgAA9XTZAmountC_AA11TokenAmountCtF">tokenToXtzMarketRate(xtzPool:<wbr>tokenPool:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Before a user has entered in an amount to trade, its useful to show them the base exchange rate, ignoring slippage.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzMarketRate</span><span class="p">(</span><span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the exchange rate from 1 of the given <code><a href="../Classes/Token.html">Token</a></code> to XTZ</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC21tokenToXtzPriceImpact0gH4Sell7xtzPool0gN03dexSo9NSDecimalaSgAA11TokenAmountC_AA9XTZAmountCAmA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/tokenToXtzPriceImpact(tokenToSell:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC21tokenToXtzPriceImpact0gH4Sell7xtzPool0gN03dexSo9NSDecimalaSgAA11TokenAmountC_AA9XTZAmountCAmA18DipDupExchangeNameOtF">tokenToXtzPriceImpact(tokenToSell:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calcualte the percentage slippage the given trade would incur. Since this is already taken into account for the other functions, this function returns in the scale of 0 - 100, for display purposes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tokenToXtzPriceImpact</span><span class="p">(</span><span class="nv">tokenToSell</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToSell</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> to sell.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> representing the current pool of XTZ that the dex holds. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> representing the current pool of the given <code><a href="../Classes/Token.html">Token</a></code> that the dex holds. Must have the same number of decimalPlaces as the token it represents. Can be fetched with xxxxx.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> containing the slippage percentage, 0 - 100.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Add%20Liquidity"></a>
+                <a name="//apple_ref/swift/Section/Add Liquidity" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Add%20Liquidity"></a>
+                  <h3 class="section-name"><span>Add Liquidity</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC18addLiquidityReturn12xtzToDeposit0J4Pool05totalH08slippage3dexAA11TokenAmountC8expected_AK7minimumtSgAA9XTZAmountC_ApKSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/addLiquidityReturn(xtzToDeposit:xtzPool:totalLiquidity:slippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC18addLiquidityReturn12xtzToDeposit0J4Pool05totalH08slippage3dexAA11TokenAmountC8expected_AK7minimumtSgAA9XTZAmountC_ApKSdAA18DipDupExchangeNameOtF">addLiquidityReturn(xtzToDeposit:<wbr>xtzPool:<wbr>totalLiquidity:<wbr>slippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the amount of liquidity tokens a user can expect back for an amount of XTZ and Token</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addLiquidityReturn</span><span class="p">(</span><span class="nv">xtzToDeposit</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">totalLiquidity</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">slippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">expected</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">minimum</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToDeposit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The XTZ to send to the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToDeposit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Token to send to the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total liquidity already in the contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>slippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> an amount of Liquidity token you will receive</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC25addLiquidityTokenRequired12xtzToDeposit0K4Pool05tokenN03dexAA0I6AmountCSgAA9XTZAmountC_AmjA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/addLiquidityTokenRequired(xtzToDeposit:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC25addLiquidityTokenRequired12xtzToDeposit0K4Pool05tokenN03dexAA0I6AmountCSgAA9XTZAmountC_AmjA18DipDupExchangeNameOtF">addLiquidityTokenRequired(xtzToDeposit:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the amount of Token that is required to send along side your XTZ</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addLiquidityTokenRequired</span><span class="p">(</span><span class="nv">xtzToDeposit</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzToDeposit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of XTZ to send</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The XTZ currently held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Token currently held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> The amount of token required to send with the given amount of XTZ</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC23addLiquidityXtzRequired14tokenToDeposit7xtzPool0kO03dexAA9XTZAmountCSgAA11TokenAmountC_AjmA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/addLiquidityXtzRequired(tokenToDeposit:xtzPool:tokenPool:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC23addLiquidityXtzRequired14tokenToDeposit7xtzPool0kO03dexAA9XTZAmountCSgAA11TokenAmountC_AjmA18DipDupExchangeNameOtF">addLiquidityXtzRequired(tokenToDeposit:<wbr>xtzPool:<wbr>tokenPool:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the amount of XTZ that is required to send along side your Token</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addLiquidityXtzRequired</span><span class="p">(</span><span class="nv">tokenToDeposit</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenToDeposit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of Token to send</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The XTZ currently held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Token currently held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> The amount of XTZ required to send with the given amount of Token</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Remove%20Liquidity"></a>
+                <a name="//apple_ref/swift/Section/Remove Liquidity" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Remove%20Liquidity"></a>
+                  <h3 class="section-name"><span>Remove Liquidity</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC28removeLiquidityTokenReceived15liquidityBurned05totalH09tokenPool8slippageAA0I6AmountC8expected_AJ7minimumtSgAJ_A2JSdtF"></a>
+                    <a name="//apple_ref/swift/Method/removeLiquidityTokenReceived(liquidityBurned:totalLiquidity:tokenPool:slippage:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC28removeLiquidityTokenReceived15liquidityBurned05totalH09tokenPool8slippageAA0I6AmountC8expected_AJ7minimumtSgAJ_A2JSdtF">removeLiquidityTokenReceived(liquidityBurned:<wbr>totalLiquidity:<wbr>tokenPool:<wbr>slippage:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the amount of token a user would revice back if they burned X liquidity</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeLiquidityTokenReceived</span><span class="p">(</span><span class="nv">liquidityBurned</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">totalLiquidity</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">tokenPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">slippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">expected</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">minimum</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>liquidityBurned</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of liquidity to burn</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The totla liquidity held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total token held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>slippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/TokenAmount.html">TokenAmount</a></code> The amount of Token that would be returned</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC26removeLiquidityXtzReceived15liquidityBurned05totalH07xtzPool8slippage3dexAA9XTZAmountC8expected_AK7minimumtSgAA11TokenAmountC_ApKSdAA18DipDupExchangeNameOtF"></a>
+                    <a name="//apple_ref/swift/Method/removeLiquidityXtzReceived(liquidityBurned:totalLiquidity:xtzPool:slippage:dex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC26removeLiquidityXtzReceived15liquidityBurned05totalH07xtzPool8slippage3dexAA9XTZAmountC8expected_AK7minimumtSgAA11TokenAmountC_ApKSdAA18DipDupExchangeNameOtF">removeLiquidityXtzReceived(liquidityBurned:<wbr>totalLiquidity:<wbr>xtzPool:<wbr>slippage:<wbr>dex:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Calculate the amount of XTZ a user would revice back if they burned X liquidity</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeLiquidityXtzReceived</span><span class="p">(</span><span class="nv">liquidityBurned</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">totalLiquidity</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">slippage</span><span class="p">:</span> <span class="kt">Double</span><span class="p">,</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">expected</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">minimum</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>liquidityBurned</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of liquidity to burn</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>totalLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The totla liquidity held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total XTZ held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>slippage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Percentage (must be between 0 and 1) of maximum amount of slippage the user is willing to accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code><a href="../Classes/XTZAmount.html">XTZAmount</a></code> The amount of XTZ that would be returned</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Misc"></a>
+                <a name="//apple_ref/swift/Section/Misc" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Misc"></a>
+                  <h3 class="section-name"><span>Misc</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21DexCalculationServiceC26estimateLiquidityBakingAPY7xtzPoolSo9NSDecimalaSgAA9XTZAmountC_tF"></a>
+                    <a name="//apple_ref/swift/Method/estimateLiquidityBakingAPY(xtzPool:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21DexCalculationServiceC26estimateLiquidityBakingAPY7xtzPoolSo9NSDecimalaSgAA9XTZAmountC_tF">estimateLiquidityBakingAPY(xtzPool:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Estimate the APY of liquidity baking contract, as it has a known income.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">estimateLiquidityBakingAPY</span><span class="p">(</span><span class="nv">xtzPool</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzPool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The total XTZ held in the dex contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Decimal</code> The estimated percentage APY</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-12-04)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

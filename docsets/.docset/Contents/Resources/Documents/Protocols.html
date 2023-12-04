@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>  Reference</title>
+    <title>Protocols  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,7 +13,8 @@
     <script src="js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a title="  Reference"></a>
+    <a name="//apple_ref/swift/Section/Protocols" class="dashAnchor"></a>
+    <a title="Protocols  Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="index.html"> Docs</a> (100% documented)</p>
@@ -29,7 +30,7 @@
       <p id="breadcrumbs">
         <a href="index.html"> Reference</a>
         <img id="carat" src="img/carat.png" alt=""/>
-          Reference
+        Protocols  Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -712,108 +713,84 @@
       <article class="main-content">
         <section>
           <section class="section">
-            
-            <h1 id='kukai-core-swift' class='heading'>Kukai Core Swift</h1>
+            <h1>Protocols</h1>
+            <p>The following protocols are available globally.</p>
 
-<p><a href="https://img.shields.io/badge/Platforms-iOS-blue"><img src="https://img.shields.io/badge/Platforms-iOS-blue" alt="Platforms"></a>
-<a href="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange"><img src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange" alt="Swift Package Manager"></a>
-<a href="https://github.com/kukai-wallet/kukai-core-swift/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"></a></p>
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift14FailWithParserP"></a>
+                    <a name="//apple_ref/swift/Protocol/FailWithParser" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14FailWithParserP">FailWithParser</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Protocol to allow defining multiple dedicated structs, one for each dApp, that knows how to convert the specific failWith cases into more human readable error messages</p>
 
-<p>Kukai Core Swift is a native Swift library for interacting with the Tezos blockchain and other applications in the Tezos ecosystem, such as the Tezos Node RPC, the indexer <a href="https://tzkt.io">TzKT</a>, the smart contract explorer <a href="https://better-call.dev/">Better Call Dev</a>, the API from the NFT marketplace <a href="https://objkt.com">OBJKT.com</a> etc.</p>
+                        <a href="Protocols/FailWithParser.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">FailWithParser</span></code></pre>
 
-<p>The purpose of this SDK is not to provide a complete feature set for every aspect of Tezos, instead it is the base building block for the Kukai iOS mobile app, that we open source and make avaialble for anyone looking for similar functionality. We are open to accepting PR&rsquo;s and discussing changes/features. However if its not related to the kuaki mobile app, such work is likely better suited in a standalone package, with this as a dependency.</p>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Protocols"></a>
+                <a name="//apple_ref/swift/Section/Protocols" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Protocols"></a>
+                  <h3 class="section-name"><span>Protocols</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift6WalletP"></a>
+                    <a name="//apple_ref/swift/Protocol/Wallet" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift6WalletP">Wallet</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Wallet protocol to allow generic handling of all wallets types for signing operations and caching data locally.</p>
 
-<p><br/></p>
+                        <a href="Protocols/Wallet.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">Wallet</span> <span class="p">:</span> <span class="kt">Decodable</span><span class="p">,</span> <span class="kt">Encodable</span></code></pre>
 
-<p>Feature set includes:</p>
-
-<ul>
-<li>Create Regular and HD wallets</li>
-<li>A service to cache and retrieve encrypted wallet details from disk, using the secure enclave</li>
-<li>Fetching a wallet&rsquo;s XTZ balance, all FA token balances, owned NFT&rsquo;s grouped together by type, all in a single function call</li>
-<li>Fetching transaction history, including token transfers</li>
-<li>Remote forging using a second node or Local forging via <a href="https://github.com/ecadlabs/taquito/tree/master/packages/taquito-local-forging">@taquito/local-forging</a>
-
-<ul>
-<li>Using a &ldquo;vanilla&rdquo; javascript version of the local-forging package specifically. These JS files can be found under the taquito github releases, under assets, named <code>taquito-local-forging-vanilla.zip</code>. e.g. <a href="https://github.com/ecadlabs/taquito/releases/tag/17.2.0">here</a></li>
-<li>Created using <a href="https://github.com/simonmcl/taquito/tree/feature/mobile_friendly_webpack/packages/taquito-local-forging">this webpack config</a> as a starting point</li>
-</ul></li>
-<li>Estimating Gas, Storage and Fees for operations</li>
-<li>Fetch Tezos domains from addresses, and addresses from domains</li>
-<li>Media proxy tools for dealing with collectible and token images</li>
-<li>Helpers for dealing with Michelson JSON</li>
-<li>Helpers for parsing contents of Operations</li>
-<li>Helpers for parsing errors</li>
-<li>Dex fee + return calculation</li>
-</ul>
-
-<p><br/>
-<br/></p>
-<h1 id='install' class='heading'>Install</h1>
-
-<p>Kukai Core Swift supports the Swift Package Manager. Either use the Xcode editor to add to your project by clicking <code>File</code> -&gt; <code>Swift Packages</code> -&gt; <code>Add Package Dependency</code>, search for the git repo <code>https://github.com/kukai-wallet/kukai-core-swift.git</code> and choose from version <code>x.x.x</code> (see tags for latest).</p>
-
-<p>Or add it to your <code>Package.swift</code> dependencies like so:</p>
-<pre class="highlight plaintext"><code>dependencies: [
-    .package(url: "https://github.com/kukai-wallet/kukai-core-swift", from: "x.x.x")
-]
-</code></pre>
-
-<p><br/>
-<br/></p>
-<h1 id='how-to-use' class='heading'>How to use</h1>
-
-<p>Wallets are created using dedicated classes for each type, conforming to the <code><a href="Protocols/Wallet.html">Wallet</a></code> protocol. Wallets are created using <code>Mnemonic</code> objects, see <a href="https://github.com/kukai-wallet/kukai-crypto-swift">Kukai Crypto Swift</a> for more details on those</p>
-
-<ul>
-<li><a href="https://kukai-core-swift.kukai.app/RegularWallet/">RegularWallet</a>
-
-<ul>
-<li>Created using a <code>Mnemonic</code>, an optional passphrase, and optionally specify the <code>EllipticalCurve</code> you want (<code>ed25519</code> for TZ1&hellip;, <code>secp256k1</code> for TZ2&hellip;)</li>
-</ul></li>
-<li><a href="https://kukai-core-swift.kukai.app/HDWallet/">HDWallet</a>
-
-<ul>
-<li>Created using a <code>Mnemonic</code>, an optional passphrase, and an optional BIP 44 derivation path</li>
-</ul></li>
-</ul>
-
-<p><br/></p>
-
-<p>The main functionality centres around client classes and a factory:</p>
-
-<ul>
-<li><a href="https://kukai-core-swift.kukai.app/TezosNodeClient/">TezosNodeClient</a>
-
-<ul>
-<li>Query details about the node</li>
-<li>Estimate fees via the node RPC</li>
-<li>Send operations</li>
-</ul></li>
-<li><a href="https://kukai-core-swift.kukai.app/TzKTClient/">TzKTClient</a>
-
-<ul>
-<li>Fetching balances</li>
-<li>Transaction history</li>
-<li>Determining if an operation has been successfully injected</li>
-</ul></li>
-<li><a href="https://kukai-core-swift.kukai.app/OperationFactory/">OperationFactory</a>
-
-<ul>
-<li>Helper methods to create arrays of operations needed for common tasks</li>
-</ul></li>
-</ul>
-
-<p><br/></p>
-
-<p>For working example, see the kukai mobile ios app <a href="https://github.com/kukai-wallet/kukai-mobile-ios">here</a></p>
-
-<p><br/>
-<br/></p>
-<h1 id='documentation' class='heading'>Documentation</h1>
-
-<p>Compiled Swift Doc&rsquo;s can be found <a href="https://kukai-core-swift.kukai.app/">here</a></p>
-
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </section>
         </section>
         <section id="footer">

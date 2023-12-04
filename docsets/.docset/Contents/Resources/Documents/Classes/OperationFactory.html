@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>OperationFactory Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/OperationFactory" class="dashAnchor"></a>
+    <a title="OperationFactory Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html"> Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fkukai-core-swift.kukai.app%2Fdocsets%2F.xml"><img src="../img/dash.png" alt="Dash"/>Install in Dash</a></p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        OperationFactory Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ContentTypeCheckingImageDownloader.html">ContentTypeCheckingImageDownloader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DAppHelperService.html">DAppHelperService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DAppHelperService/Quipuswap.html">– Quipuswap</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DexCalculationService.html">DexCalculationService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DipDupClient.html">DipDupClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DiskService.html">DiskService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ErrorHandlingService.html">ErrorHandlingService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService.html">FeeEstimatorService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService/FeeConstants.html">– FeeConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService/FeeEstimatorServiceError.html">– FeeEstimatorServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/FeeEstimatorService/EstimationResult.html">– EstimationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/HDWallet.html">HDWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerService.html">LedgerService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerService/GeneralErrorCodes.html">– GeneralErrorCodes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerService/TezosAppErrorCodes.html">– TezosAppErrorCodes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/LedgerWallet.html">LedgerWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService.html">MediaProxyService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/Format.html">– Format</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/Source.html">– Source</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/MediaType.html">– MediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MediaProxyService/AggregatedMediaType.html">– AggregatedMediaType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkService.html">NetworkService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkService/NetworkError.html">– NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ObjktClient.html">ObjktClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Operation.html">Operation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationActivateAccount.html">OperationActivateAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationBallot.html">OperationBallot</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationBallot/Ballot.html">– Ballot</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDelegation.html">OperationDelegation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDoubleBakingEvidence.html">OperationDoubleBakingEvidence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDoubleEndorsementEvidence.html">OperationDoubleEndorsementEvidence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationDoubleEndorsementEvidence/InlinedEndorsement.html">– InlinedEndorsement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationEndorsement.html">OperationEndorsement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationFactory.html">OperationFactory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationFactory/Extractor.html">– Extractor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationOrigination.html">OperationOrigination</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationProposals.html">OperationProposals</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationReveal.html">OperationReveal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationSeedNonceRevelation.html">OperationSeedNonceRevelation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationService.html">OperationService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationService/OperationServiceError.html">– OperationServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationService/LedgerPayloadPrepResponse.html">– LedgerPayloadPrepResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OperationTransaction.html">OperationTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RPC.html">RPC</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RegularWallet.html">RegularWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TaquitoService.html">TaquitoService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TaquitoService/TaquitoServiceError.html">– TaquitoServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosDomainsClient.html">TezosDomainsClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosDomainsClient/BothNetworkReverseRecord.html">– BothNetworkReverseRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosNodeClient.html">TezosNodeClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TezosNodeClient/TezosNodeClientError.html">– TezosNodeClientError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Token.html">Token</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Token/TokenType.html">– TokenType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TokenAmount.html">TokenAmount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TokenAmount/TokenAmountError.html">– TokenAmountError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TorusAuthService.html">TorusAuthService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TorusWallet.html">TorusWallet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TzKTClient.html">TzKTClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TzKTClient/TzKTServiceError.html">– TzKTServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TzKTClient/Constants.html">– Constants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/XTZAmount.html">XTZAmount</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/BiometricType.html">BiometricType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CacheType.html">CacheType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CurrentDevice.html">CurrentDevice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DAppAccessType.html">DAppAccessType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DAppCategory.html">DAppCategory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DipDupExchangeName.html">DipDupExchangeName</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/FaVersion.html">FaVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/HDWalletError.html">HDWalletError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MediaProxyServiceError.html">MediaProxyServiceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OperationKind.html">OperationKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OperationTransactionError.html">OperationTransactionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ResultExtensionError.html">ResultExtensionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TorusAuthError.html">TorusAuthError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TorusAuthProvider.html">TorusAuthProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTBakerAccuracy.html">TzKTBakerAccuracy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTBakerHealth.html">TzKTBakerHealth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTBakerTiming.html">TzKTBakerTiming</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WalletError.html">WalletError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WalletType.html">WalletType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/AnyPublisher.html">AnyPublisher</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Collection.html">Collection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/DateFormatter.html">DateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Error.html">Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/KeyedDecodingContainer.html">KeyedDecodingContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/s:14KukaiCoreSwift16LossyCodableListV">LossyCodableList</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/NSImage.html">NSImage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Publisher.html">Publisher</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Result.html">Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Thread.html">Thread</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/FailWithParser.html">FailWithParser</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Wallet.html">Wallet</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/Account.html">Account</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AggregateRewardInformation.html">AggregateRewardInformation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift13BalanceUpdateV">BalanceUpdate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BetterCallDevOperation.html">BetterCallDevOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BetterCallDevOperationError.html">BetterCallDevOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BlockchainHead.html">BlockchainHead</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift4DAppV">DApp</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DexAddCalculationResult.html">DexAddCalculationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DexRemoveCalculationResult.html">DexRemoveCalculationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DexSwapCalculationResult.html">DexSwapCalculationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupChartData.html">DipDupChartData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupChartObject.html">DipDupChartObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupExchange.html">DipDupExchange</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupExchangesAndTokens.html">DipDupExchangesAndTokens</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupExchangesAndTokensResponse.html">DipDupExchangesAndTokensResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupPosition.html">DipDupPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupPositionData.html">DipDupPositionData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DipDupToken.html">DipDupToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FailWith.html">FailWith</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/FailWithParserLiquidityBaking.html">FailWithParserLiquidityBaking</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/GraphQLError.html">GraphQLError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/GraphQLResponse.html">GraphQLResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KukaiError.html">KukaiError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/KukaiError/ErrorType.html">– ErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LiquidityBakingData.html">LiquidityBakingData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LoggingConfig.html">LoggingConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NFT.html">NFT</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkConstants.html">NetworkConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkVersion.html">NetworkVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NilOnDecodingError.html">NilOnDecodingError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktAttribute.html">ObjktAttribute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktAttributeCounts.html">ObjktAttributeCounts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktAttributeData.html">ObjktAttributeData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktCollection.html">ObjktCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktCollections.html">ObjktCollections</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktCreator.html">ObjktCreator</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktEvent.html">ObjktEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktFa.html">ObjktFa</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktListing.html">ObjktListing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktSale.html">ObjktSale</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktToken.html">ObjktToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ObjktTokenReponse.html">ObjktTokenReponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16OfflineConstantsV">OfflineConstants</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationBlockHeader.html">OperationBlockHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationBlockHeader/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationFees.html">OperationFees</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationFees/NetworkFeeType.html">– NetworkFeeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationMetadata.html">OperationMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationPayload.html">OperationPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationResponse.html">OperationResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift24OperationResponseContentV">OperationResponseContent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift025OperationResponseInternalD0V">OperationResponseInternalOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/OperationResponseInternalResultError.html">OperationResponseInternalResultError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift25OperationResponseMetadataV">OperationResponseMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift23OperationResponseResultV">OperationResponseResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift21OperationSubscriptionV">OperationSubscription</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeLedger.html">QuipuswapExchangeLedger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeLedgerKey.html">QuipuswapExchangeLedgerKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeStorage.html">QuipuswapExchangeStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeStorageResponse.html">QuipuswapExchangeStorageResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeUserRewards.html">QuipuswapExchangeUserRewards</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/QuipuswapExchangeUserRewardsKey.html">QuipuswapExchangeUserRewardsKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/RewardDetails.html">RewardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift19RunOperationPayloadV">RunOperationPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SVGImgProcessor.html">SVGImgProcessor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SubverifierWrapper.html">SubverifierWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsAddressBulkResponse.html">TezosDomainsAddressBulkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsAddressResponse.html">TezosDomainsAddressResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomain.html">TezosDomainsDomain</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomainBulkResponse.html">TezosDomainsDomainBulkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomainResponse.html">TezosDomainsDomainResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsDomains.html">TezosDomainsDomains</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsReverseRecord.html">TezosDomainsReverseRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosDomainsReverseRecords.html">TezosDomainsReverseRecords</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig.html">TezosNodeClientConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/NetworkType.html">– NetworkType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTAccountDelegate.html">TzKTAccountDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTAddress.html">TzKTAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBaker.html">TzKTBaker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfig.html">TzKTBakerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfigDoubleValue.html">TzKTBakerConfigDoubleValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfigIntValue.html">TzKTBakerConfigIntValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBakerConfigRewardStruct.html">TzKTBakerConfigRewardStruct</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalance.html">TzKTBalance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadata.html">TzKTBalanceMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadataAttributeKeyValue.html">TzKTBalanceMetadataAttributeKeyValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadataDimensions.html">TzKTBalanceMetadataDimensions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceMetadataFormat.html">TzKTBalanceMetadataFormat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTBalanceToken.html">TzKTBalanceToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTCycle.html">TzKTCycle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction.html">TzKTTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/TransactionStatus.html">– TransactionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/TransactionType.html">– TransactionType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/TransactionSubType.html">– TransactionSubType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction.html#/s:14KukaiCoreSwift15TzKTTransactionV16TransactionErrorV">– TransactionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransaction/CodingKeys.html">– CodingKeys</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:14KukaiCoreSwift7NanoTeza">NanoTez</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:14KukaiCoreSwift34QuipuswapExchangeLedgerKeyResponsea">QuipuswapExchangeLedgerKeyResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:14KukaiCoreSwift39QuipuswapExchangeUserRewardsKeyResponsea">QuipuswapExchangeUserRewardsKeyResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/UIImage">UIImage</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>OperationFactory</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">OperationFactory</span></code></pre>
+
+                </div>
+              </div>
+            <p>Class responsible for creating operations necessary to perform a given action, and converting those operations into the single payload expected by the RPC.
+Although not every action requires more than one operation, all functions will return an array, for consistency.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Operation%20Builders"></a>
+                <a name="//apple_ref/swift/Section/Operation Builders" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Operation%20Builders"></a>
+                  <h3 class="section-name"><span>Operation Builders</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC04sendD0_2of4from2toSayAA0D0CGAA11TokenAmountC_AA0J0CS2StFZ"></a>
+                    <a name="//apple_ref/swift/Method/sendOperation(_:of:from:to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC04sendD0_2of4from2toSayAA0D0CGAA11TokenAmountC_AA0J0CS2StFZ">sendOperation(_:<wbr>of:<wbr>from:<wbr>to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to send an amount of a token to a destination address.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">sendOperation</span><span class="p">(</span><span class="n">_</span> <span class="nv">tokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="n">of</span> <span class="nv">token</span><span class="p">:</span> <span class="kt"><a href="../Classes/Token.html">Token</a></span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>_</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of the given token to send.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>of</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Classes/Token.html">Token</a></code> type that will be sent.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address to deduct the funds from.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>to</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The destination address that will recieve the funds.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC04sendD0_5ofNft4from2toSayAA0D0CGSo9NSDecimala_AA3NFTVS2StFZ"></a>
+                    <a name="//apple_ref/swift/Method/sendOperation(_:ofNft:from:to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC04sendD0_5ofNft4from2toSayAA0D0CGSo9NSDecimala_AA3NFTVS2StFZ">sendOperation(_:<wbr>ofNft:<wbr>from:<wbr>to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to send aan NFT</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">sendOperation</span><span class="p">(</span><span class="n">_</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="n">ofNft</span> <span class="nv">nft</span><span class="p">:</span> <span class="kt"><a href="../Structs/NFT.html">NFT</a></span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ofNft</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Structs/NFT.html">NFT</a></code> type that will be sent.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address to deduct the funds from.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>to</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The destination address that will recieve the funds.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC08delegateD02to4fromSayAA0D0CGSS_SStFZ"></a>
+                    <a name="//apple_ref/swift/Method/delegateOperation(to:from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC08delegateD02to4fromSayAA0D0CGSS_SStFZ">delegateOperation(to:<wbr>from:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to delegate funds to a baker.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">delegateOperation</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>to</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address of the baker to delegate to.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address that wishes to delegate its funds.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC010undelegateD07addressSayAA0D0CGSS_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/undelegateOperation(address:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC010undelegateD07addressSayAA0D0CGSS_tFZ">undelegateOperation(address:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to remove the current delegate from an address.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">undelegateOperation</span><span class="p">(</span><span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>address</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address that wishes to remove its delegate.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC14swapXtzToToken7withDex9xtzAmount03miniM013walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA9XTZAmountCAA0iM0CSSSdtFZ"></a>
+                    <a name="//apple_ref/swift/Method/swapXtzToToken(withDex:xtzAmount:minTokenAmount:walletAddress:timeout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC14swapXtzToToken7withDex9xtzAmount03miniM013walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA9XTZAmountCAA0iM0CSSSdtFZ">swapXtzToToken(withDex:<wbr>xtzAmount:<wbr>minTokenAmount:<wbr>walletAddress:<wbr>timeout:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to perform an exchange of XTZ for a given FA token, using a given dex</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">swapXtzToToken</span><span class="p">(</span><span class="n">withDex</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Structs/DipDupExchange.html">DipDupExchange</a></span><span class="p">,</span> <span class="nv">xtzAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">minTokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">timeout</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withDex</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Enum controling which dex to use to perform the swap</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtzAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of XTZ to be swaped</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>minTokenAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum token amount you will accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet signing the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>timeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Max amount of time to wait before asking the node to cancel the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC14swapTokenToXTZ7withDex11tokenAmount12minXTZAmount13walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA0gM0CAA0O0CSSSdtFZ"></a>
+                    <a name="//apple_ref/swift/Method/swapTokenToXTZ(withDex:tokenAmount:minXTZAmount:walletAddress:timeout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC14swapTokenToXTZ7withDex11tokenAmount12minXTZAmount13walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA0gM0CAA0O0CSSSdtFZ">swapTokenToXTZ(withDex:<wbr>tokenAmount:<wbr>minXTZAmount:<wbr>walletAddress:<wbr>timeout:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to perform an exchange of a given FA token for XTZ, using dex contracts</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">swapTokenToXTZ</span><span class="p">(</span><span class="n">withDex</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Structs/DipDupExchange.html">DipDupExchange</a></span><span class="p">,</span> <span class="nv">tokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">minXTZAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">timeout</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withDex</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code><a href="../Structs/DipDupExchange.html">DipDupExchange</a></code> instance providing information about the exchange</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of Token to be swapped</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>minXTZAmount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum xtz amount you will accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet signing the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>timeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Max amount of time to wait before asking the node to cancel the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Allowance%20%28approve%2C%20update_operators%29"></a>
+                <a name="//apple_ref/swift/Section/Allowance (approve, update_operators)" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Allowance%20%28approve%2C%20update_operators%29"></a>
+                  <h3 class="section-name"><span>Allowance (approve, update_operators)</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC07approveD012tokenAddress07spenderH09allowance06walletH0AA0D0CSS_SSAA11TokenAmountCSStFZ"></a>
+                    <a name="//apple_ref/swift/Method/approveOperation(tokenAddress:spenderAddress:allowance:walletAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC07approveD012tokenAddress07spenderH09allowance06walletH0AA0D0CSS_SSAA11TokenAmountCSStFZ">approveOperation(tokenAddress:<wbr>spenderAddress:<wbr>allowance:<wbr>walletAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create an operation to call the entrypoint <code>approve</code>, to allow another address to spend some of your token (only FA1.2)
+Used when interacting with smart contract applications like Dexter or QuipuSwap</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">approveOperation</span><span class="p">(</span><span class="nv">tokenAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">spenderAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">allowance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Operation.html">Operation</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenAddress</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address of the token contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>spenderAddress</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address that is being given permission to spend the users balance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The allowance to set for the given contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet signing the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An <code><a href="../Classes/OperationTransaction.html">OperationTransaction</a></code> which will invoke a smart contract call</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC015updateOperatorsD012tokenAddress07spenderI09allowance06walletI0AA0D0CSS_SSAA11TokenAmountCSStFZ"></a>
+                    <a name="//apple_ref/swift/Method/updateOperatorsOperation(tokenAddress:spenderAddress:allowance:walletAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC015updateOperatorsD012tokenAddress07spenderI09allowance06walletI0AA0D0CSS_SSAA11TokenAmountCSStFZ">updateOperatorsOperation(tokenAddress:<wbr>spenderAddress:<wbr>allowance:<wbr>walletAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create an operation to call the entrypoint <code>update_operators</code>, to allow another address to spend some of your token (only FA2)
+Used when interacting with smart contract applications like Dexter or QuipuSwap</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">updateOperatorsOperation</span><span class="p">(</span><span class="nv">tokenAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">spenderAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">allowance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Operation.html">Operation</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenAddress</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address of the token contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>spenderAddress</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address that is being given permission to spend the users balance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The allowance to set for the given contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet signing the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An <code><a href="../Classes/OperationTransaction.html">OperationTransaction</a></code> which will invoke a smart contract call</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC09allowanceD08standard12tokenAddress07spenderI00F006walletI0AA0D0CAA19DipDupTokenStandardO_S2SAA0N6AmountCSStFZ"></a>
+                    <a name="//apple_ref/swift/Method/allowanceOperation(standard:tokenAddress:spenderAddress:allowance:walletAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC09allowanceD08standard12tokenAddress07spenderI00F006walletI0AA0D0CAA19DipDupTokenStandardO_S2SAA0N6AmountCSStFZ">allowanceOperation(standard:<wbr>tokenAddress:<wbr>spenderAddress:<wbr>allowance:<wbr>walletAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return the operation necessary to register an allowance (either calling <code>apporve</code> or <code>update_operators</code>) depending on the token standard version. Removing the need to check manually
+Used when interacting with smart contract applications like Dexter or QuipuSwap</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">allowanceOperation</span><span class="p">(</span><span class="nv">standard</span><span class="p">:</span> <span class="kt"><a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a></span><span class="p">,</span> <span class="nv">tokenAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">spenderAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">allowance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Operation.html">Operation</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>standard</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The FA standard that the token conforms too</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tokenAddress</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address of the token contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>spenderAddress</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The address that is being given permission to spend the users balance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The allowance to set for the given contract</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet signing the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An <code><a href="../Classes/OperationTransaction.html">OperationTransaction</a></code> which will invoke a smart contract call</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Dex%20functions"></a>
+                <a name="//apple_ref/swift/Section/Dex functions" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Dex%20functions"></a>
+                  <h3 class="section-name"><span>Dex functions</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC12addLiquidity7withDex3xtz5token11minLiquidty09isInitialG013walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA9XTZAmountCAA11TokenAmountCATSbSSSdtFZ"></a>
+                    <a name="//apple_ref/swift/Method/addLiquidity(withDex:xtz:token:minLiquidty:isInitialLiquidity:walletAddress:timeout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC12addLiquidity7withDex3xtz5token11minLiquidty09isInitialG013walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA9XTZAmountCAA11TokenAmountCATSbSSSdtFZ">addLiquidity(withDex:<wbr>xtz:<wbr>token:<wbr>minLiquidty:<wbr>isInitialLiquidity:<wbr>walletAddress:<wbr>timeout:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to add liquidity to a dex contract. Use DexCalculationService to figure out the numbers required</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">addLiquidity</span><span class="p">(</span><span class="n">withDex</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Structs/DipDupExchange.html">DipDupExchange</a></span><span class="p">,</span> <span class="nv">xtz</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">token</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">minLiquidty</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">isInitialLiquidity</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">timeout</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withDex</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code><a href="../Structs/DipDupExchange.html">DipDupExchange</a></code> instance providing information about the exchange</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>xtz</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of XTZ to deposit</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>token</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of Token to deposit</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>minLiquidty</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum amount of liquidity tokens you will accept</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isInitialLiquidity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Is this the xtzPool and tokenPool empty? If so, the operation needs to set the exchange rate for the dex. Some dex&rsquo;s require extra logic here</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet that will sign the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>timeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The timeout in seconds, before the dex contract should cancel the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC15removeLiquidity7withDex6minXTZ0J5Token15liquidityToBurn13walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA9XTZAmountCAA0L6AmountCASSSSdtFZ"></a>
+                    <a name="//apple_ref/swift/Method/removeLiquidity(withDex:minXTZ:minToken:liquidityToBurn:walletAddress:timeout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC15removeLiquidity7withDex6minXTZ0J5Token15liquidityToBurn13walletAddress7timeoutSayAA0D0CGAA14DipDupExchangeV_AA9XTZAmountCAA0L6AmountCASSSSdtFZ">removeLiquidity(withDex:<wbr>minXTZ:<wbr>minToken:<wbr>liquidityToBurn:<wbr>walletAddress:<wbr>timeout:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to remove liquidity from a dex contract, also withdraw pending rewards if applicable. Use DexCalculationService to figure out the numbers required</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">removeLiquidity</span><span class="p">(</span><span class="n">withDex</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Structs/DipDupExchange.html">DipDupExchange</a></span><span class="p">,</span> <span class="nv">minXTZ</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">,</span> <span class="nv">minToken</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">liquidityToBurn</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">timeout</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withDex</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code><a href="../Structs/DipDupExchange.html">DipDupExchange</a></code> instance providing information about the exchange</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>minXTZ</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum XTZ to accept in return for the burned amount of Liquidity</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>minToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum Token to accept in return for the burned amount of Liquidity</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>liquidityToBurn</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of Liqudity to burn</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet that will sign the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>timeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The timeout in seconds, before the dex contract should cancel the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC15withdrawRewards7withDex13walletAddressSayAA0D0CGAA14DipDupExchangeV_SStFZ"></a>
+                    <a name="//apple_ref/swift/Method/withdrawRewards(withDex:walletAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC15withdrawRewards7withDex13walletAddressSayAA0D0CGAA14DipDupExchangeV_SStFZ">withdrawRewards(withDex:<wbr>walletAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create the operations necessary to withdraw rewards from a dex contract. For example in quipuswap, XTZ provided as liquidity will earn baking rewards. This can been withdrawn at any time while leaving liquidity in palce</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">withdrawRewards</span><span class="p">(</span><span class="n">withDex</span> <span class="nv">dex</span><span class="p">:</span> <span class="kt"><a href="../Structs/DipDupExchange.html">DipDupExchange</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withDex</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code><a href="../Structs/DipDupExchange.html">DipDupExchange</a></code> instance providing information about the exchange</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The wallet that will sign the operation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Utilities"></a>
+                <a name="//apple_ref/swift/Section/Utilities" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Utilities"></a>
+                  <h3 class="section-name"><span>Utilities</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC16operationPayload12fromMetadata13andOperations13walletAddress22base58EncodedPublicKeyAA0dG0VAA0dI0V_SayAA0D0CGS2StFZ"></a>
+                    <a name="//apple_ref/swift/Method/operationPayload(fromMetadata:andOperations:walletAddress:base58EncodedPublicKey:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC16operationPayload12fromMetadata13andOperations13walletAddress22base58EncodedPublicKeyAA0dG0VAA0dI0V_SayAA0D0CGS2StFZ">operationPayload(fromMetadata:<wbr>andOperations:<wbr>walletAddress:<wbr>base58EncodedPublicKey:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Convert an array of operations into the format expected by the RPC. Will also inject a <code><a href="../Classes/OperationReveal.html">OperationReveal</a></code> if the sender has not yet revealed their public key.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">operationPayload</span><span class="p">(</span><span class="n">fromMetadata</span> <span class="nv">metadata</span><span class="p">:</span> <span class="kt"><a href="../Structs/OperationMetadata.html">OperationMetadata</a></span><span class="p">,</span> <span class="n">andOperations</span> <span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">],</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">base58EncodedPublicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/OperationPayload.html">OperationPayload</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fromMetadata</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>OperationMeatdata</code> containing necessary data to form the object.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>andOperations</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An array of <code><a href="../Classes/Operation.html">Operation</a></code> subclasses to send.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>withWallet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Protocols/Wallet.html">Wallet</a></code> instance that will be responsible for these operations.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An instance of <code><a href="../Structs/OperationPayload.html">OperationPayload</a></code> that can be sent to the RPC</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC27createDexterTimestampString19nowPlusTimeIntervalSSSd_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/createDexterTimestampString(nowPlusTimeInterval:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC27createDexterTimestampString19nowPlusTimeIntervalSSSd_tFZ">createDexterTimestampString(nowPlusTimeInterval:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Dexter requires date strings to act as deadline dates for exchanges.
+This function takes a <code>TimeInterval</code> and uses it to createa date in the future, and returns that as a formatted string.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">createDexterTimestampString</span><span class="p">(</span><span class="nv">nowPlusTimeInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nowPlusTimeInterval</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount of time in the future the date string should represent.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A formatted date <code>String</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC18sendTokenMichelson12forFaVersion11tokenAmount0L2Id2to4fromSDySSypGAA0jK0O_AA0gM0CSo9NSDecimalaS2StFZ"></a>
+                    <a name="//apple_ref/swift/Method/sendTokenMichelson(forFaVersion:tokenAmount:tokenId:to:from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC18sendTokenMichelson12forFaVersion11tokenAmount0L2Id2to4fromSDySSypGAA0jK0O_AA0gM0CSo9NSDecimalaS2StFZ">sendTokenMichelson(forFaVersion:<wbr>tokenAmount:<wbr>tokenId:<wbr>to:<wbr>from:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">sendTokenMichelson</span><span class="p">(</span><span class="n">forFaVersion</span> <span class="nv">faVersion</span><span class="p">:</span> <span class="kt"><a href="../Enums/FaVersion.html">FaVersion</a></span><span class="p">,</span> <span class="nv">tokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Extractors"></a>
+                <a name="//apple_ref/swift/Section/Extractors" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Extractors"></a>
+                  <h3 class="section-name"><span>Extractors</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV"></a>
+                    <a name="//apple_ref/swift/Struct/Extractor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV">Extractor</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Internal Struct to encapsulate helpers methods needed to extract critical information from an array of operations, needed for processing decisions like &ldquo;do i display a send token screen, or a send NFt screen&rdquo;, fetching total XTZ sent in 1 action etc</p>
+
+                        <a href="../Classes/OperationFactory/Extractor.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Extractor</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-12-04)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>
