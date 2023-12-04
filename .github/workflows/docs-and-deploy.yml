@@ -21,7 +21,7 @@ jobs:
         run: gem install jazzy
   
       - name: Run Jazzy docs
-        run: jazzy --root-url https://kukai-core-swift.kukai.app/ --output Documentation
+        run: jazzy # Will make use of .jazzy.yaml in project root for settings
       
       - name: Update Permissions
         run: 'sudo chown -R $USER Documentation'
