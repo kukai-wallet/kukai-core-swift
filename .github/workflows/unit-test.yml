@@ -20,27 +20,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
 
+      - name: Get current date
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: "swift"
-      
-      - name: Get current date
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
       - name: Test
-        run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -enableCodeCoverage YES -resultBundlePath "../../xcode-$NOW.xcresult"
-      
-      - name: Upload results
-        uses: actions/upload-artifact@v2
-        with:
-          name: "results-$NOW.xcresult"
-          path: "/Users/runner/work/xcode-$NOW.xcresult"
+        run: xcodebuild -scheme KukaiCoreSwift test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12' -enableCodeCoverage YES -resultBundlePath "$PWD/xcode-$NOW.xcresult"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:swift"
+      
+      - name: Upload results
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: "results-$NOW.xcresult"
+          path: "$PWD/xcode-$NOW.xcresult"
 
 
 
