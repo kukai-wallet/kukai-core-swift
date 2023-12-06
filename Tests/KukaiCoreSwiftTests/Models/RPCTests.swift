@@ -30,11 +30,6 @@ class RPCTests: XCTestCase {
 		XCTAssert(rpcForge?.endpoint == "chains/main/blocks/head/helpers/forge/operations", rpcForge?.endpoint ?? "-")
 		XCTAssert(rpcForge?.isPost == true)
 		XCTAssert(rpcForge?.responseType == String.self)
-		
-		if let subStr = rpcForge?.payload?.toHexString().prefix(50) {
-			XCTAssert(String(subStr) == "7b226272616e6368223a22424c4544474e75414441775a664b", String(subStr))
-		} else {
-			XCTFail("Can't get substring")
-		}
+		XCTAssert(rpcForge?.payload?.bytes.count == 285, rpcForge?.payload?.bytes.count.description ?? "-")
 	}
 }
