@@ -14,15 +14,15 @@ on:
 # Checkout the code, and run mxcl's xcodebuild action to run the unit tests
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-13
     strategy:
       matrix:
         platform:
           - iOS
         xcode:
-          - ^14
+          - ^15
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v4.1.1
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2

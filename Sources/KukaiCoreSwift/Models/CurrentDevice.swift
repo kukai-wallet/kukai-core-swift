@@ -46,7 +46,7 @@ public enum CurrentDevice {
 					return .touchID
 				case .faceID:
 					return .faceID
-				@unknown default:
+				default:
 					return .none
 			}
 		}
@@ -66,7 +66,7 @@ public enum CurrentDevice {
 					return .touchID
 				case .faceID:
 					return .faceID
-				@unknown default:
+				default:
 					return .none
 			}
 		}

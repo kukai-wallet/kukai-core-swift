@@ -440,7 +440,7 @@ public class OperationFactory {
 		 Reveal, Approve and UpdateOperator operations can be appended to operation lists. When determining what the intent of the operation array is, it can be important to ignore these
 		 */
 		public static func filterRevealApporveUpdate(operations: [Operation]) -> [Operation] {
-			var ops = operations.filter { opToCheck in
+			let ops = operations.filter { opToCheck in
 				let castAsTransaction = opToCheck as? OperationTransaction
 				let entrypointAsString = castAsTransaction?.parameters?["entrypoint"] as? String
 				
@@ -458,15 +458,15 @@ public class OperationFactory {
 		}
 		
 		/**
-		 Return true if
-		 - contains 1 operation with a non-zero amount, with no parameters
+		 Filter reveal operations, update operations, approve etc, to verify only 1 transaction exists thats sending XTZ. If so return this operation, otherweise return false
 		 */
-		public static func isTezTransfer(operations: [Operation]) -> Bool {
-			if operations.count == 1, let op = operations.first as? OperationTransaction, op.amount != "0", op.parameters == nil {
-				return true
+		public static func isTezTransfer(operations: [Operation]) -> Operation? {
+			let filteredOperations = filterRevealApporveUpdate(operations: operations)
+			if filteredOperations.count == 1, let op = filteredOperations.first as? OperationTransaction, op.amount != "0", op.parameters == nil {
+				return op
 			}
 			
-			return false
+			return nil
 		}
 		
 		/// Easy way to extract the first non-`approval` or `update_operator` transaction

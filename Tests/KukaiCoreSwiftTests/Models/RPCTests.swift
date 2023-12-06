@@ -32,7 +32,7 @@ class RPCTests: XCTestCase {
 		XCTAssert(rpcForge?.responseType == String.self)
 		
 		if let subStr = rpcForge?.payload?.toHexString().prefix(50) {
-			XCTAssert(String(subStr) == "7b22636f6e74656e7473223a5b7b22616d6f756e74223a2231", String(subStr))
+			XCTAssert(String(subStr) == "7b226272616e6368223a22424c4544474e75414441775a664b", String(subStr))
 		} else {
 			XCTFail("Can't get substring")
 		}

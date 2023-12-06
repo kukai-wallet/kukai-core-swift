@@ -537,7 +537,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(results1 == nil)
 		
 		let isTezTransfer1 = OperationFactory.Extractor.isTezTransfer(operations: xtzOp)
-		XCTAssert(isTezTransfer1)
+		XCTAssert(isTezTransfer1 != nil)
 		
 		
 		
@@ -549,7 +549,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(results2?.tokenId == nil, results2?.tokenId?.description ?? "-")
 		
 		let isTezTransfer2 = OperationFactory.Extractor.isTezTransfer(operations: opFA1)
-		XCTAssert(!isTezTransfer2)
+		XCTAssert(isTezTransfer2 == nil)
 		
 		let firstTrasnfer1 = OperationFactory.Extractor.firstTransferEntrypointOperation(operations: opFA1)
 		XCTAssert(firstTrasnfer1?.destination == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", firstTrasnfer1?.destination ?? "-")
@@ -564,7 +564,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(results3?.tokenId == 0, results3?.tokenId?.description ?? "-")
 		
 		let isTezTransfer3 = OperationFactory.Extractor.isTezTransfer(operations: opFA2)
-		XCTAssert(!isTezTransfer3)
+		XCTAssert(isTezTransfer3 == nil)
 		
 		let firstTrasnfer2 = OperationFactory.Extractor.firstTransferEntrypointOperation(operations: opFA2)
 		XCTAssert(firstTrasnfer2?.destination == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", firstTrasnfer2?.destination ?? "-")

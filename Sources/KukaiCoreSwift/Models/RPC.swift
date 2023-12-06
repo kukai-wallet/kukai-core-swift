@@ -48,7 +48,7 @@ public class RPC<T: Decodable> {
 	}
 	
 	/// Helper function to wrap up `JSONEncoder().encode` and log any errors.
-	public static func encodableToData<T: Encodable>(encodable: T) -> Data? {
+	public static func encodableToData<E: Encodable>(encodable: E) -> Data? {
 		do {
 			return try JSONEncoder().encode(encodable)
 			

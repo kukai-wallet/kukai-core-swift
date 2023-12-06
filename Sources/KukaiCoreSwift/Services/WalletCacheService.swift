@@ -566,7 +566,6 @@ extension WalletCacheService {
 		}
 		
 		return (public: mockPubKey, private: mockPrivKey)
-		
 	}
 	
 	/**
