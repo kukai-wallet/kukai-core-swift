@@ -598,5 +598,13 @@ class OperationFactoryTests: XCTestCase {
 		let totalXTZ = OperationFactory.Extractor.totalXTZAmountForContractCall(operations: xtzOpsCopy)
 		XCTAssert(totalXTZ.description == "2", totalXTZ.description)
 		
+		
+		// Filtering out reveals / approves / updates etc
+		let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "")
+		let singularXTZ = OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)
+		let filterOps1: [KukaiCoreSwift.Operation] = [reveal, singularXTZ]
+		let filterExtractions = OperationFactory.Extractor.filterRevealApporveUpdate(operations: filterOps1)
+		XCTAssert(filterExtractions.count == 1)
+		XCTAssert(filterExtractions[0].operationKind == .transaction)
 	}
 }

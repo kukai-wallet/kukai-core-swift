@@ -437,6 +437,27 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Reveal, Approve and UpdateOperator operations can be appended to operation lists. When determining what the intent of the operation array is, it can be important to ignore these
+		 */
+		public static func filterRevealApporveUpdate(operations: [Operation]) -> [Operation] {
+			var ops = operations.filter { opToCheck in
+				let castAsTransaction = opToCheck as? OperationTransaction
+				let entrypointAsString = castAsTransaction?.parameters?["entrypoint"] as? String
+				
+				if opToCheck.operationKind == .reveal ||
+					castAsTransaction == nil ||
+					entrypointAsString == OperationTransaction.StandardEntrypoint.approve.rawValue ||
+					entrypointAsString == OperationTransaction.StandardEntrypoint.updateOperators.rawValue {
+					return false
+				}
+				
+				return true
+			}
+			
+			return ops
+		}
+		
+		/**
 		 Return true if
 		 - contains 1 operation with a non-zero amount, with no parameters
 		 */
