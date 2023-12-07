@@ -27,6 +27,9 @@ jobs:
         uses: github/codeql-action/init@v2
         with:
           languages: "swift"
+      
+      - name: Launch simulator
+        run: open -b com.apple.iphonesimulator
 
       - name: Test
         run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iphonesimulator,OS=17.0.1,name=iPhone 15 Pro" -enableCodeCoverage YES -resultBundlePath "$PWD/xcode-$NOW.xcresult"
