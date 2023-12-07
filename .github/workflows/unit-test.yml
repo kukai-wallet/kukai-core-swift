@@ -23,16 +23,30 @@ jobs:
       - name: Get current date
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
+
+
+      # Temporary step due to Xcode 15 / Github actions runner issues
+      - name: Install iOS 16 simulator for Xcode 15
+        run: |
+          # Make iOS 16.4 simulator runtime available to Xcode 15
+          sudo mkdir -p /Library/Developer/CoreSimulator/Profiles/Runtimes
+          sudo ln -s /Applications/Xcode_14.3.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime /Library/Developer/CoreSimulator/Profiles/Runtimes/iOS\ 16.4.simruntime
+
+          # Create an iOS 16.4 simulator
+          xcrun simctl create "iPhone 14 Pro (16.4)" "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro" "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
+
+
+          
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: "swift"
       
-      - name: Launch simulator
-        run: open -a Simulator --args -CurrentDeviceUDID $(xcrun simctl list --json | ruby -e "require 'json'; puts JSON.parse(ARGF.read)['devices']['com.apple.CoreSimulator.SimRuntime.iOS-17-0'].find { |s| s['name'] == 'iPhone 15 Pro' }['udid']")
+      # - name: Launch simulator
+      #   run: open -a Simulator --args -CurrentDeviceUDID $(xcrun simctl list --json | ruby -e "require 'json'; puts JSON.parse(ARGF.read)['devices']['com.apple.CoreSimulator.SimRuntime.iOS-17-0'].find { |s| s['name'] == 'iPhone 15 Pro' }['udid']")
 
       - name: Test
-        run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro" -enableCodeCoverage YES -resultBundlePath "$PWD/xcode-$NOW.xcresult"
+        run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=16.4,name=iPhone 14 Pro" -enableCodeCoverage YES -resultBundlePath "$PWD/xcode-$NOW.xcresult"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
