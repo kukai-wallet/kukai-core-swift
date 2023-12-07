@@ -29,7 +29,7 @@ jobs:
           languages: "swift"
 
       - name: Test
-        run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iphonesimulator,OS=17.0,name=iPhone 15 Pro" -enableCodeCoverage YES -resultBundlePath "$PWD/xcode-$NOW.xcresult"
+        run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iphonesimulator,OS=17.0.1,name=iPhone 15 Pro" -enableCodeCoverage YES -resultBundlePath "$PWD/xcode-$NOW.xcresult"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
