@@ -71,8 +71,8 @@ public struct KukaiError: CustomStringConvertible, Error {
 	// MARK: - Constructors
 	
 	/// Create a KukaiError from an RPC string (will not be validated). You can use the string extension `.removeLeadingProtocolFromRPCError()` to strip the leading poriton of the error
-	public static func rpcError(rpcErrorString: String, andFailWith: FailWith?) -> KukaiError {
-		return KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: rpcErrorString, failWith: andFailWith, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+	public static func rpcError(rpcErrorString: String, andFailWith: FailWith?, requestURL: URL?) -> KukaiError {
+		return KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: rpcErrorString, failWith: andFailWith, requestURL: requestURL, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
 	/// Create a KukaiError denoting a sytem issue from the OS, by passing in the system Error type
@@ -224,7 +224,7 @@ public class ErrorHandlingService {
 	// MARK: - Error parsers
 	
 	/// Convert an `OperationResponseInternalResultError` into a `KukaiError` and optionally log it to the central logger
-	public static func fromOperationError(_ opError: OperationResponseInternalResultError, andLog: Bool = true) -> KukaiError {
+	public static func fromOperationError(_ opError: OperationResponseInternalResultError, requestURL: URL?, andLog: Bool = true) -> KukaiError {
 		let errorWithoutProtocol = opError.id.removeLeadingProtocolFromRPCError()
 		var errorToReturn = KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: errorWithoutProtocol, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 		
@@ -233,19 +233,19 @@ public class ErrorHandlingService {
 			if let failwith = withError.int, let failwithInt = Int(failwith) {
 				// Smart contract failwith reached with an Int denoting an error code
 				// Liquidity baking error codes, need to consider how to incorporate: https://gitlab.com/dexter2tz/dexter2tz/-/blob/liquidity_baking/dexter.liquidity_baking.mligo#L85
-				errorToReturn = KukaiError.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"int\": \(failwithInt)}", andFailWith: opError.with)
+				errorToReturn = KukaiError.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"int\": \(failwithInt)}", andFailWith: opError.with, requestURL: requestURL)
 				
 			} else if let failwith = withError.string {
 				// Smart contract failwith reached with an String error message
-				errorToReturn = KukaiError.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"string\": \(failwith)}", andFailWith: opError.with)
+				errorToReturn = KukaiError.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"string\": \(failwith)}", andFailWith: opError.with, requestURL: requestURL)
 				
 			} else if let args = withError.args {
 				// Smart Contract failwith reached with a dictionary
-				errorToReturn = KukaiError.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"args\": \(args)}", andFailWith: opError.with)
+				errorToReturn = KukaiError.rpcError(rpcErrorString: "A FAILWITH instruction was reached: {\"args\": \(args)}", andFailWith: opError.with, requestURL: requestURL)
 				
 			} else {
 				// Unknown smart contract error
-				errorToReturn = KukaiError.rpcError(rpcErrorString: "michelson_v1.runtime_error", andFailWith: opError.with)
+				errorToReturn = KukaiError.rpcError(rpcErrorString: "michelson_v1.runtime_error", andFailWith: opError.with, requestURL: requestURL)
 			}
 		}
 		
@@ -254,9 +254,9 @@ public class ErrorHandlingService {
 	}
 	
 	/// Search an `OperationResponse` to see does it contain any errors, if so return the last one as a `KukaiError` and optionally log it to the central logger
-	public static func searchOperationResponseForErrors(_ opResponse: OperationResponse, andLog: Bool = true) -> KukaiError? {
+	public static func searchOperationResponseForErrors(_ opResponse: OperationResponse, requestURL: URL?, andLog: Bool = true) -> KukaiError? {
 		if let lastError = opResponse.errors().last {
-			let errorToReturn = ErrorHandlingService.fromOperationError(lastError)
+			let errorToReturn = ErrorHandlingService.fromOperationError(lastError, requestURL: requestURL)
 			
 			if andLog { logAndCallback(withKukaiError: errorToReturn) }
 			return errorToReturn
@@ -266,9 +266,9 @@ public class ErrorHandlingService {
 	}
 	
 	/// Search an `[OperationResponse]` to see does it contain any errors, if so return the last one as a`KukaiError` and optionally log it to the central logger
-	public static func searchOperationResponseForErrors(_ opResponse: [OperationResponse], andLog: Bool = true) -> KukaiError? {
+	public static func searchOperationResponseForErrors(_ opResponse: [OperationResponse], requestURL: URL?, andLog: Bool = true) -> KukaiError? {
 		if let lastError = opResponse.flatMap({ $0.errors() }).last {
-			let errorToReturn = ErrorHandlingService.fromOperationError(lastError)
+			let errorToReturn = ErrorHandlingService.fromOperationError(lastError, requestURL: requestURL)
 			
 			if andLog { logAndCallback(withKukaiError: errorToReturn) }
 			return errorToReturn
@@ -299,7 +299,7 @@ public class ErrorHandlingService {
 				let lastError = errorArray.last,
 				let errorString = lastError.id.removeLeadingProtocolFromRPCError()
 			{
-				errorToReturn = KukaiError.rpcError(rpcErrorString: errorString, andFailWith: lastError.with)
+				errorToReturn = KukaiError.rpcError(rpcErrorString: errorString, andFailWith: lastError.with, requestURL: requestURL)
 			} else {
 				errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: httpResponse.statusCode)
 			}

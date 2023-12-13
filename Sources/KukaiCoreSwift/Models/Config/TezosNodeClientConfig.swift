@@ -32,11 +32,8 @@ public struct TezosNodeClientConfig {
 	/// Preconfigured struct with all the URL's needed to work with Tezos mainnet
 	public struct defaultMainnetURLs {
 		
-		/// The default mainnet URL to use for `primaryNodeURL`, For more information on the free service, see: https://tezos.giganode.io/
-		public static let primaryNodeURL = URL(string: "https://mainnet-tezos.giganode.io/")!
-		
-		/// The default mainnet URL to use for `parseNodeURL`, For more information on the free service, see: https://nautilus.cloud/
-		public static let parseNodeURL = URL(string: "https://tezos-prod.cryptonomic-infra.tech:443/")!
+		/// The default mainnet URLs to use for estimating and injecting operations
+		public static let nodeURLs = [URL(string: "https://mainnet.smartpy.io")!, URL(string: "https://rpc.tzbeta.net")!]
 		
 		/// The default mainnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
 		public static let tzktURL = URL(string: "https://api.tzkt.io/")!
@@ -54,12 +51,8 @@ public struct TezosNodeClientConfig {
 	/// Preconfigured struct with all the URL's needed to work with Tezos testnet
 	public struct defaultTestnetURLs {
 		
-		/// The default mainnet URL to use for `primaryNodeURL`, For more information on Ghostnet, see: https://teztnets.xyz/ghostnet-about
-		public static let primaryNodeURL = URL(string: "https://rpc.ghostnet.teztnets.xyz")!
-		
-		/// The default testnet URL to use for `parseNodeURL`, For more information on Ghostnet, see: https://teztnets.xyz/ghostnet-about
-		/// When using remote forging on mainnet, you should use two seperate servers on seperate networks for security reasons
-		public static let parseNodeURL = URL(string: "https://rpc.ghostnet.teztnets.xyz")!
+		/// The default testnet URLs to use for estimating and injecting operations
+		public static let nodeURLs = [URL(string: "https://ghostnet.smartpy.io")!, URL(string: "https://rpc.ghostnet.tzboot.net")!]
 		
 		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
 		public static let tzktURL = URL(string: "https://api.ghostnet.tzkt.io/")!
@@ -78,11 +71,8 @@ public struct TezosNodeClientConfig {
 	
 	// MARK: - Public Properties
 	
-	/// The main URL used for remote forging, fetching balances, setting delegates and other forms of queries and operations.
-	public let primaryNodeURL: URL
-	
-	/// When using remote forging, it is essential to use a second server to verify the contents of the remote forge match what the library sent.
-	public let parseNodeURL: URL?
+	/// An array of Node URLs. Default to first, and fallback to rest one by one to attempt to avoid server side issues
+	public let nodeURLs: [URL]
 	
 	/// Controls whether to use local forging or remote forging+parsing
 	public let forgingType: ForgingType
@@ -114,8 +104,7 @@ public struct TezosNodeClientConfig {
 	
 	/**
 	Private Init to prevent users from making mistakes with remote forging settings.
-	- parameter primaryNodeURL: The URL of the primary node that will perform the majority of the network operations.
-	- parameter parseNodeURL: The URL to use to parse and verify a remote forge.
+	- parameter nodeURLs: An array of URLs to use to estiamte and inject operations. Default to first and fallback to others as needed
 	- parameter forgeType: Enum to indicate whether to use local or remote forging.
 	- parameter tzktURL: The URL to use for `TzKTClient`.
 	- parameter betterCallDevURL: The URL to use for `BetterCallDevClient`.
@@ -123,9 +112,8 @@ public struct TezosNodeClientConfig {
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	*/
-	private init(primaryNodeURL: URL, parseNodeURL: URL?, forgingType: ForgingType, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) {
-		self.primaryNodeURL = primaryNodeURL
-		self.parseNodeURL = primaryNodeURL
+	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) {
+		self.nodeURLs = nodeURLs
 		self.forgingType = forgingType
 		self.tzktURL = tzktURL
 		self.betterCallDevURL = betterCallDevURL
@@ -146,8 +134,7 @@ public struct TezosNodeClientConfig {
 		
 		switch networkType {
 			case .mainnet:
-				primaryNodeURL = TezosNodeClientConfig.defaultMainnetURLs.primaryNodeURL
-				parseNodeURL = TezosNodeClientConfig.defaultMainnetURLs.parseNodeURL
+				nodeURLs = TezosNodeClientConfig.defaultMainnetURLs.nodeURLs
 				forgingType = .local
 				tzktURL = TezosNodeClientConfig.defaultMainnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultMainnetURLs.betterCallDevURL
@@ -155,8 +142,7 @@ public struct TezosNodeClientConfig {
 				objktApiURL = TezosNodeClientConfig.defaultMainnetURLs.objktApiURL
 			
 			case .testnet:
-				primaryNodeURL = TezosNodeClientConfig.defaultTestnetURLs.primaryNodeURL
-				parseNodeURL = TezosNodeClientConfig.defaultTestnetURLs.parseNodeURL
+				nodeURLs = TezosNodeClientConfig.defaultTestnetURLs.nodeURLs
 				forgingType = .local
 				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL
 				betterCallDevURL = TezosNodeClientConfig.defaultTestnetURLs.betterCallDevURL
@@ -167,17 +153,16 @@ public struct TezosNodeClientConfig {
 	
 	/**
 	Creates an instance of `TezosNodeClientConfig` with only the required properties needed when using local forge.
-	- parameter primaryNodeURL: The URL of the primary node that will perform the majority of the network operations.
+	- parameter nodeURLs: An array of URLs to use to estiamte and inject operations. Default to first and fallback to others as needed
 	- parameter tzktURL: The URL to use for `TzKTClient`.
 	- parameter betterCallDevURL: The URL to use for `BetterCallDevClient`.
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithLocalForge(primaryNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		return TezosNodeClientConfig(
-			primaryNodeURL: primaryNodeURL,
-			parseNodeURL: nil,
+			nodeURLs: nodeURLs,
 			forgingType: .local,
 			tzktURL: tzktURL,
 			betterCallDevURL: betterCallDevURL,
@@ -188,23 +173,21 @@ public struct TezosNodeClientConfig {
 	}
 	
 	/**
-	Creates an instance of `TezosNodeClientConfig` with the required properties for remote forging. Note: function will casue a `fatalError` is users attempt to set `primaryNodeURL` and  `parseNodeURL` to the same destination
-	- parameter primaryNodeURL: The URL of the primary node that will perform the majority of the network operations.
-	- parameter parseNodeURL: The URL to use to parse and verify a remote forge. Must be a different server to primary node.
+	Creates an instance of `TezosNodeClientConfig` with the required properties for remote forging. Note: function will casue a `fatalError` if supplied with less than 2 `nodeURLs`
+	- parameter nodeURLs: An array of URLs to use to estiamte and inject operations. Default to first and fallback to others as needed
 	- parameter tzktURL: The URL to use for `TzKTClient`.
 	- parameter betterCallDevURL: The URL to use for `BetterCallDevClient`.
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithRemoteForge(primaryNodeURL: URL, parseNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
-		if primaryNodeURL.absoluteString == parseNodeURL.absoluteString {
-			fatalError("Setting the `primaryNodeURL` and the `parseNodeURL` to the same server poses a huge security risk, called a 'Blind signature attack'. Doing so is forbidden in this library.")
+	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+		if nodeURLs.count >= 2 {
+			fatalError("remote forging requires using different servers to prevent against man in the middle attacks. You must supply at least 2 URLs")
 		}
 		
 		return TezosNodeClientConfig(
-			primaryNodeURL: primaryNodeURL,
-			parseNodeURL: parseNodeURL,
+			nodeURLs: nodeURLs,
 			forgingType: .remote,
 			tzktURL: tzktURL,
 			betterCallDevURL: betterCallDevURL,

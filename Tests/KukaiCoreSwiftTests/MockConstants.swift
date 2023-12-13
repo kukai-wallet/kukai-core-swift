@@ -45,7 +45,8 @@ public struct MockConstants {
 		mockURLSession = URLSession(configuration: sessionConfig)
 		
 		// Setup URL mocks
-		let baseURL = config.primaryNodeURL
+		let baseURL = config.nodeURLs[0]
+		let secondBaseURL = config.nodeURLs[1]
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
 		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
@@ -137,9 +138,11 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head~3"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
+			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations"): (MockConstants.jsonStub(fromFilename: "forge"), MockConstants.http200),
 			// Parse is handled inside MockURLProtocol due to its special requirements
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
+			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
 			baseURL.appendingPathComponent("injection/operation"): (MockConstants.jsonStub(fromFilename: "inject"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/balance"): (MockConstants.jsonStub(fromFilename: "balance"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/delegate"): (MockConstants.jsonStub(fromFilename: "delegate"), MockConstants.http200),

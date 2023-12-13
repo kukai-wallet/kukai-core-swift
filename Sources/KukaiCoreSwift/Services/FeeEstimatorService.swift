@@ -164,7 +164,7 @@ public class FeeEstimatorService {
 			return
 		}
 		
-		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { [weak self] (result) in
+		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs) { [weak self] (result) in
 			guard let opToProcess = try? result.get(), let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
 				completion(Result.failure( result.getFailure()))
 				return

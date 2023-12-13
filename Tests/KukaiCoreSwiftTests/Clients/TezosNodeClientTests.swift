@@ -91,7 +91,8 @@ class TezosNodeClientTests: XCTestCase {
 	}
 	
 	func testSendOperationsError() {
-		MockURLProtocol.triggerCounterInFutureError()
+		MockURLProtocol.triggerCounterInFutureError(nodeUrl: 0)
+		MockURLProtocol.triggerCounterInFutureError(nodeUrl: 1)
 		
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.send(operations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet) { result in

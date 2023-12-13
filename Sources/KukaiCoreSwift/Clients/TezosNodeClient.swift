@@ -76,7 +76,7 @@ public class TezosNodeClient {
 	- parameter completion: A callback containing a new `Token` object matching the xtz standard, or an error.
 	*/
 	public func getBalance(forAddress address: String, completion: @escaping ((Result<XTZAmount, KukaiError>) -> Void)) {
-		self.networkService.send(rpc: RPC.xtzBalance(forAddress: address), withBaseURL: config.primaryNodeURL) { (result) in
+		self.networkService.send(rpc: RPC.xtzBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
 			switch result {
 				case .success(let rpcAmount):
 					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
@@ -98,7 +98,7 @@ public class TezosNodeClient {
 	- parameter completion: A callback containing a String with the delegate/baker's address, or an error.
 	*/
 	public func getDelegate(forAddress address: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		self.networkService.send(rpc: RPC.getDelegate(forAddress: address), withBaseURL: config.primaryNodeURL, completion: completion)
+		self.networkService.send(rpc: RPC.getDelegate(forAddress: address), withNodeURLs: config.nodeURLs, completion: completion)
 	}
 	
 	
@@ -194,7 +194,7 @@ public class TezosNodeClient {
 	*/
 	public func getOperationMetadata(forWalletAddress: String, completion: @escaping ((Result<OperationMetadata, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
-		let url = self.config.primaryNodeURL
+		let config = self.config
 		
 		var counter = 0
 		var managerKey: String? = nil
@@ -205,7 +205,7 @@ public class TezosNodeClient {
 		// Get manager key
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.managerKey(forAddress: forWalletAddress), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.managerKey(forAddress: forWalletAddress), withNodeURLs: config.nodeURLs) { (result) in
 				switch result {
 					case .success(let value):
 						managerKey = value
@@ -222,7 +222,7 @@ public class TezosNodeClient {
 		// Get counter
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.counter(forAddress: forWalletAddress), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.counter(forAddress: forWalletAddress), withNodeURLs: config.nodeURLs) { (result) in
 				switch result {
 					case .success(let value):
 						counter = Int(value) ?? 0
@@ -239,7 +239,7 @@ public class TezosNodeClient {
 		// Get blockchain head
 		dispatchGroup.enter()
 		metadataQueue.async { [weak self] in
-			self?.networkService.send(rpc: RPC.blockchainHeadMinus3(), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.blockchainHeadMinus3(), withNodeURLs: config.nodeURLs) { (result) in
 				switch result {
 					case .success(let value):
 						blockchainHead = value
@@ -269,7 +269,7 @@ public class TezosNodeClient {
 	- parameter completion: A callback with a `Result` object, with either a `[String: Any]` or an `Error`
 	*/
 	public func getContractStorage(contractAddress: String, completion: @escaping ((Result<[String: Any], KukaiError>) -> Void)) {
-		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withBaseURL: config.primaryNodeURL) { result in
+		self.networkService.send(rpc: RPC.contractStorage(contractAddress: contractAddress), withNodeURLs: config.nodeURLs) { result in
 			switch result {
 				case .success(let d):
 					if let json = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
@@ -290,7 +290,7 @@ public class TezosNodeClient {
 	 - parameter completion: A callback with a `Result` object, with either a `[String: Any]` or an `Error`
 	*/
 	public func getBigMap(id: String, completion: @escaping ((Result<[String: Any], KukaiError>) -> Void)) {
-		self.networkService.send(rpc: RPC.bigMap(id: id), withBaseURL: config.primaryNodeURL) { result in
+		self.networkService.send(rpc: RPC.bigMap(id: id), withNodeURLs: config.nodeURLs) { result in
 			switch result {
 				case .success(let d):
 					if let json = try? JSONSerialization.jsonObject(with: d) as? [String: Any] {
@@ -316,13 +316,13 @@ public class TezosNodeClient {
 		
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
-			guard let url = self?.config.primaryNodeURL else {
-				Logger.kukaiCoreSwift.info("Invalid server url: \(self?.config.primaryNodeURL.absoluteString ?? "nil")")
+			guard let config = self?.config else {
+				Logger.kukaiCoreSwift.info("Invalid nodeURLs")
 				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
 			
-			self?.networkService.send(rpc: RPC.networkVersion(), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.networkVersion(), withNodeURLs: config.nodeURLs) { (result) in
 				switch result {
 					case .success(let value):
 						self?.networkVersion = value
@@ -337,13 +337,13 @@ public class TezosNodeClient {
 		
 		dispatchGroup.enter()
 		dexterQueriesQueue.async { [weak self] in
-			guard let url = self?.config.primaryNodeURL else {
-				Logger.kukaiCoreSwift.info("Invalid server url: \(self?.config.primaryNodeURL.absoluteString ?? "nil")")
+			guard let config = self?.config else {
+				Logger.kukaiCoreSwift.info("Invalid nodeURLs")
 				completion(false, KukaiError.internalApplicationError(error: NetworkService.NetworkError.invalidURL))
 				return
 			}
 			
-			self?.networkService.send(rpc: RPC.networkConstants(), withBaseURL: url) { (result) in
+			self?.networkService.send(rpc: RPC.networkConstants(), withNodeURLs: config.nodeURLs) { (result) in
 				switch result {
 					case .success(let value):
 						self?.networkConstants = value

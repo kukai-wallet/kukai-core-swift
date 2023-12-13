@@ -17,8 +17,8 @@ struct MockPostUrlKey: Hashable {
 class MockURLProtocol: URLProtocol {
 	
 	private static var lastForgeRequest: Data? = nil
-	private let forgeURL = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations")
-	private let parseURL = MockConstants.shared.config.parseNodeURL!.appendingPathComponent("chains/main/blocks/head/helpers/parse/operations")
+	private let forgeURL = MockConstants.shared.config.nodeURLs[0].appendingPathComponent("chains/main/blocks/head/helpers/forge/operations")
+	private let parseURL = MockConstants.shared.config.nodeURLs[1].appendingPathComponent("chains/main/blocks/head/helpers/parse/operations")
 	
 	
 	/// Dictionary maps URLs to tuples of data, and response
@@ -151,18 +151,23 @@ class MockURLProtocol: URLProtocol {
 		
 	}
 	
-	static func triggerGasExhaustedErrorOnRunOperation() {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerGasExhaustedErrorOnRunOperation(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_gas"), response: MockConstants.http200)
 	}
 	
-	static func triggerAssertErrorOnRunOperation() {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerAssertErrorOnRunOperation(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
 	
-	static func triggerCounterInFutureError() {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations")
+	static func triggerCounterInFutureError(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_counter-in-future"), response: MockConstants.http500)
+	}
+	
+	static func triggerHttp500ErrorOnRunOperation(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+		MockURLProtocol.errorURLs[url] = (data: nil, response: MockConstants.http500)
 	}
 }

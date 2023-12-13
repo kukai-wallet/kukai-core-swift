@@ -53,14 +53,35 @@ public class NetworkService {
 	/**
 	A generic send function that takes an RPC, with a generic type conforming to `Decodable`, executes the request and returns the result.
 	- parameter rpc: A instance of `RPC`.
-	- parameter withBaseURL: The base URL needed. This will typically come from `TezosNodeConfig`.
+	- parameter withNodeURLs: An array of nodeURLs from `TezosNodeConfig`.
+	- parameter retryCount: An Int denoting the current number of attempts made. 3 is max.
 	- parameter completion: A completion callback that will be executed on the main thread.
 	- returns: Void
 	*/
-	public func send<T: Decodable>(rpc: RPC<T>, withBaseURL baseURL: URL, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
-		let fullURL = baseURL.appendingPathComponent(rpc.endpoint)
+	public func send<T: Decodable>(rpc: RPC<T>, withNodeURLs nodeURLs: [URL], retryCount: Int = 0, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
+		let fullURL = nodeURLs[retryCount].appendingPathComponent(rpc.endpoint)
 		
-		self.request(url: fullURL, isPOST: rpc.isPost, withBody: rpc.payload, forReturnType: T.self, completion: completion)
+		
+		self.request(url: fullURL, isPOST: rpc.isPost, withBody: rpc.payload, forReturnType: T.self) { [weak self] result in
+			guard let _ = try? result.get() else {
+				
+				// if request failed on first attempt, we have more urls, and the error was a HTTP error. The retry with another URL
+				// else return the error
+				let failure = result.getFailure()
+				let isRPCError = failure.errorType == .rpc
+				let isHttpError = (failure.httpStatusCode ?? 0) >= 300
+				if retryCount < nodeURLs.count-1, retryCount <= 3, (isRPCError || isHttpError) {
+					self?.send(rpc: rpc, withNodeURLs: nodeURLs, retryCount: (retryCount + 1), completion: completion)
+					
+				} else {
+					completion(result)
+				}
+				
+				return
+			}
+			
+			completion(result)
+		}
 	}
 	
 	/**
@@ -195,7 +216,7 @@ public class NetworkService {
 			operations = asOperations
 		}
 		
-		var error = ErrorHandlingService.searchOperationResponseForErrors(operations)
+		var error = ErrorHandlingService.searchOperationResponseForErrors(operations, requestURL: withRequestURL)
 		error?.addNetworkData(requestURL: withRequestURL, requestJSON: requestPayload, responseJSON: responsePayload, httpStatusCode: httpStatusCode)
 		
 		return error
