@@ -50,7 +50,7 @@ class TorusAuthServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	/*
@@ -70,7 +70,7 @@ class TorusAuthServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	*/
 }

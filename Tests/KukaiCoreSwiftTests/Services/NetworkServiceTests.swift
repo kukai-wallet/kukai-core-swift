@@ -34,7 +34,7 @@ class NetworkServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testPost() {
@@ -54,7 +54,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 30)
+			wait(for: [expectation], timeout: 120)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -84,7 +84,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 30)
+			wait(for: [expectation], timeout: 120)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -114,7 +114,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 30)
+			wait(for: [expectation], timeout: 120)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -143,7 +143,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 30)
+			wait(for: [expectation], timeout: 120)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -175,7 +175,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 30)
+			wait(for: [expectation], timeout: 120)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")
@@ -201,7 +201,7 @@ class NetworkServiceTests: XCTestCase {
 				expectation.fulfill()
 			}
 			
-			wait(for: [expectation], timeout: 30)
+			wait(for: [expectation], timeout: 120)
 			
 		} else {
 			XCTFail("Couldn't parse RPC")

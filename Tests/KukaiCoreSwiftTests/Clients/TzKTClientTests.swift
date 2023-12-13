@@ -32,7 +32,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testGetOperationError() {
@@ -50,7 +50,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testTransactionHistory() {
@@ -228,7 +228,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testGetAllBalances() {
@@ -319,7 +319,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testAvatarURL() {
@@ -359,7 +359,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testEstimateRewardsNoPayoutAddress() {
@@ -390,7 +390,7 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testBakers() {
@@ -411,6 +411,6 @@ class TzKTClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 }

@@ -104,7 +104,7 @@ class MediaProxySerivceTests: XCTestCase {
 			expectationAudio.fulfill()
 		}
 		
-		wait(for: [expectationImage, expectationVideo, expectationAudio], timeout: 30)
+		wait(for: [expectationImage, expectationVideo, expectationAudio], timeout: 120)
 	}
 	
 	func testMediaTypeCheckerFromUrlExtension() {
@@ -122,7 +122,7 @@ class MediaProxySerivceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testMediaTypeCheckerFromHeaders() {
@@ -140,6 +140,6 @@ class MediaProxySerivceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 }

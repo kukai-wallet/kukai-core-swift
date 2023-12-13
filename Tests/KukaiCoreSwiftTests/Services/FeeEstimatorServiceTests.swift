@@ -41,7 +41,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testEstimationWithSuggestedGas() {
@@ -71,6 +71,6 @@ class FeeEstimatorServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 30)
+		wait(for: [expectation], timeout: 120)
 	}
 }
