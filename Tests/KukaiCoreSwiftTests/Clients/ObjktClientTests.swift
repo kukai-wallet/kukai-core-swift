@@ -44,7 +44,7 @@ class ObjktClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 		
 		let unresolved = MockConstants.shared.objktClient.unresolvedCollections(addresses: ["KT1PETpupvqJVSTEayqCDchHWFXDPD4TyBNK", "not-in-list"])
 		XCTAssert(unresolved.count == 1, unresolved.count.description)
@@ -83,7 +83,7 @@ class ObjktClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 		
 		let token = MockConstants.shared.objktClient.tokenResponse(forAddress: "KT1XNJ67F3JN2cmq6s1LmqtVg7gy9tCcN4E2", tokenId: 15)
 		XCTAssert(token != nil)

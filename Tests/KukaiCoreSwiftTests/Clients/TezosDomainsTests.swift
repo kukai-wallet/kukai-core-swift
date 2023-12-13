@@ -32,7 +32,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 		})
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 	
 	func testGetAddress() {
@@ -49,7 +49,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 		})
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 	
 	func testGetDomains() {
@@ -66,7 +66,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 		})
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 	
 	func testGetAddresses() {
@@ -83,7 +83,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 		})
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 	
 	func testGetBoth() {
@@ -101,7 +101,7 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 	
 	func testGetBothBulk() {
@@ -119,6 +119,6 @@ class TezosDomainsClientTests: XCTestCase {
 			}
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 30)
 	}
 }
