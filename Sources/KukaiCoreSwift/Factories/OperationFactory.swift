@@ -413,6 +413,17 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Filter and verify only 1 transaction exists its not a transfer operation. If so return this operation, otherwise return false
+		 */
+		public static func isSingleContractCall(operations: [Operation]) -> (entrypoint: String, address: String)? {
+			if let op = isSingleTransaction(operations: operations), let details = isNonTransferContractCall(operation: op) {
+				return details
+			}
+			
+			return nil
+		}
+		
+		/**
 		 Extract details from a payload in order to present to the user what it is they are trying to send
 		 */
 		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
@@ -528,22 +539,22 @@ public class OperationFactory {
 		/**
 		 Check if the operation is a contract call, but ignore entrypoint trasnfer
 		 Useful for situations where you want to display different info about contract calls such as claim or mint, compared to transferring a token
-		 Return the entrypoint if so
+		 Return the entrypoint and contract address if so
 		 */
-		public static func isNonTransferContractCall(operation: Operation) -> String? {
-			if let entrypoint = isContractCall(operation: operation), entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue {
-				return entrypoint
+		public static func isNonTransferContractCall(operation: Operation) -> (entrypoint: String, address: String)? {
+			if let details = isContractCall(operation: operation), details.entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue {
+				return details
 			}
 			
 			return nil
 		}
 		
 		/**
-		 Check if the operation is a contract call, return the entrypoint if so, nil if not
+		 Check if the operation is a contract call, return the entrypoint and address if so, nil if not
 		 */
-		public static func isContractCall(operation: Operation) -> String? {
+		public static func isContractCall(operation: Operation) -> (entrypoint: String, address: String)? {
 			if let opT = operation as? OperationTransaction, let entrypoint = opT.parameters?["entrypoint"] as? String {
-				return entrypoint
+				return (entrypoint: entrypoint, address: opT.destination)
 			}
 			
 			return nil

@@ -591,11 +591,25 @@ class OperationFactoryTests: XCTestCase {
 		
 		// is contract
 		XCTAssert( OperationFactory.Extractor.isContractCall(operation: xtzOp[0]) == nil )
-		XCTAssert( OperationFactory.Extractor.isContractCall(operation: swap[0]) == "tezToTokenPayment" )
+		
+		let contractDetails1 = OperationFactory.Extractor.isContractCall(operation: swap[0])
+		XCTAssert(contractDetails1?.address == "KT1abc", contractDetails1?.address ?? "-")
+		XCTAssert(contractDetails1?.entrypoint == "tezToTokenPayment", contractDetails1?.entrypoint ?? "-")
 		
 		
 		// is contract not transfer
 		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: opFA1[0]) == nil )
-		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: swap[0]) == "tezToTokenPayment" )
+		
+		let contractDetails2 = OperationFactory.Extractor.isNonTransferContractCall(operation: swap[0])
+		XCTAssert(contractDetails2?.address == "KT1abc", contractDetails2?.address ?? "-")
+		XCTAssert(contractDetails2?.entrypoint == "tezToTokenPayment", contractDetails2?.entrypoint ?? "-")
+		
+		
+		// is single contract
+		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: opFA1[0]) == nil )
+		
+		let contractDetails3 = OperationFactory.Extractor.isSingleContractCall(operations: swap)
+		XCTAssert(contractDetails2?.address == "KT1abc", contractDetails2?.address ?? "-")
+		XCTAssert(contractDetails2?.entrypoint == "tezToTokenPayment", contractDetails2?.entrypoint ?? "-")
 	}
 }
