@@ -378,6 +378,53 @@ public class OperationFactory {
 	public struct Extractor {
 		
 		/**
+		 Filter reveal operations, update operations, approve etc, and check if what remains is a single OperationTransaction
+		 Useful for other functions, such as checking if the list of operations is a single token transfer
+		 */
+		public static func isSingleTransaction(operations: [Operation]) -> OperationTransaction? {
+			let filteredOperations = filterRevealApporveUpdate(operations: operations)
+			if filteredOperations.count == 1, let op = filteredOperations.first as? OperationTransaction {
+				return op
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Filter and verify only 1 transaction exists thats sending XTZ. If so return this operation, otherwise return false
+		 */
+		public static func isTezTransfer(operations: [Operation]) -> OperationTransaction? {
+			if let op = isSingleTransaction(operations: operations), op.amount != "0", op.parameters == nil {
+				return op
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Filter and verify only 1 transaction exists thats sending a token. If so return this operation, otherwise return false
+		 */
+		public static func isFaTokenTransfer(operations: [Operation]) -> (operation: OperationTransaction, tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let op = isSingleTransaction(operations: operations), let details = faTokenDetailsFrom(transaction: op) {
+				return (operation: op, tokenContract: details.tokenContract, rpcAmount: details.rpcAmount, tokenId: details.tokenId, destination: details.destination)
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Extract details from a payload in order to present to the user what it is they are trying to send
+		 */
+		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? [Any]()) {
+				let tokenContractAddress = transaction.destination
+				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId, destination: amountAndId.destination)
+			}
+			
+			return nil
+		}
+		
+		/**
 		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload
 		 */
 		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
@@ -414,29 +461,6 @@ public class OperationFactory {
 		}
 		
 		/**
-		 Extract details from a payload in order to present to the user what it is they are trying to send
-		 */
-		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
-			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? [Any]()) {
-				let tokenContractAddress = transaction.destination
-				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId, destination: amountAndId.destination)
-			}
-			
-			return nil
-		}
-		
-		/**
-		 Helper to  call `faTokenDetailsFrom(transaction: OperationTransaction)` on the first `OperationTransaction` in an array of operations. Allows to more easily parse an array of operations that may include `approval`'s or `update_operator` calls
-		 */
-		public static func faTokenDetailsFrom(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
-			if let op = operations.first(where: { $0 is OperationTransaction }) as? OperationTransaction {
-				return OperationFactory.Extractor.faTokenDetailsFrom(transaction: op)
-			}
-			
-			return nil
-		}
-		
-		/**
 		 Reveal, Approve and UpdateOperator operations can be appended to operation lists. When determining what the intent of the operation array is, it can be important to ignore these
 		 */
 		public static func filterRevealApporveUpdate(operations: [Operation]) -> [Operation] {
@@ -458,69 +482,71 @@ public class OperationFactory {
 		}
 		
 		/**
-		 Filter reveal operations, update operations, approve etc, to verify only 1 transaction exists thats sending XTZ. If so return this operation, otherweise return false
+		 Check if the array is only of type OperationTransaction, optionally ignore reveal as its usually supressed from user
+		 Useful in situations where you are displaying batch information but can only handle certain opertion types
 		 */
-		public static func isTezTransfer(operations: [Operation]) -> Operation? {
-			let filteredOperations = filterRevealApporveUpdate(operations: operations)
-			if filteredOperations.count == 1, let op = filteredOperations.first as? OperationTransaction, op.amount != "0", op.parameters == nil {
-				return op
-			}
+		public static func containsAllOperationTransactions(operations: [Operation], ignoreReveal: Bool = true) -> Bool {
+			var result = false
 			
-			return nil
-		}
-		
-		/// Easy way to extract the first non-`approval` or `update_operator` transaction
-		public static func firstTransferEntrypointOperation(operations: [Operation]) -> OperationTransaction? {
 			for op in operations {
-				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
-				   entrypoint == OperationTransaction.StandardEntrypoint.transfer.rawValue {
-					return opTrans
+				if let _ = op as? OperationTransaction {
+					result = true
+					
+				} else if let _ = op as? OperationReveal {
+					result = ignoreReveal ?  true : false
+					
+				} else {
+					result = false
+				}
+				
+				if !result {
+					return result
 				}
 			}
 			
-			return nil
+			return result
 		}
 		
 		/**
-		 Return the entrypoint and address of the first operation, that doesn't equal `approve`, `update_operator` or `transfer`
+		 Run through list of operations and extract .amount from any OperationTransaction + balance from any OperationOrigination
 		 */
-		public static func isContractCall(operations: [Operation]) -> (entrypoint: String, address: String)? {
-			if let contractOp = firstContractCallOperation(operations: operations), let entrypoint = contractOp.parameters?["entrypoint"] as? String {
-				return (entrypoint: entrypoint, address: contractOp.destination)
-			}
-			
-			return nil
-		}
-		
-		/**
-		 Return the first operation where entrypoint doesn't equal `approve`, `update_operator` or `transfer`
-		 */
-		public static func firstContractCallOperation(operations: [Operation]) -> OperationTransaction? {
-			for op in operations {
-				if let opTrans = op as? OperationTransaction, let entrypoint = opTrans.parameters?["entrypoint"] as? String,
-				   (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue &&
-					entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue &&
-					entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue) {
-					return opTrans
-				}
-			}
-			
-			return nil
-		}
-		
-		/**
-		 Run through list of operations and extract .amount from any OperationTransaction
-		 */
-		public static func totalXTZAmountForContractCall(operations: [Operation]) -> XTZAmount {
+		public static func totalTezAmountSent(operations: [Operation]) -> XTZAmount {
 			var amount = XTZAmount.zero()
 			
 			for op in operations {
 				if let opTrans = op as? OperationTransaction {
 					amount += (XTZAmount(fromRpcAmount: opTrans.amount) ?? .zero())
+					
+				} else if let opOrig = op as? OperationOrigination {
+					amount += (XTZAmount(fromRpcAmount: opOrig.balance) ?? .zero())
 				}
 			}
 			
 			return amount
+		}
+		
+		/**
+		 Check if the operation is a contract call, but ignore entrypoint trasnfer
+		 Useful for situations where you want to display different info about contract calls such as claim or mint, compared to transferring a token
+		 Return the entrypoint if so
+		 */
+		public static func isNonTransferContractCall(operation: Operation) -> String? {
+			if let entrypoint = isContractCall(operation: operation), entrypoint != OperationTransaction.StandardEntrypoint.transfer.rawValue {
+				return entrypoint
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Check if the operation is a contract call, return the entrypoint if so, nil if not
+		 */
+		public static func isContractCall(operation: Operation) -> String? {
+			if let opT = operation as? OperationTransaction, let entrypoint = opT.parameters?["entrypoint"] as? String {
+				return entrypoint
+			}
+			
+			return nil
 		}
 	}
 	

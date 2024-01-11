@@ -532,79 +532,70 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testExtractors() {
+		
 		let xtzOp = OperationFactory.sendOperation(MockConstants.xtz_1, of: MockConstants.tokenXTZ, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results1 = OperationFactory.Extractor.faTokenDetailsFrom(operations: xtzOp)
-		XCTAssert(results1 == nil)
-		
-		let isTezTransfer1 = OperationFactory.Extractor.isTezTransfer(operations: xtzOp)
-		XCTAssert(isTezTransfer1 != nil)
-		
-		
-		
 		let opFA1 = OperationFactory.sendOperation(MockConstants.token3Decimals_1, of: MockConstants.token3Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results2 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opFA1)
-		XCTAssert(results2 != nil)
-		XCTAssert(results2?.tokenContract == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", results2?.tokenContract ?? "-")
-		XCTAssert(results2?.rpcAmount == "1000", results2?.rpcAmount ?? "-")
-		XCTAssert(results2?.tokenId == nil, results2?.tokenId?.description ?? "-")
-		
-		let isTezTransfer2 = OperationFactory.Extractor.isTezTransfer(operations: opFA1)
-		XCTAssert(isTezTransfer2 == nil)
-		
-		let firstTrasnfer1 = OperationFactory.Extractor.firstTransferEntrypointOperation(operations: opFA1)
-		XCTAssert(firstTrasnfer1?.destination == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", firstTrasnfer1?.destination ?? "-")
-		
-		
-		
 		let opFA2 = OperationFactory.sendOperation(MockConstants.token10Decimals_1, of: MockConstants.token10Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results3 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opFA2)
-		XCTAssert(results3 != nil)
-		XCTAssert(results3?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", results3?.tokenContract ?? "-")
-		XCTAssert(results3?.rpcAmount == "10000000000", results3?.rpcAmount ?? "-")
-		XCTAssert(results3?.tokenId == 0, results3?.tokenId?.description ?? "-")
-		
-		let isTezTransfer3 = OperationFactory.Extractor.isTezTransfer(operations: opFA2)
-		XCTAssert(isTezTransfer3 == nil)
-		
-		let firstTrasnfer2 = OperationFactory.Extractor.firstTransferEntrypointOperation(operations: opFA2)
-		XCTAssert(firstTrasnfer2?.destination == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", firstTrasnfer2?.destination ?? "-")
-		
-		
-		
 		let opNFT = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results4 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opNFT)
-		XCTAssert(results4 != nil)
-		XCTAssert(results4?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", results4?.tokenContract ?? "-")
-		XCTAssert(results4?.rpcAmount == "1", results4?.rpcAmount ?? "-")
-		XCTAssert(results4?.tokenId == 4, results4?.tokenId?.description ?? "-")
-		
-		
 		
 		let dexToken = DipDupToken(symbol: "BLAH", address: "KT1def", tokenId: 123, decimals: 3, standard: .fa2)
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1abc", tezPool: "100000000000", tokenPool: "1000000000", sharesTotal: "100000", midPrice: "14", token: dexToken)
 		let swap = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: .init(fromNormalisedAmount: 14), minTokenAmount: .init(fromNormalisedAmount: 2, decimalPlaces: 3), walletAddress: "tz1abc", timeout: 60)
 		
-		let isContract = OperationFactory.Extractor.isContractCall(operations: swap)
-		XCTAssert(isContract?.entrypoint == "tezToTokenPayment", isContract?.entrypoint ?? "-")
-		XCTAssert(isContract?.address == "KT1abc", isContract?.address ?? "-")
 		
-		let firstContractOp = OperationFactory.Extractor.firstContractCallOperation(operations: swap)
-		XCTAssert(firstContractOp?.destination == "KT1abc", firstContractOp?.destination ?? "-")
-		
-		
-		var xtzOpsCopy = xtzOp
-		xtzOpsCopy.append(contentsOf: xtzOp)
-		
-		let totalXTZ = OperationFactory.Extractor.totalXTZAmountForContractCall(operations: xtzOpsCopy)
-		XCTAssert(totalXTZ.description == "2", totalXTZ.description)
+		// is single transctions
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: xtzOp) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: opFA1) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: opFA2) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: opNFT) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: MockConstants.sendOperationWithReveal) != nil )
 		
 		
-		// Filtering out reveals / approves / updates etc
-		let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "")
-		let singularXTZ = OperationTransaction(amount: MockConstants.xtz_1, source: MockConstants.defaultHdWallet.address, destination: MockConstants.defaultLinearWallet.address)
-		let filterOps1: [KukaiCoreSwift.Operation] = [reveal, singularXTZ]
-		let filterExtractions = OperationFactory.Extractor.filterRevealApporveUpdate(operations: filterOps1)
-		XCTAssert(filterExtractions.count == 1)
-		XCTAssert(filterExtractions[0].operationKind == .transaction)
+		// Is Tez transfer
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: xtzOp) != nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opFA1) == nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opFA2) == nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opNFT) == nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: MockConstants.sendOperationWithReveal) != nil )
+		
+		
+		// is token transfer
+		XCTAssert( OperationFactory.Extractor.isFaTokenTransfer(operations: xtzOp) == nil )
+		
+		let fa1Results = OperationFactory.Extractor.isFaTokenTransfer(operations: opFA1)
+		XCTAssert(fa1Results?.tokenContract == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", fa1Results?.tokenContract ?? "-")
+		XCTAssert(fa1Results?.rpcAmount == "1000", fa1Results?.rpcAmount ?? "-")
+		XCTAssert(fa1Results?.tokenId == nil, fa1Results?.tokenId?.description ?? "-")
+		
+		let fa2Results = OperationFactory.Extractor.isFaTokenTransfer(operations: opFA2)
+		XCTAssert(fa2Results?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", fa2Results?.tokenContract ?? "-")
+		XCTAssert(fa2Results?.rpcAmount == "10000000000", fa2Results?.rpcAmount ?? "-")
+		XCTAssert(fa2Results?.tokenId == 0, fa2Results?.tokenId?.description ?? "-")
+		
+		let nftResults = OperationFactory.Extractor.isFaTokenTransfer(operations: opNFT)
+		XCTAssert(nftResults?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", nftResults?.tokenContract ?? "-")
+		XCTAssert(nftResults?.rpcAmount == "1", nftResults?.rpcAmount ?? "-")
+		XCTAssert(nftResults?.tokenId == 4, nftResults?.tokenId?.description ?? "-")
+		
+		XCTAssert( OperationFactory.Extractor.isFaTokenTransfer(operations: MockConstants.sendOperationWithReveal) == nil )
+		
+		
+		// contains all operationTransaction
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: xtzOp) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: opFA1) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: opFA2) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: opNFT) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: MockConstants.sendOperationWithReveal, ignoreReveal: true) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: MockConstants.sendOperationWithReveal, ignoreReveal: false) == false )
+		
+		
+		// is contract
+		XCTAssert( OperationFactory.Extractor.isContractCall(operation: xtzOp[0]) == nil )
+		XCTAssert( OperationFactory.Extractor.isContractCall(operation: swap[0]) == "tezToTokenPayment" )
+		
+		
+		// is contract not transfer
+		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: opFA1[0]) == nil )
+		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: swap[0]) == "tezToTokenPayment" )
 	}
 }
