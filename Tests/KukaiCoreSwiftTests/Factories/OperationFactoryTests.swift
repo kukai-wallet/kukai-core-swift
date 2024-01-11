@@ -609,7 +609,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: opFA1[0]) == nil )
 		
 		let contractDetails3 = OperationFactory.Extractor.isSingleContractCall(operations: swap)
-		XCTAssert(contractDetails2?.address == "KT1abc", contractDetails2?.address ?? "-")
-		XCTAssert(contractDetails2?.entrypoint == "tezToTokenPayment", contractDetails2?.entrypoint ?? "-")
+		XCTAssert(contractDetails3?.address == "KT1abc", contractDetails3?.address ?? "-")
+		XCTAssert(contractDetails3?.entrypoint == "tezToTokenPayment", contractDetails3?.entrypoint ?? "-")
 	}
 }
