@@ -378,11 +378,11 @@ public class OperationFactory {
 	public struct Extractor {
 		
 		/**
-		 Filter reveal operations, update operations, approve etc, and check if what remains is a single OperationTransaction
-		 Useful for other functions, such as checking if the list of operations is a single token transfer
+		 Filter reveal operation (if present), and check if what remains is a single OperationTransaction
+		 Useful for other functions, such as checking if the list of operations is a single XTZ or token transfer
 		 */
 		public static func isSingleTransaction(operations: [Operation]) -> OperationTransaction? {
-			let filteredOperations = filterRevealApporveUpdate(operations: operations)
+			let filteredOperations = filterReveal(operations: operations)
 			if filteredOperations.count == 1, let op = filteredOperations.first as? OperationTransaction {
 				return op
 			}
@@ -469,6 +469,21 @@ public class OperationFactory {
 			} else {
 				return nil
 			}
+		}
+		
+		/**
+		 Reveal operation is often visually hidden from user, as its a mandatory step thats handled automatically
+		 */
+		public static func filterReveal(operations: [Operation]) -> [Operation] {
+			let ops = operations.filter { opToCheck in
+				if opToCheck.operationKind == .reveal {
+					return false
+				}
+				
+				return true
+			}
+			
+			return ops
 		}
 		
 		/**

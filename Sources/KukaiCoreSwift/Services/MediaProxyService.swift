@@ -64,6 +64,10 @@ public class MediaProxyService: NSObject {
 	private static let permanentCache = ImageCache(name: "permanent")
 	private static let temporaryCache = ImageCache(name: "temporary")
 	
+	public static func setupKingfisher() {
+		KingfisherManager.shared.cache.memoryStorage.config.totalCostLimit = Int(500 * 1000 * 1000) // 500 MB
+	}
+	
 	
 	// MARK: - URL conversion
 	
