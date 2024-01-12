@@ -159,7 +159,7 @@ extension Array where Element == Operation {
 				case .transaction:
 					tempOp = try? JSONDecoder().decode(OperationTransaction.self, from: jsonObjAsData)
 				case .unknown:
-					tempOp = nil
+					tempOp = try? JSONDecoder().decode(OperationUnknown.self, from: jsonObjAsData)
 			}
 			
 			if let tempOp = tempOp {
