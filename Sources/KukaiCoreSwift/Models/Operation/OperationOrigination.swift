@@ -15,7 +15,7 @@ public class OperationOrigination: Operation {
 	public let balance: String
 	
 	/// Dictionary holding the `code` and `storage` of the contract to create.
-	public let script: [String: String]
+	public let script: [String: Any]
 	
 	enum CodingKeys: String, CodingKey {
         case balance
@@ -46,7 +46,7 @@ public class OperationOrigination: Operation {
 	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		balance = try container.decode(String.self, forKey: .balance)
-		script = try container.decode([String: String].self, forKey: .script)
+		script = try container.decode([String: Any].self, forKey: .script)
 		
 		try super.init(from: decoder)
 	}
@@ -73,6 +73,16 @@ public class OperationOrigination: Operation {
 		
 		return superResult &&
 			balance == op.balance &&
-			script == op.script
+			doScriptsMatch(lhs: script, rhs: op.script)
+	}
+	
+	private func doScriptsMatch(lhs: [String: Any], rhs: [String: Any]) -> Bool {
+		for key in lhs.keys {
+			if "\(String(describing: lhs[key]))" != "\(String(describing: rhs[key]))" {
+				return false
+			}
+		}
+		
+		return true
 	}
 }

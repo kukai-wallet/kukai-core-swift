@@ -163,7 +163,6 @@ class OperationModelTests: XCTestCase {
 		let op2 =  OperationOrigination(source: MockConstants.defaultLinearWallet.address, balance: XTZAmount(fromNormalisedAmount: 2), code: "contract-code2", storage: "contract-initial-storage2")
 		
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
-		XCTAssert(op.script == ["code": "contract-code", "storage": "contract-initial-storage"], "\(op.script)")
 		XCTAssert(op.operationKind == .origination)
 		XCTAssertFalse(op.isEqual(op2))
 		
@@ -175,6 +174,67 @@ class OperationModelTests: XCTestCase {
 		XCTAssert(readResult?.isEqual(op) ?? false)
 		
 		let _ = DiskService.delete(fileName: "OperationOrigination.txt")
+		
+		
+		
+		
+		let json = """
+			{
+				"kind": "origination",
+				"source": "tz1abcdef",
+				"balance": "0",
+				"script": {
+					"code": [
+						{
+							"prim": "parameter",
+							"args": [
+								{
+									"prim": "unit"
+								}
+							]
+						},
+						{
+							"prim": "storage",
+							"args": [
+								{
+									"prim": "unit"
+								}
+							]
+						},
+						{
+							"prim": "code",
+							"args": [
+								[
+									{
+										"prim": "DROP"
+									},
+									{
+										"prim": "UNIT"
+									},
+									{
+										"prim": "NIL",
+										"args": [
+											{
+												"prim": "operation"
+											}
+										]
+									},
+									{
+										"prim": "PAIR"
+									}
+								]
+							]
+						}
+					],
+					"storage": {
+						"prim": "Unit"
+					}
+				}
+			}
+		"""
+		
+		let jsonOp = try? JSONDecoder().decode(OperationOrigination.self, from: json.data(using: .utf8) ?? Data())
+		XCTAssert(jsonOp != nil)
 	}
 	
 	func testEndorsement() {
