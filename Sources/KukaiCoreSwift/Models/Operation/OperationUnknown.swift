@@ -114,7 +114,7 @@ public class OperationUnknown: Operation {
 			try? container.encodeIfPresent(self.counter, forKey: key)
 		}
 		
-		if let storageKey = DynamicCodingKey(stringValue: "storageLimit"), let gasKey = DynamicCodingKey(stringValue: "gasLimit"), let feeKey = DynamicCodingKey(stringValue: "fee") {
+		if let storageKey = DynamicCodingKey(stringValue: "storage_limit"), let gasKey = DynamicCodingKey(stringValue: "gas_limit"), let feeKey = DynamicCodingKey(stringValue: "fee") {
 			try container.encode("\(operationFees.storageLimit)", forKey: storageKey)
 			try container.encode("\(operationFees.gasLimit)", forKey: gasKey)
 			try container.encode(operationFees.transactionFee.rpcRepresentation, forKey: feeKey)

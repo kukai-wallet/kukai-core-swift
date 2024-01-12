@@ -353,7 +353,7 @@ class OperationModelTests: XCTestCase {
 		let string = String(data: data ?? Data(), encoding: .utf8)
 		
 		let jsonOuput = """
-		{"amount":"1000000","counter":"14","destination":"KT1CYkiSJtKgFNy6whArwpn3TsYe7iX9SwFu","fee":"140000","gasLimit":"1400","kind":"somethingWeird","parameters":{"entrypoint":"wrap","value":{"string":"tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"}},"somethingVeryNew":"bingo","source":"TZ1abcdef","storageLimit":"1452"}
+		{"amount":"1000000","counter":"14","destination":"KT1CYkiSJtKgFNy6whArwpn3TsYe7iX9SwFu","fee":"140000","gas_limit":"1400","kind":"somethingWeird","parameters":{"entrypoint":"wrap","value":{"string":"tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"}},"somethingVeryNew":"bingo","source":"TZ1abcdef","storage_limit":"1452"}
 		"""
 		XCTAssert(string == jsonOuput, string ?? "-")
 	}
