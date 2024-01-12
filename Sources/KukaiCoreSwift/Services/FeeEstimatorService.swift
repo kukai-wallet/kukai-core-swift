@@ -257,7 +257,7 @@ public class FeeEstimatorService {
 			totalAllocationFee += results.allocationFee
 			
 			// If we are allocating an address, we need to include it as storage on our operation
-			if results.allocationFee > XTZAmount.zero() {
+			if results.allocationFee > XTZAmount.zero() || content.isOrigination() {
 				opAllocationStorage = constants.bytesForReveal()
 			}
 			
@@ -273,7 +273,7 @@ public class FeeEstimatorService {
 					totalAllocationFee += results.allocationFee
 					
 					// If we are allocating an address, we need to include it as storage on our operation
-					if results.allocationFee > XTZAmount.zero() {
+					if results.allocationFee > XTZAmount.zero() || content.isOrigination() {
 						opAllocationStorage += constants.bytesForReveal()
 					}
 				}
