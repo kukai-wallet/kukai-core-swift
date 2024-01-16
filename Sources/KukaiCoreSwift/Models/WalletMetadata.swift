@@ -226,6 +226,7 @@ public struct WalletMetadata: Codable, Hashable {
 	public var hdWalletGroupName: String?
 	public var walletNickname: String?
 	public var socialUsername: String?
+	public var socialUserId: String?
 	public var mainnetDomains: [TezosDomainsReverseRecord]?
 	public var ghostnetDomains: [TezosDomainsReverseRecord]?
 	public var socialType: TorusAuthProvider?
@@ -276,11 +277,12 @@ public struct WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
+	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
 		self.address = address
 		self.hdWalletGroupName = hdWalletGroupName
 		self.walletNickname = walletNickname
 		self.socialUsername = socialUsername
+		self.socialUserId = socialUserId
 		self.mainnetDomains = mainnetDomains
 		self.ghostnetDomains = ghostnetDomains
 		self.socialType = socialType

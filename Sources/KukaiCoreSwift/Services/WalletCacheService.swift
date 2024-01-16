@@ -120,7 +120,7 @@ public class WalletCacheService {
 			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
-			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
+			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUsername, socialUserId: torusWallet.socialUserId, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else if let _ = wallet as? LedgerWallet {
 			newMetadata.ledgerWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
