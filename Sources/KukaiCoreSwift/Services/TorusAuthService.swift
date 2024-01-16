@@ -31,6 +31,7 @@ public enum TorusAuthProvider: String, Codable {
 	case twitch
 	case line
 	case github
+	case email
 }
 
 /// SDK requires information about the verifer that can't be stored inside the verifier, add a wrapper object to allow passing of all the data
