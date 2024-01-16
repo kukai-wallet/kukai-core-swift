@@ -152,6 +152,15 @@ public class TorusAuthService: NSObject {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
+		} else if verifierWrapper.isAggregate && verifierWrapper.subverifier.loginProvider == .twitter {
+			torus = CustomAuth(aggregateVerifierType: .singleLogin,
+							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
+							   subVerifierDetails: [verifierWrapper.subverifier],
+							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
+							   loglevel: .error,
+							   urlSession: self.networkService.urlSession,
+							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
+			
 		} else if verifierWrapper.isAggregate {
 			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
 							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
@@ -169,6 +178,8 @@ public class TorusAuthService: NSObject {
 							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
 							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
+			
+			
 		}
 		
 		
@@ -294,6 +305,9 @@ public class TorusAuthService: NSObject {
 		
 		let isTestnet = (verifierWrapper.networkType == .testnet)
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .TESTNET : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
+		
+		
+		
 		
 		Task { @MainActor in
 			do {
