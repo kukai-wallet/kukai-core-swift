@@ -247,6 +247,14 @@ public class TorusAuthService: NSObject {
 						print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
 						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 						
+					case .email:
+						if let userInfoDict = data["userInfo"] as? [String: Any] {
+							username = userInfoDict["email"] as? String
+							userId = userInfoDict["email"] as? String
+							profile = userInfoDict["picture"] as? String
+						}
+						pk = data["privateKey"] as? String
+						
 					default:
 						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 				}
