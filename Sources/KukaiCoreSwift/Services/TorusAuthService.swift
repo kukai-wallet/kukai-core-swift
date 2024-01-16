@@ -153,7 +153,7 @@ public class TorusAuthService: NSObject {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
-		} else if verifierWrapper.isAggregate && verifierWrapper.aggregateVerifierName == verifierWrapper.subverifier.verifier && verifierWrapper.subverifier.loginProvider != .reddit {
+		} else if verifierWrapper.isAggregate && verifierWrapper.aggregateVerifierName == verifierWrapper.subverifier.verifier && verifierWrapper.aggregateVerifierName?.suffix(6) != "reddit" {
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
 							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 							   subVerifierDetails: [verifierWrapper.subverifier],
