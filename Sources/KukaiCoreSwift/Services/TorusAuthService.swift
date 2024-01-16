@@ -153,7 +153,7 @@ public class TorusAuthService: NSObject {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
-		} else if verifierWrapper.isAggregate && ("\(verifierWrapper.subverifier.handler)" == "CustomAuth.JWTLoginHandler" || "\(verifierWrapper.subverifier.handler)" == "CustomAuth.RedditLoginHandler") { // class type private
+		} else if verifierWrapper.isAggregate && verifierWrapper.aggregateVerifierName == verifierWrapper.subverifier.verifier  /*("\(verifierWrapper.subverifier.handler)" == "CustomAuth.JWTLoginHandler" || "\(verifierWrapper.subverifier.handler)" == "CustomAuth.RedditLoginHandler")*/ { // class type private
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
 							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 							   subVerifierDetails: [verifierWrapper.subverifier],
