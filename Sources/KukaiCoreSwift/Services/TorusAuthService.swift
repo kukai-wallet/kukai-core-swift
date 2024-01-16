@@ -152,14 +152,14 @@ public class TorusAuthService: NSObject {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
-		} else if verifierWrapper.isAggregate && verifierWrapper.subverifier.loginProvider == .twitter {
+		} else if verifierWrapper.isAggregate && "\(verifierWrapper.subverifier.handler)" == "CustomAuth.JWTLoginHandler" { // class type private
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
 							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
 							   subVerifierDetails: [verifierWrapper.subverifier],
 							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
-							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
+							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
 			
 		} else if verifierWrapper.isAggregate {
 			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
@@ -168,7 +168,7 @@ public class TorusAuthService: NSObject {
 							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
-							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
+							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
 			
 		} else {
 			torus = CustomAuth(aggregateVerifierType: .singleLogin,
@@ -177,9 +177,7 @@ public class TorusAuthService: NSObject {
 							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
-							   networkUrl: verifierWrapper.networkType == .testnet ? "https://rpc.ankr.com/eth_ropsten" : nil)
-			
-			
+							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
 		}
 		
 		
