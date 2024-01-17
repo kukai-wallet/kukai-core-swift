@@ -260,14 +260,22 @@ public class TorusAuthService: NSObject {
 				}
 				
 				
-				// Create wallet with details and return
-				guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
-					Logger.torus.error("Error torus contained no, or invlaid private key")
-					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
-					return
+				// Twitter API doesn't give us the bloody "@" handle for some reason. Fetch that first and overwrite the username property with the handle, if found
+				if authType == .twitter {
+					twitterHandleLookup(id: userId ?? "") { [weak self] result in
+						switch result {
+							case .success(let actualUsername):
+								self?.createTorusWalletAndContinue(pk: pk, authType: authType, username: actualUsername, userId: userId, profile: profile, completion: completion)
+								
+							case .failure(_):
+								self?.createTorusWalletAndContinue(pk: pk, authType: authType, username: username, userId: userId, profile: profile, completion: completion)
+						}
+					}
+					
+				} else {
+					createTorusWalletAndContinue(pk: pk, authType: authType, username: username, userId: userId, profile: profile, completion: completion)
 				}
 				
-				completion(Result.success(wallet))
 			} catch {
 				Logger.torus.error("Error logging in: \(error)")
 				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
@@ -276,6 +284,15 @@ public class TorusAuthService: NSObject {
 		}
 	}
 	
+	private func createTorusWalletAndContinue(pk: String?, authType: TorusAuthProvider, username: String?, userId: String?, profile: String?, completion: @escaping ((Result<TorusWallet, KukaiError>) -> Void)) {
+		guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
+			Logger.torus.error("Error torus contained no, or invlaid private key")
+			completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+			return
+		}
+		
+		completion(Result.success(wallet))
+	}
 	
 	
 	
@@ -293,7 +310,7 @@ public class TorusAuthService: NSObject {
 		}
 		
 		if authType == .twitter {
-			twitterLookup(username: socialUsername) { [weak self] twitterResult in
+			twitterAddressLookup(username: socialUsername) { [weak self] twitterResult in
 				switch twitterResult {
 					case .success(let twitterUserId):
 						self?.getPublicAddress(verifierName: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.clientId, verifierWrapper: verifierWrapper, socialUserId: "twitter|\(twitterUserId)", completion: completion)
@@ -364,20 +381,45 @@ public class TorusAuthService: NSObject {
 		}
 	}
 	
+	/**
+	 Take in a Twitter id and fetch the Twitter username instead.
+	 - parameter id: The users ID. Can contain a prefix of "twitter|" or not
+	 - parameter completion: The callback fired when the username has been found
+	 */
+	public func twitterHandleLookup(id: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
+		guard let url = URL(string: "https://backend.kukai.network/twitter-lookup") else {
+			completion(Result.failure(KukaiError.unknown(withString: "Unable to setup request to kukai twitter service")))
+			return
+		}
+		let sanitisedId = id.replacingOccurrences(of: "twitter|", with: "")
+		let data = "{ \"id\": \(sanitisedId) }".data(using: .utf8)
+		networkService.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
+			switch result {
+				case .success(let dict):
+					if let username = dict["username"] {
+						completion(Result.success("@\(username)"))
+					} else {
+						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.noTwiiterUserIdFound)))
+					}
+					
+				case .failure(let error):
+					completion(Result.failure(error))
+			}
+		}
+	}
 	
 	/**
-	Take in a Twitter username and fetch the Twitter userId instead.
-	- parameter username: The users username. Can contain an `@` symbol, but will be stripped out by the code as its not required
-	- parameter completion: The callback fired when the userId has been found
-	*/
-	public func twitterLookup(username: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		let sanitizedUsername = username.replacingOccurrences(of: "@", with: "")
-		
-		guard let url = URL(string: "https://api.tezos.help/twitter-lookup/") else {
+	 Take in a Twitter username and fetch the Twitter userId instead.
+	 - parameter username: The users username. Can contain an `@` symbol, but will be stripped out by the code as its not required
+	 - parameter completion: The callback fired when the userId has been found
+	 */
+	public func twitterAddressLookup(username: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
+		guard let url = URL(string: "https://backend.kukai.network/twitter-lookup") else {
 			completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTwitterURL)))
 			return
 		}
 		
+		let sanitizedUsername = username.replacingOccurrences(of: "@", with: "")
 		let data = "{\"username\": \"\(sanitizedUsername)\"}".data(using: .utf8)
 		networkService.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
 			switch result {
