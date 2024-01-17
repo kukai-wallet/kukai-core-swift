@@ -326,12 +326,8 @@ public class TorusAuthService: NSObject {
 	
 	/// Private wrapper to avoid duplication in the previous function
 	private func getPublicAddress(verifierName: String, verifierWrapper: SubverifierWrapper, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		
 		let isTestnet = (verifierWrapper.networkType == .testnet)
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .TESTNET : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
-		
-		
-		
 		
 		Task { @MainActor in
 			do {
@@ -392,7 +388,7 @@ public class TorusAuthService: NSObject {
 			return
 		}
 		let sanitisedId = id.replacingOccurrences(of: "twitter|", with: "")
-		let data = "{ \"id\": \(sanitisedId) }".data(using: .utf8)
+		let data = "{ \"id\": \"\(sanitisedId)\"}".data(using: .utf8)
 		networkService.request(url: url, isPOST: true, withBody: data, forReturnType: [String: String].self) { result in
 			switch result {
 				case .success(let dict):
