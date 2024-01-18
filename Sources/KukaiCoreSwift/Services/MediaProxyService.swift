@@ -362,6 +362,8 @@ public class MediaProxyService: NSObject {
 		
 		
 		imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+		imageView.sd_imageIndicator?.startAnimatingIndicator()
+		
 		imageManager(forCacheType: cacheType)?.loadImage(with: url, context: options, progress: nil, completed: { image, data, error, sdCacheType, success, url in
 			
 			if image != nil {
@@ -369,6 +371,9 @@ public class MediaProxyService: NSObject {
 			} else {
 				imageView.image = fallback
 			}
+			
+			imageView.sd_imageIndicator?.stopAnimatingIndicator()
+			imageView.sd_imageIndicator = nil
 			
 			completion?(image?.size)
 		})
