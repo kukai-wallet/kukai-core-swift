@@ -103,6 +103,8 @@ public class MediaProxyService: NSObject {
 		let temporaryImageManager = SDWebImageManager(cache: MediaProxyService.temporaryCache, loader: SDImageLoadersManager())
 		MediaProxyService.temporaryImageManager = temporaryImageManager
 		MediaProxyService.prefetcher = SDWebImagePrefetcher(imageManager: temporaryImageManager)
+		
+		SDWebImageDownloader.shared.config.downloadTimeout = 60
 	}
 	
 	public static func imageManager(forCacheType: CacheType) -> SDWebImageManager? {
