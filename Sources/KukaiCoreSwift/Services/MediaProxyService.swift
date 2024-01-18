@@ -90,6 +90,8 @@ public class MediaProxyService: NSObject {
 	private static var temporaryImageManager: SDWebImageManager? = nil
 	private static var prefetcher: SDWebImagePrefetcher? = nil
 	
+	public static var isDarkMode = true
+	
 	
 	public static func setupImageLibrary() {
 		MediaProxyService.permanentCache.config.maxMemoryCost = UInt(100 * 1000 * 1000) // 100 MB
@@ -361,7 +363,8 @@ public class MediaProxyService: NSObject {
 		}
 		
 		
-		imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+		imageView.image = nil
+		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
 		imageView.sd_imageIndicator?.startAnimatingIndicator()
 		
 		imageManager(forCacheType: cacheType)?.loadImage(with: url, context: options, progress: nil, completed: { image, data, error, sdCacheType, success, url in
