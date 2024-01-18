@@ -26,35 +26,35 @@ class MediaProxySerivceTests: XCTestCase {
 	}
 	
 	func testURLFormatters() {
-		let url1 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.ipfsURIWithoutExtension, ofFormat: .small)
-		let url2 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.ipfsURIWithExtension, ofFormat: .medium)
-		let url3 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.httpsURI, ofFormat: .gallery)
-		let url4 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.ipfsURIWithoutExtension, ofFormat: .raw)
+		let url1 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.ipfsURIWithoutExtension, ofFormat: .mobile64)
+		let url2 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.ipfsURIWithExtension, ofFormat: .mobile128)
+		let url3 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.httpsURI, ofFormat: .mobile180)
+		let url4 = MediaProxyService.url(fromUriString: MediaProxySerivceTests.ipfsURIWithoutExtension, ofFormat: .mobile900)
 		
-		XCTAssert(url1?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url1?.absoluteString ?? "")
-		XCTAssert(url2?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url2?.absoluteString ?? "")
-		XCTAssert(url3?.absoluteString == "https://static.tcinfra.net/media/gallery/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url3?.absoluteString ?? "")
-		XCTAssert(url4?.absoluteString == "https://static.tcinfra.net/media/raw/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url4?.absoluteString ?? "")
+		XCTAssert(url1?.absoluteString == "https://data.mantodev.com/media/mobile64/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url1?.absoluteString ?? "")
+		XCTAssert(url2?.absoluteString == "https://data.mantodev.com/media/mobile128/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url2?.absoluteString ?? "")
+		XCTAssert(url3?.absoluteString == "https://data.mantodev.com/media/mobile180/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url3?.absoluteString ?? "")
+		XCTAssert(url4?.absoluteString == "https://data.mantodev.com/media/mobile900/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url4?.absoluteString ?? "")
 		
-		let url5 = MediaProxyService.url(fromUri: URL(string: MediaProxySerivceTests.ipfsURIWithoutExtension), ofFormat: .medium)
-		let url6 = MediaProxyService.url(fromUri: URL(string: MediaProxySerivceTests.ipfsURIWithExtension), ofFormat: .medium)
-		let url7 = MediaProxyService.url(fromUri: URL(string: MediaProxySerivceTests.httpsURI), ofFormat: .medium)
+		let url5 = MediaProxyService.url(fromUri: URL(string: MediaProxySerivceTests.ipfsURIWithoutExtension), ofFormat: .mobile64)
+		let url6 = MediaProxyService.url(fromUri: URL(string: MediaProxySerivceTests.ipfsURIWithExtension), ofFormat: .mobile64)
+		let url7 = MediaProxyService.url(fromUri: URL(string: MediaProxySerivceTests.httpsURI), ofFormat: .mobile64)
 		
-		XCTAssert(url5?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url5?.absoluteString ?? "")
-		XCTAssert(url6?.absoluteString == "https://static.tcinfra.net/media/medium/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url6?.absoluteString ?? "")
-		XCTAssert(url7?.absoluteString == "https://static.tcinfra.net/media/medium/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url7?.absoluteString ?? "")
+		XCTAssert(url5?.absoluteString == "https://data.mantodev.com/media/mobile64/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url5?.absoluteString ?? "")
+		XCTAssert(url6?.absoluteString == "https://data.mantodev.com/media/mobile64/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url6?.absoluteString ?? "")
+		XCTAssert(url7?.absoluteString == "https://data.mantodev.com/media/mobile64/web/uxwing.com/wp-content/themes/uxwing/download/20-food-and-drinks/rice.png", url7?.absoluteString ?? "")
 		
-		let url8 = MediaProxyService.thumbnailURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
-		let url9 = MediaProxyService.thumbnailURL(forNFT: MockConstants.tokenWithNFTs.nfts![0], keepGif: true)
+		let url8 = MediaProxyService.iconURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
+		let url9 = MediaProxyService.smallURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
 		
-		XCTAssert(url8?.absoluteString == "https://static.tcinfra.net/media/icon/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url8?.absoluteString ?? "-")
-		XCTAssert(url9?.absoluteString == "https://media_mobile.tcinfra.net/media/icon-keep-gif/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url9?.absoluteString ?? "-")
+		XCTAssert(url8?.absoluteString == "https://data.mantodev.com/media/mobile64/ipfs/Qmczgp9juksRrzDkXUQQQFb9xwNDimv1gTy6kLjZqVNPoX/display/1012.png", url8?.absoluteString ?? "-")
+		XCTAssert(url9?.absoluteString == "https://data.mantodev.com/media/mobile180/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url9?.absoluteString ?? "-")
 		
-		let url10 = MediaProxyService.displayURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
-		let url11 = MediaProxyService.displayURL(forNFT: MockConstants.tokenWithNFTs.nfts![0], keepGif: true)
+		let url10 = MediaProxyService.mediumURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
+		let url11 = MediaProxyService.largeURL(forNFT: MockConstants.tokenWithNFTs.nfts![0])
 		
-		XCTAssert(url10?.absoluteString == "https://static.tcinfra.net/media/small/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url10?.absoluteString ?? "-")
-		XCTAssert(url11?.absoluteString == "https://media_mobile.tcinfra.net/media/small-keep-gif/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url11?.absoluteString ?? "-")
+		XCTAssert(url10?.absoluteString == "https://data.mantodev.com/media/mobile600/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url10?.absoluteString ?? "-")
+		XCTAssert(url11?.absoluteString == "https://data.mantodev.com/media/mobile900/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url11?.absoluteString ?? "-")
 	}
 	
 	func testMediaTypeCheckerFromFormat() {

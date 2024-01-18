@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Kingfisher
+import SDWebImage
 import OSLog
 
 public enum MediaProxyServiceError: String, Error {
@@ -22,13 +22,38 @@ public enum CacheType {
 /// A service class for interacting with the TC infrastructure to proxy NFT images, videos and audio files
 public class MediaProxyService: NSObject {
 	
-	/// Enum denoting the avaialble sizes for media
+	/// Enum denoting the avaialble sizes for media, in a human friendly, scale agnostic manner
 	public enum Format: String, Codable {
-		case icon		// 80px
-		case small		// 300px
-		case medium		// 600px
-		case gallery	// 1200px
-		case raw		// original
+		case icon
+		case small
+		case medium
+		case large
+		
+		public func rawFormat() -> RawFormat {
+			switch self {
+				case .icon:
+					return .mobile64
+					
+				case .small:
+					return (UIScreen.main.scale == 2 ? .mobile128 : .mobile180)
+					
+				case .medium:
+					return (UIScreen.main.scale == 2 ? .mobile400 : .mobile600)
+					
+				case .large:
+					return (UIScreen.main.scale == 2 ? .mobile600 : .mobile900)
+			}
+		}
+	}
+	
+	/// Enum denoting the avaialble sizes for media in the specific values available on the server
+	public enum RawFormat: String, Codable {
+		case mobile64
+		case mobile128
+		case mobile180
+		case mobile400
+		case mobile600
+		case mobile900
 	}
 	
 	/// Supported source types for proxied media
@@ -42,7 +67,6 @@ public class MediaProxyService: NSObject {
 		case image
 		case audio
 		case video
-		case gif // needs to be sperate from "image" because sometimes its re-encoded as a video depending on which `Format` you choose
 	}
 	
 	/// Helper to parse a collection of media types to understand its contents
@@ -50,22 +74,37 @@ public class MediaProxyService: NSObject {
 		case imageOnly
 		case audioOnly
 		case videoOnly
-		case gifOnly
 		case imageAndAudio
 	}
 	
 	private var getMediaTypeCompletion: ((Result<[MediaType], KukaiError>) -> Void)? = nil
 	private var getMediaTypeDownloadTask: URLSessionDownloadTask? = nil
 	
-	private static let videoFormats = ["mp4", "mov"]
+	private static let videoFormats = ["mp4", "mov", "webm"]
 	private static let audioFormats = ["mpeg", "mpg", "mp3"]
-	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg"] // gifs might be reencoded as video, so have to exclude them
-	private static let customImageDownloader = ContentTypeCheckingImageDownloader(name: "custom-svg")
-	private static let permanentCache = ImageCache(name: "permanent")
-	private static let temporaryCache = ImageCache(name: "temporary")
+	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg", "gif", "webp"]
+	private static let permanentCache = SDImageCache(namespace: "permanent")
+	private static let temporaryCache = SDImageCache(namespace: "temporary")
 	
-	public static func setupKingfisher() {
-		KingfisherManager.shared.cache.memoryStorage.config.totalCostLimit = Int(500 * 1000 * 1000) // 500 MB
+	private static var permanentImageManager: SDWebImageManager? = nil
+	private static var temporaryImageManager: SDWebImageManager? = nil
+	private static var prefetcher: SDWebImagePrefetcher? = nil
+	
+	
+	public static func setupImageLibrary() {
+		MediaProxyService.permanentCache.config.maxMemoryCost = UInt(100 * 1000 * 1000) // 100 MB
+		MediaProxyService.permanentImageManager = SDWebImageManager(cache: MediaProxyService.permanentCache, loader: SDImageLoadersManager())
+		
+		MediaProxyService.temporaryCache.config.maxDiskAge = 3600 * 24 * 7 // 1 Week
+		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(500 * 1000 * 1000) // 500 MB
+		
+		let temporaryImageManager = SDWebImageManager(cache: MediaProxyService.temporaryCache, loader: SDImageLoadersManager())
+		MediaProxyService.temporaryImageManager = temporaryImageManager
+		MediaProxyService.prefetcher = SDWebImagePrefetcher(imageManager: temporaryImageManager)
+	}
+	
+	public static func imageManager(forCacheType: CacheType) -> SDWebImageManager? {
+		return forCacheType == .temporary ? temporaryImageManager : permanentImageManager
 	}
 	
 	
@@ -77,12 +116,12 @@ public class MediaProxyService: NSObject {
 	 - parameter ofFormat: The requested format from the proxy
 	 - returns: An optional URL
 	 */
-	public static func url(fromUriString uri: String?, ofFormat format: Format, keepGif: Bool = false) -> URL? {
+	public static func url(fromUriString uri: String?, ofFormat format: RawFormat, keepGif: Bool = false) -> URL? {
 		guard let uri = uri else {
 			return nil
 		}
 		
-		return url(fromUri: URL(string: uri), ofFormat: format, keepGif: keepGif)
+		return url(fromUri: URL(string: uri), ofFormat: format)
 	}
 	
 	/**
@@ -91,7 +130,7 @@ public class MediaProxyService: NSObject {
 	 - parameter ofFormat: The requested format from the proxy
 	 - returns: An optional URL
 	 */
-	public static func url(fromUri uri: URL?, ofFormat format: Format, keepGif: Bool = false) -> URL? {
+	public static func url(fromUri uri: URL?, ofFormat format: RawFormat) -> URL? {
 		guard let uri = uri, let scheme = uri.scheme, let strippedURL = uri.absoluteString.components(separatedBy: "://").last else {
 			return nil
 		}
@@ -110,12 +149,7 @@ public class MediaProxyService: NSObject {
 				return nil
 		}
 		
-		if keepGif {
-			return URL(string: "https://media_mobile.tcinfra.net/media/\(format.rawValue)-keep-gif/\(source.rawValue)/\(sanitizedURL)")
-			
-		} else {
-			return URL(string: "https://static.tcinfra.net/media/\(format.rawValue)/\(source.rawValue)/\(sanitizedURL)")
-		}
+		return URL(string: "https://data.mantodev.com/media/\(format.rawValue)/\(source.rawValue)/\(sanitizedURL)")
 	}
 	
 	/**
@@ -123,23 +157,41 @@ public class MediaProxyService: NSObject {
 	 - parameter fromNFT: `NFT` object
 	 - returns: An optional URL
 	 */
-	public static func thumbnailURL(forNFT nft: NFT, keepGif: Bool = false) -> URL? {
+	public static func iconURL(forNFT nft: NFT) -> URL? {
 		
 		if nft.metadata?.symbol == "OBJKT" {
-			return MediaProxyService.url(fromUri: nft.displayURI, ofFormat: .icon, keepGif: keepGif)
+			return MediaProxyService.url(fromUri: nft.displayURI, ofFormat: Format.icon.rawFormat())
 			
 		} else {
-			return MediaProxyService.url(fromUri: nft.thumbnailURI ?? nft.displayURI, ofFormat: .icon, keepGif: keepGif)
+			return MediaProxyService.url(fromUri: nft.thumbnailURI ?? nft.displayURI, ofFormat: Format.icon.rawFormat())
 		}
 	}
 	
 	/**
-	 Helper method to return a standard larger display URL for a NFT
+	 Helper method to return a standard small version of the display URL for a NFT
 	 - parameter fromNFT: `NFT` object
 	 - returns: An optional URL
 	 */
-	public static func displayURL(forNFT nft: NFT, keepGif: Bool = false) -> URL? {
-		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: .small, keepGif: keepGif)
+	public static func smallURL(forNFT nft: NFT) -> URL? {
+		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: Format.small.rawFormat())
+	}
+	
+	/**
+	 Helper method to return a standard medium version of the display URL for a NFT
+	 - parameter fromNFT: `NFT` object
+	 - returns: An optional URL
+	 */
+	public static func mediumURL(forNFT nft: NFT) -> URL? {
+		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: Format.medium.rawFormat())
+	}
+	
+	/**
+	 Helper method to return a standard large version of the display URL for a NFT
+	 - parameter fromNFT: `NFT` object
+	 - returns: An optional URL
+	 */
+	public static func largeURL(forNFT nft: NFT) -> URL? {
+		return MediaProxyService.url(fromUri: nft.displayURI ?? nft.artifactURI, ofFormat: Format.large.rawFormat())
 	}
 	
 	
@@ -159,9 +211,6 @@ public class MediaProxyService: NSObject {
 				
 			} else if format.mimeType.starts(with: "audio/") {
 				types.append(.audio)
-				
-			} else if format.mimeType.lowercased() == "image/gif" || format.mimeType.lowercased() == "gif" {
-				types.append(.gif)
 				
 			} else if format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/") {
 				types.append(.image)
@@ -227,9 +276,6 @@ public class MediaProxyService: NSObject {
 		} else if duplicatesRemoved[0] == .audio {
 			return .audioOnly
 			
-		} else if duplicatesRemoved[0] == .gif {
-			return .gifOnly
-			
 		} else {
 			return .imageOnly
 		}
@@ -237,10 +283,7 @@ public class MediaProxyService: NSObject {
 	
 	private static func checkFileExtension(fileExtension: String) -> MediaType? {
 		if fileExtension != "" {
-			if fileExtension == "gif" {
-				return.gif
-				
-			} else if MediaProxyService.imageFormats.contains(fileExtension) {
+			if MediaProxyService.imageFormats.contains(fileExtension) {
 				return .image
 				
 			} else if MediaProxyService.audioFormats.contains(fileExtension) {
@@ -260,23 +303,31 @@ public class MediaProxyService: NSObject {
 	
 	/// Clear all images from all caches
 	public static func removeAllImages(completion: @escaping (() -> Void)) {
-		MediaProxyService.temporaryCache.clearCache {
-			MediaProxyService.permanentCache.clearCache(completion: completion)
+		MediaProxyService.temporaryCache.clearMemory()
+		MediaProxyService.temporaryCache.clearDisk {
+			MediaProxyService.permanentCache.clearMemory()
+			MediaProxyService.permanentCache.clearDisk {
+				completion()
+			}
 		}
 	}
 	
 	public static func removeAllImages(fromCache: CacheType, completion: @escaping (() -> Void)) {
-		imageCache(forType: fromCache).clearCache(completion: completion)
+		let cache = imageCache(forType: fromCache)
+		cache.clearMemory()
+		cache.clearDisk {
+			completion()
+		}
 	}
 	
 	/// Clear only iamges from cahce that have expired
 	public static func clearExpiredImages() {
-		MediaProxyService.temporaryCache.cleanExpiredCache(completion: nil)
+		MediaProxyService.temporaryCache.deleteOldFiles()
 	}
 	
 	/// Get size in bytes
 	public static func sizeOf(cache: CacheType) -> UInt {
-		return (try? imageCache(forType: cache).diskStorage.totalSize()) ?? 0
+		return imageCache(forType: cache).totalDiskSize()
 	}
 	
 	
@@ -303,37 +354,27 @@ public class MediaProxyService: NSObject {
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
-		var processors: [KingfisherOptionsInfoItem] = [.downloader(MediaProxyService.customImageDownloader)]
 		
-		if let downsample = downSampleSize {
-			processors.append(.processor(DownsamplingImageProcessor(size: downsample)))
-		} else {
-			processors.append(.processor(DefaultImageProcessor.default))
+		var options: [SDWebImageContextOption: Any] = [:]
+		if let downSampleSize = downSampleSize {
+			options[.imageTransformer] = SDImageResizingTransformer(size: downSampleSize, scaleMode: .fill)
 		}
 		
-		if cacheType == .temporary {
-			processors.append(contentsOf: [.targetCache(MediaProxyService.temporaryCache), .diskCacheExpiration(.days(7))])
+		
+		imageView.sd_imageIndicator = SDWebImageProgressIndicator.default
+		imageManager(forCacheType: cacheType)?.loadImage(with: url, context: options, progress: nil, completed: { image, data, error, sdCacheType, success, url in
 			
-		} else {
-			processors.append(.targetCache(MediaProxyService.permanentCache))
-		}
-		
-		imageView.kf.indicatorType = .activity
-		imageView.kf.setImage(with: url, options: processors) { result in
-			guard let res = try? result.get() else {
-				Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: try? result.getError()))")
+			if image != nil {
+				imageView.image = image
+			} else {
 				imageView.image = fallback
-				if let comp = completion { comp(nil) }
-				return
 			}
 			
-			if let completion = completion {
-				completion(res.image.size)
-			}
-		}
+			completion?(image?.size)
+		})
 	}
 	
-	public static func imageCache(forType: CacheType) -> ImageCache {
+	public static func imageCache(forType: CacheType) -> SDImageCache {
 		if forType == .temporary {
 			return MediaProxyService.temporaryCache
 		} else {
@@ -356,24 +397,16 @@ public class MediaProxyService: NSObject {
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
-		MediaProxyService.customImageDownloader.downloadImage(with: url) { result in
-			switch result {
-				case .success(let value):
-					var options: [KingfisherOptionsInfoItem] = []
-					
-					if cacheType == .temporary {
-						options = [.diskCacheExpiration(.days(7))]
-					}
-					
-					imageCache(forType: cacheType).store(value.image, forKey: url.absoluteString, options: KingfisherParsedOptionsInfo(options)) { _ in
-						completion(value.image.size)
-					}
-					
-				case .failure(let error):
-					Logger.kukaiCoreSwift.error("Error downloading + caching image: \(error)")
-					completion(nil)
+		
+		MediaProxyService.prefetcher?.prefetchURLs([url], progress: nil, completed: { finishedURLs, skippedURLs in
+			let size = MediaProxyService.temporaryCache.imageFromCache(forKey: url.absoluteString)?.size
+			
+			if skippedURLs > 0 {
+				Logger.kukaiCoreSwift.error("Error downloading + caching image")
 			}
-		}
+			
+			completion(size)
+		})
 	}
 	
 	/// Check if a given url is already cached
@@ -382,8 +415,7 @@ public class MediaProxyService: NSObject {
 			return false
 		}
 		
-		let identifier = DefaultImageProcessor.default.identifier
-		return imageCache(forType: cacheType).isCached(forKey: url.absoluteString, processorIdentifier: identifier)
+		return imageCache(forType: cacheType).diskImageDataExists(withKey: url.absoluteString)
 	}
 	
 	/**
@@ -398,16 +430,8 @@ public class MediaProxyService: NSObject {
 			return
 		}
 		
-		imageCache(forType: cacheType).retrieveImage(forKey: url.absoluteString) { result in
-			switch result {
-				case .success(let value):
-					completion(value.image?.size)
-					
-				case .failure(let error):
-					Logger.kukaiCoreSwift.error("Error fetching from cache: \(error)")
-					completion(nil)
-			}
-		}
+		let size = imageCache(forType: cacheType).imageFromCache(forKey: url.absoluteString)?.size
+		completion(size)
 	}
 }
 
@@ -456,6 +480,7 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 	}
 }
 
+/*
 public class ContentTypeCheckingImageDownloader: ImageDownloader {
 	
 	public override func startDownloadTask(context: DownloadingContext, callback: SessionDataTask.TaskCallback) -> DownloadTask {
@@ -518,3 +543,4 @@ public class ContentTypeCheckingImageDownloader: ImageDownloader {
 		return downloadTask
 	}
 }
+*/

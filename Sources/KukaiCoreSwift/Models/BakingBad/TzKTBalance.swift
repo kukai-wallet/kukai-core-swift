@@ -293,12 +293,12 @@ public struct TzKTBalanceMetadata: Codable {
 	
 	/// Helper to run the URI through the `MediaProxyService` to generate a useable URL for the thumbnail (if available)
 	public var thumbnailURL: URL? {
-		return MediaProxyService.url(fromUriString: thumbnailUri, ofFormat: .icon, keepGif: true)
+		return MediaProxyService.url(fromUriString: thumbnailUri, ofFormat: MediaProxyService.Format.small.rawFormat(), keepGif: true)
 	}
 	
 	/// Helper to run the URI through the `MediaProxyService` to generate a useable URL for the display image (if available)
 	public var displayURL: URL? {
-		return MediaProxyService.url(fromUriString: displayUri, ofFormat: .small, keepGif: true)
+		return MediaProxyService.url(fromUriString: displayUri, ofFormat: MediaProxyService.Format.medium.rawFormat(), keepGif: true)
 	}
 	
 	/// Attributes is a complex free-form object. In a lot of cases when NFT's are games / collectibles,  it should be possible to convert most if not all the elements into more simple String: String key value pairs, which will be easier to manage in table / collection views

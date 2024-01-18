@@ -5,6 +5,7 @@
 //  Created by Simon Mcloughlin on 18/08/2021.
 //
 
+/*
 import UIKit
 import Kingfisher
 import SVGKit
@@ -26,3 +27,4 @@ public struct SVGImgProcessor: ImageProcessor {
 		}
 	}
 }
+*/

@@ -13,8 +13,8 @@ class TorusAuthServiceTests: XCTestCase {
 	
 	static let googleSubVerifier = SubVerifierDetails(loginType: .web, loginProvider: .google, clientId: "mock-google-id", verifier: "mock-google-name", redirectURL: "native://mock1")
 	let torusService = TorusAuthService(networkService: MockConstants.shared.networkService, verifiers: [
-		.twitter: SubverifierWrapper(aggregateVerifierName: "mock-twitter-verifier", networkType: .testnet, subverifier: SubVerifierDetails(loginType: .web, loginProvider: .twitter, clientId: "mock-twitter-id", verifier: "mock-twitter-name", redirectURL: "native://mock1", jwtParams: ["domain": "torus-test.auth0.com"])),
-		.google: SubverifierWrapper(aggregateVerifierName: "mock-google-verifier", networkType: .testnet, subverifier: TorusAuthServiceTests.googleSubVerifier)
+		.twitter: SubverifierWrapper(aggregateVerifierName: "mock-twitter-verifier", verifierType: .singleLogin, networkType: .testnet, subverifier: SubVerifierDetails(loginType: .web, loginProvider: .twitter, clientId: "mock-twitter-id", verifier: "mock-twitter-name", redirectURL: "native://mock1", jwtParams: ["domain": "torus-test.auth0.com"])),
+		.google: SubverifierWrapper(aggregateVerifierName: "mock-google-verifier", verifierType: .singleIdVerifier, networkType: .testnet, subverifier: TorusAuthServiceTests.googleSubVerifier)
 	])
 	
 	override func setUpWithError() throws {
