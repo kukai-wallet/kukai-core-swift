@@ -40,6 +40,9 @@ public struct SubverifierWrapper {
 	/// The name of the aggregated verifier
 	public let aggregateVerifierName: String?
 	
+	/// The type to use
+	public let verifierType: verifierTypes
+	
 	/// Unlike seed based wallets, Torus verifiers are bound to a network and generate different addresses. In order to give the same experience on Tezos, we need to supply the network for each verifier
 	public let networkType: TezosNodeClientConfig.NetworkType
 	
@@ -54,8 +57,9 @@ public struct SubverifierWrapper {
 	}
 	
 	/// Create an instance of the object with an option string for the aggregate verifier name, and a `SubVerifierDetails` object
-	public init(aggregateVerifierName: String?, networkType: TezosNodeClientConfig.NetworkType, subverifier: SubVerifierDetails) {
+	public init(aggregateVerifierName: String?, verifierType: verifierTypes, networkType: TezosNodeClientConfig.NetworkType, subverifier: SubVerifierDetails) {
 		self.aggregateVerifierName = aggregateVerifierName
+		self.verifierType = verifierType
 		self.networkType = networkType
 		self.subverifier = subverifier
 	}
@@ -153,33 +157,16 @@ public class TorusAuthService: NSObject {
 		if let mockTorus = mockedTorus {
 			torus = mockTorus
 			
-		} else if verifierWrapper.isAggregate && verifierWrapper.aggregateVerifierName == verifierWrapper.subverifier.verifier {
-			torus = CustomAuth(aggregateVerifierType: .singleLogin,
-							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
-							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
-							   loglevel: .error,
-							   urlSession: self.networkService.urlSession,
-							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
-			
-		} else if verifierWrapper.isAggregate {
-			torus = CustomAuth(aggregateVerifierType: .singleIdVerifier,
-							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? "",
-							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
-							   loglevel: .error,
-							   urlSession: self.networkService.urlSession,
-							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
-			
 		} else {
-			torus = CustomAuth(aggregateVerifierType: .singleLogin,
-							   aggregateVerifier: verifierWrapper.subverifier.clientId,
+			torus = CustomAuth(aggregateVerifierType: verifierWrapper.verifierType,
+							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.verifier,
 							   subVerifierDetails: [verifierWrapper.subverifier],
 							   network: verifierWrapper.networkType == .testnet ? .TESTNET : .MAINNET,
 							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
 							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
 		}
+
 		
 		
 		// If requesting a wallet from apple, call apple sign in code and skip rest of function
