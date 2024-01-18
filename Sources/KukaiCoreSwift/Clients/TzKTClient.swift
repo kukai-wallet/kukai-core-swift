@@ -9,7 +9,6 @@
 import Foundation
 import SignalRClient
 import Combine
-import Kingfisher
 import os.log
 
 
@@ -1011,8 +1010,9 @@ public class TzKTClient {
 				}
 			}
 		}
-		self.tempTokenTransfers.remove(atOffsets: IndexSet(transfersToRemove))
-		self.tempTransactions.remove(atOffsets: IndexSet(transactionsToRemove))
+		
+		let _ = self.tempTokenTransfers.remove(elementsAtIndices: transfersToRemove)
+		let _ = self.tempTransactions.remove(elementsAtIndices: transactionsToRemove)
 		
 		for leftOverTransfer in self.tempTokenTransfers {
 			self.tempTransactions.append( TzKTTransaction(from: leftOverTransfer) )
@@ -1076,7 +1076,7 @@ public class TzKTClient {
 			}
 		}
 		
-		tempTrans.remove(atOffsets: IndexSet(indexesToRemove))
+		let _ = tempTrans.remove(elementsAtIndices: indexesToRemove)
 		if let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 			tempGroups.append(group)
 		}

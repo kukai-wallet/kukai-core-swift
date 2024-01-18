@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Kingfisher
 import os.log
 
 /// BetterCallDev (BCD) is an indexer/smart contract debugging tool, used for the Tezos blockchain.
