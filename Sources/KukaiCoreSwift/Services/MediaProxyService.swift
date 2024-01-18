@@ -357,12 +357,28 @@ public class MediaProxyService: NSObject {
 		if Thread.current.isRunningXCTest { return }
 		
 		
-		var options: [SDWebImageContextOption: Any] = [:]
+		var context: [SDWebImageContextOption: Any] = [:]
 		if let downSampleSize = downSampleSize {
-			options[.imageTransformer] = SDImageResizingTransformer(size: downSampleSize, scaleMode: .fill)
+			context[.imageTransformer] = SDImageResizingTransformer(size: downSampleSize, scaleMode: .fill)
 		}
 		
+		context[.imageCache] = imageCache(forType: cacheType)
 		
+		
+		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
+		imageView.sd_setImage(with: url, placeholderImage: nil, context: context) { _, _, _ in
+			
+		} completed: { image, error, _, _ in
+			if let _ = error {
+				imageView.image = fallback
+			}
+			
+			completion?(image?.size)
+		}
+
+		
+		
+		/*
 		imageView.image = nil
 		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
 		imageView.sd_imageIndicator?.startAnimatingIndicator()
@@ -380,6 +396,7 @@ public class MediaProxyService: NSObject {
 			
 			completion?(image?.size)
 		})
+		*/
 	}
 	
 	public static func imageCache(forType: CacheType) -> SDImageCache {
