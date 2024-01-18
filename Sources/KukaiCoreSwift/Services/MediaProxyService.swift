@@ -361,7 +361,7 @@ public class MediaProxyService: NSObject {
 		}
 		
 		
-		imageView.sd_imageIndicator = SDWebImageProgressIndicator.default
+		imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
 		imageManager(forCacheType: cacheType)?.loadImage(with: url, context: options, progress: nil, completed: { image, data, error, sdCacheType, success, url in
 			
 			if image != nil {
