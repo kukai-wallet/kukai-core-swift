@@ -231,8 +231,12 @@ public class TorusAuthService: NSObject {
 						pk = data["privateKey"] as? String
 						
 					case .facebook:
-						print("\n\n\n Unimplemented \nFacebook data: \(data) \n\n\n")
-						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+						if let userInfoDict = data["userInfo"] as? [String: Any] {
+							username = userInfoDict["name"] as? String
+							userId = userInfoDict["id"] as? String
+							profile = ((userInfoDict["picture"] as? [String: Any])?["data"] as? [String: Any])?["url"] as? String
+						}
+						pk = data["privateKey"] as? String
 						
 					case .email:
 						if let userInfoDict = data["userInfo"] as? [String: Any] {
