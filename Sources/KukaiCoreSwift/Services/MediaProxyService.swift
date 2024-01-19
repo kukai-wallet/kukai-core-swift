@@ -377,28 +377,6 @@ public class MediaProxyService: NSObject {
 			
 			completion?(image?.size)
 		}
-
-		
-		
-		/*
-		imageView.image = nil
-		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
-		imageView.sd_imageIndicator?.startAnimatingIndicator()
-		
-		imageManager(forCacheType: cacheType)?.loadImage(with: url, context: options, progress: nil, completed: { image, data, error, sdCacheType, success, url in
-			
-			if image != nil {
-				imageView.image = image
-			} else {
-				imageView.image = fallback
-			}
-			
-			imageView.sd_imageIndicator?.stopAnimatingIndicator()
-			imageView.sd_imageIndicator = nil
-			
-			completion?(image?.size)
-		})
-		*/
 	}
 	
 	public static func imageCache(forType: CacheType) -> SDImageCache {
@@ -506,68 +484,3 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 		}
 	}
 }
-
-/*
-public class ContentTypeCheckingImageDownloader: ImageDownloader {
-	
-	public override func startDownloadTask(context: DownloadingContext, callback: SessionDataTask.TaskCallback) -> DownloadTask {
-		
-		let downloadTask = addDownloadTask(context: context, callback: callback)
-		
-		let sessionTask = downloadTask.sessionTask
-		guard !sessionTask.started else {
-			return downloadTask
-		}
-		
-		sessionTask.onTaskDone.delegate(on: self) { (self, done) in
-			// Underlying downloading finishes.
-			// result: Result<(Data, URLResponse?)>, callbacks: [TaskCallback]
-			let (result, callbacks) = done
-			
-			// Before processing the downloaded data.
-			self.reportDidDownloadImageData(result: result, url: context.url)
-			
-			switch result {
-					
-				// Download finished. Now process the data to an image.
-				case .success(let (data, response)):
-					
-					let processor = ImageDataProcessor(data: data, callbacks: callbacks, processingQueue: context.options.processingQueue)
-					
-					// If we are downloading an SVG, replace DefaultImageProcessor with SVGImgProcessor
-					if let httpResponse = response as? HTTPURLResponse, let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type"), contentType.contains("svg") {
-						for (index, callback) in processor.callbacks.enumerated() {
-							if callback.options.processor.identifier == DefaultImageProcessor.default.identifier {
-								processor.callbacks[index].options.processor = SVGImgProcessor()
-							}
-						}
-					}
-					
-					processor.onImageProcessed.delegate(on: self) { (self, done) in
-						// `onImageProcessed` will be called for `callbacks.count` times, with each
-						// `SessionDataTask.TaskCallback` as the input parameter.
-						// result: Result<Image>, callback: SessionDataTask.TaskCallback
-						let (result, callback) = done
-						
-						self.reportDidProcessImage(result: result, url: context.url, response: response)
-						
-						let imageResult = result.map { ImageLoadingResult(image: $0, url: context.url, originalData: data) }
-						let queue = callback.options.callbackQueue
-						queue.execute { callback.onCompleted?.call(imageResult) }
-					}
-					processor.process()
-					
-				case .failure(let error):
-					callbacks.forEach { callback in
-						let queue = callback.options.callbackQueue
-						queue.execute { callback.onCompleted?.call(.failure(error)) }
-					}
-			}
-		}
-		
-		reportWillDownloadImage(url: context.url, request: context.request)
-		sessionTask.resume()
-		return downloadTask
-	}
-}
-*/
