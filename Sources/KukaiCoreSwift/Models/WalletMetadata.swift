@@ -295,10 +295,14 @@ public struct WalletMetadata: Codable, Hashable {
 	}
 	
 	public static func == (lhs: WalletMetadata, rhs: WalletMetadata) -> Bool {
-		return lhs.address == rhs.address
+		return lhs.address == rhs.address &&
+			lhs.isChild == rhs.isChild &&
+			lhs.isWatchOnly == rhs.isWatchOnly
 	}
 	
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)
+		hasher.combine(isChild)
+		hasher.combine(isWatchOnly)
 	}
 }
