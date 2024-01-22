@@ -15,7 +15,7 @@ import os.log
 
 
 /// Error types that can be returned from `WalletCacheService`
-enum WalletCacheError: Error {
+public enum WalletCacheError: Error {
 	case unableToAccessEnclaveOrKeychain
 	case unableToCreatePrivateKey
 	case unableToDeleteKey
