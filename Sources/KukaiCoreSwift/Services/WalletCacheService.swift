@@ -24,6 +24,7 @@ enum WalletCacheError: Error {
 	case unableToEncrypt
 	case noPrivateKeyFound
 	case unableToDecrypt
+	case walletAlreadyExists
 }
 
 
@@ -82,15 +83,15 @@ public class WalletCacheService {
 	 - Parameter childOfIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
-	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) -> Bool {
-		guard let existingWallets = readWalletsFromDiskAndDecrypt(), existingWallets[wallet.address] == nil else {
+	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) throws -> Bool {
+		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
 			Logger.walletCache.error("cache - Unable to cache wallet, as can't decrypt existing wallets")
-			return false
+			throw WalletCacheError.unableToDecrypt
 		}
 		
 		guard existingWallets[wallet.address] == nil else {
-			Logger.walletCache.error("cache - Unable to cache wallet, as wallet has no address")
-			return false
+			Logger.walletCache.error("cache - Unable to cache wallet, walelt already exists")
+			throw WalletCacheError.walletAlreadyExists
 		}
 		
 		var newWallets = existingWallets

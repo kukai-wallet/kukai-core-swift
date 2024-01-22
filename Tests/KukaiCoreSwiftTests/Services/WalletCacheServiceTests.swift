@@ -32,11 +32,11 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.readWalletsFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false))
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)) != nil)
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false)) != nil)
 		
 		// Check it fails if we try add the same wallet a second time
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false) == false)
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false)) == nil)
 		
 		// Check they have been stored
 		XCTAssert(walletCacheService.readWalletsFromDiskAndDecrypt()?.count == 2)
@@ -74,8 +74,8 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.readWalletsFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false))
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)) != nil)
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false)) != nil)
 		
 		// Check they have been stored
 		XCTAssert(walletCacheService.readWalletsFromDiskAndDecrypt()?.count == 2)
@@ -102,8 +102,8 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.readWalletsFromDiskAndDecrypt()?.count == 0)
 		
 		// Check we can write wallet objects
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false))
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)) != nil)
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false)) != nil)
 		
 		// Rmeove Linear
 		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.defaultLinearWallet.address, parentIndex: nil))
@@ -114,9 +114,9 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.readWalletsFromDiskAndDecrypt()?.count == 0)
 		
 		// Add 2 children to the HDWallet
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet.createChild(accountIndex: 1) ?? MockConstants.defaultHdWallet, childOfIndex: 0, backedUp: false))
-		XCTAssert(walletCacheService.cache(wallet: MockConstants.defaultHdWallet.createChild(accountIndex: 2) ?? MockConstants.defaultHdWallet, childOfIndex: 0, backedUp: false))
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet, childOfIndex: nil, backedUp: false)) != nil)
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet.createChild(accountIndex: 1) ?? MockConstants.defaultHdWallet, childOfIndex: 0, backedUp: false)) != nil)
+		XCTAssert((try? walletCacheService.cache(wallet: MockConstants.defaultHdWallet.createChild(accountIndex: 2) ?? MockConstants.defaultHdWallet, childOfIndex: 0, backedUp: false)) != nil)
 		
 		// Delete the first child
 		XCTAssert(walletCacheService.deleteWallet(withAddress: MockConstants.hdWallet.childWalletAddresses[0], parentIndex: 0))
@@ -131,7 +131,7 @@ class WalletCacheServiceTests: XCTestCase {
 	
 	func testDerivationPaths() {
 		let wallet = HDWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase, derivationPath: MockConstants.hdWallet_hardened_change.derivationPath)!
-		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false))
+		XCTAssert((try? walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false)) != nil)
 		
 		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address) as? HDWallet
 		XCTAssert(wallet1 != nil)
@@ -142,7 +142,7 @@ class WalletCacheServiceTests: XCTestCase {
 	
 	func testPassphrase() {
 		let wallet = RegularWallet(withMnemonic: MockConstants.mnemonic, passphrase: MockConstants.passphrase)!
-		XCTAssert(walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false))
+		XCTAssert((try? walletCacheService.cache(wallet: wallet, childOfIndex: nil, backedUp: false)) != nil)
 		
 		let wallet1 = walletCacheService.fetchWallet(forAddress: wallet.address)
 		XCTAssert(wallet1 != nil)
@@ -161,12 +161,12 @@ class WalletCacheServiceTests: XCTestCase {
 		
 		
 		// Set 2 wallets
-		let _ = walletCacheService.cache(wallet: hdWallet1, childOfIndex: nil, backedUp: false)
+		let _ = try? walletCacheService.cache(wallet: hdWallet1, childOfIndex: nil, backedUp: false)
 		var list = walletCacheService.readMetadataFromDiskAndDecrypt()
 		let groupName1 = list.metadata(forAddress: hdWallet1.address)?.hdWalletGroupName
 		XCTAssert(groupName1 == "HD Wallet 1", groupName1 ?? "-")
 		
-		let _ = walletCacheService.cache(wallet: hdWallet2, childOfIndex: nil, backedUp: false)
+		let _ = try? walletCacheService.cache(wallet: hdWallet2, childOfIndex: nil, backedUp: false)
 		list = walletCacheService.readMetadataFromDiskAndDecrypt()
 		let groupName2 = list.metadata(forAddress: hdWallet2.address)?.hdWalletGroupName
 		XCTAssert(groupName2 == "HD Wallet 2", groupName2 ?? "-")
@@ -182,7 +182,7 @@ class WalletCacheServiceTests: XCTestCase {
 		
 		
 		// Add another to check did it reuse the name "HD Wallet 2"
-		let _ = walletCacheService.cache(wallet: hdWallet3, childOfIndex: nil, backedUp: false)
+		let _ = try? walletCacheService.cache(wallet: hdWallet3, childOfIndex: nil, backedUp: false)
 		list = walletCacheService.readMetadataFromDiskAndDecrypt()
 		let groupName4 = list.metadata(forAddress: hdWallet3.address)?.hdWalletGroupName
 		XCTAssert(groupName4 == "HD Wallet 2", groupName4 ?? "-")
@@ -193,7 +193,7 @@ class WalletCacheServiceTests: XCTestCase {
 		let _ = list.set(hdWalletGroupName: "Blah 3", forAddress: hdWallet3.address)
 		let _ = walletCacheService.encryptAndWriteMetadataToDisk(list)
 		
-		let _ = walletCacheService.cache(wallet: hdWallet4, childOfIndex: nil, backedUp: false)
+		let _ = try? walletCacheService.cache(wallet: hdWallet4, childOfIndex: nil, backedUp: false)
 		list = walletCacheService.readMetadataFromDiskAndDecrypt()
 		let groupName5 = list.metadata(forAddress: hdWallet4.address)?.hdWalletGroupName
 		XCTAssert(groupName5 == "HD Wallet 4", groupName5 ?? "-")
