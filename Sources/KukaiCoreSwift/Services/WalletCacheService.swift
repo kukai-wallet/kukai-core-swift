@@ -25,6 +25,8 @@ enum WalletCacheError: Error {
 	case noPrivateKeyFound
 	case unableToDecrypt
 	case walletAlreadyExists
+	case requestedIndexTooHigh
+	case unableToEncryptAndWrite
 }
 
 
@@ -83,7 +85,7 @@ public class WalletCacheService {
 	 - Parameter childOfIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
-	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) throws -> Bool {
+	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) throws {
 		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
 			Logger.walletCache.error("cache - Unable to cache wallet, as can't decrypt existing wallets")
 			throw WalletCacheError.unableToDecrypt
@@ -101,7 +103,7 @@ public class WalletCacheService {
 		if let index = childOfIndex {
 			if index >= newMetadata.hdWallets.count {
 				Logger.walletCache.error("WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"\(index)\", when there are currently only \"\(newMetadata.hdWallets.count)\" items")
-				return false
+				throw WalletCacheError.requestedIndexTooHigh
 			}
 			
 			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
@@ -130,7 +132,10 @@ public class WalletCacheService {
 			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 		}
 		
-		return encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata)
+		
+		if encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata) == false {
+			throw WalletCacheError.unableToEncryptAndWrite
+		}
 	}
 	/**
 	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
