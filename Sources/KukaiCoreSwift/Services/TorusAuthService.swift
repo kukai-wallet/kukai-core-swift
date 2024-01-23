@@ -331,10 +331,21 @@ public class TorusAuthService: NSObject {
 				}
 				
 				let data = try await self.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true)
-				guard let pubX = data.x,
-					  let pubY = data.y,
-					  let bytesX = Sodium.shared.utils.hex2bin(pubX),
-					  let bytesY = Sodium.shared.utils.hex2bin(pubY) else {
+				var pubX = data.x
+				var pubY = data.y
+				
+				if let x = pubX, x.count > 0 && x.count < 64 {
+					pubX = pubX?.leftPadding(toLength: (64 - x.count), withPad: "0")
+				}
+				
+				if let y = pubY, y.count > 0 && y.count < 64 {
+					pubY = pubY?.leftPadding(toLength: (64 - y.count), withPad: "0")
+				}
+				
+				guard let x = pubX,
+					  let y = pubY,
+					  let bytesX = Sodium.shared.utils.hex2bin(x),
+					  let bytesY = Sodium.shared.utils.hex2bin(y) else {
 					Logger.torus.error("Finding address - no valid pub key x and y returned")
 					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 					return
