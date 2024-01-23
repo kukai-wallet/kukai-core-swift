@@ -331,16 +331,8 @@ public class TorusAuthService: NSObject {
 				}
 				
 				let data = try await self.torusUtils.getPublicAddress(endpoints: nd.getTorusNodeEndpoints(), torusNodePubs: nd.getTorusNodePub(), verifier: verifierName, verifierId: socialUserId, isExtended: true)
-				var pubX = data.x
-				var pubY = data.y
-				
-				if let x = pubX, x.count > 0 && x.count < 64 {
-					pubX = pubX?.leftPadding(toLength: (64 - x.count), withPad: "0")
-				}
-				
-				if let y = pubY, y.count > 0 && y.count < 64 {
-					pubY = pubY?.leftPadding(toLength: (64 - y.count), withPad: "0")
-				}
+				var pubX = data.x?.padLeft(toLength: 64, withPad: "0")
+				var pubY = data.y?.padLeft(toLength: 64, withPad: "0")
 				
 				guard let x = pubX,
 					  let y = pubY,
