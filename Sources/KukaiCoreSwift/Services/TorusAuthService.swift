@@ -320,13 +320,13 @@ public class TorusAuthService: NSObject {
 		let isTestnet = (verifierWrapper.networkType == .testnet)
 		self.fetchNodeDetails = CASDKFactory().createFetchNodeDetails(network: (isTestnet ? .TESTNET : .MAINNET), urlSession: networkService.urlSession, networkUrl: (isTestnet ? "https://rpc.ankr.com/eth_ropsten" : nil))
 		
-		Task { @MainActor in
+		Task {
 			do {
 				let remoteNodeDetails = try await self.fetchNodeDetails.getNodeDetails(verifier: verifierName, verifierID: socialUserId)
 				self.nodeDetails = remoteNodeDetails
 				
 				guard let nd = self.nodeDetails else {
-					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidNodeDetails)))
+					DispatchQueue.main.async { completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidNodeDetails))) }
 					return
 				}
 				
@@ -339,7 +339,7 @@ public class TorusAuthService: NSObject {
 					  let bytesX = Sodium.shared.utils.hex2bin(x),
 					  let bytesY = Sodium.shared.utils.hex2bin(y) else {
 					Logger.torus.error("Finding address - no valid pub key x and y returned")
-					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
+					DispatchQueue.main.async { completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse))) }
 					return
 				}
 				
@@ -355,17 +355,17 @@ public class TorusAuthService: NSObject {
 				// Run Blake2b hashing on public key
 				guard let hash = Sodium.shared.genericHash.hash(message: publicKey, outputLength: 20) else {
 					Logger.torus.error("Finding address - generating hash failed")
-					completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.cryptoError)))
+					DispatchQueue.main.async { completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.cryptoError))) }
 					return
 				}
 				
 				// Create tz2 address and return
 				let tz2Address = Base58Check.encode(message: hash, prefix: Prefix.Address.tz2)
-				completion(Result.success(tz2Address))
+				DispatchQueue.main.async { completion(Result.success(tz2Address)) }
 				
 			} catch {
 				Logger.torus.error("Error logging in: \(error)")
-				completion(Result.failure(KukaiError.internalApplicationError(error: error)))
+				DispatchQueue.main.async { completion(Result.failure(KukaiError.internalApplicationError(error: error))) }
 				return
 			}
 		}
