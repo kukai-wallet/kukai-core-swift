@@ -348,7 +348,7 @@ public class MediaProxyService: NSObject {
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize? = nil, completion: ((CGSize?) -> Void)? = nil) {
+	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize? = nil, maxAnimatedImageSize: UInt? = nil, completion: ((CGSize?) -> Void)? = nil) {
 		guard let url = url else {
 			imageView.image = fallback
 			if let comp = completion { comp(nil) }
@@ -367,13 +367,18 @@ public class MediaProxyService: NSObject {
 		
 		context[.imageCache] = imageCache(forType: cacheType)
 		
-		
 		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
-		imageView.sd_setImage(with: url, placeholderImage: nil, context: context) { _, _, _ in
+		imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage], context: context) { _, _, _ in
 			
 		} completed: { image, error, _, _ in
 			if let _ = error {
 				imageView.image = fallback
+			}
+			
+			if image?.sd_isAnimated == true, let animatedImage = image as? SDAnimatedImage, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory {
+				imageView.image = animatedImage.animatedImageFrame(at: 0)
+			} else {
+				imageView.image = image
 			}
 			
 			completion?(image?.size)
