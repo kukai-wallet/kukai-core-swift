@@ -346,6 +346,7 @@ public class MediaProxyService: NSObject {
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
 	 - parameter fallback: If an error occurs and an image can't be downloaded/loaded in, display this image instead
 	 - parameter downSampleSize: Supply the dimensions you wish the image to be resized to fit
+	 - parameter maxAnimatedImageSize: set a size limit for animated images (in bytes). If exceeded, will only load the first frame of the image
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
 	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize? = nil, maxAnimatedImageSize: UInt? = nil, completion: ((CGSize?) -> Void)? = nil) {
@@ -375,8 +376,7 @@ public class MediaProxyService: NSObject {
 				imageView.image = fallback
 			}
 			
-			if image?.sd_isAnimated == true, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory/*, let animatedImageView = imageView as? SDAnimatedImageView*/ /*let aniamtedImage = SDAnimatedImage*/ {
-				//animatedImageView.autoPlayAnimatedImage = false
+			if image?.sd_isAnimated == true, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory {
 				imageView.image = image?.images?.first
 			} else {
 				imageView.image = image
