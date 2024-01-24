@@ -375,6 +375,8 @@ public class MediaProxyService: NSObject {
 			if let _ = error {
 				Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: error))")
 				imageView.image = fallback
+				completion?(nil)
+				return
 			}
 			
 			if (image?.images?.count ?? 0) > 0, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory {
