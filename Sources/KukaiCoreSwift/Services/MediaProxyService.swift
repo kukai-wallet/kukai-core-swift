@@ -373,6 +373,7 @@ public class MediaProxyService: NSObject {
 			
 		} completed: { image, error, _, _ in
 			if let _ = error {
+				Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: error))")
 				imageView.image = fallback
 			}
 			
