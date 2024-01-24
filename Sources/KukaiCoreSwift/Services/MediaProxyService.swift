@@ -375,11 +375,13 @@ public class MediaProxyService: NSObject {
 				imageView.image = fallback
 			}
 			
-			if image?.sd_isAnimated == true, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory, let animatedImageView = imageView as? SDAnimatedImageView {
-				animatedImageView.autoPlayAnimatedImage = false
+			if image?.sd_isAnimated == true, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory/*, let animatedImageView = imageView as? SDAnimatedImageView*/ /*let aniamtedImage = SDAnimatedImage*/ {
+				//animatedImageView.autoPlayAnimatedImage = false
+				imageView.image = image?.images?.first
+			} else {
+				imageView.image = image
 			}
-				
-			imageView.image = image
+			
 			completion?(image?.size)
 		}
 	}
