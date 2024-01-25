@@ -98,7 +98,7 @@ public class MediaProxyService: NSObject {
 		MediaProxyService.permanentImageManager = SDWebImageManager(cache: MediaProxyService.permanentCache, loader: SDImageLoadersManager())
 		
 		MediaProxyService.temporaryCache.config.maxDiskAge = 3600 * 24 * 7 // 1 Week
-		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(500 * 1000 * 1000) // 500 MB
+		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(1000 * 1000 * 1000) // 1000 MB
 		
 		let temporaryImageManager = SDWebImageManager(cache: MediaProxyService.temporaryCache, loader: SDImageLoadersManager())
 		MediaProxyService.temporaryImageManager = temporaryImageManager
