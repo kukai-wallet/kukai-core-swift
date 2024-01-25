@@ -17,6 +17,7 @@ public enum MediaProxyServiceError: String, Error {
 public enum CacheType {
 	case temporary
 	case permanent
+	case detail
 }
 
 /// A service class for interacting with the TC infrastructure to proxy NFT images, videos and audio files
@@ -85,9 +86,8 @@ public class MediaProxyService: NSObject {
 	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg", "gif", "webp"]
 	private static let permanentCache = SDImageCache(namespace: "permanent")
 	private static let temporaryCache = SDImageCache(namespace: "temporary")
+	private static let detailCache = SDImageCache(namespace: "detail")
 	
-	private static var permanentImageManager: SDWebImageManager? = nil
-	private static var temporaryImageManager: SDWebImageManager? = nil
 	private static var prefetcher: SDWebImagePrefetcher? = nil
 	
 	public static var isDarkMode = true
@@ -95,21 +95,16 @@ public class MediaProxyService: NSObject {
 	
 	public static func setupImageLibrary() {
 		MediaProxyService.permanentCache.config.maxMemoryCost = UInt(100 * 1000 * 1000) // 100 MB
-		MediaProxyService.permanentImageManager = SDWebImageManager(cache: MediaProxyService.permanentCache, loader: SDImageLoadersManager())
 		
 		MediaProxyService.temporaryCache.config.maxDiskAge = 3600 * 24 * 7 // 1 Week
-		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(1000 * 1000 * 1000) // 1000 MB
+		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(500 * 1000 * 1000) // 1000 MB
 		
-		let temporaryImageManager = SDWebImageManager(cache: MediaProxyService.temporaryCache, loader: SDImageLoadersManager())
-		MediaProxyService.temporaryImageManager = temporaryImageManager
-		MediaProxyService.prefetcher = SDWebImagePrefetcher(imageManager: temporaryImageManager)
+		MediaProxyService.detailCache.config.maxDiskAge = 3600 * 24 // 1 day
+		
+		MediaProxyService.prefetcher = SDWebImagePrefetcher(imageManager: SDWebImageManager(cache: MediaProxyService.temporaryCache, loader: SDImageLoadersManager()))
 		
 		SDWebImageDownloader.shared.config.downloadTimeout = 60
 		SDImageCodersManager.shared.addCoder(SDImageAWebPCoder.shared)
-	}
-	
-	public static func imageManager(forCacheType: CacheType) -> SDWebImageManager? {
-		return forCacheType == .temporary ? temporaryImageManager : permanentImageManager
 	}
 	
 	
@@ -396,10 +391,15 @@ public class MediaProxyService: NSObject {
 	}
 	
 	public static func imageCache(forType: CacheType) -> SDImageCache {
-		if forType == .temporary {
-			return MediaProxyService.temporaryCache
-		} else {
-			return MediaProxyService.permanentCache
+		switch forType {
+			case .temporary:
+				return MediaProxyService.temporaryCache
+				
+			case .permanent:
+				return MediaProxyService.permanentCache
+				
+			case .detail:
+				return MediaProxyService.detailCache
 		}
 	}
 	
