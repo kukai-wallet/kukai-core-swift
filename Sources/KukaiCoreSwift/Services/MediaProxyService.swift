@@ -97,7 +97,7 @@ public class MediaProxyService: NSObject {
 		MediaProxyService.permanentCache.config.maxMemoryCost = UInt(100 * 1000 * 1000) // 100 MB
 		
 		MediaProxyService.temporaryCache.config.maxDiskAge = 3600 * 24 * 7 // 1 Week
-		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(500 * 1000 * 1000) // 1000 MB
+		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(500 * 1000 * 1000) // 500 MB
 		
 		MediaProxyService.detailCache.config.maxDiskAge = 3600 * 24 // 1 day
 		
@@ -307,7 +307,10 @@ public class MediaProxyService: NSObject {
 		MediaProxyService.temporaryCache.clearDisk {
 			MediaProxyService.permanentCache.clearMemory()
 			MediaProxyService.permanentCache.clearDisk {
-				completion()
+				MediaProxyService.detailCache.clearMemory()
+				MediaProxyService.detailCache.clearDisk {
+					completion()
+				}
 			}
 		}
 	}
@@ -323,6 +326,7 @@ public class MediaProxyService: NSObject {
 	/// Clear only iamges from cahce that have expired
 	public static func clearExpiredImages() {
 		MediaProxyService.temporaryCache.deleteOldFiles()
+		MediaProxyService.detailCache.deleteOldFiles()
 	}
 	
 	/// Get size in bytes
@@ -381,9 +385,6 @@ public class MediaProxyService: NSObject {
 				imageView.image = image?.images?.first
 				
 			} else {
-				// Can't set image directly, or else we will skip the SDAnimatedImageView functionality.
-				// Need to call the url again, now that its downlaoded, should be instant
-				//imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
 				imageView.image = image
 			}
 			
