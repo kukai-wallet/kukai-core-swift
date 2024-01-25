@@ -369,6 +369,8 @@ public class MediaProxyService: NSObject {
 		context[.imageCache] = imageCache(forType: cacheType)
 		
 		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
+		
+		// Set the image, but avoid auto setting it, so we can run some checks first, e.g. check if the animated image is too massive
 		imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage], context: context) { _, _, _ in
 			
 		} completed: { image, error, _, _ in
@@ -383,12 +385,10 @@ public class MediaProxyService: NSObject {
 			if (image?.images?.count ?? 0) > 0, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory {
 				imageView.image = image?.images?.first
 				
-			} /*else if imageView is SDAnimatedImageView, let animatedImageView = imageView as? SDAnimatedImageView {
-				//animatedImageView.image = image
-				
-			}*/ else {
-				//imageView.image = image
-				imageView.sd_setImage(with: url)
+			} else {
+				// Can't set image directly, or else we will skip the SDAnimatedImageView functionality.
+				// Need to call the url again, now that its downlaoded, should be instant
+				imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
 			}
 			
 			completion?(image?.size)
