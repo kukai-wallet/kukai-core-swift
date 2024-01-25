@@ -383,7 +383,8 @@ public class MediaProxyService: NSObject {
 			} else {
 				// Can't set image directly, or else we will skip the SDAnimatedImageView functionality.
 				// Need to call the url again, now that its downlaoded, should be instant
-				imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+				//imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+				imageView.image = image
 			}
 			
 			completion?(image?.size)
