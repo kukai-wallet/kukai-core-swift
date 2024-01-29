@@ -420,8 +420,10 @@ public class MediaProxyService: NSObject {
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
+		var context: [SDWebImageContextOption: Any] = [:]
+		context[SDWebImageContextOption.animatedImageClass] = SDAnimatedImage.self
 		
-		MediaProxyService.prefetcher?.prefetchURLs([url], progress: nil, completed: { finishedURLs, skippedURLs in
+		MediaProxyService.prefetcher?.prefetchURLs([url], context: context, progress: nil, completed: { finishedURLs, skippedURLs in
 			let size = MediaProxyService.temporaryCache.imageFromCache(forKey: url.absoluteString)?.size
 			
 			if skippedURLs > 0 {
