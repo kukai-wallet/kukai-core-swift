@@ -181,7 +181,8 @@ extension RPC where T == OperationResponse {
 			return nil
 		}
 		
-		return RPC<OperationResponse>(endpoint: "chains/main/blocks/head/helpers/scripts/run_operation", payload: payloadData, responseType: OperationResponse.self)
+		//return RPC<OperationResponse>(endpoint: "chains/main/blocks/head/helpers/scripts/run_operation", payload: payloadData, responseType: OperationResponse.self)
+		return RPC<OperationResponse>(endpoint: "chains/main/blocks/head/helpers/scripts/simulate_operation", payload: payloadData, responseType: OperationResponse.self)
 	}
 }
 
