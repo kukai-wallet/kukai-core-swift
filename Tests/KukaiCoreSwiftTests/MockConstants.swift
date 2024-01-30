@@ -139,6 +139,8 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head~3"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
 			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
+			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations"): (MockConstants.jsonStub(fromFilename: "forge"), MockConstants.http200),
 			// Parse is handled inside MockURLProtocol due to its special requirements
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),

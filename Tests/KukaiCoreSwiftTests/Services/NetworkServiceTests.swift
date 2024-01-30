@@ -62,12 +62,12 @@ class NetworkServiceTests: XCTestCase {
 	}
 	
 	func testErrorGas() {
-		MockURLProtocol.triggerGasExhaustedErrorOnRunOperation(nodeUrl: 0)
-		MockURLProtocol.triggerGasExhaustedErrorOnRunOperation(nodeUrl: 1)
+		MockURLProtocol.triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: 0)
+		MockURLProtocol.triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: 1)
 		
 		let expectation = XCTestExpectation(description: "network service error gas")
 		
-		if let rpc = RPC.runOperation(runOperationPayload: RunOperationPayload(chainID: MockConstants.blockchainHead.chainID, operation: MockConstants.sendOperationPayload)) {
+		if let rpc = RPC.simulateOperation(runOperationPayload: RunOperationPayload(chainID: MockConstants.blockchainHead.chainID, operation: MockConstants.sendOperationPayload)) {
 			MockConstants.shared.networkService.send(rpc: rpc, withNodeURLs: MockConstants.shared.config.nodeURLs) { result in
 				
 				switch result {
@@ -76,7 +76,7 @@ class NetworkServiceTests: XCTestCase {
 						
 					case .failure(let error):
 						XCTAssert(error.errorType == .rpc, error.description)
-						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[1].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation").absoluteString, error.requestURL?.absoluteString ?? "-")
+						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[1].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation").absoluteString, error.requestURL?.absoluteString ?? "-")
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)
 				}
@@ -92,11 +92,11 @@ class NetworkServiceTests: XCTestCase {
 	}
 	
 	func testErrorAssert() {
-		MockURLProtocol.triggerAssertErrorOnRunOperation()
+		MockURLProtocol.triggerAssertErrorOnSimulateOperation()
 		
 		let expectation = XCTestExpectation(description: "network service error gas")
 		
-		if let rpc = RPC.runOperation(runOperationPayload: RunOperationPayload(chainID: MockConstants.blockchainHead.chainID, operation: MockConstants.sendOperationPayload)) {
+		if let rpc = RPC.simulateOperation(runOperationPayload: RunOperationPayload(chainID: MockConstants.blockchainHead.chainID, operation: MockConstants.sendOperationPayload)) {
 			MockConstants.shared.networkService.send(rpc: rpc, withNodeURLs: MockConstants.shared.config.nodeURLs) { result in
 				
 				switch result {
@@ -106,7 +106,7 @@ class NetworkServiceTests: XCTestCase {
 					case .failure(let error):
 						XCTAssert(error.errorType == .unknown)
 						XCTAssert(error.description == "Unknown: Assert_failure src/proto_009_PsFLoren/lib_protocol/operation_repr.ml:203:6", error.description)
-						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[0].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation").absoluteString)
+						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[0].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation").absoluteString)
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)
 				}
@@ -183,11 +183,11 @@ class NetworkServiceTests: XCTestCase {
 	}
 	
 	func testRpcRetryLogic() {
-		MockURLProtocol.triggerHttp500ErrorOnRunOperation()
+		MockURLProtocol.triggerHttp500ErrorOnSimulateOperation()
 		
 		let expectation = XCTestExpectation(description: "network service retry logic")
 		
-		if let rpc = RPC.runOperation(runOperationPayload: RunOperationPayload(chainID: MockConstants.blockchainHead.chainID, operation: MockConstants.sendOperationPayload)) {
+		if let rpc = RPC.simulateOperation(runOperationPayload: RunOperationPayload(chainID: MockConstants.blockchainHead.chainID, operation: MockConstants.sendOperationPayload)) {
 			MockConstants.shared.networkService.send(rpc: rpc, withNodeURLs: MockConstants.shared.config.nodeURLs) { result in
 				
 				switch result {

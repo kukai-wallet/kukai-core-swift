@@ -151,13 +151,13 @@ class MockURLProtocol: URLProtocol {
 		
 	}
 	
-	static func triggerGasExhaustedErrorOnRunOperation(nodeUrl: Int = 0) {
-		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_gas"), response: MockConstants.http200)
 	}
 	
-	static func triggerAssertErrorOnRunOperation(nodeUrl: Int = 0) {
-		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerAssertErrorOnSimulateOperation(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
 	
@@ -166,8 +166,8 @@ class MockURLProtocol: URLProtocol {
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_counter-in-future"), response: MockConstants.http500)
 	}
 	
-	static func triggerHttp500ErrorOnRunOperation(nodeUrl: Int = 0) {
-		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerHttp500ErrorOnSimulateOperation(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
 		MockURLProtocol.errorURLs[url] = (data: nil, response: MockConstants.http500)
 	}
 }
