@@ -534,6 +534,20 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Check if the array is contains at least 1 OperationUnknown
+		 Useful in situations to display fallback UI for unknown cases
+		 */
+		public static func containsAnUnknownOperation(operations: [Operation]) -> Bool {
+			for op in operations {
+				if let _ = op as? OperationUnknown {
+					return true
+				}
+			}
+			
+			return false
+		}
+		
+		/**
 		 Run through list of operations and extract .amount from any OperationTransaction + balance from any OperationOrigination
 		 */
 		public static func totalTezAmountSent(operations: [Operation]) -> XTZAmount {
