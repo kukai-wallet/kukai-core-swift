@@ -116,13 +116,13 @@ class OperationFactoryTests: XCTestCase {
 	
 	func testAllowance() {
 		let address = MockConstants.defaultHdWallet.address
-		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
+		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", tokenId: nil, spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op.counter == "0")
 		XCTAssert(op.operationKind == .transaction)
 		XCTAssert(op is OperationTransaction)
 		
-		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
+		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", tokenId: "0", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
 		XCTAssert(op2.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op2.counter == "0")
 		XCTAssert(op2.operationKind == .transaction)
@@ -197,6 +197,7 @@ class OperationFactoryTests: XCTestCase {
 		}
 	}
 	
+	/*
 	func testTokenToXTZ_LB() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
@@ -274,7 +275,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
+	/*
 	func testTokenToXTZ_QUIPU() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
@@ -348,7 +351,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
+	/*
 	func testAddLiquidity_LB() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
@@ -426,7 +431,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
+	/*
 	func testAddLiquidity_QUIPU() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
@@ -496,6 +503,7 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
 	func testRemoveLiquidity() {
 		let address = MockConstants.defaultHdWallet.address
@@ -611,5 +619,30 @@ class OperationFactoryTests: XCTestCase {
 		let contractDetails3 = OperationFactory.Extractor.isSingleContractCall(operations: swap)
 		XCTAssert(contractDetails3?.address == "KT1abc", contractDetails3?.address ?? "-")
 		XCTAssert(contractDetails3?.entrypoint == "tezToTokenPayment", contractDetails3?.entrypoint ?? "-")
+	}
+	
+	func testExtractors3Route() {
+		let decoder = JSONDecoder()
+		
+		let singleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route-single-route")
+		let singleRouteJson = (try? decoder.decode([OperationTransaction].self, from: singleRouteJsonData)) ?? []
+		XCTAssert(singleRouteJson.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: singleRouteJson)
+		XCTAssert(details1?.tokenContract == "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "100000000000", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == 3, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details1?.destination ?? "-")
+		
+		
+		let multipleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route-multiple-routes")
+		let multipleRouteJson = (try? decoder.decode([OperationTransaction].self, from: multipleRouteJsonData)) ?? []
+		XCTAssert(multipleRouteJson.count > 0)
+		
+		let details2 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: multipleRouteJson)
+		XCTAssert(details2?.tokenContract == "KT1914CUZ7EegAFPbfgQMRkw8Uz5mYkEz2ui", details2?.tokenContract ?? "-")
+		XCTAssert(details2?.rpcAmount == "65639920011", details2?.rpcAmount ?? "-")
+		XCTAssert(details2?.tokenId == 0, details2?.tokenId?.description ?? "-")
+		XCTAssert(details2?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details2?.destination ?? "-")
 	}
 }

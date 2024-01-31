@@ -1,0 +1,178 @@
+[
+	{
+		"kind": "transaction",
+		"gas_limit": "650000",
+		"amount": "0",
+		"source": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j",
+		"storage_limit": "60000",
+		"fee": "0",
+		"parameters": {
+			"value": [
+				{
+					"prim": "Left",
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT"
+										},
+										{
+											"int": "3"
+										}
+									]
+								}
+							],
+							"prim": "Pair"
+						}
+					]
+				}
+			],
+			"entrypoint": "update_operators"
+		},
+		"counter": "95756292",
+		"destination": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF"
+	},
+	{
+		"kind": "transaction",
+		"gas_limit": "650000",
+		"source": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j",
+		"fee": "0",
+		"amount": "0",
+		"parameters": {
+			"entrypoint": "execute",
+			"value": {
+				"prim": "Pair",
+				"args": [
+					{
+						"int": "62"
+					},
+					{
+						"args": [
+							{
+								"int": "0"
+							},
+							{
+								"args": [
+									{
+										"int": "499"
+									},
+									{
+										"prim": "Pair",
+										"args": [
+											{
+												"string": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"
+											},
+											{
+												"prim": "Pair",
+												"args": [
+													[
+														{
+															"prim": "Elt",
+															"args": [
+																{
+																	"int": "0"
+																},
+																{
+																	"prim": "Pair",
+																	"args": [
+																		{
+																			"int": "132"
+																		},
+																		{
+																			"prim": "Pair",
+																			"args": [
+																				{
+																					"int": "0"
+																				},
+																				{
+																					"prim": "Pair",
+																					"args": [
+																						{
+																							"int": "100000000000"
+																						},
+																						{
+																							"args": [
+																								{
+																									"int": "0"
+																								},
+																								{
+																									"bytes": ""
+																								}
+																							],
+																							"prim": "Pair"
+																						}
+																					]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													],
+													{
+														"int": "0"
+													}
+												]
+											}
+										]
+									}
+								],
+								"prim": "Pair"
+							}
+						],
+						"prim": "Pair"
+					}
+				]
+			}
+		},
+		"destination": "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT",
+		"counter": "95756293",
+		"storage_limit": "60000"
+	},
+	{
+		"destination": "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF",
+		"source": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j",
+		"storage_limit": "60000",
+		"fee": "0",
+		"amount": "0",
+		"parameters": {
+			"value": [
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT"
+										},
+										{
+											"int": "3"
+										}
+									],
+									"prim": "Pair"
+								}
+							]
+						}
+					],
+					"prim": "Right"
+				}
+			],
+			"entrypoint": "update_operators"
+		},
+		"gas_limit": "650000",
+		"counter": "95756294",
+		"kind": "transaction"
+	}
+]

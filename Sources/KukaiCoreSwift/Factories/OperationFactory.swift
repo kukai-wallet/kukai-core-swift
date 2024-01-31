@@ -119,6 +119,7 @@ public class OperationFactory {
 		}
 	}
 	
+	/*
 	/**
 	Create the operations necessary to perform an exchange of a given FA token for XTZ, using dex contracts
 	- parameter withDex: `DipDupExchange` instance providing information about the exchange
@@ -153,7 +154,7 @@ public class OperationFactory {
 		
 		return operations
 	}
-	
+	*/
 	
 	
 	// MARK: - Allowance (approve, update_operators)
@@ -185,10 +186,10 @@ public class OperationFactory {
 	 - parameter wallet: The wallet signing the operation
 	 - returns: An `OperationTransaction` which will invoke a smart contract call
 	 */
-	public static func updateOperatorsOperation(tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
+	public static func updateOperatorsOperation(tokenAddress: String, tokenId: String, spenderAddress: String, walletAddress: String) -> Operation {
 		let params: [String: Any] = [
 			"entrypoint": OperationTransaction.StandardEntrypoint.updateOperators.rawValue,
-			"value": [["prim": "Left","args": [["prim": "Pair","args": [["string": walletAddress] as [String: Any], ["prim": "Pair","args": [["string": spenderAddress], ["int": allowance.rpcRepresentation]]]]] as [String : Any]]]] as [[String: Any]]
+			"value": [["prim": "Left","args": [["prim": "Pair","args": [["string": walletAddress] as [String: Any], ["prim": "Pair","args": [["string": spenderAddress], ["int": tokenId]]]]] as [String : Any]]]] as [[String: Any]]
 		]
 		
 		return OperationTransaction(amount: TokenAmount.zero(), source: walletAddress, destination: tokenAddress, parameters: params)
@@ -204,14 +205,14 @@ public class OperationFactory {
 	 - parameter wallet: The wallet signing the operation
 	 - returns: An `OperationTransaction` which will invoke a smart contract call
 	 */
-	public static func allowanceOperation(standard: DipDupTokenStandard, tokenAddress: String, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
+	public static func allowanceOperation(standard: DipDupTokenStandard, tokenAddress: String, tokenId: String?, spenderAddress: String, allowance: TokenAmount, walletAddress: String) -> Operation {
 		
 		switch standard {
 			case .fa12:
 				return approveOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, walletAddress: walletAddress)
 				
 			case .fa2:
-				return updateOperatorsOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, walletAddress: walletAddress)
+				return updateOperatorsOperation(tokenAddress: tokenAddress, tokenId: tokenId ?? "0", spenderAddress: spenderAddress, walletAddress: walletAddress)
 				
 			case .unknown:
 				return approveOperation(tokenAddress: tokenAddress, spenderAddress: spenderAddress, allowance: allowance, walletAddress: walletAddress)
@@ -222,6 +223,7 @@ public class OperationFactory {
 	
 	// MARK: - Dex functions
 	
+	/*
 	/**
 	Create the operations necessary to add liquidity to a dex contract. Use DexCalculationService to figure out the numbers required
 	- parameter withDex: `DipDupExchange` instance providing information about the exchange
@@ -258,6 +260,7 @@ public class OperationFactory {
 		
 		return operations
 	}
+	*/
 	
 	/**
 	Create the operations necessary to remove liquidity from a dex contract, also withdraw pending rewards if applicable. Use DexCalculationService to figure out the numbers required
@@ -405,7 +408,7 @@ public class OperationFactory {
 		 Filter and verify only 1 transaction exists thats sending a token. If so return this operation, otherwise return false
 		 */
 		public static func isFaTokenTransfer(operations: [Operation]) -> (operation: OperationTransaction, tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
-			if let op = isSingleTransaction(operations: operations), let details = faTokenDetailsFrom(transaction: op) {
+			if let op = isSingleTransaction(operations: operations), let details = faTokenDetailsFromTransfer(transaction: op) {
 				return (operation: op, tokenContract: details.tokenContract, rpcAmount: details.rpcAmount, tokenId: details.tokenId, destination: details.destination)
 			}
 			
@@ -424,10 +427,10 @@ public class OperationFactory {
 		}
 		
 		/**
-		 Extract details from a payload in order to present to the user what it is they are trying to send
+		 Extract details from a transfer payload in order to present to the user what it is they are trying to send
 		 */
-		public static func faTokenDetailsFrom(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
-			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromSendMichelson(michelson: params["value"] ?? [Any]()) {
+		public static func faTokenDetailsFromTransfer(transaction: OperationTransaction) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let params = transaction.parameters, let amountAndId = OperationFactory.Extractor.tokenIdAndAmountFromTransferMichelson(michelson: params["value"] ?? [Any]()) {
 				let tokenContractAddress = transaction.destination
 				return (tokenContract: tokenContractAddress, rpcAmount: amountAndId.rpcAmount, tokenId: amountAndId.tokenId, destination: amountAndId.destination)
 			}
@@ -436,9 +439,66 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson `approve` value
+		 */
+		public static func tokenIdAndAmountFromApproveMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			if let michelsonDict = michelson as? [String: Any] {
+				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
+				
+				if let str = rpcAmountString {
+					return (rpcAmount: str, tokenId: nil, destination: rpcDestinationString)
+				} else {
+					return nil
+				}
+			} else {
+				return nil
+			}
+		}
+		
+		/**
+		 Extract  a tokenId, and the destination from a michelson `update_operators` value
+		 */
+		public static func tokenIdFromUpdateOperatorsMichelson(michelson: Any) -> (tokenId: Decimal?, destination: String)? {
+			if let michelsonArray = michelson as? [Any] {
+				let argsArray1 = michelsonArray.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 0)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()
+				let rpcDestination = argsArray1?.michelsonString(atIndex: 0)
+				let rpcTokenIdString = argsArray1?.michelsonInt(atIndex: 1)
+				
+				if let str = rpcTokenIdString, let dest = rpcDestination {
+					return (tokenId: Decimal(string: str), destination: dest)
+				} else {
+					return nil
+				}
+			} else {
+				return nil
+			}
+		}
+		
+		/**
+		 Extract rpc amount (without decimal info) michelson `execute` value for a 3route call
+		 */
+		public static func tokenAmountFromExecuteMichelson(michelson: Any) -> Decimal? {
+			if let michelsonDict = michelson as? [String: Any] {
+				let routeArray = (michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsUnknownArray()?.first as? [[String: Any]])
+				
+				var total: Decimal = 0
+				for michelsonDictRoute in routeArray ?? [] {
+					let value = michelsonDictRoute.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+					total += Decimal(string: value ?? "0") ?? 0
+				}
+				
+				return total
+				
+			} else {
+				return nil
+			}
+		}
+		
+		/**
 		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload
 		 */
-		public static func tokenIdAndAmountFromSendMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
+		public static func tokenIdAndAmountFromTransferMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let michelsonDict = michelson as? [String: Any] {
 				// FA1.2
 				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
@@ -469,6 +529,79 @@ public class OperationFactory {
 			} else {
 				return nil
 			}
+		}
+		
+		/**
+		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson
+		 Supports:
+		 - FA1.2 transfer
+		 - FA2 transfer
+		 - 3Route
+		 - Approve operation
+		 - update_operator operation
+		 */
+		public static func tokenIdAndAmountFromMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String?)? {
+			if let michelsonDict = michelson as? [String: Any], let entrypoint = michelsonDict["entrypoint"] as? String {
+				switch entrypoint {
+					case OperationTransaction.StandardEntrypoint.approve.rawValue:
+						return tokenIdAndAmountFromApproveMichelson(michelson: michelsonDict["value"] ?? [:])
+						
+					case OperationTransaction.StandardEntrypoint.updateOperators.rawValue:
+						if let updateResponse = tokenIdFromUpdateOperatorsMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: "0", tokenId: updateResponse.tokenId, destination: updateResponse.destination)
+						} else {
+							return nil
+						}
+						
+					case OperationTransaction.StandardEntrypoint.transfer.rawValue:
+						return tokenIdAndAmountFromTransferMichelson(michelson: michelsonDict["value"] ?? [:])
+						
+					case OperationTransaction.StandardEntrypoint.execute.rawValue:
+						if let executeResponse = tokenAmountFromExecuteMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: executeResponse.description, tokenId: nil, destination: nil)
+							
+						} else {
+							return nil
+						}
+						
+					default:
+						return nil
+				}
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Run through list of operations and extract the first valid `faTokenDetailsFrom(transaction: ...)`
+		 In the case of hitting an `update_operators`, will check for the next transaction to see if it contains the amount
+		 Useful for displaying the main token being swapped in a dex aggregator call
+		 */
+		public static func firstNonZeroTokenTransferAmount(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			
+			for (index, op) in operations.enumerated() {
+				if let opTrans = op as? OperationTransaction, let details = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]) {
+					
+					if details.rpcAmount == "0" && (opTrans.parameters?["entrypoint"] as? String) != OperationTransaction.StandardEntrypoint.updateOperators.rawValue {
+						
+						// If we have a rpcAmount of zero, and its not an `update_operators`, move on to next value
+						continue
+						
+					} else if details.rpcAmount == "0", operations.count > (index + 1), let executeDetails = tokenIdAndAmountFromMichelson(michelson: (operations[index+1] as? OperationTransaction)?.parameters ?? [:] ) {
+						
+						// If its zero, and was update_operators, check to see if parsing the next operation as a 3route execute, returns the missing piece
+						// If so return a mixture of the 2 values, as update tells us the token, execute tells us how much
+						return (tokenContract: opTrans.destination, rpcAmount: executeDetails.rpcAmount, tokenId: details.tokenId, destination: details.destination ?? "")
+						
+					} else {
+						
+						// Return the non zero value we have
+						return (tokenContract: opTrans.destination, rpcAmount: details.rpcAmount, tokenId: details.tokenId, destination: details.destination ?? "")
+					}
+				}
+			}
+			
+			return nil
 		}
 		
 		/**
@@ -563,21 +696,6 @@ public class OperationFactory {
 			}
 			
 			return amount
-		}
-		
-		/**
-		 Run through list of operations and extract the first valid `faTokenDetailsFrom(transaction: ...)`
-		 Useful for displaying the main token being swapped in a dex aggregator call
-		 */
-		public static func firstTokenTransferAmount(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
-			
-			for op in operations {
-				if let opTrans = op as? OperationTransaction , let details = faTokenDetailsFrom(transaction: opTrans) {
-					return details
-				}
-			}
-			
-			return nil
 		}
 		
 		/**

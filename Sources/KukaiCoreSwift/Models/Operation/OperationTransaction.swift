@@ -34,6 +34,7 @@ public class OperationTransaction: Operation {
 		case investLiquidity
 		case divestLiquidity
 		case withdrawProfit
+		case execute // 3route
 	}
 	
 	enum CodingKeys: String, CodingKey {
