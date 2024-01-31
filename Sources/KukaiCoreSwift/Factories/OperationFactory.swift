@@ -566,6 +566,21 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Run through list of operations and extract the first valid `faTokenDetailsFrom(transaction: ...)`
+		 Useful for displaying the main token being swapped in a dex aggregator call
+		 */
+		public static func firstTokenTransferAmount(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
+			
+			for op in operations {
+				if let opTrans = op as? OperationTransaction , let details = faTokenDetailsFrom(transaction: opTrans) {
+					return details
+				}
+			}
+			
+			return nil
+		}
+		
+		/**
 		 Check if the operation is a contract call, but ignore entrypoint trasnfer
 		 Useful for situations where you want to display different info about contract calls such as claim or mint, compared to transferring a token
 		 Return the entrypoint and contract address if so
