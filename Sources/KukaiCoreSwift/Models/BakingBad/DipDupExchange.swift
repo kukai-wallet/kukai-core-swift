@@ -19,6 +19,8 @@ public struct DipDupExchangesAndTokens: Codable {
 	public let symbol: String
 	public let address: String
 	public let tokenId: Decimal
+	public let decimals: Int
+	public let thumbnailUri: String?
 	public let exchanges: [DipDupExchange]
 	
 	/// Get the total XTZ pool amount from all the exchanges, useful for sorting

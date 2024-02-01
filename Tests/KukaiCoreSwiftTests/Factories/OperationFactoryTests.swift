@@ -169,7 +169,7 @@ class OperationFactoryTests: XCTestCase {
 	
 	func testXtzToToken() {
 		let address = MockConstants.defaultHdWallet.address
-		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
 		let op = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), walletAddress: address, timeout: 30)
 		
@@ -507,7 +507,7 @@ class OperationFactoryTests: XCTestCase {
 	
 	func testRemoveLiquidity() {
 		let address = MockConstants.defaultHdWallet.address
-		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
 		let op = OperationFactory.removeLiquidity(withDex: dex, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), walletAddress: address, timeout: 30)
 		
@@ -546,7 +546,7 @@ class OperationFactoryTests: XCTestCase {
 		let opFA2 = OperationFactory.sendOperation(MockConstants.token10Decimals_1, of: MockConstants.token10Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		let opNFT = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
 		
-		let dexToken = DipDupToken(symbol: "BLAH", address: "KT1def", tokenId: 123, decimals: 3, standard: .fa2)
+		let dexToken = DipDupToken(symbol: "BLAH", address: "KT1def", tokenId: 123, decimals: 3, standard: .fa2, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1abc", tezPool: "100000000000", tokenPool: "1000000000", sharesTotal: "100000", midPrice: "14", token: dexToken)
 		let swap = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: .init(fromNormalisedAmount: 14), minTokenAmount: .init(fromNormalisedAmount: 2, decimalPlaces: 3), walletAddress: "tz1abc", timeout: 60)
 		
