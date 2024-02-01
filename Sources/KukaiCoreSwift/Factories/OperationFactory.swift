@@ -540,7 +540,7 @@ public class OperationFactory {
 		 - Approve operation
 		 - update_operator operation
 		 */
-		public static func tokenIdAndAmountFromMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String?)? {
+		public static func tokenIdAndAmountFromMichelson(michelson: Any, operation: Operation) -> (rpcAmount: String, tokenId: Decimal?, destination: String?)? {
 			if let michelsonDict = michelson as? [String: Any], let entrypoint = michelsonDict["entrypoint"] as? String {
 				switch entrypoint {
 					case OperationTransaction.StandardEntrypoint.approve.rawValue:
@@ -548,7 +548,7 @@ public class OperationFactory {
 						
 					case OperationTransaction.StandardEntrypoint.updateOperators.rawValue:
 						if let updateResponse = tokenIdFromUpdateOperatorsMichelson(michelson: michelsonDict["value"] ?? [:]) {
-							return (rpcAmount: "0", tokenId: updateResponse.tokenId, destination: updateResponse.destination)
+							return (rpcAmount: "0", tokenId: updateResponse.tokenId, destination: updateResponse.destination) // Can extract token address + id, but not amount ... cause nobody likes me
 						} else {
 							return nil
 						}
@@ -558,7 +558,7 @@ public class OperationFactory {
 						
 					case OperationTransaction.StandardEntrypoint.execute.rawValue:
 						if let executeResponse = tokenAmountFromExecuteMichelson(michelson: michelsonDict["value"] ?? [:]) {
-							return (rpcAmount: executeResponse.description, tokenId: nil, destination: nil)
+							return (rpcAmount: executeResponse.description, tokenId: nil, destination: (operation as? OperationTransaction)?.destination) // We can extract the token address, but not the tokenId ... cause life
 							
 						} else {
 							return nil
@@ -580,14 +580,14 @@ public class OperationFactory {
 		public static func firstNonZeroTokenTransferAmount(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			
 			for (index, op) in operations.enumerated() {
-				if let opTrans = op as? OperationTransaction, let details = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]) {
+				if let opTrans = op as? OperationTransaction, let details = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:], operation: op) {
 					
 					if details.rpcAmount == "0" && (opTrans.parameters?["entrypoint"] as? String) != OperationTransaction.StandardEntrypoint.updateOperators.rawValue {
 						
 						// If we have a rpcAmount of zero, and its not an `update_operators`, move on to next value
 						continue
 						
-					} else if details.rpcAmount == "0", operations.count > (index + 1), let executeDetails = tokenIdAndAmountFromMichelson(michelson: (operations[index+1] as? OperationTransaction)?.parameters ?? [:] ) {
+					} else if details.rpcAmount == "0", operations.count > (index + 1), let executeDetails = tokenIdAndAmountFromMichelson(michelson: (operations[index+1] as? OperationTransaction)?.parameters ?? [:], operation: op) {
 						
 						// If its zero, and was update_operators, check to see if parsing the next operation as a 3route execute, returns the missing piece
 						// If so return a mixture of the 2 values, as update tells us the token, execute tells us how much
