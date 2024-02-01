@@ -31,6 +31,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case origination
 		case transaction
 		case reveal
+		case batch
 		case unknown
 	}
 	
@@ -41,6 +42,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case reveal
 		case exchange
 		case contractCall
+		case batch
 		case unknown
 	}
 	
