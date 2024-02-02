@@ -270,10 +270,10 @@ public class MediaProxyService: NSObject {
 		if duplicatesRemoved.contains(where: { $0 == .audio }) && duplicatesRemoved.contains(where: { $0 == .image }) {
 			return .imageAndAudio
 			
-		} else if duplicatesRemoved[0] == .video {
+		} else if duplicatesRemoved.contains(where: { $0 == .video }) {
 			return .videoOnly
 			
-		} else if duplicatesRemoved[0] == .audio {
+		} else if duplicatesRemoved.contains(where: { $0 == .audio }) {
 			return .audioOnly
 			
 		} else {
