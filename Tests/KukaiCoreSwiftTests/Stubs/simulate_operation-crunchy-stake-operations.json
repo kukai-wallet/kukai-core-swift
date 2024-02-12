@@ -1,11 +1,15 @@
 [
 	{
+		"amount": "0",
+		"counter": "24122610",
+		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+		"kind": "transaction",
 		"parameters": {
+			"entrypoint": "update_operators",
 			"value": [
 				{
 					"args": [
 						{
-							"prim": "Pair",
 							"args": [
 								{
 									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
@@ -21,25 +25,23 @@
 									],
 									"prim": "Pair"
 								}
-							]
+							],
+							"prim": "Pair"
 						}
 					],
 					"prim": "Left"
 				}
-			],
-			"entrypoint": "update_operators"
+			]
 		},
-		"amount": "0",
-		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
-		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
-		"counter": "143231",
-		"kind": "transaction"
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
 	},
 	{
-		"kind": "transaction",
-		"destination": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
 		"amount": "0",
+		"counter": "24122611",
+		"destination": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
+		"kind": "transaction",
 		"parameters": {
+			"entrypoint": "deposit",
 			"value": {
 				"args": [
 					{
@@ -50,18 +52,17 @@
 					}
 				],
 				"prim": "Pair"
-			},
-			"entrypoint": "deposit"
+			}
 		},
-		"counter": "143232",
 		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
 	},
 	{
-		"counter": "143233",
-		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
 		"amount": "0",
+		"counter": "24122612",
+		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
 		"kind": "transaction",
 		"parameters": {
+			"entrypoint": "update_operators",
 			"value": [
 				{
 					"args": [
@@ -71,7 +72,6 @@
 									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
 								},
 								{
-									"prim": "Pair",
 									"args": [
 										{
 											"string": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX"
@@ -79,7 +79,8 @@
 										{
 											"int": "0"
 										}
-									]
+									],
+									"prim": "Pair"
 								}
 							],
 							"prim": "Pair"
@@ -87,8 +88,7 @@
 					],
 					"prim": "Right"
 				}
-			],
-			"entrypoint": "update_operators"
+			]
 		},
 		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
 	}

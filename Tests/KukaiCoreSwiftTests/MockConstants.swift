@@ -226,16 +226,16 @@ public struct MockConstants {
 			
 			
 			// simulate_operation
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request1")):
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request1")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request3")):
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request3")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
-			MockPostUrlKey(url: secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request2")):
+			MockPostUrlKey(url: secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request2")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
 			
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-request")):
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-request")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-response"), MockConstants.http200),
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-request")):
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-request")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-response"), MockConstants.http200),
 		]
 		

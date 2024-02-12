@@ -1,75 +1,17 @@
 {
 	"contents": [
 		{
+			"amount": "0",
+			"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+			"fee": "0",
+			"kind": "transaction",
 			"metadata": {
 				"operation_result": {
 					"status": "applied",
 					"consumed_milligas": "644461",
-					"storage_size": "234361"
+					"storage_size": "234847"
 				},
 				"internal_operation_results": [
-					{
-						"result": {
-							"status": "applied",
-							"consumed_milligas": "100000"
-						},
-						"source": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
-						"kind": "event"
-					}
-				]
-			},
-			"kind": "transaction",
-			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
-		},
-		{
-			"metadata": {
-				"operation_result": {
-					"storage_size": "69900",
-					"paid_storage_size_diff": "184",
-					"consumed_milligas": "3347616",
-					"status": "applied",
-					"balance_updates": [
-						{
-							"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
-							"change": "-46000",
-							"kind": "contract"
-						},
-						{
-							"kind": "burned",
-							"change": "46000"
-						}
-					]
-				},
-				"internal_operation_results": [
-					{
-						"source": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
-						"result": {
-							"balance_updates": [
-								{
-									"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
-									"kind": "contract",
-									"change": "-13250"
-								},
-								{
-									"kind": "burned",
-									"change": "13250"
-								}
-							],
-							"consumed_milligas": "1725096",
-							"status": "applied",
-							"storage_size": "234428",
-							"paid_storage_size_diff": "53"
-						},
-						"kind": "transaction"
-					},
-					{
-						"source": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
-						"result": {
-							"status": "applied",
-							"consumed_milligas": "100000"
-						},
-						"kind": "event"
-					},
 					{
 						"result": {
 							"status": "applied",
@@ -77,6 +19,64 @@
 						},
 						"kind": "event",
 						"source": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm"
+					}
+				]
+			},
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+		},
+		{
+			"amount": "0",
+			"fee": "0",
+			"kind": "transaction",
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+			"destination": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
+			"metadata": {
+				"operation_result": {
+					"balance_updates": [
+						{
+							"kind": "contract",
+							"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+							"change": "-46000"
+						},
+						{
+							"kind": "burned",
+							"change": "46000"
+						}
+					],
+					"status": "applied",
+					"consumed_milligas": "3347616",
+					"storage_size": "71202",
+					"paid_storage_size_diff": "184"
+				},
+				"internal_operation_results": [
+					{
+						"result": {
+							"consumed_milligas": "1725096",
+							"storage_size": "234914",
+							"paid_storage_size_diff": "64",
+							"balance_updates": [
+								{
+									"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+									"kind": "contract",
+									"change": "-16000"
+								},
+								{
+									"change": "16000",
+									"kind": "burned"
+								}
+							],
+							"status": "applied"
+						},
+						"source": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
+						"kind": "transaction"
+					},
+					{
+						"result": {
+							"consumed_milligas": "100000",
+							"status": "applied"
+						},
+						"source": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+						"kind": "event"
 					},
 					{
 						"kind": "event",
@@ -87,13 +87,20 @@
 						}
 					},
 					{
-						"source": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
+						"kind": "event",
+						"result": {
+							"consumed_milligas": "100000",
+							"status": "applied"
+						},
+						"source": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm"
+					},
+					{
 						"kind": "origination",
 						"result": {
 							"balance_updates": [
 								{
-									"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
 									"change": "-204750",
+									"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
 									"kind": "contract"
 								},
 								{
@@ -101,46 +108,48 @@
 									"change": "204750"
 								},
 								{
-									"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+									"change": "-64250",
 									"kind": "contract",
-									"change": "-64250"
+									"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
 								},
 								{
-									"change": "64250",
-									"kind": "burned"
+									"kind": "burned",
+									"change": "64250"
 								}
 							],
-							"status": "applied",
-							"storage_size": "819",
 							"consumed_milligas": "588055",
-							"paid_storage_size_diff": "819"
-						}
+							"status": "applied",
+							"paid_storage_size_diff": "819",
+							"storage_size": "819"
+						},
+						"source": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX"
 					}
 				]
-			},
-			"kind": "transaction",
-			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+			}
 		},
 		{
+			"amount": "0",
 			"metadata": {
 				"operation_result": {
-					"consumed_milligas": "533338",
-					"storage_size": "234361",
-					"status": "applied"
+					"status": "applied",
+					"storage_size": "234847",
+					"consumed_milligas": "533338"
 				},
 				"internal_operation_results": [
 					{
 						"kind": "event",
 						"source": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
 						"result": {
-							"status": "applied",
-							"consumed_milligas": "100000"
+							"consumed_milligas": "100000",
+							"status": "applied"
 						}
 					}
 				]
 			},
 			"kind": "transaction",
-			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+			"fee": "0",
+			"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm"
 		}
 	]
 }

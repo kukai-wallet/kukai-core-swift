@@ -92,20 +92,20 @@ class FeeEstimatorServiceTests: XCTestCase {
 					XCTAssert(result.operations[0].operationFees.storageLimit == 0, result.operations[0].operationFees.storageLimit.description)
 					XCTAssert(result.operations[0].operationFees.allFees().normalisedRepresentation == "0", result.operations[0].operationFees.allFees().normalisedRepresentation)
 					XCTAssert(result.operations[1].operationFees.gasLimit == 6083, result.operations[1].operationFees.gasLimit.description)
-					XCTAssert(result.operations[1].operationFees.storageLimit == 1313, result.operations[1].operationFees.storageLimit.description)
+					XCTAssert(result.operations[1].operationFees.storageLimit == 1324, result.operations[1].operationFees.storageLimit.description)
 					XCTAssert(result.operations[1].operationFees.allFees().normalisedRepresentation == "0", result.operations[1].operationFees.allFees().normalisedRepresentation)
 					XCTAssert(result.operations[2].operationFees.gasLimit == 659, result.operations[2].operationFees.gasLimit.description)
 					XCTAssert(result.operations[2].operationFees.storageLimit == 0, result.operations[2].operationFees.storageLimit.description)
-					XCTAssert(result.operations[2].operationFees.allFees().normalisedRepresentation == "0.329652", result.operations[2].operationFees.allFees().normalisedRepresentation)
+					XCTAssert(result.operations[2].operationFees.allFees().normalisedRepresentation == "0.332402", result.operations[2].operationFees.allFees().normalisedRepresentation)
 					
 					let totalGas = result.operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
 					XCTAssert(totalGas == 7512, totalGas.description)
 					
 					let totalStorage = result.operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
-					XCTAssert(totalStorage == 1313, totalStorage.description)
+					XCTAssert(totalStorage == 1324, totalStorage.description)
 					
 					let totalFee = result.operations.map({ $0.operationFees.allFees() }).reduce(XTZAmount.zero(), +)
-					XCTAssert(totalFee.normalisedRepresentation == "0.329652", totalFee.normalisedRepresentation)
+					XCTAssert(totalFee.normalisedRepresentation == "0.332402", totalFee.normalisedRepresentation)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -117,7 +117,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		wait(for: [expectation1], timeout: 120)
 	}
 	
-	/*
+	
 	func testJSONPayload2() {
 		let decoder = JSONDecoder()
 		
@@ -131,25 +131,25 @@ class FeeEstimatorServiceTests: XCTestCase {
 		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
 			switch result {
 				case .success(let result):
-					XCTAssert(result.operations.count == 12, result.operations.count.description)
-					XCTAssert(result.operations[0].operationFees.gasLimit == 770, result.operations[0].operationFees.gasLimit.description)
-					XCTAssert(result.operations[0].operationFees.storageLimit == 0, result.operations[0].operationFees.storageLimit.description)
+					XCTAssert(result.operations.count == 10, result.operations.count.description)
+					XCTAssert(result.operations[0].operationFees.gasLimit == 13245, result.operations[0].operationFees.gasLimit.description)
+					XCTAssert(result.operations[0].operationFees.storageLimit == 47, result.operations[0].operationFees.storageLimit.description)
 					XCTAssert(result.operations[0].operationFees.allFees().normalisedRepresentation == "0", result.operations[0].operationFees.allFees().normalisedRepresentation)
-					XCTAssert(result.operations[1].operationFees.gasLimit == 6083, result.operations[1].operationFees.gasLimit.description)
-					XCTAssert(result.operations[1].operationFees.storageLimit == 1313, result.operations[1].operationFees.storageLimit.description)
+					XCTAssert(result.operations[1].operationFees.gasLimit == 1557, result.operations[1].operationFees.gasLimit.description)
+					XCTAssert(result.operations[1].operationFees.storageLimit == 30, result.operations[1].operationFees.storageLimit.description)
 					XCTAssert(result.operations[1].operationFees.allFees().normalisedRepresentation == "0", result.operations[1].operationFees.allFees().normalisedRepresentation)
-					XCTAssert(result.operations[2].operationFees.gasLimit == 659, result.operations[2].operationFees.gasLimit.description)
+					XCTAssert(result.operations[2].operationFees.gasLimit == 10185, result.operations[2].operationFees.gasLimit.description)
 					XCTAssert(result.operations[2].operationFees.storageLimit == 0, result.operations[2].operationFees.storageLimit.description)
-					XCTAssert(result.operations[2].operationFees.allFees().normalisedRepresentation == "0.329652", result.operations[2].operationFees.allFees().normalisedRepresentation)
+					XCTAssert(result.operations[2].operationFees.allFees().normalisedRepresentation == "0", result.operations[2].operationFees.allFees().normalisedRepresentation)
 					
 					let totalGas = result.operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
-					XCTAssert(totalGas == 7512, totalGas.description)
+					XCTAssert(totalGas == 103696, totalGas.description)
 					
 					let totalStorage = result.operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
-					XCTAssert(totalStorage == 1313, totalStorage.description)
+					XCTAssert(totalStorage == 77, totalStorage.description)
 					
 					let totalFee = result.operations.map({ $0.operationFees.allFees() }).reduce(XTZAmount.zero(), +)
-					XCTAssert(totalFee.normalisedRepresentation == "0.329652", totalFee.normalisedRepresentation)
+					XCTAssert(totalFee.normalisedRepresentation == "0.031492", totalFee.normalisedRepresentation)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -160,5 +160,4 @@ class FeeEstimatorServiceTests: XCTestCase {
 		
 		wait(for: [expectation1], timeout: 120)
 	}
-	*/
 }

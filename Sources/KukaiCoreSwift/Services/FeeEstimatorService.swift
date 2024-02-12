@@ -311,57 +311,6 @@ public class FeeEstimatorService {
 			totalStorage += opStorage
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			/*
-			let results = extractAndParseAttributes(fromResult: content.metadata.operationResult, withConstants: constants)
-			opGas = FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-			opStorage = results.storageBytesUsed
-			opAllocationFee = results.allocationFee
-			
-			totalGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-			totalStorage += results.storageBytesUsed
-			totalAllocationFee += results.allocationFee
-			
-			// If we are allocating an address, we need to include it as storage on our operation
-			if results.allocationFee > XTZAmount.zero() || content.isOrigination() {
-				opAllocationStorage = constants.bytesForReveal()
-			}
-			
-			if let innerOperationResults = content.metadata.internalOperationResults {
-				for innerResult in innerOperationResults {
-					let results = extractAndParseAttributes(fromResult: innerResult.result, withConstants: constants)
-					opGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-					opStorage += results.storageBytesUsed
-					opAllocationFee += results.allocationFee
-					
-					totalGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-					totalStorage += results.storageBytesUsed
-					totalAllocationFee += results.allocationFee
-					
-					// If we are allocating an address, we need to include it as storage on our operation
-					if results.allocationFee > XTZAmount.zero() || content.isOrigination() {
-						opAllocationStorage += constants.bytesForReveal()
-					}
-				}
-			}
-			*/
-			
-			
-			
-			
-			
-			
 			// If last
 			if index == operationResponse.contents.count-1 {
 				opFees.append( createLimitsAndTotalFeeObj(totalGas: totalGas.intValue(),
@@ -380,13 +329,6 @@ public class FeeEstimatorService {
 		return opFees
 	}
 	
-	/*
-	/// Create an instance of `OperationFees` for a non-last operation, with no fee, but accurate gas + storage
-	private func createLimitsOnlyFeeObj(gas: Decimal, storage: Decimal) -> OperationFees {
-		return OperationFees(transactionFee: .zero(), gasLimit: gas, storageLimit: storage)
-	}
-	*/
-	
 	/// Create an instance of `OperationFees` in order to calculate a transaction fee. Used to calculate the overall transaction fee
 	private func calcTransactionFee(totalGas: Int, opCount: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
 		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
@@ -404,26 +346,6 @@ public class FeeEstimatorService {
 		
 		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage)
 	}
-	
-	/*
-	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.
-	private func extractAndParseAttributes(fromResult result: OperationResponseResult?, withConstants constants: NetworkConstants) -> (consumedGas: Int, storageBytesUsed: Int, allocationFee: XTZAmount) {
-		guard let result = result else {
-			return (consumedGas: 0, storageBytesUsed: 0, allocationFee: XTZAmount.zero())
-		}
-		
-		var consumedGas = Decimal(string: result.consumedMilligas ?? "0") ?? 0
-		consumedGas = (consumedGas / 1000).rounded(scale: 0, roundingMode: .bankers)
-		let paidStorageSizeDiff = Int(result.paidStorageSizeDiff ?? "0") ?? 0
-		var allocationFee = XTZAmount.zero()
-		
-		if let allocated = result.allocatedDestinationContract, allocated {
-			allocationFee = constants.xtzForReveal()
-		}
-		
-		return (consumedGas: consumedGas.intValue(), storageBytesUsed: paidStorageSizeDiff, allocationFee: allocationFee)
-	}
-	*/
 	
 	/// Calculate the fee to add for the given amount of gas
 	public static func feeForGas(_ gas: Int) -> XTZAmount {
