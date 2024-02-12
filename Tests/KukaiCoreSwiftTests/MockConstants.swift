@@ -126,6 +126,12 @@ public struct MockConstants {
 		tzktDelegatesURL.appendQueryItem(name: "sort.desc", value: "stakingBalance")
 		tzktDelegatesURL.appendQueryItem(name: "limit", value: 10)
 		
+		var simulateURL1 = baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		simulateURL1.appendQueryItem(name: "version", value: "0")
+		
+		var simulateURL2 = secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		simulateURL2.appendQueryItem(name: "version", value: "0")
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -226,16 +232,16 @@ public struct MockConstants {
 			
 			
 			// simulate_operation
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request1")):
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request1")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request3")):
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request3")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
-			MockPostUrlKey(url: secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request2")):
+			MockPostUrlKey(url: simulateURL2, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request2")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
 			
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-request")):
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-request")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-response"), MockConstants.http200),
-			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation?version=0"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-request")):
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-request")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-response"), MockConstants.http200),
 		]
 		

@@ -41,11 +41,14 @@ class MockURLProtocol: URLProtocol {
 		
 		if let url = request.url {
 			
+			let unencodedString = url.absoluteString.removingPercentEncoding ?? ""
+			let unencodedUrl = URL(string: unencodedString)!
+			
 			if let body = request.httpBodyStreamData() {
-				self.handlePostURL(mockPostUrlKey: MockPostUrlKey(url: url, requestData: body))
+				self.handlePostURL(mockPostUrlKey: MockPostUrlKey(url: unencodedUrl, requestData: body))
 				
 			} else {
-				self.handleGetURL(url: url)
+				self.handleGetURL(url: unencodedUrl)
 			}
 		}
 		
@@ -172,12 +175,14 @@ class MockURLProtocol: URLProtocol {
 	}
 	
 	static func triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: Int = 0) {
-		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		var url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		url.appendQueryItem(name: "version", value: "0")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_gas"), response: MockConstants.http200)
 	}
 	
 	static func triggerAssertErrorOnSimulateOperation(nodeUrl: Int = 0) {
-		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		var url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		url.appendQueryItem(name: "version", value: "0")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
 	
@@ -187,7 +192,8 @@ class MockURLProtocol: URLProtocol {
 	}
 	
 	static func triggerHttp500ErrorOnSimulateOperation(nodeUrl: Int = 0) {
-		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		var url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		url.appendQueryItem(name: "version", value: "0")
 		MockURLProtocol.errorURLs[url] = (data: nil, response: MockConstants.http500)
 	}
 }
