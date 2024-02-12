@@ -1,0 +1,95 @@
+[
+	{
+		"parameters": {
+			"value": [
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX"
+										},
+										{
+											"int": "0"
+										}
+									],
+									"prim": "Pair"
+								}
+							]
+						}
+					],
+					"prim": "Left"
+				}
+			],
+			"entrypoint": "update_operators"
+		},
+		"amount": "0",
+		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"counter": "143231",
+		"kind": "transaction"
+	},
+	{
+		"kind": "transaction",
+		"destination": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
+		"amount": "0",
+		"parameters": {
+			"value": {
+				"args": [
+					{
+						"int": "1004"
+					},
+					{
+						"int": "1146068835831283"
+					}
+				],
+				"prim": "Pair"
+			},
+			"entrypoint": "deposit"
+		},
+		"counter": "143232",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+	},
+	{
+		"counter": "143233",
+		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+		"amount": "0",
+		"kind": "transaction",
+		"parameters": {
+			"value": [
+				{
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX"
+										},
+										{
+											"int": "0"
+										}
+									]
+								}
+							],
+							"prim": "Pair"
+						}
+					],
+					"prim": "Right"
+				}
+			],
+			"entrypoint": "update_operators"
+		},
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+	}
+]

@@ -139,8 +139,6 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head~3"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
 			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
-			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
-			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations"): (MockConstants.jsonStub(fromFilename: "forge"), MockConstants.http200),
 			// Parse is handled inside MockURLProtocol due to its special requirements
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
@@ -225,6 +223,20 @@ public struct MockConstants {
 				(MockConstants.jsonStub(fromFilename: "objkt_collections_response_2"), MockConstants.http200),
 			MockPostUrlKey(url: URL(string: "https://data.objkt.com/v3/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "objkt_token_request")):
 				(MockConstants.jsonStub(fromFilename: "objkt_token_response"), MockConstants.http200),
+			
+			
+			// simulate_operation
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request1")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request3")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
+			MockPostUrlKey(url: secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request2")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
+			
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-response"), MockConstants.http200),
+			MockPostUrlKey(url: baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation"), requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession

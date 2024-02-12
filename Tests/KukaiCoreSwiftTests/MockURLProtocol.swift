@@ -113,6 +113,26 @@ class MockURLProtocol: URLProtocol {
 	func handlePostURL(mockPostUrlKey: MockPostUrlKey) {
 		
 		// Check if URL is in the error list first as many error URL's and Success URLs will be indentical
+		if let (data, response) = MockURLProtocol.errorURLs[mockPostUrlKey.url] {
+			
+			if let res = response {
+				self.client?.urlProtocol(self, didReceive: res, cacheStoragePolicy: .notAllowed)
+			}
+			
+			if let d = data {
+				self.client?.urlProtocol(self, didLoad: d)
+			}
+			
+			// remove it from the list
+			if let index = MockURLProtocol.errorURLs.index(forKey: mockPostUrlKey.url) {
+				MockURLProtocol.errorURLs.remove(at: index)
+			}
+			
+			self.client?.urlProtocolDidFinishLoading(self)
+			return
+		}
+		
+		// Check if URL is in the error list first as many error URL's and Success URLs will be indentical
 		if let (data, response) = MockURLProtocol.errorPostURLs[mockPostUrlKey] {
 			
 			if let res = response {

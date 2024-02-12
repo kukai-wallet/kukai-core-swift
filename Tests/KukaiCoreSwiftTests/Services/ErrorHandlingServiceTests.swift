@@ -98,8 +98,8 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let ops = [
 			OperationResponse(contents: [
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError),
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError)
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError, destination: nil, amount: nil, fee: nil, balance: nil),
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError, destination: nil, amount: nil, fee: nil, balance: nil)
 			])
 		]
 		
@@ -119,8 +119,8 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let ops = [
 			OperationResponse(contents: [
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError),
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError)
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError, destination: nil, amount: nil, fee: nil, balance: nil),
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError, destination: nil, amount: nil, fee: nil, balance: nil)
 			])
 		]
 		

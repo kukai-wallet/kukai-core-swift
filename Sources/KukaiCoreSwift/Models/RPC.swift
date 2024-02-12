@@ -50,7 +50,10 @@ public class RPC<T: Decodable> {
 	/// Helper function to wrap up `JSONEncoder().encode` and log any errors.
 	public static func encodableToData<E: Encodable>(encodable: E) -> Data? {
 		do {
-			return try JSONEncoder().encode(encodable)
+			let encoder = JSONEncoder()
+			encoder.outputFormatting = [.sortedKeys]
+			
+			return try encoder.encode(encodable)
 			
 		} catch(let error) {
 			Logger.kukaiCoreSwift.error("Unable to encode object as string: \(error)")
@@ -190,7 +193,7 @@ extension RPC where T == OperationResponse {
 			return nil
 		}
 		
-		return RPC<OperationResponse>(endpoint: "chains/main/blocks/head/helpers/scripts/simulate_operation", payload: payloadData, responseType: OperationResponse.self)
+		return RPC<OperationResponse>(endpoint: "chains/main/blocks/head/helpers/scripts/simulate_operation?version=0", payload: payloadData, responseType: OperationResponse.self)
 	}
 }
 
