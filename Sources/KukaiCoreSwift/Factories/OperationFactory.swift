@@ -496,6 +496,20 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Extract rpc amount (without decimal info) michelson `deposit` value for a crunchy stake call
+		 */
+		public static func tokenAmountFromDepositMichelson(michelson: Any) -> Decimal? {
+			if let michelsonDict = michelson as? [String: Any] {
+				let tokenAmount = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+				
+				return Decimal(string: tokenAmount ?? "0") ?? 0
+				
+			} else {
+				return nil
+			}
+		}
+		
+		/**
 		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload
 		 */
 		public static func tokenIdAndAmountFromTransferMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
@@ -556,9 +570,17 @@ public class OperationFactory {
 					case OperationTransaction.StandardEntrypoint.transfer.rawValue:
 						return tokenIdAndAmountFromTransferMichelson(michelson: michelsonDict["value"] ?? [:])
 						
-					case OperationTransaction.StandardEntrypoint.execute.rawValue:
-						if let executeResponse = tokenAmountFromExecuteMichelson(michelson: michelsonDict["value"] ?? [:]) {
-							return (rpcAmount: executeResponse.description, tokenId: nil, destination: nil) // Can extract amount, but nothing else
+					case OperationTransaction.StandardEntrypoint.execute.rawValue: // 3route
+						if let response = tokenAmountFromExecuteMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: response.description, tokenId: nil, destination: nil) // Can extract amount, but nothing else
+							
+						} else {
+							return nil
+						}
+						
+					case OperationTransaction.StandardEntrypoint.deposit.rawValue: // crunchy - stake
+						if let response = tokenAmountFromDepositMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: response.description, tokenId: nil, destination: nil) // Can extract amount, but nothing else
 							
 						} else {
 							return nil

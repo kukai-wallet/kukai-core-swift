@@ -645,4 +645,18 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(details2?.tokenId == 0, details2?.tokenId?.description ?? "-")
 		XCTAssert(details2?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details2?.destination ?? "-")
 	}
+	
+	func testExtractorsCrunchyStake() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "crunchy-stake")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "1146068835831283", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == 0, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX", details1?.destination ?? "-")
+	}
 }

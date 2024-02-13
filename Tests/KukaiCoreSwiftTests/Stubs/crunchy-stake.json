@@ -1,0 +1,104 @@
+[
+	{
+		"counter": "24122610",
+		"kind": "transaction",
+		"gas_limit": "650000",
+		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"amount": "0",
+		"parameters": {
+			"value": [
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX"
+										},
+										{
+											"int": "0"
+										}
+									],
+									"prim": "Pair"
+								}
+							]
+						}
+					],
+					"prim": "Left"
+				}
+			],
+			"entrypoint": "update_operators"
+		},
+		"storage_limit": "60000",
+		"fee": "0"
+	},
+	{
+		"counter": "24122611",
+		"storage_limit": "60000",
+		"kind": "transaction",
+		"destination": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX",
+		"fee": "0",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"gas_limit": "650000",
+		"amount": "0",
+		"parameters": {
+			"value": {
+				"args": [
+					{
+						"int": "1004"
+					},
+					{
+						"int": "1146068835831283"
+					}
+				],
+				"prim": "Pair"
+			},
+			"entrypoint": "deposit"
+		}
+	},
+	{
+		"amount": "0",
+		"counter": "24122612",
+		"fee": "0",
+		"kind": "transaction",
+		"destination": "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"storage_limit": "60000",
+		"gas_limit": "650000",
+		"parameters": {
+			"value": [
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX"
+										},
+										{
+											"int": "0"
+										}
+									]
+								}
+							]
+						}
+					],
+					"prim": "Right"
+				}
+			],
+			"entrypoint": "update_operators"
+		}
+	}
+]
