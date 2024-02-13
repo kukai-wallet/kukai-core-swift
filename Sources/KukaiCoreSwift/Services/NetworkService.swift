@@ -59,7 +59,17 @@ public class NetworkService {
 	- returns: Void
 	*/
 	public func send<T: Decodable>(rpc: RPC<T>, withNodeURLs nodeURLs: [URL], retryCount: Int = 0, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
-		let fullURL = nodeURLs[retryCount].appendingPathComponent(rpc.endpoint)
+		var serverString = nodeURLs[retryCount].absoluteString
+		
+		if serverString.suffix(1) != "/" {
+			serverString.append("/")
+		}
+		
+		// Avoid using 'appendPathComponent' as it will percent encode '?' if included in RPC url. This causes some servers issues
+		guard let fullURL =  URL(string: "\(serverString)\(rpc.endpoint)") else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: NetworkError.invalidURL)))
+			return
+		}
 		
 		
 		self.request(url: fullURL, isPOST: rpc.isPost, withBody: rpc.payload, forReturnType: T.self) { [weak self] result in

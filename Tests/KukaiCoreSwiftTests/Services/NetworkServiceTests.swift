@@ -61,8 +61,6 @@ class NetworkServiceTests: XCTestCase {
 		}
 	}
 	
-	// TODO: issue since moving to postURLS for simulation
-	/*
 	func testErrorGas() {
 		MockURLProtocol.triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: 0)
 		MockURLProtocol.triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: 1)
@@ -78,7 +76,7 @@ class NetworkServiceTests: XCTestCase {
 						
 					case .failure(let error):
 						XCTAssert(error.errorType == .rpc, error.description)
-						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[1].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation").absoluteString, error.requestURL?.absoluteString ?? "-")
+						XCTAssert(error.requestURL?.absoluteString == "https://rpc.ghostnet.tzboot.net/chains/main/blocks/head/helpers/scripts/simulate_operation?version=0", error.requestURL?.absoluteString ?? "-")
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)
 				}
@@ -92,9 +90,7 @@ class NetworkServiceTests: XCTestCase {
 			XCTFail("Couldn't parse RPC")
 		}
 	}
-	*/
 	
-	/*
 	func testErrorAssert() {
 		MockURLProtocol.triggerAssertErrorOnSimulateOperation()
 		
@@ -110,7 +106,7 @@ class NetworkServiceTests: XCTestCase {
 					case .failure(let error):
 						XCTAssert(error.errorType == .unknown)
 						XCTAssert(error.description == "Unknown: Assert_failure src/proto_009_PsFLoren/lib_protocol/operation_repr.ml:203:6", error.description)
-						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[0].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation").absoluteString)
+						XCTAssert(error.requestURL?.absoluteString == "https://ghostnet.smartpy.io/chains/main/blocks/head/helpers/scripts/simulate_operation?version=0", error.requestURL?.absoluteString ?? "-")
 						XCTAssert(error.requestJSON != nil)
 						XCTAssert(error.responseJSON != nil)
 				}
@@ -124,7 +120,6 @@ class NetworkServiceTests: XCTestCase {
 			XCTFail("Couldn't parse RPC")
 		}
 	}
-	*/
 	
 	func testCounterInFutureErrorSingleError() {
 		MockURLProtocol.triggerCounterInFutureError(nodeUrl: 0)
