@@ -405,6 +405,18 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Filter and verify only 1 transaction exists thats setting a baker. If so return this operation, otherwise return false
+		 */
+		public static func isDelegate(operations: [Operation]) -> OperationDelegation? {
+			let filteredOperations = filterReveal(operations: operations)
+			if filteredOperations.count == 1, let op = filteredOperations.first as? OperationDelegation {
+				return op
+			}
+			
+			return nil
+		}
+		
+		/**
 		 Filter and verify only 1 transaction exists thats sending a token. If so return this operation, otherwise return false
 		 */
 		public static func isFaTokenTransfer(operations: [Operation]) -> (operation: OperationTransaction, tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {

@@ -549,6 +549,7 @@ class OperationFactoryTests: XCTestCase {
 		let dexToken = DipDupToken(symbol: "BLAH", address: "KT1def", tokenId: 123, decimals: 3, standard: .fa2, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1abc", tezPool: "100000000000", tokenPool: "1000000000", sharesTotal: "100000", midPrice: "14", token: dexToken)
 		let swap = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: .init(fromNormalisedAmount: 14), minTokenAmount: .init(fromNormalisedAmount: 2, decimalPlaces: 3), walletAddress: "tz1abc", timeout: 60)
+		let delegate = OperationFactory.delegateOperation(to: "KT1abc", from: MockConstants.defaultHdWallet.address)
 		
 		
 		// is single transctions
@@ -565,6 +566,11 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opFA2) == nil )
 		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opNFT) == nil )
 		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: MockConstants.sendOperationWithReveal) != nil )
+		
+		
+		// Is Delegate
+		XCTAssert( OperationFactory.Extractor.isDelegate(operations: delegate) != nil )
+		XCTAssert( OperationFactory.Extractor.isDelegate(operations: opFA1) == nil )
 		
 		
 		// is token transfer
