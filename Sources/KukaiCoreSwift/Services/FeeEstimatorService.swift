@@ -160,7 +160,7 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, 
+	private func estimate(runOperationPayload: RunOperationPayload,
 						  preparedOperationsCopy: [Operation],
 						  constants: NetworkConstants,
 						  forgedHex: String,
@@ -175,7 +175,7 @@ public class FeeEstimatorService {
 		}
 		
 		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs) { [weak self] (result) in
-			guard let opToProcess = try? result.get(), let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants, fromAddress: address) else {
+			guard let opToProcess = try? result.get(), let fees = self?.extractFees(fromOperationResponse: opToProcess, originalRemoteOps: originalRemoteOps, forgedHash: forgedHex, withConstants: constants, fromAddress: address) else {
 				completion(Result.failure( result.getFailure()))
 				return
 			}
@@ -186,40 +186,13 @@ public class FeeEstimatorService {
 				return
 			}
 			
-			
-			// Operations can come in with suggested fees (e.g. when using a dApp through something like WalletConnect).
-			// We always do an estimation and pick which ever is higher, the supplied suggested fees (which should always be worst case, but can be flawed), or the result of the estimation
-			var lastOpFee: OperationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
-			var operationFeesToUse: [OperationFees] = []
-			var original = originalRemoteOps
-			
-			
-			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon.
-			// Check and add a dummy reveal operation to the "originalOps", so that fees are calcualted correctly
-			if (preparedOperationsCopy.first is OperationReveal && original.count < preparedOperationsCopy.count) {
-				let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "") // dummy only used as an OperationsFee placeholder
-				reveal.operationFees = OperationFees(transactionFee: .zero(), networkFees: fees.first?.networkFees ?? [:], gasLimit: fees.first?.gasLimit ?? 0, storageLimit: fees.first?.storageLimit ?? 0)
-				original.insert(reveal, at: 0)
-			}
-			
-			
-			// Check whether to use suggested fees, or estiamted fees
-			if original.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
-				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: original, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
-				operationFeesToUse = original.map({ $0.operationFees })
-				
-			} else {
-				lastOpFee = fees.last ?? OperationFees.zero()
-				operationFeesToUse = fees
-			}
-			
-			
 			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
 			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
 			for (index, op) in preparedOperationsCopy.enumerated() {
-				op.operationFees = operationFeesToUse[index]
+				op.operationFees = fees[index]
 				
 				if index == preparedOperationsCopy.count-1 {
+					let lastOpFee = fees.last ?? OperationFees.zero()
 					op.operationFees.transactionFee = lastOpFee.transactionFee
 					op.operationFees.networkFees = lastOpFee.networkFees
 					
@@ -232,27 +205,23 @@ public class FeeEstimatorService {
 		}
 	}
 	
-	private func calcFeeFromSuggestedOperations(operations: [Operation], constants: NetworkConstants, forgedHex: String) -> OperationFees {
-		let totalGas = operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
-		let totalStorage = operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
-		
-		return calcTransactionFee(totalGas: totalGas, opCount: operations.count, totalStorage: totalStorage, forgedHash: forgedHex, constants: constants)
-	}
-	
 	/**
 	Create an array of `OperationFees` from an `OperationResponse`.
 	- parameter fromOperationResponse: The `OperationResponse` resulting from an RPC call to `.../run_operation`.
 	- parameter forgedHash: The forged hash string resulting from a call to `TezosNodeClient.forge(...)`
 	- returns: An array of `OperationFees`
 	*/
-	public func extractFees(fromOperationResponse operationResponse: OperationResponse, forgedHash: String, withConstants constants: NetworkConstants, fromAddress address: String) -> [OperationFees] {
+	public func extractFees(fromOperationResponse operationResponse: OperationResponse, originalRemoteOps: [Operation], forgedHash: String, withConstants constants: NetworkConstants, fromAddress address: String) -> [OperationFees] {
 		var opFees: [OperationFees] = []
 		var totalGas: Decimal = 0
 		var totalStorage: Decimal = 0
 		
+		
+		// preparedOperationsCopy may contain an extra reveal operation at the start
 		for (index, content) in operationResponse.contents.enumerated() {
 			var opGas: Decimal = 0
 			var opStorage: Decimal = 0
+			let suggestedCompareIndex = (operationResponse.contents.first?.kind == "reveal" && operationResponse.contents.count != originalRemoteOps.count) ? -1 : 0
 			
 			
 			// Storage
@@ -306,7 +275,22 @@ public class FeeEstimatorService {
 				}
 			}
 			
+			// Check whether suggested or estimated gas / sotrage is higher and pick that
+			let indexToCheck = index + suggestedCompareIndex
+			if indexToCheck > -1 {
+				let op = originalRemoteOps[indexToCheck]
+				
+				if op.operationFees.gasLimit > opGas.intValue() {
+					opGas = Decimal(op.operationFees.gasLimit)
+				}
+				
+				if op.operationFees.storageLimit > opStorage.intValue() {
+					opStorage = Decimal(op.operationFees.storageLimit)
+				}
+			}
 			
+			
+			// Sum totals for later
 			totalGas += opGas
 			totalStorage += opStorage
 			

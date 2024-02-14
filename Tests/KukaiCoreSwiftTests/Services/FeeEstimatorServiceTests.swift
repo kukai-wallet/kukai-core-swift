@@ -62,7 +62,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 				case .success(let result):
 					XCTAssert(result.operations.count == 2)
 					XCTAssert(result.operations[0].operationFees.allFees() == XTZAmount(fromNormalisedAmount:  0), result.operations[0].operationFees.allFees().description)
-					XCTAssert(result.operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.014339), result.operations[1].operationFees.allFees().description)
+					XCTAssert(result.operations[1].operationFees.allFees() == XTZAmount(fromNormalisedAmount: 0.014442), result.operations[1].operationFees.allFees().description)
 					
 				case .failure(let error):
 					XCTFail(error.description)
@@ -150,6 +150,52 @@ class FeeEstimatorServiceTests: XCTestCase {
 					
 					let totalFee = result.operations.map({ $0.operationFees.allFees() }).reduce(XTZAmount.zero(), +)
 					XCTAssert(totalFee.normalisedRepresentation == "0.031492", totalFee.normalisedRepresentation)
+					
+				case .failure(let error):
+					XCTFail(error.description)
+			}
+			
+			expectation1.fulfill()
+		}
+		
+		wait(for: [expectation1], timeout: 120)
+	}
+	
+	// TODO: add teset with and without reveal
+	
+	// Test that if a dApp suggests a high gas amount, but a low storage amount. That we take the gas, but use our own higher estimated storage
+	func testJSONPayload3() {
+		let decoder = JSONDecoder()
+		
+		let jsonDataRequest1 = MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-operations")
+		let jsonRequestOps1 = (try? decoder.decode([OperationTransaction].self, from: jsonDataRequest1)) ?? []
+		XCTAssert(jsonRequestOps1.count != 0)
+		
+		let expectation1 = XCTestExpectation(description: "Estimation service")
+		let address = MockConstants.defaultHdWallet.address
+		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
+		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+			switch result {
+				case .success(let result):
+					XCTAssert(result.operations.count == 3, result.operations.count.description)
+					XCTAssert(result.operations[0].operationFees.gasLimit == 16000, result.operations[0].operationFees.gasLimit.description)
+					XCTAssert(result.operations[0].operationFees.storageLimit == 385, result.operations[0].operationFees.storageLimit.description)
+					XCTAssert(result.operations[0].operationFees.allFees().normalisedRepresentation == "0", result.operations[0].operationFees.allFees().normalisedRepresentation)
+					XCTAssert(result.operations[1].operationFees.gasLimit == 32000, result.operations[1].operationFees.gasLimit.description)
+					XCTAssert(result.operations[1].operationFees.storageLimit == 384, result.operations[1].operationFees.storageLimit.description)
+					XCTAssert(result.operations[1].operationFees.allFees().normalisedRepresentation == "0", result.operations[1].operationFees.allFees().normalisedRepresentation)
+					XCTAssert(result.operations[2].operationFees.gasLimit == 12000, result.operations[2].operationFees.gasLimit.description)
+					XCTAssert(result.operations[2].operationFees.storageLimit == 0, result.operations[2].operationFees.storageLimit.description)
+					XCTAssert(result.operations[2].operationFees.allFees().normalisedRepresentation == "0.200317", result.operations[2].operationFees.allFees().normalisedRepresentation)
+					
+					let totalGas = result.operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
+					XCTAssert(totalGas == 60000, totalGas.description)
+					
+					let totalStorage = result.operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
+					XCTAssert(totalStorage == 769, totalStorage.description)
+					
+					let totalFee = result.operations.map({ $0.operationFees.allFees() }).reduce(XTZAmount.zero(), +)
+					XCTAssert(totalFee.normalisedRepresentation == "0.200317", totalFee.normalisedRepresentation)
 					
 				case .failure(let error):
 					XCTFail(error.description)

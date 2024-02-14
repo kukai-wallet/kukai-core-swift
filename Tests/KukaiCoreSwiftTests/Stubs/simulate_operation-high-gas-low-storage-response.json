@@ -1,0 +1,98 @@
+{
+	"contents": [
+		{
+			"amount": "0",
+			"metadata": {
+				"operation_result": {
+					"status": "applied",
+					"consumed_milligas": "2159468",
+					"storage_size": "3914125",
+					"balance_updates": [
+						{
+							"change": "-96250",
+							"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+							"kind": "contract"
+						},
+						{
+							"change": "96250",
+							"kind": "burned"
+						}
+					]
+				}
+			},
+			"kind": "transaction",
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+			"destination": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv",
+			"fee": "0"
+		},
+		{
+			"metadata": {
+				"operation_result": {
+					"paid_storage_size_diff": "67",
+					"consumed_milligas": "3401341",
+					"balance_updates": [
+						{
+							"change": "-96000",
+							"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+							"kind": "contract"
+						},
+						{
+							"change": "96000",
+							"kind": "burned"
+						}
+					],
+					"storage_size": "3348412",
+					"status": "applied"
+				},
+				"internal_operation_results": [
+					{
+						"result": {
+							"status": "applied",
+							"consumed_milligas": "13182268",
+							"storage_size": "3913857"
+						},
+						"kind": "transaction",
+						"source": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+					},
+					{
+						"source": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi",
+						"kind": "transaction",
+						"result": {
+							"consumed_milligas": "321958",
+							"status": "applied",
+							"storage_size": "3913857"
+						}
+					},
+					{
+						"kind": "transaction",
+						"result": {
+							"consumed_milligas": "2866760",
+							"storage_size": "3913924",
+							"status": "applied"
+						},
+						"source": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+					}
+				]
+			},
+			"fee": "0",
+			"destination": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi",
+			"amount": "0",
+			"kind": "transaction",
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+		},
+		{
+			"amount": "0",
+			"fee": "0",
+			"kind": "transaction",
+			"metadata": {
+				"operation_result": {
+					"status": "applied",
+					"consumed_milligas": "1819686",
+					"storage_size": "3913455"
+				}
+			},
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+			"destination": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv"
+		}
+	]
+}
