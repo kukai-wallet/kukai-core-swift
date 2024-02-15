@@ -55,6 +55,10 @@ class MediaProxySerivceTests: XCTestCase {
 		
 		XCTAssert(url10?.absoluteString == "https://data.mantodev.com/media/mobile600/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url10?.absoluteString ?? "-")
 		XCTAssert(url11?.absoluteString == "https://data.mantodev.com/media/mobile900/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", url11?.absoluteString ?? "-")
+		
+		let alreadyConverted = URL(string: "https://data.mantodev.com/media/mobile64/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")
+		let testConversion = MediaProxyService.url(fromUri: alreadyConverted, ofFormat: .mobile64)
+		XCTAssert(testConversion?.absoluteString == "https://data.mantodev.com/media/mobile64/ipfs/bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea", testConversion?.absoluteString  ?? "-")
 	}
 	
 	func testMediaTypeCheckerFromFormat() {

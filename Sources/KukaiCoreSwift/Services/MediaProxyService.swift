@@ -135,6 +135,11 @@ public class MediaProxyService: NSObject {
 			return nil
 		}
 		
+		// To simplify calling logic, check if its already been converted and return previous url
+		if uri.absoluteString.prefix(25) == "https://data.mantodev.com" {
+			return uri
+		}
+		
 		let sanitizedURL = strippedURL.replacingOccurrences(of: "www.", with: "")
 		var source = Source.ipfs
 		
