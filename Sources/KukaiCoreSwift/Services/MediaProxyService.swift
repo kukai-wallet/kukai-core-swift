@@ -447,16 +447,13 @@ public class MediaProxyService: NSObject {
 	 Check if an image is cached, and return its size if so. Useful for preparing table/collection view
 	 - parameter url: Media proxy URL pointing to an image
 	 - parameter fromCache: Which cahce to search for the image, or load it into if not found and needs to be downloaded
-	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
-	public static func sizeForImageIfCached(url: URL?, cacheType: CacheType = .temporary, completion: @escaping ((CGSize?) -> Void) ) {
+	public static func sizeForImageIfCached(url: URL?, cacheType: CacheType = .temporary) -> CGSize? {
 		guard let url = url else {
-			completion(nil)
-			return
+			return nil
 		}
 		
-		let size = imageCache(forType: cacheType).imageFromCache(forKey: url.absoluteString)?.size
-		completion(size)
+		return imageCache(forType: cacheType).imageFromCache(forKey: url.absoluteString)?.size
 	}
 }
 
