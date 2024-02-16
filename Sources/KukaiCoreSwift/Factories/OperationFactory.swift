@@ -455,7 +455,7 @@ public class OperationFactory {
 		 */
 		public static func tokenIdAndAmountFromApproveMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let michelsonDict = michelson as? [String: Any] {
-				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
 				
 				if let str = rpcAmountString {
