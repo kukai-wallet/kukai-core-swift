@@ -32,7 +32,7 @@ final class TzKTBakerTests: XCTestCase {
 									 rewardStruct: [
 										TzKTBakerConfigIntValue(cycle: 500, value: 981)
 									 ])
-		let baker2 = TzKTBaker(address: "tz1abc123", name: "Baking Benjamins", logo: nil, balance: 123, stakingBalance: 123, stakingCapacity: 123, maxStakingBalance: 123, freeSpace: 123, fee: 0.5, minDelegation: 123, payoutDelay: 1, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 5.5, serviceHealth: .active, serviceType: .tezosOnly, payoutTiming: .stable, payoutAccuracy: .precise, config: config)
+		let baker2 = TzKTBaker(address: "tz1abc123", name: "Baking Benjamins", logo: nil, balance: 123, stakingBalance: 123, stakingCapacity: 123, maxStakingBalance: 123, freeSpace: 123, fee: 0.5, minDelegation: 123, payoutDelay: 1, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 5.5, serviceHealth: .active, serviceType: "tezos_only", payoutTiming: .stable, payoutAccuracy: .precise, config: config)
 		XCTAssert(baker2.name == "Baking Benjamins")
 		XCTAssert(baker2.config != nil)
 		XCTAssert(baker2.config?.latesetFee() == 14)
