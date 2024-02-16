@@ -30,14 +30,6 @@ public enum TzKTBakerTiming: String, Codable {
 	case no_data
 }
 
-/// The reliability of the bakers payouts
-public enum TzKTBakerServiceType: String, Codable {
-	case tezosOnly = "tezos_only"
-	case multiasset = "multiasset"
-	case exchange = "exchange"
-	case unknown
-}
-
 /// Data representing a baker from TzKT or Baking-Bad
 public struct TzKTBaker: Codable, Hashable {
 	
@@ -56,7 +48,7 @@ public struct TzKTBaker: Codable, Hashable {
 	public let openForDelegation: Bool
 	public let estimatedRoi: Decimal
 	public let serviceHealth: TzKTBakerHealth
-	public let serviceType: TzKTBakerServiceType
+	public let serviceType: String
 	public let payoutTiming: TzKTBakerTiming
 	public let payoutAccuracy: TzKTBakerAccuracy
 	public let config: TzKTBakerConfig?
@@ -79,13 +71,13 @@ public struct TzKTBaker: Codable, Hashable {
 		self.openForDelegation = false
 		self.estimatedRoi = 0
 		self.serviceHealth = .dead
-		self.serviceType = .unknown
+		self.serviceType = "unknown"
 		self.payoutTiming = .no_data
 		self.payoutAccuracy = .no_data
 		self.config = nil
 	}
 	
-	public init(address: String, name: String?, logo: String?, balance: Decimal, stakingBalance: Decimal, stakingCapacity: Decimal, maxStakingBalance: Decimal, freeSpace: Decimal, fee: Double, minDelegation: Decimal, payoutDelay: Int, payoutPeriod: Int, openForDelegation: Bool, estimatedRoi: Decimal, serviceHealth: TzKTBakerHealth, serviceType: TzKTBakerServiceType, payoutTiming: TzKTBakerTiming, payoutAccuracy: TzKTBakerAccuracy, config: TzKTBakerConfig?) {
+	public init(address: String, name: String?, logo: String?, balance: Decimal, stakingBalance: Decimal, stakingCapacity: Decimal, maxStakingBalance: Decimal, freeSpace: Decimal, fee: Double, minDelegation: Decimal, payoutDelay: Int, payoutPeriod: Int, openForDelegation: Bool, estimatedRoi: Decimal, serviceHealth: TzKTBakerHealth, serviceType: String, payoutTiming: TzKTBakerTiming, payoutAccuracy: TzKTBakerAccuracy, config: TzKTBakerConfig?) {
 		
 		self.address = address
 		self.name = name
@@ -118,7 +110,7 @@ public struct TzKTBaker: Codable, Hashable {
 		let name = data[1] as? String
 		let normalisedBalance = balance/1000000
 		let normalisedStakingBal = stakingBalance/1000000
-		return TzKTBaker(address: address, name: name, logo: nil, balance: normalisedBalance, stakingBalance: normalisedStakingBal, stakingCapacity: normalisedStakingBal, maxStakingBalance: normalisedStakingBal, freeSpace: normalisedStakingBal, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, serviceType: .tezosOnly, payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
+		return TzKTBaker(address: address, name: name, logo: nil, balance: normalisedBalance, stakingBalance: normalisedStakingBal, stakingCapacity: normalisedStakingBal, maxStakingBalance: normalisedStakingBal, freeSpace: normalisedStakingBal, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, serviceType: "tezos_only", payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
 	}
 	
 	/// Convert con-chain data into a meaningful, readable object
