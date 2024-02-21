@@ -627,7 +627,7 @@ public class TzKTClient {
 		isListening = true
 		
 		var url = config.tzktURL
-		url.appendPathComponent("v1/events")
+		url.appendPathComponent("v1/ws")
 		
 		if withDebugging {
 			signalrConnection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .debug).build()
