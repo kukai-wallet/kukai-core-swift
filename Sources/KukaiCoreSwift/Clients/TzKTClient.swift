@@ -838,6 +838,8 @@ public class TzKTClient {
 		
 		for balance in balances {
 			
+			// TODO: temporarily remove, as we currently are not supporting differentiating Liquidity tokens. Will be re added later
+			/*
 			// Check if balance is a liquidityToken and ignore it
 			// Liquidity baking is a standalone contract address. Hardcoding address for now, revisit how to query if it ever migrates to another token
 			if balance.token.contract.address == "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo" {
@@ -848,7 +850,7 @@ public class TzKTClient {
 			if liquidityTokens.contains(where: { $0.exchange.address == balance.token.contract.address }) {
 				continue
 			}
-			
+			*/
 			
 			// If its an NFT, hold onto for later
 			if balance.isNFT() && balance.token.malformedMetadata == false {
