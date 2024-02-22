@@ -140,11 +140,19 @@ public class WalletCacheService {
 	/**
 	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
 	 */
-	public func cacheWatchWallet(metadata: WalletMetadata) -> Bool {
+	public func cacheWatchWallet(metadata: WalletMetadata) throws {
 		var list = readMetadataFromDiskAndDecrypt()
+		
+		if let _ = list.watchWallets.first(where: { $0.address == metadata.address }) {
+			Logger.walletCache.error("cacheWatchWallet - Unable to cache wallet, walelt already exists")
+			throw WalletCacheError.walletAlreadyExists
+		}
+			
 		list.watchWallets.append(metadata)
 		
-		return encryptAndWriteMetadataToDisk(list)
+		if encryptAndWriteMetadataToDisk(list) == false {
+			throw WalletCacheError.unableToEncryptAndWrite
+		}
 	}
 	
 	/**

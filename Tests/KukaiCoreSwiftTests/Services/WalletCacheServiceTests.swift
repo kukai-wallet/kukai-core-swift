@@ -332,10 +332,14 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 		
 		let watchWallet = WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
-		XCTAssert(walletCacheService.cacheWatchWallet(metadata: watchWallet))
 		
-		let list =  walletCacheService.readMetadataFromDiskAndDecrypt()
-		let watch = list.watchWallets
-		XCTAssert(watch.count == 1, watch.count.description)
+		do {
+			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
+			let list =  walletCacheService.readMetadataFromDiskAndDecrypt()
+			let watch = list.watchWallets
+			XCTAssert(watch.count == 1, watch.count.description)
+		} catch {
+			XCTFail("Should not error: \(error)")
+		}
 	}
 }
