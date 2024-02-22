@@ -375,7 +375,7 @@ public class MediaProxyService: NSObject {
 		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
 		
 		// Set the image, but avoid auto setting it, so we can run some checks first, e.g. check if the animated image is too massive
-		imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage], context: context) { _, _, _ in
+		imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage, .retryFailed], context: context) { _, _, _ in
 			
 		} completed: { image, error, _, _ in
 			if let _ = error {
