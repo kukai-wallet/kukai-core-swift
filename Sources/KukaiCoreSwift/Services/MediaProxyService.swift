@@ -103,7 +103,7 @@ public class MediaProxyService: NSObject {
 		
 		MediaProxyService.prefetcher = SDWebImagePrefetcher(imageManager: SDWebImageManager(cache: MediaProxyService.temporaryCache, loader: SDImageLoadersManager()))
 		
-		SDWebImageDownloader.shared.config.downloadTimeout = 60
+		SDWebImageDownloader.shared.config.downloadTimeout = 30
 		SDImageCodersManager.shared.addCoder(SDImageAWebPCoder.shared)
 	}
 	
