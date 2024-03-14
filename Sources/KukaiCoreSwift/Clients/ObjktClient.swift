@@ -55,13 +55,6 @@ public class ObjktClient {
 	 Take in an array of contract addresses, and return a list of the ones that we currently have no metadata for
 	 */
 	public func unresolvedCollections(addresses: [String]) -> [String] {
-		
-		// OBJKT doesn't currently support testnet, easy solution to prevent unwanted requests / processing until a solution is found
-		// But allow for XCTest, which targets testnet
-		if self.config.networkType == .testnet && !Thread.current.isRunningXCTest {
-			return []
-		}
-		
 		var unresolved: [String] = []
 		for add in addresses {
 			if collections[add] == nil {
