@@ -654,7 +654,6 @@ public class TzKTClient {
 				Logger.tzkt.error("Failed to parse incoming websocket data: \(error)")
 				self?.signalrConnection?.stop()
 				self?.isListening = false
-				//completion(false, error, KukaiError.internalApplicationError(error: error))
 			}
 		})
 		signalrConnection?.delegate = self
@@ -1098,14 +1097,17 @@ extension TzKTClient: HubConnectionDelegate {
 			if let error = error {
 				Logger.tzkt.error("Subscribe to account changes failed: \(error)")
 				self?.signalrConnection?.stop()
+				self?.isListening = false
 			} else {
 				Logger.tzkt.info("Subscribe to account changes succeeded, waiting for objects")
+				self?.isListening = true
 			}
 		}
 	}
 	
 	public func connectionDidClose(error: Error?) {
 		Logger.tzkt.error("SignalR connection closed: \(error)")
+		isListening = false
 		
 		if newAddressesToWatch.count > 0 {
 			self.listenForAccountChanges(addresses: newAddressesToWatch)
@@ -1115,5 +1117,6 @@ extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidFailToOpen(error: Error) {
 		Logger.tzkt.error("Failed to open SignalR connection to listen for changes: \(error)")
+		isListening = false
 	}
 }
