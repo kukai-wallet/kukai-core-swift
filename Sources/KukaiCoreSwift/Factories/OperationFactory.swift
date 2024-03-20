@@ -453,12 +453,13 @@ public class OperationFactory {
 		/**
 		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson `approve` value
 		 */
-		public static func tokenIdAndAmountFromApproveMichelson(michelson: Any) -> (tokenId: Decimal?, destination: String)? {
+		public static func tokenIdAndAmountFromApproveMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let michelsonDict = michelson as? [String: Any] {
-				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonString(atIndex: 0)
+				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 1)
+				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
 				
-				if let dest = rpcDestinationString {
-					return (tokenId: nil, destination: dest)
+				if let str = rpcAmountString {
+					return (rpcAmount: str, tokenId: nil, destination: rpcDestinationString)
 				} else {
 					return nil
 				}
@@ -687,6 +688,12 @@ public class OperationFactory {
 						return (tokenContract: opTrans.destination, rpcAmount: details.rpcAmount, tokenId: details.tokenId, destination: details.destination ?? "")
 					}
 				}
+			}
+			
+			
+			if let lastDetails = lastTokenIdAndAmountResults, let lastTokenAddress = lastTokenAddress {
+				// If we have anything at all, return it, so that we can display something in the event of a single approve or whatever
+				return (tokenContract: lastTokenAddress, rpcAmount: lastDetails.rpcAmount, tokenId: lastDetails.tokenId, destination: lastDetails.destination ?? "")
 			}
 			
 			return nil
