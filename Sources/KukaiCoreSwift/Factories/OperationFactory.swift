@@ -539,7 +539,7 @@ public class OperationFactory {
 		 */
 		public static func tokenAmountFromBidMichelson(michelson: Any) -> Decimal? {
 			if let michelsonDict = michelson as? [String: Any] {
-				let tokenAmount = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+				let tokenAmount = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
 				
 				return Decimal(string: tokenAmount ?? "0") ?? 0
 				

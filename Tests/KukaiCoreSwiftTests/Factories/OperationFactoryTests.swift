@@ -700,7 +700,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
 		XCTAssert(details1?.tokenContract == "KT1TjnZYs5CGLbmV6yuW169P8Pnr9BiVwwjz", details1?.tokenContract ?? "-")
-		XCTAssert(details1?.rpcAmount == "2004532", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.rpcAmount == "201000000", details1?.rpcAmount ?? "-")
 		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
 		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
 	}
@@ -714,7 +714,7 @@ class OperationFactoryTests: XCTestCase {
 		
 		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
 		XCTAssert(details1?.tokenContract == "KT1TjnZYs5CGLbmV6yuW169P8Pnr9BiVwwjz", details1?.tokenContract ?? "-")
-		XCTAssert(details1?.rpcAmount == "2004532", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.rpcAmount == "201000000", details1?.rpcAmount ?? "-")
 		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
 		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
 	}
