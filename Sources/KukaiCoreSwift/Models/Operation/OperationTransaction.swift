@@ -34,8 +34,10 @@ public class OperationTransaction: Operation {
 		case investLiquidity
 		case divestLiquidity
 		case withdrawProfit
-		case execute // 3route
-		case deposit // crunchy - stake
+		case execute 	// 3route
+		case deposit 	// crunchy - stake
+		case offer 		// OBJKT - make offer
+		case bid 		// OBJKT - bid on auction
 	}
 	
 	enum CodingKeys: String, CodingKey {

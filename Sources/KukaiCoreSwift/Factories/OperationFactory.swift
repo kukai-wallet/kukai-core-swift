@@ -453,13 +453,12 @@ public class OperationFactory {
 		/**
 		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson `approve` value
 		 */
-		public static func tokenIdAndAmountFromApproveMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
+		public static func tokenIdAndAmountFromApproveMichelson(michelson: Any) -> (tokenId: Decimal?, destination: String)? {
 			if let michelsonDict = michelson as? [String: Any] {
-				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 1)
-				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
+				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonString(atIndex: 0)
 				
-				if let str = rpcAmountString {
-					return (rpcAmount: str, tokenId: nil, destination: rpcDestinationString)
+				if let dest = rpcDestinationString {
+					return (tokenId: nil, destination: dest)
 				} else {
 					return nil
 				}
@@ -522,6 +521,34 @@ public class OperationFactory {
 		}
 		
 		/**
+		 Extract rpc amount (without decimal info) michelson `offer` value for a OBJKT offer call
+		 */
+		public static func tokenAmountFromOfferMichelson(michelson: Any) -> Decimal? {
+			if let michelsonDict = michelson as? [String: Any] {
+				let tokenAmount = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+				
+				return Decimal(string: tokenAmount ?? "0") ?? 0
+				
+			} else {
+				return nil
+			}
+		}
+		
+		/**
+		 Extract rpc amount (without decimal info) michelson `offer` value for a OBJKT offer call
+		 */
+		public static func tokenAmountFromBidMichelson(michelson: Any) -> Decimal? {
+			if let michelsonDict = michelson as? [String: Any] {
+				let tokenAmount = michelsonDict.michelsonArgsArray()?.michelsonInt(atIndex: 0)
+				
+				return Decimal(string: tokenAmount ?? "0") ?? 0
+				
+			} else {
+				return nil
+			}
+		}
+		
+		/**
 		 Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson FA1.2 / FA2 transfer payload
 		 */
 		public static func tokenIdAndAmountFromTransferMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
@@ -570,11 +597,15 @@ public class OperationFactory {
 			if let michelsonDict = michelson as? [String: Any], let entrypoint = michelsonDict["entrypoint"] as? String {
 				switch entrypoint {
 					case OperationTransaction.StandardEntrypoint.approve.rawValue:
-						return tokenIdAndAmountFromApproveMichelson(michelson: michelsonDict["value"] ?? [:])
+						if let approveResponse = tokenIdAndAmountFromApproveMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: "0", tokenId: approveResponse.tokenId, destination: approveResponse.destination)
+						} else {
+							return nil
+						}
 						
 					case OperationTransaction.StandardEntrypoint.updateOperators.rawValue:
 						if let updateResponse = tokenIdFromUpdateOperatorsMichelson(michelson: michelsonDict["value"] ?? [:]) {
-							return (rpcAmount: "0", tokenId: updateResponse.tokenId, destination: updateResponse.destination) // Can extract token address + id, but not amount ... cause nobody likes me
+							return (rpcAmount: "0", tokenId: updateResponse.tokenId, destination: updateResponse.destination)
 						} else {
 							return nil
 						}
@@ -597,6 +628,22 @@ public class OperationFactory {
 						} else {
 							return nil
 						}
+					
+					case OperationTransaction.StandardEntrypoint.offer.rawValue: // OBJKT - make offer
+						if let response = tokenAmountFromOfferMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: response.description, tokenId: nil, destination: nil) // Can extract amount, but nothing else
+							
+						} else {
+							return nil
+						}
+						
+					case OperationTransaction.StandardEntrypoint.bid.rawValue: // OBJKT - bid on auction
+						if let response = tokenAmountFromBidMichelson(michelson: michelsonDict["value"] ?? [:]) {
+							return (rpcAmount: response.description, tokenId: nil, destination: nil) // Can extract amount, but nothing else
+							
+						} else {
+							return nil
+						}
 						
 					default:
 						return nil
@@ -613,19 +660,26 @@ public class OperationFactory {
 		 */
 		public static func firstNonZeroTokenTransferAmount(operations: [Operation]) -> (tokenContract: String, rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			
-			for (index, op) in operations.enumerated() {
-				if let opTrans = op as? OperationTransaction, let details = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]) {
+			var lastTokenIdAndAmountResults: (rpcAmount: String, tokenId: Decimal?, destination: String?)? = nil
+			var lastTokenAddress: String? = nil
+			
+			for op in operations {
+				if let opTrans = op as? OperationTransaction, let details = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]), let entrypoint = (opTrans.parameters?["entrypoint"] as? String) {
 					
-					if details.rpcAmount == "0" && (opTrans.parameters?["entrypoint"] as? String) != OperationTransaction.StandardEntrypoint.updateOperators.rawValue {
+					if details.rpcAmount == "0", (entrypoint == OperationTransaction.StandardEntrypoint.approve.rawValue || entrypoint == OperationTransaction.StandardEntrypoint.updateOperators.rawValue) {
 						
-						// If we have a rpcAmount of zero, and its not an `update_operators`, move on to next value
-						continue
+						// If its an `approve` oepration or an `update_operators` hold onto the details for the next run
+						lastTokenIdAndAmountResults = details
+						lastTokenAddress = opTrans.destination
 						
-					} else if details.rpcAmount == "0", operations.count > (index + 1), let executeDetails = tokenIdAndAmountFromMichelson(michelson: (operations[index+1] as? OperationTransaction)?.parameters ?? [:]) {
+					} else if let lastDetails = lastTokenIdAndAmountResults,
+							  let lastTokenAddress = lastTokenAddress,
+							  lastDetails.rpcAmount == "0",
+							  (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue && entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue),
+							  let knownOpDetails = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]) {
 						
-						// If its zero, and was update_operators, check to see if parsing the next operation as a 3route execute, returns the missing piece
-						// If so return a mixture of the 2 values, as update tells us the token, execute tells us how much
-						return (tokenContract: opTrans.destination, rpcAmount: executeDetails.rpcAmount, tokenId: details.tokenId, destination: details.destination ?? "")
+						// If we have a previous set of details from an approve or update, check if we can extract something useful from this one to complete the info
+						return (tokenContract: lastTokenAddress, rpcAmount: knownOpDetails.rpcAmount, tokenId: lastDetails.tokenId, destination: lastDetails.destination ?? "")
 						
 					} else {
 						

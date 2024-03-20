@@ -676,4 +676,46 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(details1?.tokenId == 0, details1?.tokenId?.description ?? "-")
 		XCTAssert(details1?.destination == "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX", details1?.destination ?? "-")
 	}
+	
+	func testExtractorsObjktOffer() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "objkt-offer-fa1")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "478000", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1Xjap1TwmDR1d8yEd8ErkraAj2mbdMrPZY", details1?.destination ?? "-")
+	}
+	
+	func testExtractorsObjktBid() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "objkt-bid")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1TjnZYs5CGLbmV6yuW169P8Pnr9BiVwwjz", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "2004532", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
+	}
+	
+	func testExtractorsObjktBidWithWrap() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "objkt-bid-with-wrap")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1TjnZYs5CGLbmV6yuW169P8Pnr9BiVwwjz", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "2004532", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
+	}
 }
