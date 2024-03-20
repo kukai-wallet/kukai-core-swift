@@ -599,7 +599,7 @@ public class OperationFactory {
 				switch entrypoint {
 					case OperationTransaction.StandardEntrypoint.approve.rawValue:
 						if let approveResponse = tokenIdAndAmountFromApproveMichelson(michelson: michelsonDict["value"] ?? [:]) {
-							return (rpcAmount: "0", tokenId: approveResponse.tokenId, destination: approveResponse.destination)
+							return (rpcAmount: approveResponse.rpcAmount, tokenId: approveResponse.tokenId, destination: approveResponse.destination)
 						} else {
 							return nil
 						}
@@ -667,7 +667,7 @@ public class OperationFactory {
 			for op in operations {
 				if let opTrans = op as? OperationTransaction, let details = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]), let entrypoint = (opTrans.parameters?["entrypoint"] as? String) {
 					
-					if details.rpcAmount == "0", (entrypoint == OperationTransaction.StandardEntrypoint.approve.rawValue || entrypoint == OperationTransaction.StandardEntrypoint.updateOperators.rawValue) {
+					if entrypoint == OperationTransaction.StandardEntrypoint.approve.rawValue || entrypoint == OperationTransaction.StandardEntrypoint.updateOperators.rawValue {
 						
 						// If its an `approve` oepration or an `update_operators` hold onto the details for the next run
 						lastTokenIdAndAmountResults = details
@@ -675,7 +675,6 @@ public class OperationFactory {
 						
 					} else if let lastDetails = lastTokenIdAndAmountResults,
 							  let lastTokenAddress = lastTokenAddress,
-							  lastDetails.rpcAmount == "0",
 							  (entrypoint != OperationTransaction.StandardEntrypoint.approve.rawValue && entrypoint != OperationTransaction.StandardEntrypoint.updateOperators.rawValue),
 							  let knownOpDetails = tokenIdAndAmountFromMichelson(michelson: opTrans.parameters ?? [:]) {
 						
