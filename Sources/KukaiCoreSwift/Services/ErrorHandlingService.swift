@@ -208,7 +208,8 @@ public struct KukaiError: CustomStringConvertible, Error {
 	 Allow the delegate of the error callback the ability to decide what errors to log or not by detecting the high level type of error being generated
 	*/
 	public func isTimeout() -> Bool {
-		return self.underlyingError?.domain == "NSURLErrorDomain" && self.underlyingError?.code == -1001
+		return (self.subType?.domain == "NSURLErrorDomain" && self.subType?.code == -1001) ||
+				(self.underlyingError?.domain == "NSURLErrorDomain" && self.underlyingError?.code == -1001)
 	}
 }
 
