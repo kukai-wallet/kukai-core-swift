@@ -199,6 +199,17 @@ public struct KukaiError: CustomStringConvertible, Error {
 			return "HTTP Status \(statusCode) \nUnable to communicate with: \(url.absoluteStringByTrimmingQuery() ?? url.absoluteString)"
 		}
 	}
+	
+	
+	
+	// MARK: - Central callback parsers
+	
+	/**
+	 Allow the delegate of the error callback the ability to decide what errors to log or not by detecting the high level type of error being generated
+	*/
+	public func isTimeout(_ kukaiError: KukaiError) -> Bool {
+		return kukaiError.underlyingError?.domain == "NSURLErrorDomain" && kukaiError.underlyingError?.code == -1001
+	}
 }
 
 
