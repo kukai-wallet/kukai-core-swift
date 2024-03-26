@@ -767,7 +767,7 @@ public class TzKTClient {
 		
 		
 		dispatchGroup.enter()
-		dispatchGroup.enter()
+		//dispatchGroup.enter()
 		
 		// Get XTZ balance from TzKT Account
 		self.getAccount(forAddress: address) { result in
@@ -781,7 +781,8 @@ public class TzKTClient {
 			dispatchGroup.leave()
 		}
 		
-		
+		// TODO: DeFi functionality currently disabled
+		/*
 		// Get Liquidity Tokens from DipDup
 		self.dipDupClient.getLiquidityFor(address: address) { result in
 			switch result {
@@ -793,6 +794,7 @@ public class TzKTClient {
 			}
 			dispatchGroup.leave()
 		}
+		*/
 		
 		
 		// Cycle through the number of token balance requests needed to be performed (likely just 1)
