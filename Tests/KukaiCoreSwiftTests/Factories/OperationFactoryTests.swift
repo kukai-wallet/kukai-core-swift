@@ -627,10 +627,35 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(contractDetails3?.entrypoint == "tezToTokenPayment", contractDetails3?.entrypoint ?? "-")
 	}
 	
-	func testExtractors3Route() {
+	func testExtractors3RouteV3() {
 		let decoder = JSONDecoder()
 		
-		let singleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route-single-route")
+		let fa1ForXTZData = MockConstants.jsonStub(fromFilename: "3route_v3_fa1-for-xtz")
+		let fa1ForXTZJson = (try? decoder.decode([OperationTransaction].self, from: fa1ForXTZData)) ?? []
+		XCTAssert(fa1ForXTZJson.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: fa1ForXTZJson)
+		XCTAssert(details1?.tokenContract == "KT1JVjgXPMMSaa6FkzeJcgb8q9cUaLmwaJUX", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "6605336839045864425", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz", details1?.destination ?? "-")
+		
+		
+		let fa2ForXTZData = MockConstants.jsonStub(fromFilename: "3route_v3_fa2-for-xtz")
+		let fa2ForXTZJson = (try? decoder.decode([OperationTransaction].self, from: fa2ForXTZData)) ?? []
+		XCTAssert(fa2ForXTZJson.count > 0)
+		
+		let details2 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: fa2ForXTZJson)
+		XCTAssert(details2?.tokenContract == "KT1914CUZ7EegAFPbfgQMRkw8Uz5mYkEz2ui", details2?.tokenContract ?? "-")
+		XCTAssert(details2?.rpcAmount == "47557742041756", details2?.rpcAmount ?? "-")
+		XCTAssert(details2?.tokenId == 0, details2?.tokenId?.description ?? "-")
+		XCTAssert(details2?.destination == "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz", details2?.destination ?? "-")
+	}
+	
+	func testExtractors3RouteV4() {
+		let decoder = JSONDecoder()
+		
+		let singleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route_v4_single-route")
 		let singleRouteJson = (try? decoder.decode([OperationTransaction].self, from: singleRouteJsonData)) ?? []
 		XCTAssert(singleRouteJson.count > 0)
 		
@@ -641,7 +666,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(details1?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details1?.destination ?? "-")
 		
 		
-		let multipleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route-multiple-routes")
+		let multipleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route_v4_multiple-routes")
 		let multipleRouteJson = (try? decoder.decode([OperationTransaction].self, from: multipleRouteJsonData)) ?? []
 		XCTAssert(multipleRouteJson.count > 0)
 		
@@ -652,7 +677,7 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(details2?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details2?.destination ?? "-")
 		
 		
-		let fa1ForFa2Data = MockConstants.jsonStub(fromFilename: "3route-fa1-for-fa2")
+		let fa1ForFa2Data = MockConstants.jsonStub(fromFilename: "3route_v4_fa1-for-fa2")
 		let fa1ForFa2Json = (try? decoder.decode([OperationTransaction].self, from: fa1ForFa2Data)) ?? []
 		XCTAssert(fa1ForFa2Json.count > 0)
 		
