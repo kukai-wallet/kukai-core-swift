@@ -297,7 +297,7 @@ public class TzKTClient {
 					alias = config.name
 					avatarURL = TzKTClient.avatarURL(forToken: config.address)
 					fee = config.fee
-					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - (config.payoutDelay - 1))
 					
 				}
 				// If the tx came from a known payout address, match it to the baker address and grab the config
@@ -307,7 +307,7 @@ public class TzKTClient {
 							alias = config.name
 							avatarURL = TzKTClient.avatarURL(forToken: config.address)
 							fee = config.fee
-							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - (config.payoutDelay - 1))
 						}
 					}
 				}
