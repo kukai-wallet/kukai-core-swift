@@ -584,8 +584,8 @@ public class TzKTClient {
 		}
 		
 		if let last = cycles.last, last.firstLevel > level {
-			// Level is in the past, return last cycle we have
-			return last
+			// Level is in the past, return nil so we don't display invalid data
+			return nil
 			
 		} else if let first = cycles.first, first.lastLevel < level {
 			// Delegation level is in the future, return nil
