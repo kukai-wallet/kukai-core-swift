@@ -354,6 +354,21 @@ public class TzKTClient {
 					return
 				}
 			}
+			// Inactive baker, display next reward as zero
+			else if previousRewardIndex == 0 {
+				let futureCycle = currentCycles.first
+				let futureReward = RewardDetails(bakerAlias: pReward?.bakerAlias,
+												 bakerLogo: pReward?.bakerLogo,
+												 paymentAddress: pReward?.paymentAddress ?? configToUse.address,
+												 amount: .zero(),
+												 cycle: futureCycle?.index ?? 0,
+												 fee: 0,
+												 date: futureCycle?.endDate ?? Date(),
+												 meetsMinDelegation: pReward?.meetsMinDelegation ?? true)
+				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: futureReward))) }
+				return
+			}
+			
 			
 			let lastCompleteCycle = currentCycles[TzKTClient.numberOfFutureCyclesReturned + 1]
 			estimatedPreviousReward = self?.rewardDetail(fromConfig: configToUse, rewards: currentDelegatorRewards, cycles: currentCycles, selectedIndex: previousRewardIndex, dateForDisplay: lastCompleteCycle.endDate ?? Date())
