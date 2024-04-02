@@ -17,7 +17,8 @@ public struct TzKTTokenTransfer: Codable {
 	public let to: TzKTAddress?
 	public let from: TzKTAddress?
 	public let amount: String
-	public let transactionId: Decimal
+	public let transactionId: Decimal?
+	public let originationId: Decimal?
 	public let mintingTool: String?
 	
 	public func tokenAmount() -> TokenAmount {
