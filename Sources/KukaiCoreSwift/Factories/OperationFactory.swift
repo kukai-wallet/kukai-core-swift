@@ -570,6 +570,7 @@ public class OperationFactory {
 		 */
 		public static func tokenIdAndAmountFromTransferMichelson(michelson: Any) -> (rpcAmount: String, tokenId: Decimal?, destination: String)? {
 			if let michelsonDict = michelson as? [String: Any] {
+				
 				// FA1.2
 				let rpcAmountString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonInt(atIndex: 1)
 				let rpcDestinationString = michelsonDict.michelsonArgsArray()?.michelsonPair(atIndex: 1)?.michelsonArgsArray()?.michelsonString(atIndex: 0) ?? ""
@@ -581,9 +582,18 @@ public class OperationFactory {
 				}
 				
 			} else if let michelsonArray = michelson as? [[String: Any]] {
-				// FA2
 				
-				let argsArray1 = michelsonArray[0].michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)?.michelsonPair(atIndex: 0)?.michelsonArgsArray()
+				// FA2
+				let outerContainerArray = michelsonArray[0].michelsonArgsUnknownArray()?.michelsonArray(atIndex: 1)
+				
+				// For now, we only support sending 1 item per transaction. The FA2 standard allows for multiple items to be passed in via an array
+				// If thats the case we simply return nil, to mark it as an unknwon type until we can get a better handle on extractions
+				guard outerContainerArray?.count == 1 else {
+					return nil
+				}
+				
+				let argsArray1 = outerContainerArray?.michelsonPair(atIndex: 0)?.michelsonArgsArray()
+				
 				let rpcDestination = argsArray1?.michelsonString(atIndex: 0)
 				
 				let argsArray2 = argsArray1?.michelsonPair(atIndex: 1)?.michelsonArgsArray()

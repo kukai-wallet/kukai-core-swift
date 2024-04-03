@@ -743,4 +743,15 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
 		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
 	}
+	
+	func testExtractorsMultiSendInListParam() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "operation-factory-extractor-multiple-send-in-param")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.isFaTokenTransfer(operations: jsonOperations) // operation is multiple sends in a single michelson param, for now, thats not supported as a "send"
+		XCTAssert(details1 == nil)
+	}
 }
