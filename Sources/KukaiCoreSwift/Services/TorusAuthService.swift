@@ -207,33 +207,43 @@ public class TorusAuthService: NSObject {
 				// Each serach returns required data in a different format. Grab the private key and social profile info needed
 				switch authType {
 					case .apple, .google:
-						username = data.userInfo["name"] as? String
-						userId = data.userInfo["email"] as? String
-						profile = data.userInfo["picture"] as? String
+						if let userInfo = data.userInfo["userInfo"] as? [String: Any] {
+							username = userInfo["name"] as? String
+							userId = userInfo["email"] as? String
+							profile = userInfo["picture"] as? String
+						}
 						pk = data.torusKey.finalKeyData?.privKey
 						
 					case .twitter:
-						username = data.userInfo["nickname"] as? String
-						userId = data.userInfo["sub"] as? String
-						profile = data.userInfo["picture"] as? String
+						if let userInfo = data.userInfo["userInfo"] as? [String: Any] {
+							username = userInfo["nickname"] as? String
+							userId = userInfo["sub"] as? String
+							profile = userInfo["picture"] as? String
+						}
 						pk = data.torusKey.finalKeyData?.privKey
 						
 					case .reddit:
-						username = data.userInfo["name"] as? String
-						userId = nil
-						profile = data.userInfo["icon_img"] as? String
+						if let userInfo = data.userInfo["userInfo"] as? [String: Any] {
+							username = userInfo["name"] as? String
+							userId = nil
+							profile = userInfo["icon_img"] as? String
+						}
 						pk = data.torusKey.finalKeyData?.privKey
 						
 					case .facebook:
-						username = data.userInfo["name"] as? String
-						userId = data.userInfo["id"] as? String
-						profile = ((data.userInfo["picture"] as? [String: Any])?["data"] as? [String: Any])?["url"] as? String
+						if let userInfo = data.userInfo["userInfo"] as? [String: Any] {
+							username = userInfo["name"] as? String
+							userId = userInfo["id"] as? String
+							profile = ((userInfo["picture"] as? [String: Any])?["data"] as? [String: Any])?["url"] as? String
+						}
 						pk = data.torusKey.finalKeyData?.privKey
 						
 					case .email:
-						username = data.userInfo["email"] as? String
-						userId = data.userInfo["email"] as? String
-						profile = data.userInfo["picture"] as? String
+						if let userInfo = data.userInfo["userInfo"] as? [String: Any] {
+							username = userInfo["email"] as? String
+							userId = userInfo["email"] as? String
+							profile = userInfo["picture"] as? String
+						}
 						pk = data.torusKey.finalKeyData?.privKey
 						
 					default:
