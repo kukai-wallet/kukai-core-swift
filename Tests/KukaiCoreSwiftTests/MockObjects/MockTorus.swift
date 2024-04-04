@@ -12,6 +12,8 @@ import FetchNodeDetails
 
 public class MockCustomAuth: CustomAuth {
 	
+	/*
+	 // TODO: becoming too painful to keep updating this with every version change. Need to find a better solution
 	override open func triggerLogin(controller: UIViewController? = nil, browserType: URLOpenerTypes = .asWebAuthSession, modalPresentationStyle: UIModalPresentationStyle = .fullScreen) async throws -> [String : Any] {
 		guard let verifierType = self.subVerifierDetails.first?.loginProvider else {
 			fatalError("can't find verifier")
@@ -71,6 +73,7 @@ public class MockCustomAuth: CustomAuth {
 			fatalError("Invalid verifier")
 		}
 	}
+	*/
 }
 
 /*
