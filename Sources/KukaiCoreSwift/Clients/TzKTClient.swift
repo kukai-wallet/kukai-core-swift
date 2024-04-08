@@ -739,9 +739,14 @@ public class TzKTClient {
 	 - parameter forAddress: The tz address to search for
 	 - parameter completion: The completion block called with a `Result` containing an object or an error
 	 */
-	public func getAccount(forAddress: String, completion: @escaping ((Result<TzKTAccount, KukaiError>) -> Void)) {
-		var url = config.tzktURL
-		url.appendPathComponent("v1/accounts/\(forAddress)")
+	public func getAccount(forAddress: String, fromURL: URL? = nil, completion: @escaping ((Result<TzKTAccount, KukaiError>) -> Void)) {
+		var url = fromURL == nil ? config.tzktURL : fromURL
+		url?.appendPathComponent("v1/accounts/\(forAddress)")
+		
+		guard let url = url else {
+			completion(Result.failure(KukaiError.unknown()))
+			return
+		}
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: TzKTAccount.self) { (result) in
 			completion(result)
