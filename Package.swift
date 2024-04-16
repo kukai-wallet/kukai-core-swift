@@ -29,7 +29,8 @@ let package = Package(
 			resources: [
 				.copy("Services/kukai-dex-calculations.js"),
 				.copy("Services/ledger_app_tezos.js"),
-				.copy("Services/taquito_local_forging.js")
+				.copy("Services/taquito_local_forging.js"),
+				.copy("PrivacyInfo.xcprivacy")
 			]
 		),
 		
