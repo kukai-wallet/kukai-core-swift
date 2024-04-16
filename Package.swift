@@ -12,7 +12,7 @@ let package = Package(
 		.library(name: "KukaiCoreSwift", targets: ["KukaiCoreSwift"]),
 	],
 	dependencies: [
-		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.18" /*.branch("feature/")*/),
+		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.19" /*.branch("feature/")*/),
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", /*from: "6.0.0"*/ .branch("master")),
 		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
 		.package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.18.10")
