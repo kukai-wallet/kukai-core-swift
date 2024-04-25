@@ -133,7 +133,7 @@ public class TorusAuthService: NSObject {
 		self.web3AuthClientId = web3AuthClientId
 		
 		self.fetchNodeDetails = NodeDetailManager(network: .legacy(.MAINNET), urlSession: networkService.urlSession)
-		self.torusUtils = TorusUtils(loglevel: .error, urlSession: networkService.urlSession, clientId: web3AuthClientId)
+		self.torusUtils = TorusUtils(loglevel: .error, urlSession: networkService.urlSession, network: .legacy(.MAINNET), clientId: web3AuthClientId)
 	}
 	
 	
