@@ -281,6 +281,7 @@ public struct MockConstants {
 	// MARK: - Wallets
 	
 	public static let mnemonic = try! Mnemonic(seedPhrase: "rigid obscure hurry scene eyebrow decide empty annual hunt cute also base")
+	public static let shiftedMnemonic = try! Mnemonic(seedPhrase: "laugh come news visit ceiling network rich outdoor license enjoy govern drastic slight close panic kingdom wash bring electric convince fiber relief cash siren")
 	public static let passphrase = "superSecurePassphrase"
 	public static let messageToSign = "something very interesting that needs to be signed"
 	
@@ -335,6 +336,12 @@ public struct MockConstants {
 		public static let privateKey = "efa21dab1ddaf1a6f78cbe7e131bd10209ece4ae0642ac78f9532dbe216a0d39bc1287467d20ea180ee01734ada519322bcb8e60b08c923547e67d8f7a5bc14c"
 		public static let publicKey = "bc1287467d20ea180ee01734ada519322bcb8e60b08c923547e67d8f7a5bc14c"
 		public static let derivationPath = "m/44'/1729'/0'/1'"
+	}
+	
+	public struct shiftedWallet {
+		public static let address = "tz2HpbGQcmU3UyusJ78Sbqeg9fYteamSMDGo"
+		public static let privateKey = "7d85c254fa624f29ae54e981295594212cba5767ebd5f763851d97c55b6a88d6"
+		public static let publicKey = "025b4cb98848c2288eda85a8083d07d595721e89d3694bd3fb2a4c497ceeac66ca"
 	}
 	
 	

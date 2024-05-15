@@ -14,6 +14,7 @@ import KukaiCryptoSwift
 /// Enum to distingush between linear (non-hd) wallets, using the Bip39 standard, and hd wallets using the Bip44 standard.
 public enum WalletType: String, Codable {
 	case regular
+	case regularShifted
 	case hd
 	case social
 	case ledger

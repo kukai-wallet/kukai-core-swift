@@ -26,6 +26,13 @@ class RegularWalletTests: XCTestCase {
 		XCTAssert(wallet?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, wallet?.publicKey.bytes.toHexString() ?? "-")
 	}
 	
+	func testCreateWithShiftedMnemonic() {
+		let wallet = RegularWallet(withShiftedMnemonic: MockConstants.shiftedMnemonic, passphrase: "")
+		XCTAssert(wallet?.address == MockConstants.shiftedWallet.address, wallet?.address ?? "-")
+		XCTAssert(wallet?.privateKey.bytes.toHexString() == MockConstants.shiftedWallet.privateKey, wallet?.privateKey.bytes.toHexString() ?? "-")
+		XCTAssert(wallet?.publicKey.bytes.toHexString() == MockConstants.shiftedWallet.publicKey, wallet?.publicKey.bytes.toHexString() ?? "-")
+	}
+	
 	func testCreateWithMnemonicLength() {
 		let wallet1 = RegularWallet(withMnemonicLength: .twelve, passphrase: "")
 		XCTAssert(wallet1?.mnemonic?.words.count == 12, "\(wallet1?.mnemonic?.words.count ?? -1)")

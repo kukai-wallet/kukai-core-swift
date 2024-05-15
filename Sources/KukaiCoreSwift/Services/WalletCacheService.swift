@@ -270,7 +270,7 @@ public class WalletCacheService {
 			var walletData: Data = Data()
 			for wallet in wallets.values {
 				switch wallet.type {
-					case .regular:
+					case .regular, .regularShifted:
 						if let walletObj = wallet as? RegularWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
@@ -351,7 +351,7 @@ public class WalletCacheService {
 				let jsonObjAsData = try JSONSerialization.data(withJSONObject: jsonObj, options: .fragmentsAllowed)
 				
 				switch type {
-					case .regular:
+					case .regular, .regularShifted:
 						let wallet = try JSONDecoder().decode(RegularWallet.self, from: jsonObjAsData)
 						wallets[wallet.address] = wallet
 						
