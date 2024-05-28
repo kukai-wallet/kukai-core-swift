@@ -103,6 +103,23 @@ public class RegularWallet: Wallet {
 	}
 	
 	/**
+	 Create a `RegularWallet` by supplying a a Base58 encoded string containing a secret key. Both encrypted and unencrypted are supported. Supports Tz1 and Tz2
+	 - Parameter fromSecretKey: A String containing a Base58Check encoded secret key
+	 - Parameter passphrase: An optional string containing the passphrase used to encrypt the secret key
+	 */
+	public init?(fromSecretKey secretKey: String, passphrase: String?) {
+		guard let keyPair = KeyPair.regular(fromSecretKey: secretKey, andPassphrase: passphrase), let address = keyPair.publicKey.publicKeyHash else {
+			return nil
+		}
+		
+		self.type = .regular
+		self.address = address
+		self.privateKey = keyPair.privateKey
+		self.publicKey = keyPair.publicKey
+		self.mnemonic = nil
+	}
+	
+	/**
 	 Create a `RegularWallet` by asking for a mnemonic of a given number of words and a passphrase (or "" if none).
 	 - Parameter withMnemonicLength: `Mnemonic.NumberOfWords` the number of words to use when creating a mnemonic
 	 - Parameter passphrase: String contianing a passphrase, or empty string if none
