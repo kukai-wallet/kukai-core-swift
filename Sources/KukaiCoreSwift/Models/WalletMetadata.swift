@@ -75,6 +75,16 @@ public struct WalletMetadataList: Codable, Hashable {
 		return nil
 	}
 	
+	public func parentMetadata(forChildAddress address: String) -> WalletMetadata? {
+		for metadata in hdWallets {
+			for childMetadata in metadata.children {
+				if childMetadata.address == address { return metadata }
+			}
+		}
+		
+		return nil
+	}
+	
 	public mutating func update(address: String, with newMetadata: WalletMetadata) -> Bool {
 		for (index, metadata) in socialWallets.enumerated() {
 			if metadata.address == address { socialWallets[index] = newMetadata; return true }

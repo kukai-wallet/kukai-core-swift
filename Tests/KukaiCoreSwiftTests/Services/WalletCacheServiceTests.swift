@@ -310,6 +310,9 @@ class WalletCacheServiceTests: XCTestCase {
 		let metaForAddress = list.metadata(forAddress: "tz1jkl")
 		XCTAssert(metaForAddress?.address == "tz1jkl", metaForAddress?.address ?? "-")
 		
+		let parentMeta = list.parentMetadata(forChildAddress: child.address)
+		XCTAssert(parentMeta?.address == "tz1abc123", parentMeta?.address ?? "-")
+		
 		let _ = list.set(hdWalletGroupName: "Test", forAddress: "tz1abc123")
 		let updatedMeta = list.metadata(forAddress: "tz1abc123")
 		XCTAssert(updatedMeta?.hdWalletGroupName == "Test", updatedMeta?.hdWalletGroupName ?? "-")
