@@ -28,7 +28,11 @@
     </header>
     <div class="content-wrapper">
       <p id="breadcrumbs">
-        <a href="../../index.html"> Reference</a>
+        <a href="../../index.html">Index</a>
+        <img id="carat" src="../../img/carat.png" alt=""/>
+        <a href="../../Classes.html">Classes</a>
+        <img id="carat" src="../../img/carat.png" alt=""/>
+        <a href="../../Classes/OperationFactory.html">KukaiCoreSwift.OperationFactory</a>
         <img id="carat" src="../../img/carat.png" alt=""/>
         Extractor Structure Reference
       </p>
@@ -47,9 +51,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Classes/ContentTypeCheckingImageDownloader.html">ContentTypeCheckingImageDownloader</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Classes/DAppHelperService.html">DAppHelperService</a>
@@ -101,6 +102,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../../Classes/MediaProxyService/Format.html">– Format</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/MediaProxyService/RawFormat.html">– RawFormat</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Classes/MediaProxyService/Source.html">– Source</a>
@@ -178,6 +182,9 @@
                 <a href="../../Classes/OperationTransaction.html">OperationTransaction</a>
               </li>
               <li class="nav-group-task">
+                <a href="../../Classes/OperationUnknown.html">OperationUnknown</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../../Classes/RPC.html">RPC</a>
               </li>
               <li class="nav-group-task">
@@ -249,12 +256,6 @@
                 <a href="../../Enums/CurrentDevice.html">CurrentDevice</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Enums/DAppAccessType.html">DAppAccessType</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Enums/DAppCategory.html">DAppCategory</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../../Enums/DipDupExchangeName.html">DipDupExchangeName</a>
               </li>
               <li class="nav-group-task">
@@ -276,6 +277,9 @@
                 <a href="../../Enums/OperationTransactionError.html">OperationTransactionError</a>
               </li>
               <li class="nav-group-task">
+                <a href="../../Enums/OperationUnknownError.html">OperationUnknownError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../../Enums/ResultExtensionError.html">ResultExtensionError</a>
               </li>
               <li class="nav-group-task">
@@ -292,6 +296,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../../Enums/TzKTBakerTiming.html">TzKTBakerTiming</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/WalletCacheError.html">WalletCacheError</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Enums/WalletError.html">WalletError</a>
@@ -352,6 +359,9 @@
               <li class="nav-group-task">
                 <a href="../../Extensions/Thread.html">Thread</a>
               </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/URL.html">URL</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -385,9 +395,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../../Structs/BlockchainHead.html">BlockchainHead</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Structs.html#/s:14KukaiCoreSwift4DAppV">DApp</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Structs/DexAddCalculationResult.html">DexAddCalculationResult</a>
@@ -495,9 +502,6 @@
                 <a href="../../Structs/ObjktTokenReponse.html">ObjktTokenReponse</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Structs.html#/s:14KukaiCoreSwift16OfflineConstantsV">OfflineConstants</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../../Structs/OperationBlockHeader.html">OperationBlockHeader</a>
               </li>
               <li class="nav-group-task">
@@ -519,7 +523,7 @@
                 <a href="../../Structs/OperationResponse.html">OperationResponse</a>
               </li>
               <li class="nav-group-task">
-                <a href="../../Structs.html#/s:14KukaiCoreSwift24OperationResponseContentV">OperationResponseContent</a>
+                <a href="../../Structs/OperationResponseContent.html">OperationResponseContent</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Structs.html#/s:14KukaiCoreSwift025OperationResponseInternalD0V">OperationResponseInternalOperation</a>
@@ -559,9 +563,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../../Structs.html#/s:14KukaiCoreSwift19RunOperationPayloadV">RunOperationPayload</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../../Structs/SVGImgProcessor.html">SVGImgProcessor</a>
               </li>
               <li class="nav-group-task">
                 <a href="../../Structs/SubverifierWrapper.html">SubverifierWrapper</a>
@@ -730,9 +731,334 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV33tokenIdAndAmountFromSendMichelson9michelsonSS03rpcJ0_So9NSDecimalaSg0gH0SS11destinationtSgyp_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/tokenIdAndAmountFromSendMichelson(michelson:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV33tokenIdAndAmountFromSendMichelson9michelsonSS03rpcJ0_So9NSDecimalaSg0gH0SS11destinationtSgyp_tFZ">tokenIdAndAmountFromSendMichelson(michelson:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV19isSingleTransaction10operationsAA0dI0CSgSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isSingleTransaction(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV19isSingleTransaction10operationsAA0dI0CSgSayAA0D0CG_tFZ">isSingleTransaction(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filter reveal operation (if present), and check if what remains is a single OperationTransaction
+Useful for other functions, such as checking if the list of operations is a single XTZ or token transfer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isSingleTransaction</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV13isTezTransfer10operationsAA0D11TransactionCSgSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isTezTransfer(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV13isTezTransfer10operationsAA0D11TransactionCSgSayAA0D0CG_tFZ">isTezTransfer(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filter and verify only 1 transaction exists thats sending XTZ. If so return this operation, otherwise return false</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isTezTransfer</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV10isDelegate10operationsAA0D10DelegationCSgSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isDelegate(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV10isDelegate10operationsAA0D10DelegationCSgSayAA0D0CG_tFZ">isDelegate(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filter and verify only 1 transaction exists thats setting a baker. If so return this operation, otherwise return false</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isDelegate</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/OperationDelegation.html">OperationDelegation</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV17isFaTokenTransfer10operationsAA0D11TransactionC9operation_SS13tokenContractSS9rpcAmountSo9NSDecimalaSg0N2IdSS11destinationtSgSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isFaTokenTransfer(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV17isFaTokenTransfer10operationsAA0D11TransactionC9operation_SS13tokenContractSS9rpcAmountSo9NSDecimalaSg0N2IdSS11destinationtSgSayAA0D0CG_tFZ">isFaTokenTransfer(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filter and verify only 1 transaction exists thats sending a token. If so return this operation, otherwise return false</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isFaTokenTransfer</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">,</span> <span class="nv">tokenContract</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV20isSingleContractCall10operationsAA0D11TransactionC9operation_SS10entrypointSS7addresstSgSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isSingleContractCall(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV20isSingleContractCall10operationsAA0D11TransactionC9operation_SS10entrypointSS7addresstSgSayAA0D0CG_tFZ">isSingleContractCall(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filter and verify only 1 transaction exists its not a transfer operation. If so return this operation, otherwise return false</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isSingleContractCall</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">,</span> <span class="nv">entrypoint</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV26faTokenDetailsFromTransfer11transactionSS13tokenContract_SS9rpcAmountSo9NSDecimalaSg0M2IdSS11destinationtSgAA0D11TransactionC_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/faTokenDetailsFromTransfer(transaction:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV26faTokenDetailsFromTransfer11transactionSS13tokenContract_SS9rpcAmountSo9NSDecimalaSg0M2IdSS11destinationtSgAA0D11TransactionC_tFZ">faTokenDetailsFromTransfer(transaction:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract details from a transfer payload in order to present to the user what it is they are trying to send</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">faTokenDetailsFromTransfer</span><span class="p">(</span><span class="nv">transaction</span><span class="p">:</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">tokenContract</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV36tokenIdAndAmountFromApproveMichelson9michelsonSS03rpcJ0_So9NSDecimalaSg0gH0SS11destinationtSgyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenIdAndAmountFromApproveMichelson(michelson:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV36tokenIdAndAmountFromApproveMichelson9michelsonSS03rpcJ0_So9NSDecimalaSg0gH0SS11destinationtSgyp_tFZ">tokenIdAndAmountFromApproveMichelson(michelson:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson <code>approve</code> value</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenIdAndAmountFromApproveMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV35tokenIdFromUpdateOperatorsMichelson9michelsonSo9NSDecimalaSg0gH0_SS11destinationtSgyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenIdFromUpdateOperatorsMichelson(michelson:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV35tokenIdFromUpdateOperatorsMichelson9michelsonSo9NSDecimalaSg0gH0_SS11destinationtSgyp_tFZ">tokenIdFromUpdateOperatorsMichelson(michelson:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract  a tokenId, and the destination from a michelson <code>update_operators</code> value</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenIdFromUpdateOperatorsMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV31tokenAmountFromExecuteMichelson9michelson8contractSo9NSDecimalaSgyp_SStFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenAmountFromExecuteMichelson(michelson:contract:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV31tokenAmountFromExecuteMichelson9michelson8contractSo9NSDecimalaSgyp_SStFZ">tokenAmountFromExecuteMichelson(michelson:<wbr>contract:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract rpc amount (without decimal info) michelson <code>execute</code> value for a 3route call</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenAmountFromExecuteMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">contract</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV31tokenAmountFromDepositMichelson9michelsonSo9NSDecimalaSgyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenAmountFromDepositMichelson(michelson:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV31tokenAmountFromDepositMichelson9michelsonSo9NSDecimalaSgyp_tFZ">tokenAmountFromDepositMichelson(michelson:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract rpc amount (without decimal info) michelson <code>deposit</code> value for a crunchy stake call</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenAmountFromDepositMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV29tokenAmountFromOfferMichelson9michelsonSo9NSDecimalaSgyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenAmountFromOfferMichelson(michelson:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV29tokenAmountFromOfferMichelson9michelsonSo9NSDecimalaSgyp_tFZ">tokenAmountFromOfferMichelson(michelson:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract rpc amount (without decimal info) michelson <code>offer</code> value for a OBJKT offer call</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenAmountFromOfferMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV27tokenAmountFromBidMichelson9michelsonSo9NSDecimalaSgyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenAmountFromBidMichelson(michelson:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV27tokenAmountFromBidMichelson9michelsonSo9NSDecimalaSgyp_tFZ">tokenAmountFromBidMichelson(michelson:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Extract rpc amount (without decimal info) michelson <code>offer</code> value for a OBJKT offer call</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenAmountFromBidMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV37tokenIdAndAmountFromTransferMichelson9michelsonSS03rpcJ0_So9NSDecimalaSg0gH0SS11destinationtSgyp_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenIdAndAmountFromTransferMichelson(michelson:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV37tokenIdAndAmountFromTransferMichelson9michelsonSS03rpcJ0_So9NSDecimalaSg0gH0SS11destinationtSgyp_tFZ">tokenIdAndAmountFromTransferMichelson(michelson:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -747,7 +1073,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenIdAndAmountFromSendMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenIdAndAmountFromTransferMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -757,9 +1083,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV18faTokenDetailsFrom11transactionSS13tokenContract_SS9rpcAmountSo9NSDecimalaSg0L2IdSS11destinationtSgAA0D11TransactionC_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/faTokenDetailsFrom(transaction:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV18faTokenDetailsFrom11transactionSS13tokenContract_SS9rpcAmountSo9NSDecimalaSg0L2IdSS11destinationtSgAA0D11TransactionC_tFZ">faTokenDetailsFrom(transaction:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV29tokenIdAndAmountFromMichelson9michelson8contractSS03rpcJ0_So9NSDecimalaSg0gH0SSSg11destinationtSgyp_SStFZ"></a>
+                    <a name="//apple_ref/swift/Method/tokenIdAndAmountFromMichelson(michelson:contract:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV29tokenIdAndAmountFromMichelson9michelson8contractSS03rpcJ0_So9NSDecimalaSg0gH0SSSg11destinationtSgyp_SStFZ">tokenIdAndAmountFromMichelson(michelson:<wbr>contract:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -767,64 +1093,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Extract details from a payload in order to present to the user what it is they are trying to send</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">faTokenDetailsFrom</span><span class="p">(</span><span class="nv">transaction</span><span class="p">:</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">tokenContract</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV18faTokenDetailsFrom10operationsSS13tokenContract_SS9rpcAmountSo9NSDecimalaSg0L2IdSS11destinationtSgSayAA0D0CG_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/faTokenDetailsFrom(operations:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV18faTokenDetailsFrom10operationsSS13tokenContract_SS9rpcAmountSo9NSDecimalaSg0L2IdSS11destinationtSgSayAA0D0CG_tFZ">faTokenDetailsFrom(operations:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Helper to  call <code>faTokenDetailsFrom(transaction: OperationTransaction)</code> on the first <code><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></code> in an array of operations. Allows to more easily parse an array of operations that may include <code>approval</code>&lsquo;s or <code>update_operator</code> calls</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">faTokenDetailsFrom</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">tokenContract</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV13isTezTransfer10operationsSbSayAA0D0CG_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/isTezTransfer(operations:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV13isTezTransfer10operationsSbSayAA0D0CG_tFZ">isTezTransfer(operations:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Return true if</p>
+                        <p>Extract rpc amount (without decimal info) a tokenId, and the destination from a michelson
+Supports:</p>
 
 <ul>
-<li>contains 1 operation with a non-zero amount, with no parameters</li>
+<li>FA1.2 transfer</li>
+<li>FA2 transfer</li>
+<li>3Route</li>
+<li>Approve operation</li>
+<li>update_operator operation</li>
 </ul>
 
                       </div>
@@ -832,7 +1109,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isTezTransfer</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">tokenIdAndAmountFromMichelson</span><span class="p">(</span><span class="nv">michelson</span><span class="p">:</span> <span class="kt">Any</span><span class="p">,</span> <span class="nv">contract</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)?</span></code></pre>
 
                         </div>
                       </div>
@@ -842,9 +1119,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV023firstTransferEntrypointD010operationsAA0D11TransactionCSgSayAA0D0CG_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/firstTransferEntrypointOperation(operations:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV023firstTransferEntrypointD010operationsAA0D11TransactionCSgSayAA0D0CG_tFZ">firstTransferEntrypointOperation(operations:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV31firstNonZeroTokenTransferAmount10operationsSS13tokenContract_SS03rpcL0So9NSDecimalaSg0N2IdSS11destinationtSgSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/firstNonZeroTokenTransferAmount(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV31firstNonZeroTokenTransferAmount10operationsSS13tokenContract_SS03rpcL0So9NSDecimalaSg0N2IdSS11destinationtSgSayAA0D0CG_tFZ">firstNonZeroTokenTransferAmount(operations:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -852,14 +1129,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Easy way to extract the first non-<code>approval</code> or <code>update_operator</code> transaction</p>
+                        <p>Run through list of operations and extract the first valid <code>faTokenDetailsFrom(transaction: ...)</code>
+In the case of hitting an <code>update_operators</code>, will check for the next transaction to see if it contains the amount
+Useful for displaying the main token being swapped in a dex aggregator call</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">firstTransferEntrypointOperation</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">firstNonZeroTokenTransferAmount</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">tokenContract</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">rpcAmount</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -869,9 +1148,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV14isContractCall10operationsSS10entrypoint_SS7addresstSgSayAA0D0CG_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/isContractCall(operations:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV14isContractCall10operationsSS10entrypoint_SS7addresstSgSayAA0D0CG_tFZ">isContractCall(operations:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV12filterReveal10operationsSayAA0D0CGAJ_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/filterReveal(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV12filterReveal10operationsSayAA0D0CGAJ_tFZ">filterReveal(operations:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -879,14 +1158,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Return the entrypoint and address of the first operation, that doesn&rsquo;t equal <code>approve</code>, <code>update_operator</code> or <code>transfer</code></p>
+                        <p>Reveal operation is often visually hidden from user, as its a mandatory step thats handled automatically</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isContractCall</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">entrypoint</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">filterReveal</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -896,9 +1175,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV017firstContractCallD010operationsAA0D11TransactionCSgSayAA0D0CG_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/firstContractCallOperation(operations:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV017firstContractCallD010operationsAA0D11TransactionCSgSayAA0D0CG_tFZ">firstContractCallOperation(operations:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV25filterRevealApporveUpdate10operationsSayAA0D0CGAJ_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/filterRevealApporveUpdate(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV25filterRevealApporveUpdate10operationsSayAA0D0CGAJ_tFZ">filterRevealApporveUpdate(operations:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -906,14 +1185,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Return the first operation where entrypoint doesn&rsquo;t equal <code>approve</code>, <code>update_operator</code> or <code>transfer</code></p>
+                        <p>Reveal, Approve and UpdateOperator operations can be appended to operation lists. When determining what the intent of the operation array is, it can be important to ignore these</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">firstContractCallOperation</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">filterRevealApporveUpdate</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -923,9 +1202,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV29totalXTZAmountForContractCall10operationsAA0H0CSayAA0D0CG_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/totalXTZAmountForContractCall(operations:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV29totalXTZAmountForContractCall10operationsAA0H0CSayAA0D0CG_tFZ">totalXTZAmountForContractCall(operations:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV011containsAllD12Transactions10operations12ignoreRevealSbSayAA0D0CG_SbtFZ"></a>
+                    <a name="//apple_ref/swift/Method/containsAllOperationTransactions(operations:ignoreReveal:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV011containsAllD12Transactions10operations12ignoreRevealSbSayAA0D0CG_SbtFZ">containsAllOperationTransactions(operations:<wbr>ignoreReveal:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -933,14 +1212,126 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Run through list of operations and extract .amount from any OperationTransaction</p>
+                        <p>Check if the array is only of type OperationTransaction, optionally ignore reveal as its usually supressed from user
+Useful in situations where you are displaying batch information but can only handle certain opertion types</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">totalXTZAmountForContractCall</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/XTZAmount.html">XTZAmount</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">containsAllOperationTransactions</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">],</span> <span class="nv">ignoreReveal</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV017containsAnUnknownD010operationsSbSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/containsAnUnknownOperation(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV017containsAnUnknownD010operationsSbSayAA0D0CG_tFZ">containsAnUnknownOperation(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Check if the array is contains at least 1 OperationUnknown
+Useful in situations to display fallback UI for unknown cases</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">containsAnUnknownOperation</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV18totalTezAmountSent10operationsAA9XTZAmountCSayAA0D0CG_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/totalTezAmountSent(operations:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV18totalTezAmountSent10operationsAA9XTZAmountCSayAA0D0CG_tFZ">totalTezAmountSent(operations:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Run through list of operations and extract .amount from any OperationTransaction + balance from any OperationOrigination</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">totalTezAmountSent</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Classes/XTZAmount.html">XTZAmount</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV25isNonTransferContractCall9operationAA0D11TransactionCAG_SS10entrypointSS7addresstSgAA0D0C_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isNonTransferContractCall(operation:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV25isNonTransferContractCall9operationAA0D11TransactionCAG_SS10entrypointSS7addresstSgAA0D0C_tFZ">isNonTransferContractCall(operation:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Check if the operation is a contract call, but ignore entrypoint trasnfer
+Useful for situations where you want to display different info about contract calls such as claim or mint, compared to transferring a token
+Return the entrypoint and contract address if so</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isNonTransferContractCall</span><span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">,</span> <span class="nv">entrypoint</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV14isContractCall9operationAA0D11TransactionCAG_SS10entrypointSS7addresstSgAA0D0C_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/isContractCall(operation:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16OperationFactoryC9ExtractorV14isContractCall9operationAA0D11TransactionCAG_SS10entrypointSS7addresstSgAA0D0C_tFZ">isContractCall(operation:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Check if the operation is a contract call, return the entrypoint and address if so, nil if not</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">isContractCall</span><span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/Operation.html">Operation</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt"><a href="../../Classes/OperationTransaction.html">OperationTransaction</a></span><span class="p">,</span> <span class="nv">entrypoint</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)?</span></code></pre>
 
                         </div>
                       </div>
@@ -952,8 +1343,8 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-12-04)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-05)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>
