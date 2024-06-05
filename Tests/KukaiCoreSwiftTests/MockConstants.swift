@@ -124,7 +124,7 @@ public struct MockConstants {
 		var tzktLastBakerRewardURL3 = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktLastBakerRewardURL3.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL3.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
+		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
 		
 		var tzktDelegatesURL = tzktURL.appendingPathComponent("v1/delegates")
 		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")

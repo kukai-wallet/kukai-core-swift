@@ -379,15 +379,15 @@ class TzKTClientTests: XCTestCase {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.197861", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.05", rewards.estimatedPreviousReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "516", rewards.estimatedPreviousReward?.cycle.description ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Bake Nug", rewards.estimatedPreviousReward?.bakerAlias ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.5598", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "742", rewards.estimatedPreviousReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.034051", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.05", rewards.estimatedNextReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.cycle.description == "517", rewards.estimatedNextReward?.cycle.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Bake Nug", rewards.estimatedNextReward?.bakerAlias ?? "")
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.722042", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "743", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
 					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
 					
