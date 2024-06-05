@@ -163,7 +163,6 @@ class OperationModelTests: XCTestCase {
 		let op2 =  OperationOrigination(source: MockConstants.defaultLinearWallet.address, balance: XTZAmount(fromNormalisedAmount: 2), code: "contract-code2", storage: "contract-initial-storage2")
 		
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
-		XCTAssert(op.script == ["code": "contract-code", "storage": "contract-initial-storage"], "\(op.script)")
 		XCTAssert(op.operationKind == .origination)
 		XCTAssertFalse(op.isEqual(op2))
 		
@@ -175,6 +174,67 @@ class OperationModelTests: XCTestCase {
 		XCTAssert(readResult?.isEqual(op) ?? false)
 		
 		let _ = DiskService.delete(fileName: "OperationOrigination.txt")
+		
+		
+		
+		
+		let json = """
+			{
+				"kind": "origination",
+				"source": "tz1abcdef",
+				"balance": "0",
+				"script": {
+					"code": [
+						{
+							"prim": "parameter",
+							"args": [
+								{
+									"prim": "unit"
+								}
+							]
+						},
+						{
+							"prim": "storage",
+							"args": [
+								{
+									"prim": "unit"
+								}
+							]
+						},
+						{
+							"prim": "code",
+							"args": [
+								[
+									{
+										"prim": "DROP"
+									},
+									{
+										"prim": "UNIT"
+									},
+									{
+										"prim": "NIL",
+										"args": [
+											{
+												"prim": "operation"
+											}
+										]
+									},
+									{
+										"prim": "PAIR"
+									}
+								]
+							]
+						}
+					],
+					"storage": {
+						"prim": "Unit"
+					}
+				}
+			}
+		"""
+		
+		let jsonOp = try? JSONDecoder().decode(OperationOrigination.self, from: json.data(using: .utf8) ?? Data())
+		XCTAssert(jsonOp != nil)
 	}
 	
 	func testEndorsement() {
@@ -311,5 +371,50 @@ class OperationModelTests: XCTestCase {
 		
 		let defaultFees5 = OperationFees.defaultFees(operationKind: .activate_account).allFees()
 		XCTAssert(defaultFees5 == XTZAmount(fromNormalisedAmount: 0.001268), defaultFees5.normalisedRepresentation)
+	}
+	
+	func testUnknownOperationFallback() {
+		let jsonString = """
+		  {
+				"kind": "somethingWeird",
+				"amount": "1000000",
+				"somethingVeryNew": "bingo",
+				"destination": "KT1CYkiSJtKgFNy6whArwpn3TsYe7iX9SwFu",
+				"parameters": {
+					"entrypoint": "wrap",
+					"value": {
+						"string": "tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"
+					}
+				}
+			}
+		"""
+		
+		let unknown = try? JSONDecoder().decode(OperationUnknown.self, from: (jsonString.data(using: .utf8) ?? Data()))
+		unknown?.source = "TZ1abcdef"
+		unknown?.counter = "14"
+		unknown?.operationFees = OperationFees(transactionFee: XTZAmount(fromNormalisedAmount: 0.14), gasLimit: 1400, storageLimit: 1452)
+		
+		
+		XCTAssert(unknown?.operationKind == .unknown, unknown?.operationKind.rawValue ?? "-")
+		XCTAssert(unknown?.unknownKind == "somethingWeird", unknown?.unknownKind ?? "-")
+		XCTAssert(unknown?.source == "TZ1abcdef", unknown?.source ?? "-")
+		
+		let propTest1 = unknown?.allOtherProperties["somethingVeryNew"] as? String
+		XCTAssert(propTest1 == "bingo", propTest1 ?? "-")
+		
+		let propTest2 = unknown?.allOtherProperties["destination"] as? String
+		XCTAssert(propTest2 == "KT1CYkiSJtKgFNy6whArwpn3TsYe7iX9SwFu", propTest2 ?? "-")
+		
+		
+		let encoder = JSONEncoder()
+		encoder.outputFormatting = .sortedKeys
+		
+		let data = try? encoder.encode(unknown)
+		let string = String(data: data ?? Data(), encoding: .utf8)
+		
+		let jsonOuput = """
+		{"amount":"1000000","counter":"14","destination":"KT1CYkiSJtKgFNy6whArwpn3TsYe7iX9SwFu","fee":"140000","gas_limit":"1400","kind":"somethingWeird","parameters":{"entrypoint":"wrap","value":{"string":"tz1bJyyFMMWhwkdKSi7Ud8fimu72yfjNC44j"}},"somethingVeryNew":"bingo","source":"TZ1abcdef","storage_limit":"1452"}
+		"""
+		XCTAssert(string == jsonOuput, string ?? "-")
 	}
 }

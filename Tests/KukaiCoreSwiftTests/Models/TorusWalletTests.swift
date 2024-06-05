@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import KukaiCoreSwift
+@testable import CustomAuth
 
 class TorusWalletTests: XCTestCase {
 

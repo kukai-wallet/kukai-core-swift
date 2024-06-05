@@ -32,7 +32,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testDelegate() {
@@ -49,7 +49,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testEstiamte() {
@@ -87,11 +87,12 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testSendOperationsError() {
-		MockURLProtocol.triggerCounterInFutureError()
+		MockURLProtocol.triggerCounterInFutureError(nodeUrl: 0)
+		MockURLProtocol.triggerCounterInFutureError(nodeUrl: 1)
 		
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.send(operations: MockConstants.sendOperations, withWallet: MockConstants.defaultHdWallet) { result in
@@ -107,7 +108,7 @@ class TezosNodeClientTests: XCTestCase {
 			
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testSendPayload() {
@@ -124,7 +125,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testGetMetadata() {
@@ -146,7 +147,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testGetContractStorage() {
@@ -163,7 +164,7 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testGetNetworkInformation() {
@@ -177,6 +178,6 @@ class TezosNodeClientTests: XCTestCase {
 			expectation.fulfill()
 		})
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 }

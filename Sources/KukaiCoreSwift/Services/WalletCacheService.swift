@@ -15,7 +15,7 @@ import os.log
 
 
 /// Error types that can be returned from `WalletCacheService`
-enum WalletCacheError: Error {
+public enum WalletCacheError: String, Error {
 	case unableToAccessEnclaveOrKeychain
 	case unableToCreatePrivateKey
 	case unableToDeleteKey
@@ -24,6 +24,9 @@ enum WalletCacheError: Error {
 	case unableToEncrypt
 	case noPrivateKeyFound
 	case unableToDecrypt
+	case walletAlreadyExists
+	case requestedIndexTooHigh
+	case unableToEncryptAndWrite
 }
 
 
@@ -44,7 +47,7 @@ public class WalletCacheService {
 	fileprivate var privateKey: SecKey?
 	
 	/// The algorithm used by the enclave or keychain
-	fileprivate static var encryptionAlgorithm = SecKeyAlgorithm.eciesEncryptionCofactorX963SHA256AESGCM
+	fileprivate static var encryptionAlgorithm = SecKeyAlgorithm.eciesEncryptionCofactorVariableIVX963SHA256AESGCM
 	
 	/// The application key used to identify the encryption keys
 	fileprivate static let applicationKey = "app.kukai.kukai-core-swift.walletcache.encryption"
@@ -82,15 +85,15 @@ public class WalletCacheService {
 	 - Parameter childOfIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
-	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) -> Bool {
-		guard let existingWallets = readWalletsFromDiskAndDecrypt(), existingWallets[wallet.address] == nil else {
+	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) throws {
+		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
 			Logger.walletCache.error("cache - Unable to cache wallet, as can't decrypt existing wallets")
-			return false
+			throw WalletCacheError.unableToDecrypt
 		}
 		
 		guard existingWallets[wallet.address] == nil else {
-			Logger.walletCache.error("cache - Unable to cache wallet, as wallet has no address")
-			return false
+			Logger.walletCache.error("cache - Unable to cache wallet, walelt already exists")
+			throw WalletCacheError.walletAlreadyExists
 		}
 		
 		var newWallets = existingWallets
@@ -100,7 +103,7 @@ public class WalletCacheService {
 		if let index = childOfIndex {
 			if index >= newMetadata.hdWallets.count {
 				Logger.walletCache.error("WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"\(index)\", when there are currently only \"\(newMetadata.hdWallets.count)\" items")
-				return false
+				throw WalletCacheError.requestedIndexTooHigh
 			}
 			
 			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
@@ -120,7 +123,7 @@ public class WalletCacheService {
 			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
-			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUserId ?? torusWallet.socialUsername, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
+			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUsername, socialUserId: torusWallet.socialUserId, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else if let _ = wallet as? LedgerWallet {
 			newMetadata.ledgerWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
@@ -129,16 +132,27 @@ public class WalletCacheService {
 			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 		}
 		
-		return encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata)
+		
+		if encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata) == false {
+			throw WalletCacheError.unableToEncryptAndWrite
+		}
 	}
 	/**
 	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
 	 */
-	public func cacheWatchWallet(metadata: WalletMetadata) -> Bool {
+	public func cacheWatchWallet(metadata: WalletMetadata) throws {
 		var list = readMetadataFromDiskAndDecrypt()
+		
+		if let _ = list.watchWallets.first(where: { $0.address == metadata.address }) {
+			Logger.walletCache.error("cacheWatchWallet - Unable to cache wallet, walelt already exists")
+			throw WalletCacheError.walletAlreadyExists
+		}
+			
 		list.watchWallets.append(metadata)
 		
-		return encryptAndWriteMetadataToDisk(list)
+		if encryptAndWriteMetadataToDisk(list) == false {
+			throw WalletCacheError.unableToEncryptAndWrite
+		}
 	}
 	
 	/**
@@ -256,7 +270,7 @@ public class WalletCacheService {
 			var walletData: Data = Data()
 			for wallet in wallets.values {
 				switch wallet.type {
-					case .regular:
+					case .regular, .regularShifted:
 						if let walletObj = wallet as? RegularWallet {
 							walletData = try JSONEncoder().encode(walletObj)
 						}
@@ -337,7 +351,7 @@ public class WalletCacheService {
 				let jsonObjAsData = try JSONSerialization.data(withJSONObject: jsonObj, options: .fragmentsAllowed)
 				
 				switch type {
-					case .regular:
+					case .regular, .regularShifted:
 						let wallet = try JSONDecoder().decode(RegularWallet.self, from: jsonObjAsData)
 						wallets[wallet.address] = wallet
 						
@@ -566,7 +580,6 @@ extension WalletCacheService {
 		}
 		
 		return (public: mockPubKey, private: mockPrivKey)
-		
 	}
 	
 	/**

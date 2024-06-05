@@ -116,13 +116,13 @@ class OperationFactoryTests: XCTestCase {
 	
 	func testAllowance() {
 		let address = MockConstants.defaultHdWallet.address
-		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
+		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", tokenId: nil, spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
 		XCTAssert(op.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op.counter == "0")
 		XCTAssert(op.operationKind == .transaction)
 		XCTAssert(op is OperationTransaction)
 		
-		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
+		let op2 = OperationFactory.allowanceOperation(standard: .fa2, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", tokenId: "0", spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
 		XCTAssert(op2.source == MockConstants.defaultHdWallet.address)
 		XCTAssert(op2.counter == "0")
 		XCTAssert(op2.operationKind == .transaction)
@@ -169,7 +169,7 @@ class OperationFactoryTests: XCTestCase {
 	
 	func testXtzToToken() {
 		let address = MockConstants.defaultHdWallet.address
-		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
 		let op = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: XTZAmount(fromNormalisedAmount: 1.5), minTokenAmount: TokenAmount(fromNormalisedAmount: 1, decimalPlaces: 8), walletAddress: address, timeout: 30)
 		
@@ -197,6 +197,7 @@ class OperationFactoryTests: XCTestCase {
 		}
 	}
 	
+	/*
 	func testTokenToXTZ_LB() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
@@ -274,7 +275,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
+	/*
 	func testTokenToXTZ_QUIPU() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
@@ -348,7 +351,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
+	/*
 	func testAddLiquidity_LB() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
@@ -426,7 +431,9 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
+	/*
 	func testAddLiquidity_QUIPU() {
 		let address = MockConstants.defaultHdWallet.address
 		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa2)
@@ -496,10 +503,11 @@ class OperationFactoryTests: XCTestCase {
 			XCTFail("invalid op type")
 		}
 	}
+	*/
 	
 	func testRemoveLiquidity() {
 		let address = MockConstants.defaultHdWallet.address
-		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12)
+		let token = DipDupToken(symbol: "TEST", address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tokenId: 0, decimals: 0, standard: .fa12, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .lb, address: "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tezPool: "10000000000", tokenPool: "100000", sharesTotal: "1000", midPrice: "1", token: token)
 		let op = OperationFactory.removeLiquidity(withDex: dex, minXTZ: XTZAmount(fromNormalisedAmount: 1), minToken: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), liquidityToBurn: TokenAmount(fromNormalisedAmount: 1.5, decimalPlaces: 8), walletAddress: address, timeout: 30)
 		
@@ -532,71 +540,218 @@ class OperationFactoryTests: XCTestCase {
 	}
 	
 	func testExtractors() {
+		
 		let xtzOp = OperationFactory.sendOperation(MockConstants.xtz_1, of: MockConstants.tokenXTZ, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results1 = OperationFactory.Extractor.faTokenDetailsFrom(operations: xtzOp)
-		XCTAssert(results1 == nil)
-		
-		let isTezTransfer1 = OperationFactory.Extractor.isTezTransfer(operations: xtzOp)
-		XCTAssert(isTezTransfer1)
-		
-		
-		
 		let opFA1 = OperationFactory.sendOperation(MockConstants.token3Decimals_1, of: MockConstants.token3Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results2 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opFA1)
-		XCTAssert(results2 != nil)
-		XCTAssert(results2?.tokenContract == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", results2?.tokenContract ?? "-")
-		XCTAssert(results2?.rpcAmount == "1000", results2?.rpcAmount ?? "-")
-		XCTAssert(results2?.tokenId == nil, results2?.tokenId?.description ?? "-")
-		
-		let isTezTransfer2 = OperationFactory.Extractor.isTezTransfer(operations: opFA1)
-		XCTAssert(!isTezTransfer2)
-		
-		let firstTrasnfer1 = OperationFactory.Extractor.firstTransferEntrypointOperation(operations: opFA1)
-		XCTAssert(firstTrasnfer1?.destination == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", firstTrasnfer1?.destination ?? "-")
-		
-		
-		
 		let opFA2 = OperationFactory.sendOperation(MockConstants.token10Decimals_1, of: MockConstants.token10Decimals, from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results3 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opFA2)
-		XCTAssert(results3 != nil)
-		XCTAssert(results3?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", results3?.tokenContract ?? "-")
-		XCTAssert(results3?.rpcAmount == "10000000000", results3?.rpcAmount ?? "-")
-		XCTAssert(results3?.tokenId == 0, results3?.tokenId?.description ?? "-")
-		
-		let isTezTransfer3 = OperationFactory.Extractor.isTezTransfer(operations: opFA2)
-		XCTAssert(!isTezTransfer3)
-		
-		let firstTrasnfer2 = OperationFactory.Extractor.firstTransferEntrypointOperation(operations: opFA2)
-		XCTAssert(firstTrasnfer2?.destination == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", firstTrasnfer2?.destination ?? "-")
-		
-		
-		
 		let opNFT = OperationFactory.sendOperation(1, ofNft: (MockConstants.tokenWithNFTs.nfts ?? [])[0], from: MockConstants.defaultHdWallet.address, to: MockConstants.defaultLinearWallet.address)
-		let results4 = OperationFactory.Extractor.faTokenDetailsFrom(operations: opNFT)
-		XCTAssert(results4 != nil)
-		XCTAssert(results4?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", results4?.tokenContract ?? "-")
-		XCTAssert(results4?.rpcAmount == "1", results4?.rpcAmount ?? "-")
-		XCTAssert(results4?.tokenId == 4, results4?.tokenId?.description ?? "-")
 		
-		
-		
-		let dexToken = DipDupToken(symbol: "BLAH", address: "KT1def", tokenId: 123, decimals: 3, standard: .fa2)
+		let dexToken = DipDupToken(symbol: "BLAH", address: "KT1def", tokenId: 123, decimals: 3, standard: .fa2, thumbnailUri: nil)
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1abc", tezPool: "100000000000", tokenPool: "1000000000", sharesTotal: "100000", midPrice: "14", token: dexToken)
 		let swap = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: .init(fromNormalisedAmount: 14), minTokenAmount: .init(fromNormalisedAmount: 2, decimalPlaces: 3), walletAddress: "tz1abc", timeout: 60)
-		
-		let isContract = OperationFactory.Extractor.isContractCall(operations: swap)
-		XCTAssert(isContract?.entrypoint == "tezToTokenPayment", isContract?.entrypoint ?? "-")
-		XCTAssert(isContract?.address == "KT1abc", isContract?.address ?? "-")
-		
-		let firstContractOp = OperationFactory.Extractor.firstContractCallOperation(operations: swap)
-		XCTAssert(firstContractOp?.destination == "KT1abc", firstContractOp?.destination ?? "-")
+		let delegate = OperationFactory.delegateOperation(to: "KT1abc", from: MockConstants.defaultHdWallet.address)
 		
 		
-		var xtzOpsCopy = xtzOp
-		xtzOpsCopy.append(contentsOf: xtzOp)
+		// is single transctions
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: xtzOp) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: opFA1) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: opFA2) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: opNFT) != nil )
+		XCTAssert( OperationFactory.Extractor.isSingleTransaction(operations: MockConstants.sendOperationWithReveal) != nil )
 		
-		let totalXTZ = OperationFactory.Extractor.totalXTZAmountForContractCall(operations: xtzOpsCopy)
-		XCTAssert(totalXTZ.description == "2", totalXTZ.description)
 		
+		// Is Tez transfer
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: xtzOp) != nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opFA1) == nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opFA2) == nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: opNFT) == nil )
+		XCTAssert( OperationFactory.Extractor.isTezTransfer(operations: MockConstants.sendOperationWithReveal) != nil )
+		
+		
+		// Is Delegate
+		XCTAssert( OperationFactory.Extractor.isDelegate(operations: delegate) != nil )
+		XCTAssert( OperationFactory.Extractor.isDelegate(operations: opFA1) == nil )
+		
+		
+		// is token transfer
+		XCTAssert( OperationFactory.Extractor.isFaTokenTransfer(operations: xtzOp) == nil )
+		
+		let fa1Results = OperationFactory.Extractor.isFaTokenTransfer(operations: opFA1)
+		XCTAssert(fa1Results?.tokenContract == "KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8", fa1Results?.tokenContract ?? "-")
+		XCTAssert(fa1Results?.rpcAmount == "1000", fa1Results?.rpcAmount ?? "-")
+		XCTAssert(fa1Results?.tokenId == nil, fa1Results?.tokenId?.description ?? "-")
+		
+		let fa2Results = OperationFactory.Extractor.isFaTokenTransfer(operations: opFA2)
+		XCTAssert(fa2Results?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtar8nn9", fa2Results?.tokenContract ?? "-")
+		XCTAssert(fa2Results?.rpcAmount == "10000000000", fa2Results?.rpcAmount ?? "-")
+		XCTAssert(fa2Results?.tokenId == 0, fa2Results?.tokenId?.description ?? "-")
+		
+		let nftResults = OperationFactory.Extractor.isFaTokenTransfer(operations: opNFT)
+		XCTAssert(nftResults?.tokenContract == "KT1G1cCRNBgQ48mVDjopHjEmTN5Sbtabc123", nftResults?.tokenContract ?? "-")
+		XCTAssert(nftResults?.rpcAmount == "1", nftResults?.rpcAmount ?? "-")
+		XCTAssert(nftResults?.tokenId == 4, nftResults?.tokenId?.description ?? "-")
+		
+		XCTAssert( OperationFactory.Extractor.isFaTokenTransfer(operations: MockConstants.sendOperationWithReveal) == nil )
+		
+		
+		// contains all operationTransaction
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: xtzOp) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: opFA1) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: opFA2) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: opNFT) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: MockConstants.sendOperationWithReveal, ignoreReveal: true) )
+		XCTAssert( OperationFactory.Extractor.containsAllOperationTransactions(operations: MockConstants.sendOperationWithReveal, ignoreReveal: false) == false )
+		
+		
+		// is contract
+		XCTAssert( OperationFactory.Extractor.isContractCall(operation: xtzOp[0]) == nil )
+		
+		let contractDetails1 = OperationFactory.Extractor.isContractCall(operation: swap[0])
+		XCTAssert(contractDetails1?.address == "KT1abc", contractDetails1?.address ?? "-")
+		XCTAssert(contractDetails1?.entrypoint == "tezToTokenPayment", contractDetails1?.entrypoint ?? "-")
+		
+		
+		// is contract not transfer
+		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: opFA1[0]) == nil )
+		
+		let contractDetails2 = OperationFactory.Extractor.isNonTransferContractCall(operation: swap[0])
+		XCTAssert(contractDetails2?.address == "KT1abc", contractDetails2?.address ?? "-")
+		XCTAssert(contractDetails2?.entrypoint == "tezToTokenPayment", contractDetails2?.entrypoint ?? "-")
+		
+		
+		// is single contract
+		XCTAssert( OperationFactory.Extractor.isNonTransferContractCall(operation: opFA1[0]) == nil )
+		
+		let contractDetails3 = OperationFactory.Extractor.isSingleContractCall(operations: swap)
+		XCTAssert(contractDetails3?.address == "KT1abc", contractDetails3?.address ?? "-")
+		XCTAssert(contractDetails3?.entrypoint == "tezToTokenPayment", contractDetails3?.entrypoint ?? "-")
+	}
+	
+	func testExtractors3RouteV3() {
+		let decoder = JSONDecoder()
+		
+		let fa1ForXTZData = MockConstants.jsonStub(fromFilename: "3route_v3_fa1-for-xtz")
+		let fa1ForXTZJson = (try? decoder.decode([OperationTransaction].self, from: fa1ForXTZData)) ?? []
+		XCTAssert(fa1ForXTZJson.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: fa1ForXTZJson)
+		XCTAssert(details1?.tokenContract == "KT1JVjgXPMMSaa6FkzeJcgb8q9cUaLmwaJUX", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "6605336839045864425", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz", details1?.destination ?? "-")
+		
+		
+		let fa2ForXTZData = MockConstants.jsonStub(fromFilename: "3route_v3_fa2-for-xtz")
+		let fa2ForXTZJson = (try? decoder.decode([OperationTransaction].self, from: fa2ForXTZData)) ?? []
+		XCTAssert(fa2ForXTZJson.count > 0)
+		
+		let details2 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: fa2ForXTZJson)
+		XCTAssert(details2?.tokenContract == "KT1914CUZ7EegAFPbfgQMRkw8Uz5mYkEz2ui", details2?.tokenContract ?? "-")
+		XCTAssert(details2?.rpcAmount == "47557742041756", details2?.rpcAmount ?? "-")
+		XCTAssert(details2?.tokenId == 0, details2?.tokenId?.description ?? "-")
+		XCTAssert(details2?.destination == "KT1R7WEtNNim3YgkxPt8wPMczjH3eyhbJMtz", details2?.destination ?? "-")
+	}
+	
+	func testExtractors3RouteV4() {
+		let decoder = JSONDecoder()
+		
+		let singleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route_v4_single-route")
+		let singleRouteJson = (try? decoder.decode([OperationTransaction].self, from: singleRouteJsonData)) ?? []
+		XCTAssert(singleRouteJson.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: singleRouteJson)
+		XCTAssert(details1?.tokenContract == "KT1ErKVqEhG9jxXgUG2KGLW3bNM7zXHX8SDF", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "100000000000", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == 3, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details1?.destination ?? "-")
+		
+		
+		let multipleRouteJsonData = MockConstants.jsonStub(fromFilename: "3route_v4_multiple-routes")
+		let multipleRouteJson = (try? decoder.decode([OperationTransaction].self, from: multipleRouteJsonData)) ?? []
+		XCTAssert(multipleRouteJson.count > 0)
+		
+		let details2 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: multipleRouteJson)
+		XCTAssert(details2?.tokenContract == "KT1914CUZ7EegAFPbfgQMRkw8Uz5mYkEz2ui", details2?.tokenContract ?? "-")
+		XCTAssert(details2?.rpcAmount == "65639920011", details2?.rpcAmount ?? "-")
+		XCTAssert(details2?.tokenId == 0, details2?.tokenId?.description ?? "-")
+		XCTAssert(details2?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details2?.destination ?? "-")
+		
+		
+		let fa1ForFa2Data = MockConstants.jsonStub(fromFilename: "3route_v4_fa1-for-fa2")
+		let fa1ForFa2Json = (try? decoder.decode([OperationTransaction].self, from: fa1ForFa2Data)) ?? []
+		XCTAssert(fa1ForFa2Json.count > 0)
+		
+		let details3 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: fa1ForFa2Json)
+		XCTAssert(details3?.tokenContract == "KT1Ha4yFVeyzw6KRAdkzq6TxDHB97KG4pZe8", details3?.tokenContract ?? "-")
+		XCTAssert(details3?.rpcAmount == "400000", details3?.rpcAmount ?? "-")
+		XCTAssert(details3?.tokenId == nil, details3?.tokenId?.description ?? "-")
+		XCTAssert(details3?.destination == "KT1V5XKmeypanMS9pR65REpqmVejWBZURuuT", details3?.destination ?? "-")
+	}
+	
+	func testExtractorsCrunchyStake() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "crunchy-stake")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1UQVEDf4twF2eMbrCKQAxN7YYunTAiCTTm", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "1146068835831283", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == 0, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1L1WZgdsfjEyP5T4ZCYVvN5vgzrNbu18kX", details1?.destination ?? "-")
+	}
+	
+	func testExtractorsObjktOffer() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "objkt-offer-fa1")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "478000", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT1Xjap1TwmDR1d8yEd8ErkraAj2mbdMrPZY", details1?.destination ?? "-")
+	}
+	
+	func testExtractorsObjktBid() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "objkt-bid")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1TjnZYs5CGLbmV6yuW169P8Pnr9BiVwwjz", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "201000000", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
+	}
+	
+	func testExtractorsObjktBidWithWrap() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "objkt-bid-with-wrap")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.firstNonZeroTokenTransferAmount(operations: jsonOperations)
+		XCTAssert(details1?.tokenContract == "KT1TjnZYs5CGLbmV6yuW169P8Pnr9BiVwwjz", details1?.tokenContract ?? "-")
+		XCTAssert(details1?.rpcAmount == "201000000", details1?.rpcAmount ?? "-")
+		XCTAssert(details1?.tokenId == nil, details1?.tokenId?.description ?? "-")
+		XCTAssert(details1?.destination == "KT18iSHoRW1iogamADWwQSDoZa3QkN4izkqj", details1?.destination ?? "-")
+	}
+	
+	func testExtractorsMultiSendInListParam() {
+		let decoder = JSONDecoder()
+		
+		let jsonData = MockConstants.jsonStub(fromFilename: "operation-factory-extractor-multiple-send-in-param")
+		let jsonOperations = (try? decoder.decode([OperationTransaction].self, from: jsonData)) ?? []
+		XCTAssert(jsonOperations.count > 0)
+		
+		let details1 = OperationFactory.Extractor.isFaTokenTransfer(operations: jsonOperations) // operation is multiple sends in a single michelson param, for now, thats not supported as a "send"
+		XCTAssert(details1 == nil)
 	}
 }

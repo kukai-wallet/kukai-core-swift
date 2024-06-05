@@ -75,6 +75,16 @@ public struct WalletMetadataList: Codable, Hashable {
 		return nil
 	}
 	
+	public func parentMetadata(forChildAddress address: String) -> WalletMetadata? {
+		for metadata in hdWallets {
+			for childMetadata in metadata.children {
+				if childMetadata.address == address { return metadata }
+			}
+		}
+		
+		return nil
+	}
+	
 	public mutating func update(address: String, with newMetadata: WalletMetadata) -> Bool {
 		for (index, metadata) in socialWallets.enumerated() {
 			if metadata.address == address { socialWallets[index] = newMetadata; return true }
@@ -226,6 +236,7 @@ public struct WalletMetadata: Codable, Hashable {
 	public var hdWalletGroupName: String?
 	public var walletNickname: String?
 	public var socialUsername: String?
+	public var socialUserId: String?
 	public var mainnetDomains: [TezosDomainsReverseRecord]?
 	public var ghostnetDomains: [TezosDomainsReverseRecord]?
 	public var socialType: TorusAuthProvider?
@@ -276,11 +287,12 @@ public struct WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
+	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
 		self.address = address
 		self.hdWalletGroupName = hdWalletGroupName
 		self.walletNickname = walletNickname
 		self.socialUsername = socialUsername
+		self.socialUserId = socialUserId
 		self.mainnetDomains = mainnetDomains
 		self.ghostnetDomains = ghostnetDomains
 		self.socialType = socialType
@@ -293,10 +305,14 @@ public struct WalletMetadata: Codable, Hashable {
 	}
 	
 	public static func == (lhs: WalletMetadata, rhs: WalletMetadata) -> Bool {
-		return lhs.address == rhs.address
+		return lhs.address == rhs.address &&
+			lhs.isChild == rhs.isChild &&
+			lhs.isWatchOnly == rhs.isWatchOnly
 	}
 	
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)
+		hasher.combine(isChild)
+		hasher.combine(isWatchOnly)
 	}
 }

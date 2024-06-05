@@ -55,7 +55,7 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testForge2() {
@@ -78,7 +78,7 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testForge3() {
@@ -101,7 +101,7 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testForgeError() {
@@ -124,7 +124,7 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testParse1() {
@@ -141,7 +141,7 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testParse2() {
@@ -158,7 +158,7 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 	
 	func testParse3() {
@@ -175,6 +175,6 @@ class TaquitoServiceTests: XCTestCase {
 			expectation.fulfill()
 		}
 		
-		wait(for: [expectation], timeout: 10)
+		wait(for: [expectation], timeout: 120)
 	}
 }

@@ -9,7 +9,6 @@
 import Foundation
 import SignalRClient
 import Combine
-import Kingfisher
 import os.log
 
 
@@ -298,7 +297,7 @@ public class TzKTClient {
 					alias = config.name
 					avatarURL = TzKTClient.avatarURL(forToken: config.address)
 					fee = config.fee
-					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - (config.payoutDelay - 1))
 					
 				}
 				// If the tx came from a known payout address, match it to the baker address and grab the config
@@ -308,7 +307,7 @@ public class TzKTClient {
 							alias = config.name
 							avatarURL = TzKTClient.avatarURL(forToken: config.address)
 							fee = config.fee
-							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - (config.payoutDelay - 1))
 						}
 					}
 				}
@@ -355,6 +354,21 @@ public class TzKTClient {
 					return
 				}
 			}
+			// Inactive baker, display next reward as zero
+			else if previousRewardIndex == 0 {
+				let futureCycle = currentCycles.first
+				let futureReward = RewardDetails(bakerAlias: pReward?.bakerAlias,
+												 bakerLogo: pReward?.bakerLogo,
+												 paymentAddress: pReward?.paymentAddress ?? configToUse.address,
+												 amount: .zero(),
+												 cycle: futureCycle?.index ?? 0,
+												 fee: 0,
+												 date: futureCycle?.endDate ?? Date(),
+												 meetsMinDelegation: pReward?.meetsMinDelegation ?? true)
+				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: futureReward))) }
+				return
+			}
+			
 			
 			let lastCompleteCycle = currentCycles[TzKTClient.numberOfFutureCyclesReturned + 1]
 			estimatedPreviousReward = self?.rewardDetail(fromConfig: configToUse, rewards: currentDelegatorRewards, cycles: currentCycles, selectedIndex: previousRewardIndex, dateForDisplay: lastCompleteCycle.endDate ?? Date())
@@ -570,8 +584,8 @@ public class TzKTClient {
 		}
 		
 		if let last = cycles.last, last.firstLevel > level {
-			// Level is in the past, return last cycle we have
-			return last
+			// Level is in the past, return nil so we don't display invalid data
+			return nil
 			
 		} else if let first = cycles.first, first.lastLevel < level {
 			// Delegation level is in the future, return nil
@@ -628,7 +642,7 @@ public class TzKTClient {
 		isListening = true
 		
 		var url = config.tzktURL
-		url.appendPathComponent("v1/events")
+		url.appendPathComponent("v1/ws")
 		
 		if withDebugging {
 			signalrConnection = HubConnectionBuilder(url: url).withLogging(minLogLevel: .debug).build()
@@ -655,7 +669,6 @@ public class TzKTClient {
 				Logger.tzkt.error("Failed to parse incoming websocket data: \(error)")
 				self?.signalrConnection?.stop()
 				self?.isListening = false
-				//completion(false, error, KukaiError.internalApplicationError(error: error))
 			}
 		})
 		signalrConnection?.delegate = self
@@ -726,9 +739,14 @@ public class TzKTClient {
 	 - parameter forAddress: The tz address to search for
 	 - parameter completion: The completion block called with a `Result` containing an object or an error
 	 */
-	public func getAccount(forAddress: String, completion: @escaping ((Result<TzKTAccount, KukaiError>) -> Void)) {
-		var url = config.tzktURL
-		url.appendPathComponent("v1/accounts/\(forAddress)")
+	public func getAccount(forAddress: String, fromURL: URL? = nil, completion: @escaping ((Result<TzKTAccount, KukaiError>) -> Void)) {
+		var url = fromURL == nil ? config.tzktURL : fromURL
+		url?.appendPathComponent("v1/accounts/\(forAddress)")
+		
+		guard let url = url else {
+			completion(Result.failure(KukaiError.unknown()))
+			return
+		}
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: TzKTAccount.self) { (result) in
 			completion(result)
@@ -763,13 +781,13 @@ public class TzKTClient {
 		
 		var tzktAccount = TzKTAccount(balance: 0, type: "user", address: "", publicKey: "", revealed: false, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0, activeTokensCount: 0, tokenBalancesCount: 0)
 		var tokenBalances: [TzKTBalance] = []
-		var liquidityTokens: [DipDupPositionData] = []
+		//var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
 		var groupedData: (tokens: [Token], nftGroups: [Token], recentNFTs: [NFT]) = (tokens: [], nftGroups: [], recentNFTs: [])
 		
 		
 		dispatchGroup.enter()
-		dispatchGroup.enter()
+		//dispatchGroup.enter()
 		
 		// Get XTZ balance from TzKT Account
 		self.getAccount(forAddress: address) { result in
@@ -783,7 +801,8 @@ public class TzKTClient {
 			dispatchGroup.leave()
 		}
 		
-		
+		// TODO: DeFi functionality currently disabled
+		/*
 		// Get Liquidity Tokens from DipDup
 		self.dipDupClient.getLiquidityFor(address: address) { result in
 			switch result {
@@ -795,6 +814,7 @@ public class TzKTClient {
 			}
 			dispatchGroup.leave()
 		}
+		*/
 		
 		
 		// Cycle through the number of token balance requests needed to be performed (likely just 1)
@@ -821,8 +841,8 @@ public class TzKTClient {
 				completion(Result.failure(err))
 				
 			} else {
-				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: liquidityTokens) ?? (tokens: [], nftGroups: [], recentNFTs: [])
-				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: liquidityTokens, delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
+				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: []) ?? (tokens: [], nftGroups: [], recentNFTs: [])
+				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
 				
 				completion(Result.success(account))
 			}
@@ -839,6 +859,8 @@ public class TzKTClient {
 		
 		for balance in balances {
 			
+			// TODO: temporarily remove, as we currently are not supporting differentiating Liquidity tokens. Will be re added later
+			/*
 			// Check if balance is a liquidityToken and ignore it
 			// Liquidity baking is a standalone contract address. Hardcoding address for now, revisit how to query if it ever migrates to another token
 			if balance.token.contract.address == "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo" {
@@ -849,7 +871,7 @@ public class TzKTClient {
 			if liquidityTokens.contains(where: { $0.exchange.address == balance.token.contract.address }) {
 				continue
 			}
-			
+			*/
 			
 			// If its an NFT, hold onto for later
 			if balance.isNFT() && balance.token.malformedMetadata == false {
@@ -1011,8 +1033,9 @@ public class TzKTClient {
 				}
 			}
 		}
-		self.tempTokenTransfers.remove(atOffsets: IndexSet(transfersToRemove))
-		self.tempTransactions.remove(atOffsets: IndexSet(transactionsToRemove))
+		
+		let _ = self.tempTokenTransfers.remove(elementsAtIndices: transfersToRemove)
+		let _ = self.tempTransactions.remove(elementsAtIndices: transactionsToRemove)
 		
 		for leftOverTransfer in self.tempTokenTransfers {
 			self.tempTransactions.append( TzKTTransaction(from: leftOverTransfer) )
@@ -1076,7 +1099,7 @@ public class TzKTClient {
 			}
 		}
 		
-		tempTrans.remove(atOffsets: IndexSet(indexesToRemove))
+		let _ = tempTrans.remove(elementsAtIndices: indexesToRemove)
 		if let group = TzKTTransactionGroup(withTransactions: tempTrans, currentWalletAddress: currentWalletAddress) {
 			tempGroups.append(group)
 		}
@@ -1096,14 +1119,17 @@ extension TzKTClient: HubConnectionDelegate {
 			if let error = error {
 				Logger.tzkt.error("Subscribe to account changes failed: \(error)")
 				self?.signalrConnection?.stop()
+				self?.isListening = false
 			} else {
 				Logger.tzkt.info("Subscribe to account changes succeeded, waiting for objects")
+				self?.isListening = true
 			}
 		}
 	}
 	
 	public func connectionDidClose(error: Error?) {
 		Logger.tzkt.error("SignalR connection closed: \(error)")
+		isListening = false
 		
 		if newAddressesToWatch.count > 0 {
 			self.listenForAccountChanges(addresses: newAddressesToWatch)
@@ -1113,5 +1139,6 @@ extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidFailToOpen(error: Error) {
 		Logger.tzkt.error("Failed to open SignalR connection to listen for changes: \(error)")
+		isListening = false
 	}
 }

@@ -65,6 +65,8 @@ public class DipDupClient {
 				symbol,
 				address,
 				tokenId,
+				decimals,
+				thumbnailUri,
 				exchanges(where: {name: {_in: ["lb", "quipuswap"]}}) {
 					name,
 					tezPool,
@@ -77,7 +79,8 @@ public class DipDupClient {
 						decimals,
 						symbol,
 						tokenId,
-						standard
+						standard,
+						thumbnailUri
 					}
 				}
 			}

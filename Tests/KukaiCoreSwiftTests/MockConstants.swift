@@ -45,7 +45,8 @@ public struct MockConstants {
 		mockURLSession = URLSession(configuration: sessionConfig)
 		
 		// Setup URL mocks
-		let baseURL = config.primaryNodeURL
+		let baseURL = config.nodeURLs[0]
+		let secondBaseURL = config.nodeURLs[1]
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
 		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
@@ -125,6 +126,12 @@ public struct MockConstants {
 		tzktDelegatesURL.appendQueryItem(name: "sort.desc", value: "stakingBalance")
 		tzktDelegatesURL.appendQueryItem(name: "limit", value: 10)
 		
+		var simulateURL1 = baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		simulateURL1.appendQueryItem(name: "version", value: "0")
+		
+		var simulateURL2 = secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		simulateURL2.appendQueryItem(name: "version", value: "0")
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -137,9 +144,11 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head~3"): (MockConstants.jsonStub(fromFilename: "head"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
+			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation"): (MockConstants.jsonStub(fromFilename: "run_operation"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations"): (MockConstants.jsonStub(fromFilename: "forge"), MockConstants.http200),
 			// Parse is handled inside MockURLProtocol due to its special requirements
 			baseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
+			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
 			baseURL.appendingPathComponent("injection/operation"): (MockConstants.jsonStub(fromFilename: "inject"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/balance"): (MockConstants.jsonStub(fromFilename: "balance"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/delegate"): (MockConstants.jsonStub(fromFilename: "delegate"), MockConstants.http200),
@@ -220,6 +229,22 @@ public struct MockConstants {
 				(MockConstants.jsonStub(fromFilename: "objkt_collections_response_2"), MockConstants.http200),
 			MockPostUrlKey(url: URL(string: "https://data.objkt.com/v3/graphql")!, requestData: MockConstants.jsonStub(fromFilename: "objkt_token_request")):
 				(MockConstants.jsonStub(fromFilename: "objkt_token_response"), MockConstants.http200),
+			
+			
+			// simulate_operation
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request1")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request3")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL2, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-request2")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-response1"), MockConstants.http200),
+			
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-stake-response"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-response"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession
@@ -256,6 +281,7 @@ public struct MockConstants {
 	// MARK: - Wallets
 	
 	public static let mnemonic = try! Mnemonic(seedPhrase: "rigid obscure hurry scene eyebrow decide empty annual hunt cute also base")
+	public static let shiftedMnemonic = try! Mnemonic(seedPhrase: "laugh come news visit ceiling network rich outdoor license enjoy govern drastic slight close panic kingdom wash bring electric convince fiber relief cash siren")
 	public static let passphrase = "superSecurePassphrase"
 	public static let messageToSign = "something very interesting that needs to be signed"
 	
@@ -310,6 +336,12 @@ public struct MockConstants {
 		public static let privateKey = "efa21dab1ddaf1a6f78cbe7e131bd10209ece4ae0642ac78f9532dbe216a0d39bc1287467d20ea180ee01734ada519322bcb8e60b08c923547e67d8f7a5bc14c"
 		public static let publicKey = "bc1287467d20ea180ee01734ada519322bcb8e60b08c923547e67d8f7a5bc14c"
 		public static let derivationPath = "m/44'/1729'/0'/1'"
+	}
+	
+	public struct shiftedWallet {
+		public static let address = "tz2HpbGQcmU3UyusJ78Sbqeg9fYteamSMDGo"
+		public static let privateKey = "7d85c254fa624f29ae54e981295594212cba5767ebd5f763851d97c55b6a88d6"
+		public static let publicKey = "025b4cb98848c2288eda85a8083d07d595721e89d3694bd3fb2a4c497ceeac66ca"
 	}
 	
 	

@@ -586,7 +586,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				let components = apdu.components(separatedBy: " ")
 				for component in components {
 					if component != "" {
-						let data = (try? Data(hexString: component)) ?? Data()
+						let data = Data(hexString: component) ?? Data()
 						
 						Logger.ledger.info("sendAPDU - writing payload")
 						self.connectedDevice?.writeValue(data, for: writeCharacteristic, type: .withResponse)

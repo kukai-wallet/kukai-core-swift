@@ -34,6 +34,10 @@ public class OperationTransaction: Operation {
 		case investLiquidity
 		case divestLiquidity
 		case withdrawProfit
+		case execute 	// 3route
+		case deposit 	// crunchy - stake
+		case offer 		// OBJKT - make offer
+		case bid 		// OBJKT - bid on auction
 	}
 	
 	enum CodingKeys: String, CodingKey {
@@ -110,7 +114,7 @@ public class OperationTransaction: Operation {
 		
 		// encodeIfPresent still printing "parameters: null". Not sure if apple bug or mistake
 		if let params = parameters {
-			try container.encodeIfPresent(params, forKey: .parameters)
+			try container.encode(params, forKey: .parameters)
 		}
 		
 		try super.encode(to: encoder)

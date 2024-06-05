@@ -35,7 +35,7 @@ public class OperationDelegation: Operation {
 	*/
 	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		delegate = try container.decode(String.self, forKey: .delegate)
+		delegate = try container.decodeIfPresent(String.self, forKey: .delegate)
 		
 		try super.init(from: decoder)
 	}
@@ -47,7 +47,7 @@ public class OperationDelegation: Operation {
 	public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 		if let del = delegate {
-			try container.encode(del, forKey: .delegate)
+			try container.encodeIfPresent(del, forKey: .delegate)
 		}
 		
 		try super.encode(to: encoder)

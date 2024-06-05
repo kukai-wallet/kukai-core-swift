@@ -106,7 +106,7 @@ public class LedgerWallet: Wallet {
 	Function to convert the public key into a Base58 encoded string
 	*/
 	public func publicKeyBase58encoded() -> String {
-		let publicKeyData = (try? Data(hexString: publicKey)) ?? Data()
+		let publicKeyData = Data(hexString: publicKey) ?? Data()
 		return Base58Check.encode(message: publicKeyData.bytes, prefix: Prefix.Keys.Ed25519.public)
 	}
 }

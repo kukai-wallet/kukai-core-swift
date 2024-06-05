@@ -1,0 +1,538 @@
+[
+	{
+		"amount": "0",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"storage_limit": "350",
+		"parameters": {
+			"entrypoint": "update_operators",
+			"value": [
+				{
+					"prim": "Left",
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "156"
+										}
+									],
+									"prim": "Pair"
+								}
+							],
+							"prim": "Pair"
+						}
+					]
+				},
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "157"
+										}
+									]
+								}
+							]
+						}
+					],
+					"prim": "Left"
+				},
+				{
+					"prim": "Left",
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "158"
+										}
+									],
+									"prim": "Pair"
+								}
+							]
+						}
+					]
+				},
+				{
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "159"
+										}
+									]
+								}
+							],
+							"prim": "Pair"
+						}
+					],
+					"prim": "Left"
+				},
+				{
+					"prim": "Left",
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "160"
+										}
+									],
+									"prim": "Pair"
+								}
+							],
+							"prim": "Pair"
+						}
+					]
+				},
+				{
+					"prim": "Left",
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "161"
+										}
+									]
+								}
+							],
+							"prim": "Pair"
+						}
+					]
+				},
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "162"
+										}
+									]
+								}
+							]
+						}
+					],
+					"prim": "Left"
+				}
+			]
+		},
+		"fee": "0",
+		"counter": null,
+		"gas_limit": "16000",
+		"kind": "transaction",
+		"destination": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv"
+	},
+	{
+		"destination": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"counter": null,
+		"fee": "0",
+		"parameters": {
+			"value": {
+				"prim": "Pair",
+				"args": [
+					{
+						"string": "sigiNx86DL1pMLs5fakRRWhR1SH4MKuQJGM2E2FajcbyraXTNPhBmpQJVFW69tUPFG1VwZbdaVRWo6BhSVmdZk8xQqR3kbvR"
+					},
+					{
+						"prim": "Pair",
+						"args": [
+							{
+								"int": "0"
+							},
+							{
+								"prim": "Pair",
+								"args": [
+									{
+										"int": "505"
+									},
+									{
+										"prim": "Pair",
+										"args": [
+											[
+												{
+													"args": [
+														{
+															"string": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv"
+														},
+														[
+															{
+																"prim": "Pair",
+																"args": [
+																	{
+																		"int": "156"
+																	},
+																	{
+																		"int": "1"
+																	}
+																]
+															},
+															{
+																"args": [
+																	{
+																		"int": "157"
+																	},
+																	{
+																		"int": "1"
+																	}
+																],
+																"prim": "Pair"
+															},
+															{
+																"prim": "Pair",
+																"args": [
+																	{
+																		"int": "158"
+																	},
+																	{
+																		"int": "1"
+																	}
+																]
+															},
+															{
+																"args": [
+																	{
+																		"int": "159"
+																	},
+																	{
+																		"int": "1"
+																	}
+																],
+																"prim": "Pair"
+															},
+															{
+																"prim": "Pair",
+																"args": [
+																	{
+																		"int": "160"
+																	},
+																	{
+																		"int": "1"
+																	}
+																]
+															},
+															{
+																"prim": "Pair",
+																"args": [
+																	{
+																		"int": "161"
+																	},
+																	{
+																		"int": "1"
+																	}
+																]
+															},
+															{
+																"prim": "Pair",
+																"args": [
+																	{
+																		"int": "162"
+																	},
+																	{
+																		"int": "1"
+																	}
+																]
+															}
+														]
+													],
+													"prim": "Elt"
+												}
+											],
+											{
+												"args": [
+													[
+														{
+															"args": [
+																{
+																	"string": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv"
+																},
+																[]
+															],
+															"prim": "Elt"
+														}
+													],
+													[
+														{
+															"prim": "Elt",
+															"args": [
+																{
+																	"string": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv"
+																},
+																[
+																	{
+																		"prim": "Pair",
+																		"args": [
+																			{
+																				"int": "198"
+																			},
+																			{
+																				"int": "1"
+																			}
+																		]
+																	}
+																]
+															]
+														}
+													]
+												],
+												"prim": "Pair"
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			"entrypoint": "claim"
+		},
+		"gas_limit": "32000",
+		"storage_limit": "300",
+		"amount": "0",
+		"kind": "transaction"
+	},
+	{
+		"gas_limit": "12000",
+		"parameters": {
+			"value": [
+				{
+					"args": [
+						{
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "156"
+										}
+									],
+									"prim": "Pair"
+								}
+							],
+							"prim": "Pair"
+						}
+					],
+					"prim": "Right"
+				},
+				{
+					"prim": "Right",
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "157"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"prim": "Right",
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "158"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"prim": "Right",
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "159"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"prim": "Right",
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "160"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"prim": "Right",
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "161"
+										}
+									],
+									"prim": "Pair"
+								}
+							]
+						}
+					]
+				},
+				{
+					"args": [
+						{
+							"prim": "Pair",
+							"args": [
+								{
+									"string": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
+								},
+								{
+									"prim": "Pair",
+									"args": [
+										{
+											"string": "KT1WvV2rPBQUFUqtCWmnnj8JX2gkmDtMBzQi"
+										},
+										{
+											"int": "162"
+										}
+									]
+								}
+							]
+						}
+					],
+					"prim": "Right"
+				}
+			],
+			"entrypoint": "update_operators"
+		},
+		"destination": "KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv",
+		"kind": "transaction",
+		"source": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi",
+		"amount": "0",
+		"fee": "0",
+		"storage_limit": "0",
+		"counter": null
+	}
+]

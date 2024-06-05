@@ -26,6 +26,13 @@ class RegularWalletTests: XCTestCase {
 		XCTAssert(wallet?.publicKey.bytes.toHexString() == MockConstants.linearWalletEd255519.publicKey, wallet?.publicKey.bytes.toHexString() ?? "-")
 	}
 	
+	func testCreateWithShiftedMnemonic() {
+		let wallet = RegularWallet(withShiftedMnemonic: MockConstants.shiftedMnemonic, passphrase: "")
+		XCTAssert(wallet?.address == MockConstants.shiftedWallet.address, wallet?.address ?? "-")
+		XCTAssert(wallet?.privateKey.bytes.toHexString() == MockConstants.shiftedWallet.privateKey, wallet?.privateKey.bytes.toHexString() ?? "-")
+		XCTAssert(wallet?.publicKey.bytes.toHexString() == MockConstants.shiftedWallet.publicKey, wallet?.publicKey.bytes.toHexString() ?? "-")
+	}
+	
 	func testCreateWithMnemonicLength() {
 		let wallet1 = RegularWallet(withMnemonicLength: .twelve, passphrase: "")
 		XCTAssert(wallet1?.mnemonic?.words.count == 12, "\(wallet1?.mnemonic?.words.count ?? -1)")
@@ -66,5 +73,27 @@ class RegularWalletTests: XCTestCase {
 	func testBase58Encoding() {
 		let encoded = MockConstants.defaultLinearWallet.publicKeyBase58encoded()
 		XCTAssert(encoded == MockConstants.linearWalletEd255519.base58Encoded, encoded)
+	}
+	
+	func testSecretKeyImport() {
+		let tz1UnencryptedSeed = RegularWallet(fromSecretKey: "edsk3KvXD8SVD9GCyU4jbzaFba2HZRad5pQ7ajL79n7rUoc3nfHv5t", passphrase: nil)
+		XCTAssert(tz1UnencryptedSeed?.address == "tz1Qvpsq7UZWyQ4yabf9wGpG97testZCjoCH", tz1UnencryptedSeed?.address ?? "-")
+		XCTAssert(tz1UnencryptedSeed?.privateKey.signingCurve == .ed25519, tz1UnencryptedSeed?.privateKey.signingCurve.rawValue ?? "-")
+		
+		let tz1UnencryptedSecret = RegularWallet(fromSecretKey: "edskRgQqEw17KMib89AzChu8DiJjmVeDfGmbCMpp7MpmhgTdNVvZ3TTaLfwNoux4hDDVeLxmEJxKiYE1cYp1Vgj6QATKaJa58L", passphrase: nil)
+		XCTAssert(tz1UnencryptedSecret?.address == "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss", tz1UnencryptedSecret?.address ?? "-")
+		XCTAssert(tz1UnencryptedSecret?.privateKey.signingCurve == .ed25519, tz1UnencryptedSecret?.privateKey.signingCurve.rawValue ?? "-")
+		
+		let tz1EncryptedSecret = RegularWallet(fromSecretKey: "edesk1L8uVSYd3aug7jbeynzErQTnBxq6G6hJwmeue3yUBt11wp3ULXvcLwYRzDp4LWWvRFNJXRi3LaN7WGiEGhh", passphrase: "pa55word")
+		XCTAssert(tz1EncryptedSecret?.address == "tz1XztestvvcXSQZUbZav5YgVLRQbxC4GuMF", tz1EncryptedSecret?.address ?? "-")
+		XCTAssert(tz1EncryptedSecret?.privateKey.signingCurve == .ed25519, tz1EncryptedSecret?.privateKey.signingCurve.rawValue ?? "-")
+		
+		let tz2UnencryptedSecret = RegularWallet(fromSecretKey: "spsk29hF9oJ6koNnnJMs1rXz4ynBs8hL8FyubTNPCu2tCVP5beGDbw", passphrase: nil)
+		XCTAssert(tz2UnencryptedSecret?.address == "tz2RbUirt95UQHa9YyxcLj9GusNctxwn3Xi1", tz2UnencryptedSecret?.address ?? "-")
+		XCTAssert(tz2UnencryptedSecret?.privateKey.signingCurve == .secp256k1, tz2UnencryptedSecret?.privateKey.signingCurve.rawValue ?? "-")
+		
+		let tz2EncryptedSecret = RegularWallet(fromSecretKey: "spesk1S5bMTCyH9z4mHSpnbn6DBY831DD6Rxgq7ANfEKkngoHSwy6B5odh942TKL6DtLbfTkpTHfSTAQu2d72Qd6", passphrase: "pa55word")
+		XCTAssert(tz2EncryptedSecret?.address == "tz2C8APAjnQfffdkHssxdFRctkD1iPLGaGEg", tz2EncryptedSecret?.address ?? "-")
+		XCTAssert(tz2EncryptedSecret?.privateKey.signingCurve == .secp256k1, tz2EncryptedSecret?.privateKey.signingCurve.rawValue ?? "-")
 	}
 }

@@ -52,6 +52,18 @@ public struct OperationResponseContent: Codable {
 	let kind: String
 	let source: String?
 	let metadata: OperationResponseMetadata
+	let destination: String?
+	let amount: String?
+	let fee: String?
+	let balance: String?
+	
+	public func isOrigination() -> Bool {
+		if kind == "origination" {
+			return true
+		}
+		
+		return false
+	}
 }
 
 /// The metadata belonging to the `OperationResponse`

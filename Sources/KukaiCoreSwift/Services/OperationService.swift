@@ -202,7 +202,7 @@ public class OperationService {
 			return
 		}
 		
-		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { (result) in
+		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs) { (result) in
 			switch result {
 				case .success(let string):
 					completion(Result.success(string))
@@ -222,12 +222,6 @@ public class OperationService {
 	- parameter completion: callback which just returns success or failure with an error.
 	*/
 	public func remoteParse(forgeResult: Result<String, KukaiError>, operationMetadata: OperationMetadata, operationPayload: OperationPayload, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		guard let parseURL = config.parseNodeURL else {
-			completion(Result.failure(KukaiError.internalApplicationError(error: OperationServiceError.noRemoteParseURLFound)))
-			return
-		}
-		
-		
 		// Handle the forge result first to check there are no errors
 		var remoteForgedHash = ""
 		
@@ -248,7 +242,7 @@ public class OperationService {
 			return
 		}
 		
-		self.networkService.send(rpc: rpc, withBaseURL: parseURL) { (result) in
+		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs.reversed()) { (result) in
 			switch result {
 				case .success(let parsedPayload):
 					
@@ -279,7 +273,7 @@ public class OperationService {
 			return
 		}
 		
-		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { (result) in
+		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs) { (result) in
 			switch result {
 				case .success(let operationResponse):
 					completion(Result.success(operationResponse))
@@ -326,7 +320,7 @@ public class OperationService {
 			return
 		}
 		
-		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { (result) in
+		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs) { (result) in
 			completion(result)
 		}
 	}

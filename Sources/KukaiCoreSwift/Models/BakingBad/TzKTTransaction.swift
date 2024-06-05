@@ -31,6 +31,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case origination
 		case transaction
 		case reveal
+		case batch
 		case unknown
 	}
 	
@@ -41,6 +42,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case reveal
 		case exchange
 		case contractCall
+		case batch
 		case unknown
 	}
 	
@@ -250,11 +252,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	}
 	
 	/// Used for creating "Pending" transactions
-	public static func placeholder(withStatus status: TransactionStatus, opHash: String, type: TransactionType, counter: Decimal, fromWallet: WalletMetadata, destination: TzKTAddress, xtzAmount: TokenAmount, parameters: [String: String]?, primaryToken: Token?) -> TzKTTransaction {
+	public static func placeholder(withStatus status: TransactionStatus, id: Decimal, opHash: String, type: TransactionType, counter: Decimal, fromWallet: WalletMetadata, destination: TzKTAddress, xtzAmount: TokenAmount, parameters: [String: String]?, primaryToken: Token?) -> TzKTTransaction {
 		let timestamp = TzKTTransaction.dateFormatter.string(from: Date())
 		let sender = TzKTAddress(alias: fromWallet.walletNickname ?? fromWallet.socialUsername ?? fromWallet.address, address: fromWallet.address)
 		
-		var transaction = TzKTTransaction(type: .transaction, id: 0, level: 0, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: destination, prevDelegate: nil, newDelegate: nil, amount: xtzAmount, parameter: parameters, status: status, hasInternals: false, tokenTransfersCount: nil, errors: nil)
+		var transaction = TzKTTransaction(type: .transaction, id: id, level: id, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: destination, prevDelegate: nil, newDelegate: nil, amount: xtzAmount, parameter: parameters, status: status, hasInternals: false, tokenTransfersCount: nil, errors: nil)
 		transaction.processAdditionalData(withCurrentWalletAddress: fromWallet.address)
 		
 		if let pToken = primaryToken {
@@ -265,11 +267,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	}
 	
 	/// Used for createing a "Pending" delegation transaction
-	public static func placeholder(withStatus status: TransactionStatus, opHash: String, type: TransactionType, counter: Decimal, fromWallet: WalletMetadata, newDelegate: TzKTAddress?) -> TzKTTransaction {
+	public static func placeholder(withStatus status: TransactionStatus, id: Decimal, opHash: String, type: TransactionType, counter: Decimal, fromWallet: WalletMetadata, newDelegate: TzKTAddress?) -> TzKTTransaction {
 		let timestamp = TzKTTransaction.dateFormatter.string(from: Date())
 		let sender = TzKTAddress(alias: fromWallet.walletNickname ?? fromWallet.socialUsername ?? fromWallet.address, address: fromWallet.address)
 		
-		var transaction = TzKTTransaction(type: .delegation, id: 0, level: 0, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: nil, prevDelegate: nil, newDelegate: newDelegate, amount: .zero(), parameter: nil, status: status, hasInternals: false, tokenTransfersCount: nil, errors: nil)
+		var transaction = TzKTTransaction(type: .delegation, id: id, level: id, timestamp: timestamp, hash: opHash, counter: counter, initiater: nil, sender: sender, bakerFee: .zero(), storageFee: .zero(), allocationFee: .zero(), target: nil, prevDelegate: nil, newDelegate: newDelegate, amount: .zero(), parameter: nil, status: status, hasInternals: false, tokenTransfersCount: nil, errors: nil)
 		transaction.processAdditionalData(withCurrentWalletAddress: fromWallet.address)
 		
 		return transaction

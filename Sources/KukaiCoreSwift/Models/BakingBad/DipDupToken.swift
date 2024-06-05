@@ -25,6 +25,9 @@ public struct DipDupToken: Codable, Hashable, Equatable {
 	/// Which standard the token follows
 	public let standard: DipDupTokenStandard
 	
+	/// Optional string to denote where to get the thumbnail image
+	public let thumbnailUri: String?
+	
 	/// Conforming to `Hashable` to enable working with UITableViewDiffableDataSource
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)

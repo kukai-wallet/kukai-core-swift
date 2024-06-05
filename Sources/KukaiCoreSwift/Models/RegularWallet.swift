@@ -61,7 +61,7 @@ public class RegularWallet: Wallet {
 	
 	/**
 	 Create a `RegularWallet` by supplying a `Mnemonic` and a passphrase (or "" if none).
-	 - Parameter withMnemonic: A `Mnemonic` representing a BIP39 menmonic
+	 - Parameter withMnemonic: A `Mnemonic` representing a BIP39 mnemonic
 	 - Parameter passphrase: String contianing a passphrase, or empty string if none
 	 */
 	public init?(withMnemonic mnemonic: Mnemonic, passphrase: String) {
@@ -74,6 +74,49 @@ public class RegularWallet: Wallet {
 		self.privateKey = keyPair.privateKey
 		self.publicKey = keyPair.publicKey
 		self.mnemonic = mnemonic
+	}
+	
+	/**
+	 Create a `RegularWallet` by supplying a `Mnemonic` that has been shifted and a passphrase (or "" if none).
+	 - Parameter withShiftedMnemonic: A `Mnemonic` representing a BIP39 mnemonic that has been shifted to support social recovery
+	 - Parameter passphrase: String contianing a passphrase, or empty string if none
+	 */
+	public init?(withShiftedMnemonic shiftedMnemonic: Mnemonic, passphrase: String) {
+		guard let normalMnemonic = Mnemonic.shiftedMnemonicToMnemonic(mnemonic: shiftedMnemonic),
+			  let normalSpsk = Mnemonic.mnemonicToSpsk(mnemonic: normalMnemonic),
+			  let normalSpskBytes = Base58Check.decode(string: normalSpsk, prefix: Prefix.Keys.Secp256k1.secret) else {
+			return nil
+		}
+		
+		let normalPrivateKey = PrivateKey(normalSpskBytes, signingCurve: .secp256k1)
+		
+		guard let normalPublicKey = KeyPair.secp256k1PublicKey(fromPrivateKeyBytes: normalPrivateKey.bytes),
+			  let pkh = normalPublicKey.publicKeyHash else {
+			return nil
+		}
+		
+		self.type = .regularShifted
+		self.address = pkh
+		self.privateKey = normalPrivateKey
+		self.publicKey = normalPublicKey
+		self.mnemonic = shiftedMnemonic
+	}
+	
+	/**
+	 Create a `RegularWallet` by supplying a a Base58 encoded string containing a secret key. Both encrypted and unencrypted are supported. Supports Tz1 and Tz2
+	 - Parameter fromSecretKey: A String containing a Base58Check encoded secret key
+	 - Parameter passphrase: An optional string containing the passphrase used to encrypt the secret key
+	 */
+	public init?(fromSecretKey secretKey: String, passphrase: String?) {
+		guard let keyPair = KeyPair.regular(fromSecretKey: secretKey, andPassphrase: passphrase), let address = keyPair.publicKey.publicKeyHash else {
+			return nil
+		}
+		
+		self.type = .regular
+		self.address = address
+		self.privateKey = keyPair.privateKey
+		self.publicKey = keyPair.publicKey
+		self.mnemonic = nil
 	}
 	
 	/**

@@ -115,6 +115,7 @@ public class FeeEstimatorService {
 									  constants: constants,
 									  signingCurve: ellipticalCurve,
 									  originalRemoteOps: originalRemoteOps,
+									  fromAddress: walletAddress,
 									  completion: completion)
 				}
 				
@@ -127,6 +128,7 @@ public class FeeEstimatorService {
 									  constants: constants,
 									  signingCurve: ellipticalCurve,
 									  originalRemoteOps: originalRemoteOps,
+									  fromAddress: walletAddress,
 									  completion: completion)
 				}
 		}
@@ -140,6 +142,7 @@ public class FeeEstimatorService {
 							 constants: NetworkConstants,
 							 signingCurve: EllipticalCurve,
 							 originalRemoteOps: [Operation],
+							 fromAddress address: String,
 							 completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void))
 	{
 		switch forgeResult {
@@ -148,7 +151,7 @@ public class FeeEstimatorService {
 				mutablePayload.addSignature(FeeEstimatorService.defaultSignature, signingCurve: signingCurve)
 				let runOperationPayload = RunOperationPayload(chainID: operationMetadata.chainID, operation: mutablePayload)
 				
-				self.estimate(runOperationPayload: runOperationPayload, preparedOperationsCopy: preparedOperationsCopy, constants: constants, forgedHex: hexString, originalRemoteOps: originalRemoteOps, completion: completion)
+				self.estimate(runOperationPayload: runOperationPayload, preparedOperationsCopy: preparedOperationsCopy, constants: constants, forgedHex: hexString, originalRemoteOps: originalRemoteOps, fromAddress: address, completion: completion)
 			
 			case .failure(let error):
 				completion(Result.failure(error))
@@ -157,15 +160,22 @@ public class FeeEstimatorService {
 	}
 
 	/// Breaking out part of the estimation process to keep code cleaner
-	private func estimate(runOperationPayload: RunOperationPayload, preparedOperationsCopy: [Operation], constants: NetworkConstants, forgedHex: String, originalRemoteOps: [Operation], completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
-		guard let rpc = RPC.runOperation(runOperationPayload: runOperationPayload) else {
+	private func estimate(runOperationPayload: RunOperationPayload,
+						  preparedOperationsCopy: [Operation],
+						  constants: NetworkConstants,
+						  forgedHex: String,
+						  originalRemoteOps: [Operation],
+						  fromAddress address: String,
+						  completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
+		
+		guard let rpc = RPC.simulateOperation(runOperationPayload: runOperationPayload) else {
 			Logger.kukaiCoreSwift.error("Unable to create runOperation RPC, cancelling event")
 			completion(Result.failure(KukaiError.internalApplicationError(error: FeeEstimatorServiceError.unableToSetupRunOperation)))
 			return
 		}
 		
-		self.networkService.send(rpc: rpc, withBaseURL: config.primaryNodeURL) { [weak self] (result) in
-			guard let opToProcess = try? result.get(), let fees = self?.extractFees(fromOperationResponse: opToProcess, forgedHash: forgedHex, withConstants: constants) else {
+		self.networkService.send(rpc: rpc, withNodeURLs: config.nodeURLs) { [weak self] (result) in
+			guard let opToProcess = try? result.get(), let fees = self?.extractFees(fromOperationResponse: opToProcess, originalRemoteOps: originalRemoteOps, forgedHash: forgedHex, withConstants: constants, fromAddress: address) else {
 				completion(Result.failure( result.getFailure()))
 				return
 			}
@@ -176,40 +186,13 @@ public class FeeEstimatorService {
 				return
 			}
 			
-			
-			// Operations can come in with suggested fees (e.g. when using a dApp through something like Beacon).
-			// We always do an estimation and pick which ever is higher, the supplied suggested fees (which should always be worst case, but can be flawed), or the result of the estimation
-			var lastOpFee: OperationFees = OperationFees(transactionFee: .zero(), gasLimit: 0, storageLimit: 0)
-			var operationFeesToUse: [OperationFees] = []
-			var original = originalRemoteOps
-			
-			
-			// originalOps may not contain a reveal operation, if the first request a user does is wallet connect / beacon.
-			// Check and add a dummy reveal operation to the "originalOps", so that fees are calcualted correctly
-			if (preparedOperationsCopy.first is OperationReveal && original.count < preparedOperationsCopy.count) {
-				let reveal = OperationReveal(base58EncodedPublicKey: "", walletAddress: "") // dummy only used as an OperationsFee placeholder
-				reveal.operationFees = OperationFees(transactionFee: .zero(), networkFees: fees.first?.networkFees ?? [:], gasLimit: fees.first?.gasLimit ?? 0, storageLimit: fees.first?.storageLimit ?? 0)
-				original.insert(reveal, at: 0)
-			}
-			
-			
-			// Check whether to use suggested fees, or estiamted fees
-			if original.map({ $0.operationFees.gasLimit }).reduce(0, +) > fees.map({ $0.gasLimit }).reduce(0, +) {
-				lastOpFee = self?.calcFeeFromSuggestedOperations(operations: original, constants: constants, forgedHex: forgedHex) ?? OperationFees.zero()
-				operationFeesToUse = original.map({ $0.operationFees })
-				
-			} else {
-				lastOpFee = fees.last ?? OperationFees.zero()
-				operationFeesToUse = fees
-			}
-			
-			
 			// Set gas, storage and network fees on each operation, but only add transaction fee to last operation.
 			// The entire chain of operations can fail due to one in the middle failing. If that happens, only fees attached to operations that were processed, gets debited
 			for (index, op) in preparedOperationsCopy.enumerated() {
-				op.operationFees = operationFeesToUse[index]
+				op.operationFees = fees[index]
 				
 				if index == preparedOperationsCopy.count-1 {
+					let lastOpFee = fees.last ?? OperationFees.zero()
 					op.operationFees.transactionFee = lastOpFee.transactionFee
 					op.operationFees.networkFees = lastOpFee.networkFees
 					
@@ -222,114 +205,130 @@ public class FeeEstimatorService {
 		}
 	}
 	
-	private func calcFeeFromSuggestedOperations(operations: [Operation], constants: NetworkConstants, forgedHex: String) -> OperationFees {
-		let totalGas = operations.map({ $0.operationFees.gasLimit }).reduce(0, +)
-		let totalStorage = operations.map({ $0.operationFees.storageLimit }).reduce(0, +)
-		
-		return calcTransactionFee(totalGas: totalGas, opCount: operations.count, totalStorage: totalStorage, forgedHash: forgedHex, constants: constants)
-	}
-	
 	/**
 	Create an array of `OperationFees` from an `OperationResponse`.
 	- parameter fromOperationResponse: The `OperationResponse` resulting from an RPC call to `.../run_operation`.
 	- parameter forgedHash: The forged hash string resulting from a call to `TezosNodeClient.forge(...)`
 	- returns: An array of `OperationFees`
 	*/
-	public func extractFees(fromOperationResponse operationResponse: OperationResponse, forgedHash: String, withConstants constants: NetworkConstants) -> [OperationFees] {
+	public func extractFees(fromOperationResponse operationResponse: OperationResponse, originalRemoteOps: [Operation], forgedHash: String, withConstants constants: NetworkConstants, fromAddress address: String) -> [OperationFees] {
 		var opFees: [OperationFees] = []
-		var totalGas = 0
-		var totalStorage = 0
-		var totalAllocationFee = XTZAmount.zero()
+		var totalGas: Decimal = 0
+		var totalStorage: Decimal = 0
 		
+		
+		// preparedOperationsCopy may contain an extra reveal operation at the start
 		for (index, content) in operationResponse.contents.enumerated() {
-			var opGas = 0
-			var opStorage = 0
-			var opAllocationStorage = 0 // Needs to be included in `storage_limit`, but ignored as a burn fee because it is an "allocation fee"
-			var opAllocationFee = XTZAmount.zero()
+			var opGas: Decimal = 0
+			var opStorage: Decimal = 0
+			let suggestedCompareIndex = (operationResponse.contents.first?.kind == "reveal" && operationResponse.contents.count != originalRemoteOps.count) ? -1 : 0
 			
-			let results = extractAndParseAttributes(fromResult: content.metadata.operationResult, withConstants: constants)
-			opGas = FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-			opStorage = results.storageBytesUsed
-			opAllocationFee = results.allocationFee
 			
-			totalGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-			totalStorage += results.storageBytesUsed
-			totalAllocationFee += results.allocationFee
-			
-			// If we are allocating an address, we need to include it as storage on our operation
-			if results.allocationFee > XTZAmount.zero() {
-				opAllocationStorage = constants.bytesForReveal()
+			// Storage
+			if content.source == address {
+				opStorage -= Decimal(string: content.amount ?? "0") ?? 0
+				opStorage -= Decimal(string: content.fee ?? "0") ?? 0
+				opStorage -= Decimal(string: content.balance ?? "0") ?? 0
 			}
 			
-			if let innerOperationResults = content.metadata.internalOperationResults {
-				for innerResult in innerOperationResults {
-					let results = extractAndParseAttributes(fromResult: innerResult.result, withConstants: constants)
-					opGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-					opStorage += results.storageBytesUsed
-					opAllocationFee += results.allocationFee
-					
-					totalGas += FeeEstimatorService.addGasSafetyMarginTo(gasUsed: results.consumedGas)
-					totalStorage += results.storageBytesUsed
-					totalAllocationFee += results.allocationFee
-					
-					// If we are allocating an address, we need to include it as storage on our operation
-					if results.allocationFee > XTZAmount.zero() {
-						opAllocationStorage += constants.bytesForReveal()
-					}
+			if content.destination == address {
+				opStorage += Decimal(string: content.amount ?? "0") ?? 0
+			}
+			
+			for balanceUpdate in content.metadata.operationResult?.balanceUpdates ?? [] {
+				if balanceUpdate.contract == address {
+					opStorage -= Decimal(string: balanceUpdate.change) ?? 0
 				}
 			}
 			
+			for balanceUpdate in content.metadata.balanceUpdates ?? [] {
+				if balanceUpdate.contract == address {
+					opStorage -= Decimal(string: balanceUpdate.change) ?? 0
+				}
+			}
+			
+			// Gas
+			opGas += ((Decimal(string: content.metadata.operationResult?.consumedMilligas ?? "0") ?? 0) / 1000).rounded(scale: 0, roundingMode: .up)
+			for internalResult in content.metadata.internalOperationResults ?? [] {
+				opGas += ((Decimal(string: internalResult.result.consumedMilligas ?? "0") ?? 0) / 1000).rounded(scale: 0, roundingMode: .up)
+				
+				for balanceUpdate in internalResult.result.balanceUpdates ?? [] {
+					if balanceUpdate.contract == address && balanceUpdate.change.prefix(1) == "-" {
+						opStorage -= Decimal(string: balanceUpdate.change) ?? 0
+					}
+				}
+			}
+			opGas = Decimal(FeeEstimatorService.addGasSafetyMarginTo(gasUsed: opGas.intValue()))
+			
+			
+			// Convert storage to bytes
+			opStorage = opStorage / (constants.xtzPerByte().toRpcDecimal() ?? 250)
+			
+			// Check for reveal
+			if content.metadata.operationResult?.allocatedDestinationContract == true {
+				opStorage += Decimal(constants.bytesForReveal())
+			}
+			
+			for internalResult in content.metadata.internalOperationResults ?? [] {
+				if internalResult.result.allocatedDestinationContract == true {
+					opStorage += Decimal(constants.bytesForReveal())
+				}
+			}
+			
+			// Check whether suggested or estimated gas / sotrage is higher and pick that
+			let indexToCheck = index + suggestedCompareIndex
+			if indexToCheck > -1 {
+				let op = originalRemoteOps[indexToCheck]
+				
+				if op.operationFees.gasLimit > opGas.intValue() {
+					opGas = Decimal(op.operationFees.gasLimit)
+				}
+				
+				if op.operationFees.storageLimit > opStorage.intValue() {
+					opStorage = Decimal(op.operationFees.storageLimit)
+				}
+			}
+			
+			
+			// Sum totals for later
+			totalGas += opGas
+			totalStorage += opStorage
+			
+			
 			// If last
 			if index == operationResponse.contents.count-1 {
-				opFees.append( createLimitsAndTotalFeeObj(totalGas: totalGas, opGas: opGas, opCount: operationResponse.contents.count, totalStorage: totalStorage, opStorage: opStorage, forgedHash: forgedHash, constants: constants, allocationStorage: opAllocationStorage, totalAllocationFee: totalAllocationFee) )
+				opFees.append( createLimitsAndTotalFeeObj(totalGas: totalGas.intValue(),
+														  opGas: opGas.intValue(),
+														  opCount: operationResponse.contents.count,
+														  totalStorage: totalStorage.intValue(),
+														  opStorage: opStorage.intValue(),
+														  forgedHash: forgedHash,
+														  constants: constants) )
 				
 			} else {
-				opFees.append( createLimitsOnlyFeeObj(gas: opGas, storage: opStorage, allocationStorage: opAllocationStorage) )
+				opFees.append( OperationFees(transactionFee: .zero(), gasLimit: opGas.intValue(), storageLimit: opStorage.intValue()) )
 			}
 		}
 		
 		return opFees
 	}
 	
-	/// Create an instance of `OperationFees` for a non-last operation, with no fee, but accurate gas + storage
-	private func createLimitsOnlyFeeObj(gas: Int, storage: Int, allocationStorage: Int) -> OperationFees {
-		return OperationFees(transactionFee: .zero(), gasLimit: gas, storageLimit: storage + allocationStorage)
-	}
-	
 	/// Create an instance of `OperationFees` in order to calculate a transaction fee. Used to calculate the overall transaction fee
 	private func calcTransactionFee(totalGas: Int, opCount: Int, totalStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
 		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
 		let burnFee = FeeEstimatorService.feeForBurn(totalStorage, withConstants: constants)
-		let networkFees = [OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: .zero()]
+		let networkFees = [OperationFees.NetworkFeeType.burnFee: burnFee]
 		
 		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: 0, storageLimit: 0)
 	}
 	
 	/// Create an instance of `OperationFees` for a last operation, with its corresponding gas + storage, but fees for the entire list of operations
-	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, opCount: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants, allocationStorage: Int, totalAllocationFee: XTZAmount) -> OperationFees {
+	private func createLimitsAndTotalFeeObj(totalGas: Int, opGas: Int, opCount: Int, totalStorage: Int, opStorage: Int, forgedHash: String, constants: NetworkConstants) -> OperationFees {
 		let fee = FeeEstimatorService.fee(forGasLimit: totalGas, forgedHexString: forgedHash, numberOfOperations: opCount)
 		let burnFee = FeeEstimatorService.feeForBurn(totalStorage, withConstants: constants)
-		let networkFees = [OperationFees.NetworkFeeType.burnFee: burnFee, OperationFees.NetworkFeeType.allocationFee: totalAllocationFee]
+		let networkFees = [OperationFees.NetworkFeeType.burnFee: burnFee]
 		
-		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage + allocationStorage)
-	}
-	
-	/// Private helper to process `OperationResponseResult` block. Complicated operations will contain many of these.
-	private func extractAndParseAttributes(fromResult result: OperationResponseResult?, withConstants constants: NetworkConstants) -> (consumedGas: Int, storageBytesUsed: Int, allocationFee: XTZAmount) {
-		guard let result = result else {
-			return (consumedGas: 0, storageBytesUsed: 0, allocationFee: XTZAmount.zero())
-		}
-		
-		var consumedGas = Decimal(string: result.consumedMilligas ?? "0") ?? 0
-		consumedGas = (consumedGas / 1000).rounded(scale: 0, roundingMode: .bankers)
-		let paidStorageSizeDiff = Int(result.paidStorageSizeDiff ?? "0") ?? 0
-		var allocationFee = XTZAmount.zero()
-		
-		if let allocated = result.allocatedDestinationContract, allocated {
-			allocationFee = constants.xtzForReveal()
-		}
-		
-		return (consumedGas: consumedGas.intValue(), storageBytesUsed: paidStorageSizeDiff, allocationFee: allocationFee)
+		return OperationFees(transactionFee: fee, networkFees: networkFees, gasLimit: opGas, storageLimit: opStorage)
 	}
 	
 	/// Calculate the fee to add for the given amount of gas

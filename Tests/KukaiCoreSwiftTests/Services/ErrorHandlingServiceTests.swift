@@ -16,11 +16,11 @@ class ErrorHandlingServiceTests: XCTestCase {
 	}
 	
 	func testStaticConstrutors() {
-		let error1 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: nil)
+		let error1 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: nil, requestURL: nil)
 		XCTAssert(error1.rpcErrorString == "testing RPC string", error1.rpcErrorString ?? "-")
 		XCTAssert(error1.description == "RPC: testing RPC string", error1.description)
 		
-		let error2 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: FailWith(string: nil, int: "1", args: nil))
+		let error2 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: FailWith(string: nil, int: "1", args: nil), requestURL: nil)
 		XCTAssert(error2.rpcErrorString == "testing RPC string", error2.rpcErrorString ?? "-")
 		XCTAssert(error2.description == "RPC: testing RPC string", error2.description)
 		
@@ -98,12 +98,12 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let ops = [
 			OperationResponse(contents: [
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError),
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError)
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError, destination: nil, amount: nil, fee: nil, balance: nil),
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError, destination: nil, amount: nil, fee: nil, balance: nil)
 			])
 		]
 		
-		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops)
+		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops, requestURL: nil)
 		XCTAssert(containsErrors1?.errorType == .rpc)
 		XCTAssert(containsErrors1?.rpcErrorString == "gas_exhausted.operation", containsErrors1?.rpcErrorString ?? "-")
 		XCTAssert(containsErrors1?.description == "RPC: gas_exhausted.operation", containsErrors1?.description ?? "-")
@@ -119,12 +119,12 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let ops = [
 			OperationResponse(contents: [
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError),
-				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError)
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithError, destination: nil, amount: nil, fee: nil, balance: nil),
+				OperationResponseContent(kind: "", source: nil, metadata: operationMetadataWithoutError, destination: nil, amount: nil, fee: nil, balance: nil)
 			])
 		]
 		
-		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops)
+		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops, requestURL: nil)
 		XCTAssert(containsErrors1?.errorType == .rpc)
 		XCTAssert(containsErrors1?.rpcErrorString == "A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.rpcErrorString ?? "-")
 		XCTAssert(containsErrors1?.description == "RPC: A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.description ?? "-")
@@ -138,7 +138,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 			return
 		}
 		
-		let result2 = ErrorHandlingService.searchOperationResponseForErrors(opResponse)
+		let result2 = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
 		XCTAssert(result2?.rpcErrorString == "gas_exhausted.operation", result2?.rpcErrorString ?? "-")
 		XCTAssert(result2?.description == "RPC: gas_exhausted.operation", result2?.description ?? "-")
 
@@ -152,7 +152,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 			return
 		}
 		
-		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse)
+		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
 		XCTAssert(result?.rpcErrorString == "A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.rpcErrorString ?? "-")
 		XCTAssert(result?.description == "RPC: A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.description ?? "-")
 	}
@@ -165,7 +165,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 			return
 		}
 		
-		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse)
+		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
 		XCTAssert(result?.rpcErrorString == "A FAILWITH instruction was reached: {\"args\": [[\"string\": \"NotEnoughBalance\"]]}", result?.rpcErrorString ?? "-")
 		XCTAssert(result?.description == "RPC: A FAILWITH instruction was reached: {\"args\": [[\"string\": \"NotEnoughBalance\"]]}", result?.description ?? "-")
 	}

@@ -17,8 +17,8 @@ struct MockPostUrlKey: Hashable {
 class MockURLProtocol: URLProtocol {
 	
 	private static var lastForgeRequest: Data? = nil
-	private let forgeURL = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/forge/operations")
-	private let parseURL = MockConstants.shared.config.parseNodeURL!.appendingPathComponent("chains/main/blocks/head/helpers/parse/operations")
+	private let forgeURL = MockConstants.shared.config.nodeURLs[0].appendingPathComponent("chains/main/blocks/head/helpers/forge/operations")
+	private let parseURL = MockConstants.shared.config.nodeURLs[1].appendingPathComponent("chains/main/blocks/head/helpers/parse/operations")
 	
 	
 	/// Dictionary maps URLs to tuples of data, and response
@@ -41,11 +41,14 @@ class MockURLProtocol: URLProtocol {
 		
 		if let url = request.url {
 			
+			let unencodedString = url.absoluteString.removingPercentEncoding ?? ""
+			let unencodedUrl = URL(string: unencodedString)!
+			
 			if let body = request.httpBodyStreamData() {
-				self.handlePostURL(mockPostUrlKey: MockPostUrlKey(url: url, requestData: body))
+				self.handlePostURL(mockPostUrlKey: MockPostUrlKey(url: unencodedUrl, requestData: body))
 				
 			} else {
-				self.handleGetURL(url: url)
+				self.handleGetURL(url: unencodedUrl)
 			}
 		}
 		
@@ -113,6 +116,26 @@ class MockURLProtocol: URLProtocol {
 	func handlePostURL(mockPostUrlKey: MockPostUrlKey) {
 		
 		// Check if URL is in the error list first as many error URL's and Success URLs will be indentical
+		if let (data, response) = MockURLProtocol.errorURLs[mockPostUrlKey.url] {
+			
+			if let res = response {
+				self.client?.urlProtocol(self, didReceive: res, cacheStoragePolicy: .notAllowed)
+			}
+			
+			if let d = data {
+				self.client?.urlProtocol(self, didLoad: d)
+			}
+			
+			// remove it from the list
+			if let index = MockURLProtocol.errorURLs.index(forKey: mockPostUrlKey.url) {
+				MockURLProtocol.errorURLs.remove(at: index)
+			}
+			
+			self.client?.urlProtocolDidFinishLoading(self)
+			return
+		}
+		
+		// Check if URL is in the error list first as many error URL's and Success URLs will be indentical
 		if let (data, response) = MockURLProtocol.errorPostURLs[mockPostUrlKey] {
 			
 			if let res = response {
@@ -151,18 +174,26 @@ class MockURLProtocol: URLProtocol {
 		
 	}
 	
-	static func triggerGasExhaustedErrorOnRunOperation() {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerGasExhaustedErrorOnSimulateOperation(nodeUrl: Int = 0) {
+		var url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		url.appendQueryItem(name: "version", value: "0")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_gas"), response: MockConstants.http200)
 	}
 	
-	static func triggerAssertErrorOnRunOperation() {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/run_operation")
+	static func triggerAssertErrorOnSimulateOperation(nodeUrl: Int = 0) {
+		var url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		url.appendQueryItem(name: "version", value: "0")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_assert"), response: MockConstants.http200)
 	}
 	
-	static func triggerCounterInFutureError() {
-		let url = MockConstants.shared.config.primaryNodeURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations")
+	static func triggerCounterInFutureError(nodeUrl: Int = 0) {
+		let url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations")
 		MockURLProtocol.errorURLs[url] = (data: MockConstants.jsonStub(fromFilename: "rpc_error_counter-in-future"), response: MockConstants.http500)
+	}
+	
+	static func triggerHttp500ErrorOnSimulateOperation(nodeUrl: Int = 0) {
+		var url = MockConstants.shared.config.nodeURLs[nodeUrl].appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
+		url.appendQueryItem(name: "version", value: "0")
+		MockURLProtocol.errorURLs[url] = (data: nil, response: MockConstants.http500)
 	}
 }

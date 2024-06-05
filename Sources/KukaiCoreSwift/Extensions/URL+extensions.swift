@@ -10,7 +10,7 @@ import Foundation
 import OSLog
 
 /// Extensions to make adding query items easier
-extension URL {
+public extension URL {
 	
 	/// Helper to append a String as a query param to a URL
 	mutating func appendQueryItem(name: String, value: String?) {
