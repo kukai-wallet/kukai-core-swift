@@ -27,6 +27,7 @@ public struct TzKTDelegatorReward: Codable {
 	public let extraBlockRewards: Decimal
 	public let missedExtraBlockRewards: Decimal
 	
+	public let futureBlocks: Decimal
 	public let futureBlockRewards: Decimal
 	public let futureEndorsementRewards: Decimal
 	

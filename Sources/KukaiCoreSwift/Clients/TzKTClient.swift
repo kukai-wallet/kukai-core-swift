@@ -26,7 +26,7 @@ public class TzKTClient {
 		public static let tokenBalanceQuerySize = 10000
 	}
 	
-	static let numberOfFutureCyclesReturned = 5
+	static var numberOfFutureCyclesReturned = 2
 	
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
@@ -548,6 +548,15 @@ public class TzKTClient {
 			guard let res = try? result.get() else {
 				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
 				return
+			}
+			
+			for (index, reward) in res.enumerated() {
+				if reward.futureBlocks == 0 {
+					// Number of future cycles is 1 less than the index of the first reward where `futureBlocks` is equal to zero
+					// The first non zero is the current, in-progress block
+					TzKTClient.numberOfFutureCyclesReturned = (index-1)
+					break
+				}
 			}
 			
 			currentRewards = res
