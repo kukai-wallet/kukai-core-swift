@@ -248,6 +248,9 @@ class TzKTClientTests: XCTestCase {
 					
 					// Tokens
 					XCTAssert(account.xtzBalance.normalisedRepresentation == "1.843617", account.xtzBalance.normalisedRepresentation)
+					XCTAssert(account.xtzStakedBalance.normalisedRepresentation == "0", account.xtzStakedBalance.normalisedRepresentation)
+					XCTAssert(account.xtzUnstakedBalance.normalisedRepresentation == "0", account.xtzUnstakedBalance.normalisedRepresentation)
+					XCTAssert(account.availableBalance.normalisedRepresentation == "1.843617", account.availableBalance.normalisedRepresentation)
 					XCTAssert(account.tokens.count == 21, "\(account.tokens.count)")
 					XCTAssert(account.tokens[0].symbol == "wBUSD", account.tokens[0].symbol)
 					XCTAssert(account.tokens[0].name == "Wrapped Tokens Contract", account.tokens[0].name ?? "")

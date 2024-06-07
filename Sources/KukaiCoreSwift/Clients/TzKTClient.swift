@@ -788,7 +788,7 @@ public class TzKTClient {
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var tzktAccount = TzKTAccount(balance: 0, type: "user", address: "", publicKey: "", revealed: false, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0, activeTokensCount: 0, tokenBalancesCount: 0)
+		var tzktAccount = TzKTAccount(balance: 0, stakedBalance: 0, unstakedBalance: 0, type: "user", address: "", publicKey: "", revealed: false, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0, activeTokensCount: 0, tokenBalancesCount: 0)
 		var tokenBalances: [TzKTBalance] = []
 		//var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
@@ -851,7 +851,7 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: []) ?? (tokens: [], nftGroups: [], recentNFTs: [])
-				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
+				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, xtzStakedBalance: tzktAccount.xtzUnstakedBalance, xtzUnstakedBalance: tzktAccount.xtzUnstakedBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
 				
 				completion(Result.success(account))
 			}
