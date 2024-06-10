@@ -202,8 +202,8 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter withAmount: The Amount of XTZ to create the `Token` with.
 	- returns: `Token`.
 	*/
-	public static func xtz(withAmount amount: TokenAmount) -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, stakedBalance: .zero(), unstakedBalance: .zero(), thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
+	public static func xtz(withAmount amount: TokenAmount, stakedAmount: TokenAmount = .zero(), unstakedAmount: TokenAmount = .zero()) -> Token {
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, stakedBalance: stakedAmount, unstakedBalance: unstakedAmount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Useful for creating placeholders for pending activity items
