@@ -81,6 +81,47 @@ public struct Account: Codable, Hashable {
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(walletAddress)
 	}
+	
+	public init(from decoder: any Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.walletAddress = try container.decode(String.self, forKey: .walletAddress)
+		self.xtzBalance = try container.decode(XTZAmount.self, forKey: .xtzBalance)
+		self.xtzStakedBalance = (try? container.decode(XTZAmount.self, forKey: .xtzStakedBalance)) ?? .zero() // TODO: optionality can be removed before app store release
+		self.xtzUnstakedBalance = (try? container.decode(XTZAmount.self, forKey: .xtzUnstakedBalance)) ?? .zero()
+		self.tokens = try container.decode([Token].self, forKey: .tokens)
+		self.nfts = try container.decode([Token].self, forKey: .nfts)
+		self.recentNFTs = try container.decode([NFT].self, forKey: .recentNFTs)
+		self.liquidityTokens = try container.decode([DipDupPositionData].self, forKey: .liquidityTokens)
+		self.delegate = try container.decodeIfPresent(TzKTAccountDelegate.self, forKey: .delegate)
+		self.delegationLevel = try container.decodeIfPresent(Decimal.self, forKey: .delegationLevel)
+	}
+	
+	enum CodingKeys: CodingKey {
+		case walletAddress
+		case xtzBalance
+		case xtzStakedBalance
+		case xtzUnstakedBalance
+		case tokens
+		case nfts
+		case recentNFTs
+		case liquidityTokens
+		case delegate
+		case delegationLevel
+	}
+	
+	public func encode(to encoder: any Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(self.walletAddress, forKey: .walletAddress)
+		try container.encode(self.xtzBalance, forKey: .xtzBalance)
+		try container.encode(self.xtzStakedBalance, forKey: .xtzStakedBalance)
+		try container.encode(self.xtzUnstakedBalance, forKey: .xtzUnstakedBalance)
+		try container.encode(self.tokens, forKey: .tokens)
+		try container.encode(self.nfts, forKey: .nfts)
+		try container.encode(self.recentNFTs, forKey: .recentNFTs)
+		try container.encode(self.liquidityTokens, forKey: .liquidityTokens)
+		try container.encodeIfPresent(self.delegate, forKey: .delegate)
+		try container.encodeIfPresent(self.delegationLevel, forKey: .delegationLevel)
+	}
 }
 
 extension Account: Identifiable {
