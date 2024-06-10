@@ -48,6 +48,7 @@ class TokenTests: XCTestCase {
 		let placeholder = Token.placeholder(fromNFT: nft, amount: .init(fromNormalisedAmount: 1, decimalPlaces: 0), thumbnailURL: nil)
 		XCTAssert(placeholder.name == "Unknown Token", placeholder.name ?? "-")
 		XCTAssert(placeholder.balance.description == "1", placeholder.balance.description)
+		XCTAssert(placeholder.availableBalance.description == "1", placeholder.availableBalance.description)
 		
 		XCTAssert(token == token)
 		XCTAssert(token != token2)
