@@ -113,14 +113,14 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter tokenId: The token id if the token is an FA2 token, nil otherwise.
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, stakedBalance: TokenAmount = .zero(), unstakedBalance: TokenAmount = .zero(), thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?, mintingTool: String?) {
+	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, stakedBalance: TokenAmount? = nil, unstakedBalance: TokenAmount? = nil, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?, mintingTool: String?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
 		self.faVersion = faVersion
 		self.balance = balance
-		self.stakedBalance = stakedBalance
-		self.unstakedBalance = unstakedBalance
+		self.stakedBalance = stakedBalance ?? .zeroBalance(decimalPlaces: balance.decimalPlaces)
+		self.unstakedBalance = unstakedBalance ?? .zeroBalance(decimalPlaces: balance.decimalPlaces)
 		self.thumbnailURL = thumbnailURL
 		self.tokenContractAddress = tokenContractAddress
 		self.tokenId = tokenId
@@ -136,7 +136,7 @@ public class Token: Codable, CustomStringConvertible {
 	/**
 	 Init a `Token` from an object returned by the TzKT API
 	 */
-	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount, stakedTokenAmount: TokenAmount = .zero(), unstakedTokenAmount: TokenAmount = .zero()) {
+	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount, stakedTokenAmount: TokenAmount? = nil, unstakedTokenAmount: TokenAmount? = nil) {
 		let decimalsString = from.metadata?.decimals ?? "0"
 		let decimalsInt = Int(decimalsString) ?? 0
 		let isNFT = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2)
@@ -146,8 +146,8 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.standard
 		self.balance = andTokenAmount
-		self.stakedBalance = stakedTokenAmount
-		self.unstakedBalance = unstakedTokenAmount
+		self.stakedBalance = stakedTokenAmount ?? .zeroBalance(decimalPlaces: andTokenAmount.decimalPlaces)
+		self.unstakedBalance = unstakedTokenAmount ?? .zeroBalance(decimalPlaces: andTokenAmount.decimalPlaces)
 		self.thumbnailURL = from.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.contract.address)
 		self.tokenContractAddress = from.contract.address
 		self.tokenId = Decimal(string: from.tokenId) ?? 0
@@ -173,9 +173,11 @@ public class Token: Codable, CustomStringConvertible {
 		self.symbol = isNFT ? from.token.metadata?.symbol ?? "" : from.token.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.token.standard
-		self.balance = from.tokenAmount()
-		self.stakedBalance = .zero()
-		self.unstakedBalance = .zero()
+		
+		let tokenAmount = from.tokenAmount()
+		self.balance = tokenAmount
+		self.stakedBalance = .zeroBalance(decimalPlaces: tokenAmount.decimalPlaces)
+		self.unstakedBalance = .zeroBalance(decimalPlaces: tokenAmount.decimalPlaces)
 		self.thumbnailURL = from.token.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.token.contract.address)
 		self.tokenContractAddress = from.token.contract.address
 		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
@@ -202,13 +204,13 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter withAmount: The Amount of XTZ to create the `Token` with.
 	- returns: `Token`.
 	*/
-	public static func xtz(withAmount amount: TokenAmount, stakedAmount: TokenAmount = .zero(), unstakedAmount: TokenAmount = .zero()) -> Token {
+	public static func xtz(withAmount amount: TokenAmount, stakedAmount: TokenAmount = .zeroBalance(decimalPlaces: 6), unstakedAmount: TokenAmount = .zeroBalance(decimalPlaces: 6)) -> Token {
 		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, stakedBalance: stakedAmount, unstakedBalance: unstakedAmount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Useful for creating placeholders for pending activity items
 	public static func placeholder(fromNFT nft: NFT, amount: TokenAmount, thumbnailURL: URL?) -> Token {
-		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, stakedBalance: .zero(), unstakedBalance: .zero(), thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil, mintingTool: nil)
+		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, stakedBalance: .zeroBalance(decimalPlaces: amount.decimalPlaces), unstakedBalance: .zeroBalance(decimalPlaces: amount.decimalPlaces), thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type
