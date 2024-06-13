@@ -1,0 +1,64 @@
+{
+    "contents": [
+        {
+            "kind": "transaction",
+            "source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+            "fee": "0",
+            "counter": "11240021",
+            "gas_limit": "866666",
+            "storage_limit": "60000",
+            "amount": "1",
+            "destination": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+            "parameters": {
+                "entrypoint": "unstake",
+                "value": {
+                    "prim": "Unit"
+                }
+            },
+            "metadata": {
+                "operation_result": {
+                    "status": "applied",
+                    "balance_updates": [
+                        {
+                            "kind": "staking",
+                            "category": "delegate_denominator",
+                            "delegate": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD",
+                            "change": "-1",
+                            "origin": "block"
+                        },
+                        {
+                            "kind": "staking",
+                            "category": "delegator_numerator",
+                            "delegator": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+                            "change": "-1",
+                            "origin": "block"
+                        },
+                        {
+                            "kind": "freezer",
+                            "category": "deposits",
+                            "staker": {
+                                "contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+                                "delegate": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+                            },
+                            "change": "-1",
+                            "origin": "block"
+                        },
+                        {
+                            "kind": "freezer",
+                            "category": "unstaked_deposits",
+                            "staker": {
+                                "contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+                                "delegate": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+                            },
+                            "cycle": 1064,
+                            "change": "1",
+                            "origin": "block"
+                        }
+                    ],
+                    "consumed_milligas": "4249020"
+                }
+            }
+        }
+    ],
+    "signature": "edsigtXomBKi5CTRf5cjATJWSyaRvhfYNHqSUGrn4SdbYRcGwQrUGjzEfQDTuqHhuA8b2d8NarZjz8TRf65WkpQmo423BtomS8Q"
+}

@@ -253,6 +253,10 @@ public struct MockConstants {
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-response"), MockConstants.http200),
 			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-request")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-response"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-stake-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-stake-response"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-unstake-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-unstake-response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession

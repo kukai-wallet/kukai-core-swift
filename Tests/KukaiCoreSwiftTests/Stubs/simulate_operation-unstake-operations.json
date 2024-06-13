@@ -1,0 +1,14 @@
+[
+	{
+		"kind": "transaction",
+		"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+		"amount": "1",
+		"destination": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+		"parameters": {
+			"entrypoint": "unstake",
+			"value": {
+				"prim": "Unit"
+			}
+		}
+	}
+]

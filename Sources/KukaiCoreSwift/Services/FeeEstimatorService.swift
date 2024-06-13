@@ -95,7 +95,7 @@ public class FeeEstimatorService {
 			// To handle issues with sending max Tez, and simulation API not ignoring burn fees etc
 			// modify the operationPayload contents to send 1 mutez instead of real amount
 			// This won't effect the returned operations later, as we've made a deep copy first and will use that afte rthe estimation
-			if $0.operationKind == .transaction, let transOp = $0 as? OperationTransaction, (transOp.destination.prefix(3) != "KT1" && ($0 as? OperationTransaction)?.parameters == nil) {
+			if $0.operationKind == .transaction, let transOp = $0 as? OperationTransaction, (transOp.destination.prefix(3) != "KT1" && transOp.parameters == nil && transOp.destination != walletAddress) {
 				transOp.amount = "1" // rpc representation of 1 mutez
 			}
 		}
@@ -236,7 +236,7 @@ public class FeeEstimatorService {
 			}
 			
 			for balanceUpdate in content.metadata.operationResult?.balanceUpdates ?? [] {
-				if balanceUpdate.contract == address {
+				if balanceUpdate.contract == address || balanceUpdate.staker?.contract == address {
 					opStorage -= Decimal(string: balanceUpdate.change) ?? 0
 				}
 			}
@@ -261,6 +261,7 @@ public class FeeEstimatorService {
 			opGas = Decimal(FeeEstimatorService.addGasSafetyMarginTo(gasUsed: opGas.intValue()))
 			
 			
+			
 			// Convert storage to bytes
 			opStorage = opStorage / (constants.xtzPerByte().toRpcDecimal() ?? 250)
 			
@@ -275,7 +276,9 @@ public class FeeEstimatorService {
 				}
 			}
 			
-			// Check whether suggested or estimated gas / sotrage is higher and pick that
+			
+			
+			// Check whether suggested or estimated gas / storage is higher and pick that
 			let indexToCheck = index + suggestedCompareIndex
 			if indexToCheck > -1 {
 				let op = originalRemoteOps[indexToCheck]
@@ -288,6 +291,8 @@ public class FeeEstimatorService {
 					opStorage = Decimal(op.operationFees.storageLimit)
 				}
 			}
+			
+			
 			
 			
 			// Sum totals for later
