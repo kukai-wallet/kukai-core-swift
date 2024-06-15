@@ -392,7 +392,7 @@ public class TzKTClient {
 			return nil
 		}
 		
-		let cycleItShouldBeRecieved = cycles[(rewards.count-1) + bakerConfig.payoutDelay]
+		let cycleItShouldBeRecieved = cycles[(rewards.count-1)]
 		return rewardDetail(fromConfig: bakerConfig, rewards: rewards, cycles: cycles, selectedIndex: rewards.count-1, dateForDisplay: cycleItShouldBeRecieved.endDate ?? Date())
 	}
 	
