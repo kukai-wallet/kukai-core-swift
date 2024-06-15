@@ -337,7 +337,7 @@ public class TzKTClient {
 			
 			
 			// If we don't have enough objects to fetch, can't compute previous, early exit
-			if currentDelegatorRewards.count < previousRewardIndex {
+			if currentDelegatorRewards.count-1 < previousRewardIndex {
 				let nextPossibleReward = self?.tryToGetFutureRewardFromLimitedData(bakerConfigs: bakerConfigs, rewards: currentDelegatorRewards, cycles: currentCycles)
 				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: nextPossibleReward))) }
 				return
