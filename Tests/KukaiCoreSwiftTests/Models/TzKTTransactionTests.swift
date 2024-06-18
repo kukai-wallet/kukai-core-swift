@@ -97,7 +97,7 @@ final class TzKTTransactionTests: XCTestCase {
 		transaction.processAdditionalData(withCurrentWalletAddress: "tz1abc")
 		
 		if let json = try? JSONEncoder().encode(transaction), let jsonString = String(data: json, encoding: .utf8) {
-			XCTAssert(jsonString.count == 952, jsonString.count.description)
+			XCTAssert(jsonString.count == 944, jsonString.count.description)
 		} else {
 			XCTFail()
 		}

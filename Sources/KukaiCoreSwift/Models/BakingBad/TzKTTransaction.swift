@@ -250,10 +250,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		try container.encode(newDelegate, forKey: .newDelegate)
 		try container.encodeIfPresent(baker, forKey: .baker)
 		try container.encode(parameter, forKey: .parameter)
-		try container.encode(bakerFee.rpcRepresentation, forKey: .bakerFee)
-		try container.encode(storageFee.rpcRepresentation, forKey: .storageFee)
-		try container.encode(allocationFee.rpcRepresentation, forKey: .allocationFee)
-		try container.encode(amount.rpcRepresentation, forKey: .amount)
+		try container.encode(bakerFee.toRpcDecimal(), forKey: .bakerFee)
+		try container.encode(storageFee.toRpcDecimal(), forKey: .storageFee)
+		try container.encode(allocationFee.toRpcDecimal(), forKey: .allocationFee)
+		try container.encode(amount.toRpcDecimal(), forKey: .amount)
 		try container.encode(status.rawValue, forKey: .status)
 		try container.encode(hasInternals, forKey: .hasInternals)
 		try container.encode(tokenTransfersCount, forKey: .tokenTransfersCount)
@@ -343,9 +343,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 			
 		} else if self.kind == "stake" {
 			self.subType = .stake
+			self.primaryToken = createPrimaryToken()
 			
 		} else if self.kind == "unstake" {
 			self.subType = .unstake
+			self.primaryToken = createPrimaryToken()
 			
 		} else {
 			if self.type == .delegation {
