@@ -232,6 +232,8 @@ class TzKTClientTests: XCTestCase {
 						XCTAssert(group.groupType == .unstake, group.groupType.rawValue)
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
 						XCTAssert(group.transactions.first?.amount.description == "1", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
+						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
 						XCTAssert(group.hash == "ooyVR1r5vt3K4JGoVnH2XLQjwAVpoZaAkfdG1PssCPPovi7m1FL", group.hash)
 						XCTAssert(group.status == .applied, group.status.rawValue)
 						
@@ -239,6 +241,8 @@ class TzKTClientTests: XCTestCase {
 						XCTAssert(group.groupType == .stake, group.groupType.rawValue)
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
 						XCTAssert(group.transactions.first?.amount.description == "10", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
+						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
 						XCTAssert(group.hash == "opPGcuZ459ZGR11RXaL2rRDtKnHFC9o5JQdyBHj3Qua4BMBkAsi", group.hash)
 						XCTAssert(group.status == .applied, group.status.rawValue)
 						
