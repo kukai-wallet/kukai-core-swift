@@ -57,7 +57,7 @@ public struct MockConstants {
 		bcdTokenBalanceURL.appendQueryItem(name: "hide_empty", value: "true")
 		
 		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
-		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction")
+		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction,staking")
 		tzktHistoryMainURL.appendQueryItem(name: "micheline", value: "1")
 		tzktHistoryMainURL.appendQueryItem(name: "limit", value: "50")
 		

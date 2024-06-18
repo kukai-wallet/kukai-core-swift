@@ -59,7 +59,7 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
 			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
-			XCTAssert(groups.count == 19, "\(groups.count)")
+			XCTAssert(groups.count == 21, "\(groups.count)")
 			
 			for (index, group) in groups.enumerated() {
 				
@@ -227,6 +227,20 @@ class TzKTClientTests: XCTestCase {
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
 						XCTAssert(group.hash == "opC815T6zqTUtzQktPBBeLAB1eRnvuR5ETZDoLPGgAb3698wwFK", group.hash)
 						XCTAssert(group.status == .failed, group.status.rawValue)
+						
+					case 19:
+						XCTAssert(group.groupType == .unstake, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.transactions.first?.amount.description == "1", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.hash == "ooyVR1r5vt3K4JGoVnH2XLQjwAVpoZaAkfdG1PssCPPovi7m1FL", group.hash)
+						XCTAssert(group.status == .applied, group.status.rawValue)
+						
+					case 20:
+						XCTAssert(group.groupType == .stake, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.transactions.first?.amount.description == "10", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.hash == "opPGcuZ459ZGR11RXaL2rRDtKnHFC9o5JQdyBHj3Qua4BMBkAsi", group.hash)
+						XCTAssert(group.status == .applied, group.status.rawValue)
 						
 					default:
 						XCTFail("Missing test for transaction")

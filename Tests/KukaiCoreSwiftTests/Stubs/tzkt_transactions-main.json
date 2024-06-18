@@ -991,5 +991,55 @@
             }
         ],
         "hasInternals": false
+    },
+    {
+        "type": "staking",
+        "id": 314516181090304,
+        "level": 1672990,
+        "timestamp": "2024-06-18T12:03:40Z",
+        "hash": "ooyVR1r5vt3K4JGoVnH2XLQjwAVpoZaAkfdG1PssCPPovi7m1FL",
+        "sender": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "counter": 392658,
+        "gasLimit": 4335,
+        "gasUsed": 4249,
+        "storageLimit": 0,
+        "bakerFee": 705,
+        "action": "unstake",
+        "requestedAmount": 1000000,
+        "amount": 1000000,
+        "baker": {
+            "alias": "Baking Benjamins",
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "stakingUpdatesCount": 1,
+        "status": "applied",
+        "kind": "unstake"
+    },
+    {
+        "type": "staking",
+        "id": 314486743367680,
+        "level": 1672989,
+        "timestamp": "2024-06-18T10:41:46Z",
+        "hash": "opPGcuZ459ZGR11RXaL2rRDtKnHFC9o5JQdyBHj3Qua4BMBkAsi",
+        "sender": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "counter": 392657,
+        "gasLimit": 3907,
+        "gasUsed": 3830,
+        "storageLimit": 0,
+        "bakerFee": 663,
+        "action": "stake",
+        "requestedAmount": 10000000,
+        "amount": 10000000,
+        "baker": {
+            "alias": "Baking Benjamins",
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "stakingUpdatesCount": 2,
+        "status": "applied",
+        "kind": "stake"
     }
 ]
