@@ -86,6 +86,12 @@ public struct BalanceUpdate: Codable {
 	let change: String
 	let delegate: String?
 	let cycle: Int?
+	let staker: BalanceUpdateStake?
+}
+
+public struct BalanceUpdateStake: Codable {
+	let contract: String
+	let delegate: String
 }
 
 /// The inner `result` key from the `OeprationResponse`

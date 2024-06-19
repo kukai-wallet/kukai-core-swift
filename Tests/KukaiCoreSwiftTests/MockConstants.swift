@@ -57,7 +57,7 @@ public struct MockConstants {
 		bcdTokenBalanceURL.appendQueryItem(name: "hide_empty", value: "true")
 		
 		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
-		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction")
+		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction,staking")
 		tzktHistoryMainURL.appendQueryItem(name: "micheline", value: "1")
 		tzktHistoryMainURL.appendQueryItem(name: "limit", value: "50")
 		
@@ -96,6 +96,9 @@ public struct MockConstants {
 		var bakingBadConfigURL2 = bakingBadURL.appendingPathComponent("v2/bakers/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
 		bakingBadConfigURL2.appendQueryItem(name: "configs", value: "true")
 		
+		var bakingBadConfigURL3 = bakingBadURL.appendingPathComponent("v2/bakers/tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur")
+		bakingBadConfigURL3.appendQueryItem(name: "configs", value: "true")
+		
 		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")
 		tzktsuggestURL1.appendQueryItem(name: "limit", value: 1)
 		
@@ -105,20 +108,23 @@ public struct MockConstants {
 		var tzktsuggestURL3 = tzktURL.appendingPathComponent("v1/suggest/accounts/The Payouts")
 		tzktsuggestURL3.appendQueryItem(name: "limit", value: 1)
 		
+		var tzktsuggestURL4 = tzktURL.appendingPathComponent("v1/suggest/accounts/Baking Benjamins Payouts")
+		tzktsuggestURL4.appendQueryItem(name: "limit", value: 1)
+		
 		var tzktLastBakerRewardURL = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktLastBakerRewardURL.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC")
+		tzktLastBakerRewardURL.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
 		
 		var tzktLastBakerRewardURL2 = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktLastBakerRewardURL2.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL2.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL2.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi")
+		tzktLastBakerRewardURL2.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC")
 		
 		var tzktLastBakerRewardURL3 = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktLastBakerRewardURL3.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL3.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa,tz1XWEi47p85eUwRZk2Xsp9VobSwUFq7GYKi")
+		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
 		
 		var tzktDelegatesURL = tzktURL.appendingPathComponent("v1/delegates")
 		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")
@@ -175,9 +181,11 @@ public struct MockConstants {
 			tzktDelegatorRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards"), MockConstants.http200),
 			bakingBadConfigURL1: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa"), MockConstants.http200),
 			bakingBadConfigURL2: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv"), MockConstants.http200),
+			bakingBadConfigURL3: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"), MockConstants.http200),
 			tzktsuggestURL1: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-bake-nug"), MockConstants.http200),
 			tzktsuggestURL2: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire"), MockConstants.http200),
 			tzktsuggestURL3: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire_updated"), MockConstants.http200),
+			tzktsuggestURL4: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-baking-benjamins"), MockConstants.http200),
 			tzktLastBakerRewardURL: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL2: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL3: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
@@ -245,6 +253,10 @@ public struct MockConstants {
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-crunchy-swap-response"), MockConstants.http200),
 			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-request")):
 				(MockConstants.jsonStub(fromFilename: "simulate_operation-high-gas-low-storage-response"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-stake-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-stake-response"), MockConstants.http200),
+			MockPostUrlKey(url: simulateURL1, requestData: MockConstants.jsonStub(fromFilename: "simulate_operation-unstake-request")):
+				(MockConstants.jsonStub(fromFilename: "simulate_operation-unstake-response"), MockConstants.http200),
 		]
 		
 		config.urlSession = mockURLSession

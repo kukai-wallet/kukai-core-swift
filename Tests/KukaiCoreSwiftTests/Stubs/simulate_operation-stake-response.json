@@ -1,0 +1,63 @@
+{
+	"contents": [
+		{
+			"amount": "100000000",
+			"fee": "0",
+			"kind": "transaction",
+			"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+			"destination": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+			"metadata": {
+				"balance_updates": [
+					{
+						"kind": "contract",
+						"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+						"change": "-641",
+						"origin": "block"
+					},
+					{
+						"kind": "accumulator",
+						"category": "block fees",
+						"change": "641",
+						"origin": "block"
+					}
+				],
+				"operation_result": {
+					"status": "applied",
+					"balance_updates": [
+						{
+							"kind": "staking",
+							"category": "delegator_numerator",
+							"delegator": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+							"change": "92355529",
+							"origin": "block"
+						},
+						{
+							"kind": "staking",
+							"category": "delegate_denominator",
+							"delegate": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD",
+							"change": "92355529",
+							"origin": "block"
+						},
+						{
+							"kind": "contract",
+							"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+							"change": "-100000000",
+							"origin": "block"
+						},
+						{
+							"kind": "freezer",
+							"category": "deposits",
+							"staker": {
+								"contract": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+								"delegate": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+							},
+							"change": "100000000",
+							"origin": "block"
+						}
+					],
+					"consumed_milligas": "3629053"
+				}
+			}
+		}
+	]
+}

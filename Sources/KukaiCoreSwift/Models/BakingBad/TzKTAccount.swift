@@ -13,6 +13,12 @@ public struct TzKTAccount: Codable, Equatable {
 	/// The address XTZ balance in RPC format
 	public let balance: Decimal?
 	
+	/// The address staked (locked) XTZ balance in RPC format
+	public let stakedBalance: Decimal?
+	
+	/// The address unstaked (pending unlock) XTZ balance in RPC format
+	public let unstakedBalance: Decimal?
+	
 	/// type of account e.g. "user" or "empty"
 	public let type: String
 	
@@ -40,9 +46,27 @@ public struct TzKTAccount: Codable, Equatable {
 		return XTZAmount(fromRpcAmount: balance ?? 0) ?? .zero()
 	}
 	
+	/// Helper method to convert the RPC balance into an XTZAmount
+	public var xtzStakedBalance: XTZAmount {
+		return XTZAmount(fromRpcAmount: stakedBalance ?? 0) ?? .zero()
+	}
+	
+	/// Helper method to convert the RPC balance into an XTZAmount
+	public var xtzUnstakedBalance: XTZAmount {
+		return XTZAmount(fromRpcAmount: unstakedBalance ?? 0) ?? .zero()
+	}
+	
+	/// Helper method to to return the available or spendable balance
+	public var xtzAvailableBalance: XTZAmount {
+		return ((xtzBalance - xtzStakedBalance) - xtzUnstakedBalance)
+	}
+	
+	
 	/// Generic init
-	public init(balance: Decimal?, type: String, address: String, publicKey: String, revealed: Bool, delegate: TzKTAccountDelegate?, delegationLevel: Decimal?, activeTokensCount: Decimal?, tokenBalancesCount: Decimal?) {
+	public init(balance: Decimal?, stakedBalance: Decimal?, unstakedBalance: Decimal?, type: String, address: String, publicKey: String, revealed: Bool, delegate: TzKTAccountDelegate?, delegationLevel: Decimal?, activeTokensCount: Decimal?, tokenBalancesCount: Decimal?) {
 		self.balance = balance
+		self.stakedBalance = stakedBalance
+		self.unstakedBalance = unstakedBalance
 		self.type = type
 		self.address = address
 		self.publicKey = publicKey

@@ -26,7 +26,7 @@ public class TzKTClient {
 		public static let tokenBalanceQuerySize = 10000
 	}
 	
-	static let numberOfFutureCyclesReturned = 5
+	static var numberOfFutureCyclesReturned = 2
 	
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
@@ -337,7 +337,7 @@ public class TzKTClient {
 			
 			
 			// If we don't have enough objects to fetch, can't compute previous, early exit
-			if currentDelegatorRewards.count < previousRewardIndex {
+			if currentDelegatorRewards.count-1 < previousRewardIndex {
 				let nextPossibleReward = self?.tryToGetFutureRewardFromLimitedData(bakerConfigs: bakerConfigs, rewards: currentDelegatorRewards, cycles: currentCycles)
 				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: nextPossibleReward))) }
 				return
@@ -392,7 +392,7 @@ public class TzKTClient {
 			return nil
 		}
 		
-		let cycleItShouldBeRecieved = cycles[(rewards.count-1) + bakerConfig.payoutDelay]
+		let cycleItShouldBeRecieved = cycles[(rewards.count-1)]
 		return rewardDetail(fromConfig: bakerConfig, rewards: rewards, cycles: cycles, selectedIndex: rewards.count-1, dateForDisplay: cycleItShouldBeRecieved.endDate ?? Date())
 	}
 	
@@ -548,6 +548,15 @@ public class TzKTClient {
 			guard let res = try? result.get() else {
 				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
 				return
+			}
+			
+			for (index, reward) in res.enumerated() {
+				if reward.futureBlocks == 0 {
+					// Number of future cycles is 1 less than the index of the first reward where `futureBlocks` is equal to zero
+					// The first non zero is the current, in-progress block
+					TzKTClient.numberOfFutureCyclesReturned = (index-1)
+					break
+				}
 			}
 			
 			currentRewards = res
@@ -779,7 +788,7 @@ public class TzKTClient {
 	private func getAllBalances(forAddress address: String, numberOfPages: Int, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
-		var tzktAccount = TzKTAccount(balance: 0, type: "user", address: "", publicKey: "", revealed: false, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0, activeTokensCount: 0, tokenBalancesCount: 0)
+		var tzktAccount = TzKTAccount(balance: 0, stakedBalance: 0, unstakedBalance: 0, type: "user", address: "", publicKey: "", revealed: false, delegate: TzKTAccountDelegate(alias: nil, address: "", active: false), delegationLevel: 0, activeTokensCount: 0, tokenBalancesCount: 0)
 		var tokenBalances: [TzKTBalance] = []
 		//var liquidityTokens: [DipDupPositionData] = []
 		var errorFound: KukaiError? = nil
@@ -842,7 +851,7 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: []) ?? (tokens: [], nftGroups: [], recentNFTs: [])
-				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
+				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, xtzStakedBalance: tzktAccount.xtzUnstakedBalance, xtzUnstakedBalance: tzktAccount.xtzUnstakedBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
 				
 				completion(Result.success(account))
 			}
@@ -959,7 +968,7 @@ public class TzKTClient {
 		// Main transactions
 		var urlMain = config.tzktURL
 		urlMain.appendPathComponent("v1/accounts/\(address)/operations")
-		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction")
+		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction,staking")
 		urlMain.appendQueryItem(name: "micheline", value: 1)
 		urlMain.appendQueryItem(name: "limit", value: limit)
 		

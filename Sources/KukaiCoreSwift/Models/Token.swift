@@ -49,6 +49,19 @@ public class Token: Codable, CustomStringConvertible {
 	/// Object that holds and formats the balance of the token
 	public var balance: TokenAmount
 	
+	/// Object that holds and formats the staked balance of the token
+	public var stakedBalance: TokenAmount
+	
+	/// Object that holds and formats the pending unstaked balance of the token
+	public var unstakedBalance: TokenAmount
+	
+	/// helper to return the available spendable balance of the token `(balance - stakedBalance) - unstakedBalance`
+	public var availableBalance: TokenAmount {
+		get {
+			return (balance - stakedBalance) - unstakedBalance
+		}
+	}
+	
 	/// Get the underlying number of decimal places that this token represents
 	public var decimalPlaces: Int {
 		get {
@@ -100,12 +113,14 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter tokenId: The token id if the token is an FA2 token, nil otherwise.
 	- parameter nfts:The individual NFT's owned of this token type
 	*/
-	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?, mintingTool: String?) {
+	public init(name: String?, symbol: String, tokenType: TokenType, faVersion: FaVersion?, balance: TokenAmount, stakedBalance: TokenAmount? = nil, unstakedBalance: TokenAmount? = nil, thumbnailURL: URL?, tokenContractAddress: String?, tokenId: Decimal?, nfts: [NFT]?, mintingTool: String?) {
 		self.name = name
 		self.symbol = symbol
 		self.tokenType = tokenType
 		self.faVersion = faVersion
 		self.balance = balance
+		self.stakedBalance = stakedBalance ?? .zeroBalance(decimalPlaces: balance.decimalPlaces)
+		self.unstakedBalance = unstakedBalance ?? .zeroBalance(decimalPlaces: balance.decimalPlaces)
 		self.thumbnailURL = thumbnailURL
 		self.tokenContractAddress = tokenContractAddress
 		self.tokenId = tokenId
@@ -121,7 +136,7 @@ public class Token: Codable, CustomStringConvertible {
 	/**
 	 Init a `Token` from an object returned by the TzKT API
 	 */
-	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount) {
+	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount, stakedTokenAmount: TokenAmount? = nil, unstakedTokenAmount: TokenAmount? = nil) {
 		let decimalsString = from.metadata?.decimals ?? "0"
 		let decimalsInt = Int(decimalsString) ?? 0
 		let isNFT = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2)
@@ -131,6 +146,8 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.standard
 		self.balance = andTokenAmount
+		self.stakedBalance = stakedTokenAmount ?? .zeroBalance(decimalPlaces: andTokenAmount.decimalPlaces)
+		self.unstakedBalance = unstakedTokenAmount ?? .zeroBalance(decimalPlaces: andTokenAmount.decimalPlaces)
 		self.thumbnailURL = from.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.contract.address)
 		self.tokenContractAddress = from.contract.address
 		self.tokenId = Decimal(string: from.tokenId) ?? 0
@@ -156,7 +173,11 @@ public class Token: Codable, CustomStringConvertible {
 		self.symbol = isNFT ? from.token.metadata?.symbol ?? "" : from.token.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
 		self.faVersion = from.token.standard
-		self.balance = from.tokenAmount()
+		
+		let tokenAmount = from.tokenAmount()
+		self.balance = tokenAmount
+		self.stakedBalance = .zeroBalance(decimalPlaces: tokenAmount.decimalPlaces)
+		self.unstakedBalance = .zeroBalance(decimalPlaces: tokenAmount.decimalPlaces)
 		self.thumbnailURL = from.token.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.token.contract.address)
 		self.tokenContractAddress = from.token.contract.address
 		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
@@ -175,7 +196,7 @@ public class Token: Codable, CustomStringConvertible {
 	- returns: `Token`
 	*/
 	public static func xtz() -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: TokenAmount.zeroBalance(decimalPlaces: 6), stakedBalance: TokenAmount.zeroBalance(decimalPlaces: 6), unstakedBalance: TokenAmount.zeroBalance(decimalPlaces: 6), thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
 	}
 	
 	/**
@@ -183,13 +204,13 @@ public class Token: Codable, CustomStringConvertible {
 	- parameter withAmount: The Amount of XTZ to create the `Token` with.
 	- returns: `Token`.
 	*/
-	public static func xtz(withAmount amount: TokenAmount) -> Token {
-		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
+	public static func xtz(withAmount amount: TokenAmount, stakedAmount: TokenAmount = .zeroBalance(decimalPlaces: 6), unstakedAmount: TokenAmount = .zeroBalance(decimalPlaces: 6)) -> Token {
+		return Token(name: "Tezos", symbol: "XTZ", tokenType: .xtz, faVersion: nil, balance: amount, stakedBalance: stakedAmount, unstakedBalance: unstakedAmount, thumbnailURL: nil, tokenContractAddress: nil, tokenId: nil, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Useful for creating placeholders for pending activity items
 	public static func placeholder(fromNFT nft: NFT, amount: TokenAmount, thumbnailURL: URL?) -> Token {
-		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil, mintingTool: nil)
+		return Token(name: nft.name, symbol: nft.parentAlias ?? "", tokenType: .nonfungible, faVersion: .fa2, balance: amount, stakedBalance: .zeroBalance(decimalPlaces: amount.decimalPlaces), unstakedBalance: .zeroBalance(decimalPlaces: amount.decimalPlaces), thumbnailURL: thumbnailURL, tokenContractAddress: nft.parentContract, tokenId: nft.tokenId, nfts: nil, mintingTool: nil)
 	}
 	
 	/// Conforming to `CustomStringConvertible` to print a number, giving the appearence of a numeric type

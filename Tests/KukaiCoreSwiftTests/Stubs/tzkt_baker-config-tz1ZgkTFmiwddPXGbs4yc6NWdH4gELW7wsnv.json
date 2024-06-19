@@ -2,22 +2,22 @@
     "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
     "name": "The Shire",
     "logo": "https://services.tzkt.io/v1/avatars/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
-    "balance": 13765.509375,
-    "stakingBalance": 113473.999574,
-    "stakingCapacity": 133000,
-    "maxStakingBalance": 133000,
-    "freeSpace": 19526.000426,
+    "balance": 40340.153319,
+    "stakingBalance": 405649.076449,
+    "stakingCapacity": 400000,
+    "maxStakingBalance": 400000,
+    "freeSpace": -5649.076448999986,
     "fee": 0.042,
     "minDelegation": 0,
     "payoutDelay": 1,
     "payoutPeriod": 1,
     "openForDelegation": true,
-    "estimatedRoi": 0.058841,
+    "estimatedRoi": 0.058902,
     "serviceType": "tezos_only",
     "serviceHealth": "active",
     "payoutTiming": "stable",
     "payoutAccuracy": "precise",
-    "audit": "62947959d0970a602a90d424",
+    "audit": "6565bfaaa6632298f27ed779",
     "insuranceCoverage": 0,
     "config": {
         "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
@@ -34,6 +34,14 @@
             }
         ],
         "payoutFee": [
+            {
+                "cycle": 617,
+                "value": true
+            },
+            {
+                "cycle": 529,
+                "value": false
+            },
             {
                 "cycle": 0,
                 "value": true

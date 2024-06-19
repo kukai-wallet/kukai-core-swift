@@ -2,17 +2,17 @@
     "address": "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
     "name": "Bake Nug",
     "logo": "https://services.tzkt.io/v1/avatars/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
-    "balance": 295299.99798,
-    "stakingBalance": 2930551.45779,
-    "stakingCapacity": 2952999.9798,
-    "maxStakingBalance": 2952999.9798,
-    "freeSpace": 22448.522009999957,
-    "fee": 0.05,
+    "balance": 187878.327672,
+    "stakingBalance": 1663793.545668,
+    "stakingCapacity": 1878783.27672,
+    "maxStakingBalance": 1878783.27672,
+    "freeSpace": 214989.73105200008,
+    "fee": 0.1498,
     "minDelegation": 5,
     "payoutDelay": 6,
     "payoutPeriod": 1,
     "openForDelegation": true,
-    "estimatedRoi": 0.058402,
+    "estimatedRoi": 0.053012,
     "serviceType": "tezos_only",
     "serviceHealth": "active",
     "payoutTiming": "stable",
@@ -22,6 +22,14 @@
     "config": {
         "address": "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
         "fee": [
+            {
+                "cycle": 690,
+                "value": 0.1498
+            },
+            {
+                "cycle": 551,
+                "value": 0.0795
+            },
             {
                 "cycle": 392,
                 "value": 0.05

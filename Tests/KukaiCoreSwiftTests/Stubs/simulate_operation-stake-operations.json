@@ -1,0 +1,15 @@
+[
+	{
+		"amount": "100000000",
+		"counter": "10534537",
+		"destination": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss",
+		"kind": "transaction",
+		"parameters": {
+			"entrypoint": "stake",
+			"value": {
+				"prim": "Unit"
+			}
+		},
+		"source": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+	}
+]

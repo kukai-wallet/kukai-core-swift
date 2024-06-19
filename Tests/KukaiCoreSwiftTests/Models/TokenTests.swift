@@ -18,7 +18,6 @@ class TokenTests: XCTestCase {
 		
 	}
 	
-	
 	func testToken() {
 		let token = Token(name: "test1", symbol: "T", tokenType: .fungible, faVersion: .fa1_2, balance: TokenAmount(fromNormalisedAmount: 3, decimalPlaces: 4), thumbnailURL: URL(string: "ipfs://abcdefgh1234"), tokenContractAddress: "KT1abc", tokenId: nil, nfts: nil, mintingTool: nil)
 		
@@ -31,6 +30,7 @@ class TokenTests: XCTestCase {
 		XCTAssert(token.symbol == "T", token.symbol)
 		XCTAssert(token.tokenType == .fungible, token.tokenType.rawValue)
 		XCTAssert(token.tokenId == nil)
+		XCTAssert(token.balance.normalisedRepresentation == "3", token.balance.normalisedRepresentation)
 		
 		XCTAssert(token2.name == "test2", token2.name ?? "")
 		XCTAssert(token2.symbol == "F", token2.symbol)
@@ -47,7 +47,13 @@ class TokenTests: XCTestCase {
 		
 		let placeholder = Token.placeholder(fromNFT: nft, amount: .init(fromNormalisedAmount: 1, decimalPlaces: 0), thumbnailURL: nil)
 		XCTAssert(placeholder.name == "Unknown Token", placeholder.name ?? "-")
-		XCTAssert(placeholder.balance.description == "1", placeholder.balance.description)
+		XCTAssert(placeholder.balance.normalisedRepresentation == "1", placeholder.balance.normalisedRepresentation)
+		XCTAssert(placeholder.availableBalance.normalisedRepresentation == "1", placeholder.availableBalance.normalisedRepresentation)
+		
+		let placeholder2 = Token.placeholder(fromNFT: nft, amount: .init(fromNormalisedAmount: 1, decimalPlaces: 4), thumbnailURL: nil)
+		XCTAssert(placeholder2.name == "Unknown Token", placeholder2.name ?? "-")
+		XCTAssert(placeholder2.balance.normalisedRepresentation == "1", placeholder2.balance.normalisedRepresentation)
+		XCTAssert(placeholder2.availableBalance.normalisedRepresentation == "1", placeholder2.availableBalance.normalisedRepresentation)
 		
 		XCTAssert(token == token)
 		XCTAssert(token != token2)

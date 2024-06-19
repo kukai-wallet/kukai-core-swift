@@ -18,6 +18,12 @@ public struct Account: Codable, Hashable {
 	/// The XTZ balance of the wallet
 	public let xtzBalance: XTZAmount
 	
+	/// The staked (locked) XTZ balance of the wallet
+	public let xtzStakedBalance: XTZAmount
+	
+	/// The unstaked (pending unlock) XTZ balance of the wallet
+	public let xtzUnstakedBalance: XTZAmount
+	
 	/// All the wallets FA1.2, FA2 funginble tokens
 	public let tokens: [Token]
 	
@@ -36,11 +42,19 @@ public struct Account: Codable, Hashable {
 	/// The block level that the delegate was set
 	public let delegationLevel: Decimal?
 	
+	/// The total available (or spendable) balance of the account
+	public var availableBalance: XTZAmount {
+		get {
+			return (xtzBalance - xtzStakedBalance) - xtzUnstakedBalance
+		}
+	}
 	
 	/// Basic init to default properties to zero / empty, so that optionals can be avoided on a key model throughout an app
 	public init(walletAddress: String) {
 		self.walletAddress = walletAddress
 		self.xtzBalance = .zero()
+		self.xtzStakedBalance = .zero()
+		self.xtzUnstakedBalance = .zero()
 		self.tokens = []
 		self.nfts = []
 		self.recentNFTs = []
@@ -50,9 +64,11 @@ public struct Account: Codable, Hashable {
 	}
 	
 	/// Full init
-	public init(walletAddress: String, xtzBalance: XTZAmount, tokens: [Token], nfts: [Token], recentNFTs: [NFT], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
+	public init(walletAddress: String, xtzBalance: XTZAmount, xtzStakedBalance: XTZAmount, xtzUnstakedBalance: XTZAmount, tokens: [Token], nfts: [Token], recentNFTs: [NFT], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
 		self.walletAddress = walletAddress
 		self.xtzBalance = xtzBalance
+		self.xtzStakedBalance = xtzStakedBalance
+		self.xtzUnstakedBalance = xtzUnstakedBalance
 		self.tokens = tokens
 		self.nfts = nfts
 		self.recentNFTs = recentNFTs
