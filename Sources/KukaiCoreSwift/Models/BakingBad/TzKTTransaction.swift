@@ -349,6 +349,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 			self.subType = .unstake
 			self.primaryToken = createPrimaryToken()
 			
+		} else if self.kind == "finalize" {
+			self.subType = .finaliseUnstake
+			self.primaryToken = createPrimaryToken()
+			
 		} else {
 			if self.type == .delegation {
 				self.subType = .delegate

@@ -59,7 +59,7 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.defaultHdWallet.address) { transactions in
 			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.defaultHdWallet.address)
 			
-			XCTAssert(groups.count == 21, "\(groups.count)")
+			XCTAssert(groups.count == 22, "\(groups.count)")
 			
 			for (index, group) in groups.enumerated() {
 				
@@ -246,6 +246,16 @@ class TzKTClientTests: XCTestCase {
 						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
 						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
 						XCTAssert(group.hash == "opPGcuZ459ZGR11RXaL2rRDtKnHFC9o5JQdyBHj3Qua4BMBkAsi", group.hash)
+						XCTAssert(group.status == .applied, group.status.rawValue)
+						
+					case 21:
+						XCTAssert(group.groupType == .finaliseUnstake, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.transactions.first?.amount.description == "400333", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.transactions.first?.primaryToken?.balance.description == "400333", group.transactions.first?.primaryToken?.balance.description ?? "-")
+						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
+						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
+						XCTAssert(group.hash == "onnkAJpSQ8SnLB94saCmtQdPge7gCyEwG6UuEW6KhGkbaQobFBu", group.hash)
 						XCTAssert(group.status == .applied, group.status.rawValue)
 						
 					default:

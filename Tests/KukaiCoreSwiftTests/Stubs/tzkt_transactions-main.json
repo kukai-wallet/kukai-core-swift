@@ -1041,5 +1041,30 @@
         "stakingUpdatesCount": 2,
         "status": "applied",
         "kind": "stake"
+    },
+    {
+        "type": "staking",
+        "id": 309694884216832,
+        "level": 1672988,
+        "timestamp": "2024-06-09T15:50:30Z",
+        "hash": "onnkAJpSQ8SnLB94saCmtQdPge7gCyEwG6UuEW6KhGkbaQobFBu",
+        "sender": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "counter": 27926309,
+        "gasLimit": 1830,
+        "gasUsed": 1729,
+        "storageLimit": 0,
+        "bakerFee": 464,
+        "action": "finalize",
+        "requestedAmount": 0,
+        "amount": 400333000000,
+        "baker": {
+            "alias": "Baking Benjamins",
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "stakingUpdatesCount": 2,
+        "status": "applied",
+        "kind": "finalize"
     }
 ]
