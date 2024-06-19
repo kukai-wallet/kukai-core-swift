@@ -386,6 +386,9 @@
                 <a href="../Structs.html#/s:14KukaiCoreSwift13BalanceUpdateV">BalanceUpdate</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift18BalanceUpdateStakeV">BalanceUpdateStake</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/BetterCallDevOperation.html">BetterCallDevOperation</a>
               </li>
               <li class="nav-group-task">
@@ -897,6 +900,87 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14KukaiCoreSwift5TokenC13stakedBalanceAA0D6AmountCvp"></a>
+                    <a name="//apple_ref/swift/Property/stakedBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC13stakedBalanceAA0D6AmountCvp">stakedBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Object that holds and formats the staked balance of the token</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">stakedBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift5TokenC15unstakedBalanceAA0D6AmountCvp"></a>
+                    <a name="//apple_ref/swift/Property/unstakedBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC15unstakedBalanceAA0D6AmountCvp">unstakedBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Object that holds and formats the pending unstaked balance of the token</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">unstakedBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift5TokenC16availableBalanceAA0D6AmountCvp"></a>
+                    <a name="//apple_ref/swift/Property/availableBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC16availableBalanceAA0D6AmountCvp">availableBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>helper to return the available spendable balance of the token <code>(balance - stakedBalance) - unstakedBalance</code></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">availableBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14KukaiCoreSwift5TokenC13decimalPlacesSivp"></a>
                     <a name="//apple_ref/swift/Property/decimalPlaces" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift5TokenC13decimalPlacesSivp">decimalPlaces</a>
@@ -1179,9 +1263,9 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift5TokenC4name6symbol9tokenType9faVersion7balance12thumbnailURL0G15ContractAddress0G2Id4nfts11mintingToolACSSSg_SSAC0dH0OAA02FaJ0OSgAA0D6AmountC10Foundation0M0VSgANSo9NSDecimalaSgSayAA3NFTVGSgANtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(name:symbol:tokenType:faVersion:balance:thumbnailURL:tokenContractAddress:tokenId:nfts:mintingTool:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC4name6symbol9tokenType9faVersion7balance12thumbnailURL0G15ContractAddress0G2Id4nfts11mintingToolACSSSg_SSAC0dH0OAA02FaJ0OSgAA0D6AmountC10Foundation0M0VSgANSo9NSDecimalaSgSayAA3NFTVGSgANtcfc">init(name:<wbr>symbol:<wbr>tokenType:<wbr>faVersion:<wbr>balance:<wbr>thumbnailURL:<wbr>tokenContractAddress:<wbr>tokenId:<wbr>nfts:<wbr>mintingTool:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift5TokenC4name6symbol9tokenType9faVersion7balance13stakedBalance08unstakedM012thumbnailURL0G15ContractAddress0G2Id4nfts11mintingToolACSSSg_SSAC0dH0OAA02FaJ0OSgAA0D6AmountCAWSgAX10Foundation0P0VSgAPSo9NSDecimalaSgSayAA3NFTVGSgAPtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(name:symbol:tokenType:faVersion:balance:stakedBalance:unstakedBalance:thumbnailURL:tokenContractAddress:tokenId:nfts:mintingTool:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC4name6symbol9tokenType9faVersion7balance13stakedBalance08unstakedM012thumbnailURL0G15ContractAddress0G2Id4nfts11mintingToolACSSSg_SSAC0dH0OAA02FaJ0OSgAA0D6AmountCAWSgAX10Foundation0P0VSgAPSo9NSDecimalaSgSayAA3NFTVGSgAPtcfc">init(name:<wbr>symbol:<wbr>tokenType:<wbr>faVersion:<wbr>balance:<wbr>stakedBalance:<wbr>unstakedBalance:<wbr>thumbnailURL:<wbr>tokenContractAddress:<wbr>tokenId:<wbr>nfts:<wbr>mintingTool:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1196,7 +1280,7 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">symbol</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenType</span><span class="p">:</span> <span class="kt"><a href="../Classes/Token/TokenType.html">TokenType</a></span><span class="p">,</span> <span class="nv">faVersion</span><span class="p">:</span> <span class="kt"><a href="../Enums/FaVersion.html">FaVersion</a></span><span class="p">?,</span> <span class="nv">balance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">thumbnailURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">tokenContractAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">nfts</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/NFT.html">NFT</a></span><span class="p">]?,</span> <span class="nv">mintingTool</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">symbol</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">tokenType</span><span class="p">:</span> <span class="kt"><a href="../Classes/Token/TokenType.html">TokenType</a></span><span class="p">,</span> <span class="nv">faVersion</span><span class="p">:</span> <span class="kt"><a href="../Enums/FaVersion.html">FaVersion</a></span><span class="p">?,</span> <span class="nv">balance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">stakedBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">unstakedBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">thumbnailURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">tokenContractAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">tokenId</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">nfts</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/NFT.html">NFT</a></span><span class="p">]?,</span> <span class="nv">mintingTool</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
 
                         </div>
                       </div>
@@ -1321,9 +1405,9 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift5TokenC4from03andD6AmountAcA011TzKTBalanceD0V_AA0dG0Ctcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(from:andTokenAmount:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC4from03andD6AmountAcA011TzKTBalanceD0V_AA0dG0Ctcfc">init(from:<wbr>andTokenAmount:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift5TokenC4from03andD6Amount06stakeddG008unstakeddG0AcA011TzKTBalanceD0V_AA0dG0CAKSgALtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(from:andTokenAmount:stakedTokenAmount:unstakedTokenAmount:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC4from03andD6Amount06stakeddG008unstakeddG0AcA011TzKTBalanceD0V_AA0dG0CAKSgALtcfc">init(from:<wbr>andTokenAmount:<wbr>stakedTokenAmount:<wbr>unstakedTokenAmount:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1338,7 +1422,7 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTBalanceToken.html">TzKTBalanceToken</a></span><span class="p">,</span> <span class="nv">andTokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTBalanceToken.html">TzKTBalanceToken</a></span><span class="p">,</span> <span class="nv">andTokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">stakedTokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">unstakedTokenAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1406,9 +1490,9 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift5TokenC3xtz10withAmountAcA0dG0C_tFZ"></a>
-                    <a name="//apple_ref/swift/Method/xtz(withAmount:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC3xtz10withAmountAcA0dG0C_tFZ">xtz(withAmount:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift5TokenC3xtz10withAmount06stakedG008unstakedG0AcA0dG0C_A2ItFZ"></a>
+                    <a name="//apple_ref/swift/Method/xtz(withAmount:stakedAmount:unstakedAmount:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift5TokenC3xtz10withAmount06stakedG008unstakedG0AcA0dG0C_A2ItFZ">xtz(withAmount:<wbr>stakedAmount:<wbr>unstakedAmount:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1423,7 +1507,7 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">xtz</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Token</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">xtz</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">stakedAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span> <span class="o">=</span> <span class="o">.</span><span class="nf">zeroBalance</span><span class="p">(</span><span class="nv">decimalPlaces</span><span class="p">:</span> <span class="mi">6</span><span class="p">),</span> <span class="nv">unstakedAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span> <span class="o">=</span> <span class="o">.</span><span class="nf">zeroBalance</span><span class="p">(</span><span class="nv">decimalPlaces</span><span class="p">:</span> <span class="mi">6</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kt">Token</span></code></pre>
 
                         </div>
                       </div>
@@ -1621,8 +1705,8 @@ versus fetching a FA1.2 token balance. This allows the library to abstract this 
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-05)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>

@@ -386,6 +386,9 @@
                 <a href="../Structs.html#/s:14KukaiCoreSwift13BalanceUpdateV">BalanceUpdate</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift18BalanceUpdateStakeV">BalanceUpdateStake</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/BetterCallDevOperation.html">BetterCallDevOperation</a>
               </li>
               <li class="nav-group-task">
@@ -756,6 +759,60 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14KukaiCoreSwift11TzKTAccountV13stakedBalanceSo9NSDecimalaSgvp"></a>
+                    <a name="//apple_ref/swift/Property/stakedBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV13stakedBalanceSo9NSDecimalaSgvp">stakedBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The address staked (locked) XTZ balance in RPC format</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">stakedBalance</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11TzKTAccountV15unstakedBalanceSo9NSDecimalaSgvp"></a>
+                    <a name="//apple_ref/swift/Property/unstakedBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV15unstakedBalanceSo9NSDecimalaSgvp">unstakedBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The address unstaked (pending unlock) XTZ balance in RPC format</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">unstakedBalance</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14KukaiCoreSwift11TzKTAccountV4typeSSvp"></a>
                     <a name="//apple_ref/swift/Property/type" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV4typeSSvp">type</a>
@@ -997,9 +1054,90 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift11TzKTAccountV7balance4type7address9publicKey8revealed8delegate15delegationLevel17activeTokensCount013tokenBalancesQ0ACSo9NSDecimalaSg_S3SSbAA0dE8DelegateVSgA3Otcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(balance:type:address:publicKey:revealed:delegate:delegationLevel:activeTokensCount:tokenBalancesCount:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV7balance4type7address9publicKey8revealed8delegate15delegationLevel17activeTokensCount013tokenBalancesQ0ACSo9NSDecimalaSg_S3SSbAA0dE8DelegateVSgA3Otcfc">init(balance:<wbr>type:<wbr>address:<wbr>publicKey:<wbr>revealed:<wbr>delegate:<wbr>delegationLevel:<wbr>activeTokensCount:<wbr>tokenBalancesCount:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift11TzKTAccountV16xtzStakedBalanceAA9XTZAmountCvp"></a>
+                    <a name="//apple_ref/swift/Property/xtzStakedBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV16xtzStakedBalanceAA9XTZAmountCvp">xtzStakedBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Helper method to convert the RPC balance into an XTZAmount</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">xtzStakedBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11TzKTAccountV18xtzUnstakedBalanceAA9XTZAmountCvp"></a>
+                    <a name="//apple_ref/swift/Property/xtzUnstakedBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV18xtzUnstakedBalanceAA9XTZAmountCvp">xtzUnstakedBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Helper method to convert the RPC balance into an XTZAmount</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">xtzUnstakedBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11TzKTAccountV19xtzAvailableBalanceAA9XTZAmountCvp"></a>
+                    <a name="//apple_ref/swift/Property/xtzAvailableBalance" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV19xtzAvailableBalanceAA9XTZAmountCvp">xtzAvailableBalance</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Helper method to to return the available or spendable balance</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">xtzAvailableBalance</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11TzKTAccountV7balance13stakedBalance08unstakedH04type7address9publicKey8revealed8delegate15delegationLevel17activeTokensCount013tokenBalancesT0ACSo9NSDecimalaSg_A2QS3SSbAA0dE8DelegateVSgA3Qtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(balance:stakedBalance:unstakedBalance:type:address:publicKey:revealed:delegate:delegationLevel:activeTokensCount:tokenBalancesCount:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11TzKTAccountV7balance13stakedBalance08unstakedH04type7address9publicKey8revealed8delegate15delegationLevel17activeTokensCount013tokenBalancesT0ACSo9NSDecimalaSg_A2QS3SSbAA0dE8DelegateVSgA3Qtcfc">init(balance:<wbr>stakedBalance:<wbr>unstakedBalance:<wbr>type:<wbr>address:<wbr>publicKey:<wbr>revealed:<wbr>delegate:<wbr>delegationLevel:<wbr>activeTokensCount:<wbr>tokenBalancesCount:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1014,7 +1152,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">balance</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">revealed</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAccountDelegate.html">TzKTAccountDelegate</a></span><span class="p">?,</span> <span class="nv">delegationLevel</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">activeTokensCount</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">tokenBalancesCount</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">balance</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">stakedBalance</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">unstakedBalance</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">revealed</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAccountDelegate.html">TzKTAccountDelegate</a></span><span class="p">?,</span> <span class="nv">delegationLevel</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">activeTokensCount</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?,</span> <span class="nv">tokenBalancesCount</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?)</span></code></pre>
 
                         </div>
                       </div>
@@ -1026,8 +1164,8 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-05)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>
