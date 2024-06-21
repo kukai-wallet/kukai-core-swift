@@ -338,7 +338,7 @@ class WalletCacheServiceTests: XCTestCase {
 		
 		do {
 			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
-			let list =  walletCacheService.readMetadataFromDiskAndDecrypt()
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
 			let watch = list.watchWallets
 			XCTAssert(watch.count == 1, watch.count.description)
 		} catch {
@@ -362,6 +362,33 @@ class WalletCacheServiceTests: XCTestCase {
 			XCTFail("Already exists, should be rejected")
 		} catch let error {
 			XCTAssert(error.localizedDescription == "The operation couldn’t be completed. (KukaiCoreSwift.WalletCacheError error 8.)", error.localizedDescription)
+		}
+	}
+	
+	func testWatchWalletRemovedAfterImported() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		// Add watch and confirm
+		let watchWallet = WalletMetadata(address: MockConstants.defaultLinearWallet.address, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		
+		do {
+			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let watch = list.watchWallets
+			XCTAssert(watch.count == 1, watch.count.description)
+		} catch let error {
+			XCTFail("Should not error: \(error)")
+		}
+		
+		
+		// Add the wallet via an import, test watch is now been removed
+		do {
+			try walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let watch = list.watchWallets
+			XCTAssert(watch.count == 0, watch.count.description)
+		} catch {
+			XCTFail("Should not error: \(error)")
 		}
 	}
 }

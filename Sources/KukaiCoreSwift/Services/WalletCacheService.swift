@@ -135,8 +135,17 @@ public class WalletCacheService {
 		
 		if encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata) == false {
 			throw WalletCacheError.unableToEncryptAndWrite
+		} else {
+			removeNewAddressFromWatchListIfExists(wallet.address, list: newMetadata)
 		}
 	}
+	
+	private func removeNewAddressFromWatchListIfExists(_ address: String, list: WalletMetadataList) {
+		if let _ = list.watchWallets.first(where: { $0.address == address }) {
+			let _ = deleteWatchWallet(address: address)
+		}
+	}
+	
 	/**
 	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
 	 */
