@@ -345,4 +345,23 @@ class WalletCacheServiceTests: XCTestCase {
 			XCTFail("Should not error: \(error)")
 		}
 	}
+	
+	func testWatchWalletThatAlreadyExists() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		do {
+			try walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)
+		} catch {
+			XCTFail("Should not error: \(error)")
+		}
+		
+		let watchWallet = WalletMetadata(address: MockConstants.defaultLinearWallet.address, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		
+		do {
+			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
+			XCTFail("Already exists, should be rejected")
+		} catch let error {
+			XCTAssert(error.localizedDescription == "The operation couldn’t be completed. (KukaiCoreSwift.WalletCacheError error 8.)", error.localizedDescription)
+		}
+	}
 }

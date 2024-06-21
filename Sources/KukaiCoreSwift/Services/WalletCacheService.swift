@@ -143,8 +143,8 @@ public class WalletCacheService {
 	public func cacheWatchWallet(metadata: WalletMetadata) throws {
 		var list = readMetadataFromDiskAndDecrypt()
 		
-		if let _ = list.watchWallets.first(where: { $0.address == metadata.address }) {
-			Logger.walletCache.error("cacheWatchWallet - Unable to cache wallet, walelt already exists")
+		if let _ = list.addresses().first(where: { $0 == metadata.address }) {
+			Logger.walletCache.error("cacheWatchWallet - Unable to cache wallet, wallet already exists")
 			throw WalletCacheError.walletAlreadyExists
 		}
 			
