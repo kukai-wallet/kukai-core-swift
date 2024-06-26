@@ -96,7 +96,7 @@ public class MediaProxyService: NSObject {
 	public static func setupImageLibrary() {
 		MediaProxyService.permanentCache.config.maxMemoryCost = UInt(100 * 1000 * 1000) // 100 MB
 		
-		MediaProxyService.temporaryCache.config.maxDiskAge = 3600 * 24 * 7 // 1 Week
+		MediaProxyService.temporaryCache.config.maxDiskAge = 3600 * 24 * 30 // 30 days
 		MediaProxyService.temporaryCache.config.maxMemoryCost = UInt(500 * 1000 * 1000) // 500 MB
 		
 		MediaProxyService.detailCache.config.maxDiskAge = 3600 * 24 // 1 day
