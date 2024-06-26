@@ -36,7 +36,7 @@ public struct MockConstants {
 	// MARK: - Init
 	
 	private init() {
-		config = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
+		config = TezosNodeClientConfig(withDefaultsForNetworkType: .ghostnet)
 		loggingConfig = LoggingConfig(logNetworkFailures: true, logNetworkSuccesses: true)
 		
 		let sessionConfig = URLSessionConfiguration.ephemeral // Uses no caching / storage

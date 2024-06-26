@@ -255,13 +255,13 @@ class WalletCacheServiceTests: XCTestCase {
 		XCTAssert(metadata1.hasMainnetDomain())
 		XCTAssert(metadata1.hasGhostnetDomain())
 		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.mainnet))
-		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.testnet))
+		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.ghostnet))
 		XCTAssert(metadata1.mainnetDomains?.first?.domain.name == "blah.tez")
 		XCTAssert(metadata1.ghostnetDomains?.first?.domain.name == "blah.gho")
 		XCTAssert(metadata1.primaryMainnetDomain()?.domain.name == "blah.tez")
 		XCTAssert(metadata1.primaryGhostnetDomain()?.domain.name == "blah.gho")
 		XCTAssert(metadata1.primaryDomain(onNetwork: .mainnet)?.domain.name == "blah.tez")
-		XCTAssert(metadata1.primaryDomain(onNetwork: .testnet)?.domain.name == "blah.gho")
+		XCTAssert(metadata1.primaryDomain(onNetwork: .ghostnet)?.domain.name == "blah.gho")
 		
 		
 		

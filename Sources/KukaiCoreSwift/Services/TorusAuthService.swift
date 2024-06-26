@@ -161,10 +161,10 @@ public class TorusAuthService: NSObject {
 							   aggregateVerifierType: verifierWrapper.verifierType,
 							   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.verifier,
 							   subVerifierDetails: [verifierWrapper.subverifier],
-							   network: verifierWrapper.networkType == .testnet ? .legacy(.TESTNET) : .legacy(.MAINNET),
+							   network: verifierWrapper.networkType == .mainnet ? .legacy(.MAINNET) : .legacy(.TESTNET),
 							   loglevel: .error,
 							   urlSession: self.networkService.urlSession,
-							   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
+							   networkUrl: verifierWrapper.networkType == .mainnet ? nil : "https://www.ankr.com/rpc/eth/eth_goerli")
 		}
 
 		
@@ -317,7 +317,7 @@ public class TorusAuthService: NSObject {
 	
 	/// Private wrapper to avoid duplication in the previous function
 	private func getPublicAddress(verifierName: String, verifierWrapper: SubverifierWrapper, socialUserId: String, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
-		let isTestnet = (verifierWrapper.networkType == .testnet)
+		let isTestnet = (verifierWrapper.networkType != .mainnet)
 		self.fetchNodeDetails = NodeDetailManager(network: (isTestnet ? .legacy(.TESTNET) : .legacy(.MAINNET)), urlSession: networkService.urlSession)
 		
 		Task {
@@ -457,10 +457,10 @@ extension TorusAuthService: ASAuthorizationControllerDelegate, ASAuthorizationCo
 									   aggregateVerifierType: verifierWrapper.verifierType,
 									   aggregateVerifier: verifierWrapper.aggregateVerifierName ?? verifierWrapper.subverifier.verifier,
 									   subVerifierDetails: [verifierWrapper.subverifier],
-									   network: verifierWrapper.networkType == .testnet ? .legacy(.TESTNET) : .legacy(.MAINNET),
+									   network: verifierWrapper.networkType == .mainnet ? .legacy(.MAINNET) : .legacy(.TESTNET),
 									   loglevel: .error,
 									   urlSession: self.networkService.urlSession,
-									   networkUrl: verifierWrapper.networkType == .testnet ? "https://www.ankr.com/rpc/eth/eth_goerli" : nil)
+									   networkUrl: verifierWrapper.networkType == .mainnet ? nil : "https://www.ankr.com/rpc/eth/eth_goerli")
 				
 				Task { @MainActor in
 					do {

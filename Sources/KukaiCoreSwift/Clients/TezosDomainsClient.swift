@@ -86,7 +86,7 @@ public class TezosDomainsClient {
 			dispatchGroup.leave()
 		}
 		
-		getDomainFor(address: address, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL) { result in
+		getDomainFor(address: address, url: TezosNodeClientConfig.defaultGhostnetURLs.tezosDomainsURL) { result in
 			guard let res = try? result.get() else {
 				errorGhost = result.getFailure()
 				dispatchGroup.leave()
@@ -172,7 +172,7 @@ public class TezosDomainsClient {
 			dispatchGroup.leave()
 		}
 		
-		getDomainsFor(addresses: addresses, url: TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL) { result in
+		getDomainsFor(addresses: addresses, url: TezosNodeClientConfig.defaultGhostnetURLs.tezosDomainsURL) { result in
 			guard let res = try? result.get() else {
 				errorGhost = result.getFailure()
 				dispatchGroup.leave()
