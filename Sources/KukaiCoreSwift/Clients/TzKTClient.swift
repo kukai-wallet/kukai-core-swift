@@ -322,7 +322,8 @@ public class TzKTClient {
 			var estimatedNextReward: RewardDetails? = nil
 			
 			// Check if we have enough rewards to bring us up to the current cycle
-			guard currentDelegatorRewards.count > TzKTClient.numberOfFutureCyclesReturned,
+			guard TzKTClient.numberOfFutureCyclesReturned >= 0,
+				  currentDelegatorRewards.count > TzKTClient.numberOfFutureCyclesReturned,
 				  let currentBakerConfig = bakerConfigs[delegate.address],
 				  let inProgresCycleBakerConfig = bakerConfigs[currentDelegatorRewards[TzKTClient.numberOfFutureCyclesReturned].baker.address] else {
 				
