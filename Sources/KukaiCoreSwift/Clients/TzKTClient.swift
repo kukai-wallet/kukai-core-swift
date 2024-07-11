@@ -18,6 +18,7 @@ public class TzKTClient {
 	/// Unique Errors that TzKTClient can throw
 	public enum TzKTServiceError: Error {
 		case invalidURL
+		case invalidAddress
 		case parseError(String)
 	}
 	
@@ -714,6 +715,11 @@ public class TzKTClient {
 	 - parameter completion: The completion block called with a `Result` containing the number or an error
 	 */
 	public func getBalanceCount(forAddress: String, completion: @escaping (Result<Int, KukaiError>) -> Void) {
+		guard forAddress != "" else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidAddress)))
+			return
+		}
+		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/tokens/balances/count")
 		url.appendQueryItem(name: "account", value: forAddress)
@@ -731,6 +737,11 @@ public class TzKTClient {
 	 - parameter completion: The completion block called with a `Result` containing an array of balances or an error
 	 */
 	public func getBalancePage(forAddress: String, offset: Int = 0, completion: @escaping ((Result<[TzKTBalance], KukaiError>) -> Void)) {
+		guard forAddress != "" else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidAddress)))
+			return
+		}
+		
 		var url = config.tzktURL
 		url.appendPathComponent("v1/tokens/balances")
 		url.appendQueryItem(name: "account", value: forAddress)
@@ -750,6 +761,11 @@ public class TzKTClient {
 	 - parameter completion: The completion block called with a `Result` containing an object or an error
 	 */
 	public func getAccount(forAddress: String, fromURL: URL? = nil, completion: @escaping ((Result<TzKTAccount, KukaiError>) -> Void)) {
+		guard forAddress != "" else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidAddress)))
+			return
+		}
+		
 		var url = fromURL == nil ? config.tzktURL : fromURL
 		url?.appendPathComponent("v1/accounts/\(forAddress)")
 		
@@ -769,6 +785,11 @@ public class TzKTClient {
 	 - parameter completion: The completion block called with a `Result` containing an object or an error
 	 */
 	public func getAllBalances(forAddress address: String, completion: @escaping ((Result<Account, KukaiError>) -> Void)) {
+		guard address != "" else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidAddress)))
+			return
+		}
+		
 		getBalanceCount(forAddress: address) { [weak self] result in
 			guard let tokenCount = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
@@ -959,6 +980,11 @@ public class TzKTClient {
 	
 	/// Fetch all transactions, both account operations, and token transfers, and combine them into 1 response
 	public func fetchTransactions(forAddress address: String, limit: Int = 50, completion: @escaping (([TzKTTransaction]) -> Void)) {
+		guard address != "" else {
+			completion([])
+			return
+		}
+		
 		let dispatchGroupTransactions = DispatchGroup()
 		dispatchGroupTransactions.enter()
 		dispatchGroupTransactions.enter()
