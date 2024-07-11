@@ -1148,6 +1148,7 @@ public class TzKTClient {
 extension TzKTClient: HubConnectionDelegate {
 	
 	public func connectionDidOpen(hubConnection: HubConnection) {
+		if addressesToWatch.count == 0 { return }
 		
 		// Request to be subscribed to events belonging to the given account
 		let subscription = AccountSubscription(addresses: addressesToWatch)
