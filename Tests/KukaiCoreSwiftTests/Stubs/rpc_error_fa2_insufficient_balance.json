@@ -1,0 +1,330 @@
+{
+	"contents": [
+		{
+			"kind": "transaction",
+			"source": "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+			"fee": "0",
+			"counter": "6856031",
+			"gas_limit": "1040000",
+			"storage_limit": "60000",
+			"amount": "0",
+			"destination": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+			"parameters": {
+				"entrypoint": "approve",
+				"value": {
+					"prim": "Pair",
+					"args": [
+						{
+							"string": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc"
+						},
+						{
+							"int": "0"
+						}
+					]
+				}
+			},
+			"metadata": {
+				"operation_result": {
+					"status": "backtracked",
+					"consumed_milligas": "3471406",
+					"storage_size": "215587",
+					"lazy_storage_diff": [
+						{
+							"kind": "big_map",
+							"id": "31",
+							"diff": {
+								"action": "update",
+								"updates": [
+									{
+										"key_hash": "exprtms8xryAx1EVZU2kyeTJhP8o6RBLBip81R7h7jS13dXJmREbhb",
+										"key": {
+											"bytes": "05070701000000066c65646765720a00000016000038a2241d7ebdb18ab60ec0cfe71d7e47680d78d5"
+										},
+										"value": {
+											"bytes": "050707000a0200000000"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"kind": "transaction",
+			"source": "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+			"fee": "0",
+			"counter": "6856032",
+			"gas_limit": "1040000",
+			"storage_limit": "60000",
+			"amount": "0",
+			"destination": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+			"parameters": {
+				"entrypoint": "approve",
+				"value": {
+					"prim": "Pair",
+					"args": [
+						{
+							"string": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc"
+						},
+						{
+							"int": "7349"
+						}
+					]
+				}
+			},
+			"metadata": {
+				"operation_result": {
+					"status": "backtracked",
+					"consumed_milligas": "3480969",
+					"storage_size": "215619",
+					"lazy_storage_diff": [
+						{
+							"kind": "big_map",
+							"id": "31",
+							"diff": {
+								"action": "update",
+								"updates": [
+									{
+										"key_hash": "exprtms8xryAx1EVZU2kyeTJhP8o6RBLBip81R7h7jS13dXJmREbhb",
+										"key": {
+											"bytes": "05070701000000066c65646765720a00000016000038a2241d7ebdb18ab60ec0cfe71d7e47680d78d5"
+										},
+										"value": {
+											"bytes": "050707000a020000002007040a0000001601ece491d1ef313570a669e1c6d96af52d1ce0785c0000b572"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"kind": "transaction",
+			"source": "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+			"fee": "0",
+			"counter": "6856033",
+			"gas_limit": "1040000",
+			"storage_limit": "60000",
+			"amount": "1000000",
+			"destination": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+			"parameters": {
+				"entrypoint": "investLiquidity",
+				"value": {
+					"int": "7349"
+				}
+			},
+			"metadata": {
+				"operation_result": {
+					"status": "backtracked",
+					"balance_updates": [
+						{
+							"kind": "contract",
+							"contract": "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+							"change": "-1000000",
+							"origin": "block"
+						},
+						{
+							"kind": "contract",
+							"contract": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+							"change": "1000000",
+							"origin": "block"
+						}
+					],
+					"consumed_milligas": "8318704",
+					"storage_size": "83635",
+					"lazy_storage_diff": [
+						{
+							"kind": "big_map",
+							"id": "1498",
+							"diff": {
+								"action": "update",
+								"updates": []
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1497",
+							"diff": {
+								"action": "update",
+								"updates": []
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1496",
+							"diff": {
+								"action": "update",
+								"updates": []
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1495",
+							"diff": {
+								"action": "update",
+								"updates": []
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1494",
+							"diff": {
+								"action": "update",
+								"updates": [
+									{
+										"key_hash": "exprvNa7fxN79ehSzqQiNv6YMNBFbPnt9wUWhvKJpD2KdcmicK4R3f",
+										"key": {
+											"bytes": "000038a2241d7ebdb18ab60ec0cfe71d7e47680d78d5"
+										},
+										"value": {
+											"prim": "Pair",
+											"args": [
+												{
+													"int": "289061751656371524"
+												},
+												{
+													"int": "100397669321122290545"
+												}
+											]
+										}
+									}
+								]
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1493",
+							"diff": {
+								"action": "update",
+								"updates": [
+									{
+										"key_hash": "exprvNa7fxN79ehSzqQiNv6YMNBFbPnt9wUWhvKJpD2KdcmicK4R3f",
+										"key": {
+											"bytes": "000038a2241d7ebdb18ab60ec0cfe71d7e47680d78d5"
+										},
+										"value": {
+											"prim": "Pair",
+											"args": [
+												{
+													"prim": "Pair",
+													"args": [
+														[],
+														{
+															"int": "1487105"
+														}
+													]
+												},
+												{
+													"int": "0"
+												}
+											]
+										}
+									}
+								]
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1492",
+							"diff": {
+								"action": "update",
+								"updates": []
+							}
+						},
+						{
+							"kind": "big_map",
+							"id": "1491",
+							"diff": {
+								"action": "update",
+								"updates": []
+							}
+						}
+					]
+				},
+				"internal_operation_results": [
+					{
+						"kind": "transaction",
+						"source": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc",
+						"nonce": 0,
+						"amount": "0",
+						"destination": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+						"parameters": {
+							"entrypoint": "transfer",
+							"value": {
+								"prim": "Pair",
+								"args": [
+									{
+										"bytes": "000038a2241d7ebdb18ab60ec0cfe71d7e47680d78d5"
+									},
+									{
+										"prim": "Pair",
+										"args": [
+											{
+												"bytes": "01ece491d1ef313570a669e1c6d96af52d1ce0785c00"
+											},
+											{
+												"int": "7348"
+											}
+										]
+									}
+								]
+							}
+						},
+						"result": {
+							"status": "failed",
+							"errors": [
+								{
+									"kind": "temporary",
+									"id": "proto.013-PtJakart.michelson_v1.runtime_error",
+									"contract_handle": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+									"contract_code": "Deprecated"
+								},
+								{
+									"kind": "temporary",
+									"id": "proto.013-PtJakart.michelson_v1.script_rejected",
+									"location": 519,
+									"with": {
+										"string": "fa2_insufficient_balance"
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		},
+		{
+			"kind": "transaction",
+			"source": "tz1QoUmcycUDaFGvuju2bmTSaCqQCMEpRcgs",
+			"fee": "0",
+			"counter": "6856034",
+			"gas_limit": "1040000",
+			"storage_limit": "60000",
+			"amount": "0",
+			"destination": "KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn",
+			"parameters": {
+				"entrypoint": "approve",
+				"value": {
+					"prim": "Pair",
+					"args": [
+						{
+							"string": "KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc"
+						},
+						{
+							"int": "0"
+						}
+					]
+				}
+			},
+			"metadata": {
+				"operation_result": {
+					"status": "skipped"
+				}
+			}
+		}
+	]
+}

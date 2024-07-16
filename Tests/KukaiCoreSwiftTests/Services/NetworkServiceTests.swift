@@ -168,7 +168,7 @@ class NetworkServiceTests: XCTestCase {
 						
 					case .failure(let error):
 						XCTAssert(error.errorType == .rpc)
-						XCTAssert(error.description == "RPC: contract.counter_in_the_future", error.description)
+						XCTAssert(error.description == "RPC error code: contract.counter_in_the_future", error.description)
 						XCTAssert(error.requestURL?.absoluteString == MockConstants.shared.config.nodeURLs[1].appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations").absoluteString, error.requestURL?.absoluteString ?? "-")
 				}
 				

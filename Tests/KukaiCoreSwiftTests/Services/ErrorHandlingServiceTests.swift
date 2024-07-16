@@ -18,11 +18,11 @@ class ErrorHandlingServiceTests: XCTestCase {
 	func testStaticConstrutors() {
 		let error1 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: nil, requestURL: nil)
 		XCTAssert(error1.rpcErrorString == "testing RPC string", error1.rpcErrorString ?? "-")
-		XCTAssert(error1.description == "RPC: testing RPC string", error1.description)
+		XCTAssert(error1.description == "testing RPC string", error1.description)
 		
 		let error2 = KukaiError.rpcError(rpcErrorString: "testing RPC string", andFailWith: FailWith(string: nil, int: "1", args: nil), requestURL: nil)
 		XCTAssert(error2.rpcErrorString == "testing RPC string", error2.rpcErrorString ?? "-")
-		XCTAssert(error2.description == "RPC: testing RPC string", error2.description)
+		XCTAssert(error2.description == "testing RPC string", error2.description)
 		
 		let error3 = KukaiError.unknown(withString: "test unknown string")
 		XCTAssert(error3.rpcErrorString == "test unknown string", error3.rpcErrorString ?? "-")
@@ -105,8 +105,8 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops, requestURL: nil)
 		XCTAssert(containsErrors1?.errorType == .rpc)
-		XCTAssert(containsErrors1?.rpcErrorString == "gas_exhausted.operation", containsErrors1?.rpcErrorString ?? "-")
-		XCTAssert(containsErrors1?.description == "RPC: gas_exhausted.operation", containsErrors1?.description ?? "-")
+		XCTAssert(containsErrors1?.rpcErrorString == "RPC error code: gas_exhausted.operation", containsErrors1?.rpcErrorString ?? "-")
+		XCTAssert(containsErrors1?.description == "RPC error code: gas_exhausted.operation", containsErrors1?.description ?? "-")
 	}
 	
 	func testOperationResponseParserFailWith() {
@@ -127,7 +127,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 		let containsErrors1 = ErrorHandlingService.searchOperationResponseForErrors(ops, requestURL: nil)
 		XCTAssert(containsErrors1?.errorType == .rpc)
 		XCTAssert(containsErrors1?.rpcErrorString == "A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.rpcErrorString ?? "-")
-		XCTAssert(containsErrors1?.description == "RPC: A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.description ?? "-")
+		XCTAssert(containsErrors1?.description == "A FAILWITH instruction was reached: {\"int\": 14}", containsErrors1?.description ?? "-")
 	}
 	
 	func testJsonResponse() {
@@ -139,8 +139,8 @@ class ErrorHandlingServiceTests: XCTestCase {
 		}
 		
 		let result2 = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
-		XCTAssert(result2?.rpcErrorString == "gas_exhausted.operation", result2?.rpcErrorString ?? "-")
-		XCTAssert(result2?.description == "RPC: gas_exhausted.operation", result2?.description ?? "-")
+		XCTAssert(result2?.rpcErrorString == "RPC error code: gas_exhausted.operation", result2?.rpcErrorString ?? "-")
+		XCTAssert(result2?.description == "RPC error code: gas_exhausted.operation", result2?.description ?? "-")
 
 	}
 	
@@ -154,7 +154,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
 		XCTAssert(result?.rpcErrorString == "A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.rpcErrorString ?? "-")
-		XCTAssert(result?.description == "RPC: A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.description ?? "-")
+		XCTAssert(result?.description == "A FAILWITH instruction was reached: {\"string\": Dex/wrong-min-out}", result?.description ?? "-")
 	}
 	
 	func testNotEnoughBalanceResponse() {
@@ -166,8 +166,21 @@ class ErrorHandlingServiceTests: XCTestCase {
 		}
 		
 		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
-		XCTAssert(result?.rpcErrorString == "A FAILWITH instruction was reached: {\"args\": [[\"string\": \"NotEnoughBalance\"]]}", result?.rpcErrorString ?? "-")
-		XCTAssert(result?.description == "RPC: A FAILWITH instruction was reached: {\"args\": [[\"string\": \"NotEnoughBalance\"]]}", result?.description ?? "-")
+		XCTAssert(result?.rpcErrorString == "Insufficient token balance to complete the transaction", result?.rpcErrorString ?? "-")
+		XCTAssert(result?.description == "Insufficient token balance to complete the transaction", result?.description ?? "-")
+	}
+	
+	func testInsufficientBalance() {
+		let errorData = MockConstants.jsonStub(fromFilename: "rpc_error_fa2_insufficient_balance")
+		
+		guard let opResponse = try? JSONDecoder().decode(OperationResponse.self, from: errorData) else {
+			XCTFail("Couldn't parse data as [OperationResponse]")
+			return
+		}
+		
+		let result = ErrorHandlingService.searchOperationResponseForErrors(opResponse, requestURL: nil)
+		XCTAssert(result?.rpcErrorString == "Insufficient NFT/DeFi token balance to complete the transaction", result?.rpcErrorString ?? "-")
+		XCTAssert(result?.description == "Insufficient NFT/DeFi token balance to complete the transaction", result?.description ?? "-")
 	}
 	
 	func testFailWithParsers() {

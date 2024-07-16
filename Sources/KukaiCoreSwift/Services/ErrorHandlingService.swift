@@ -128,7 +128,7 @@ public struct KukaiError: CustomStringConvertible, Error {
 			switch errorType {
 				case .rpc:
 					if let rpcErrorString = rpcErrorString {
-						return "RPC: \(rpcErrorString.removeLeadingProtocolFromRPCError() ?? rpcErrorString)"
+						return rpcErrorString
 					}
 					return "RPC: Unknown"
 					
@@ -238,9 +238,13 @@ public class ErrorHandlingService {
 	/// Convert an `OperationResponseInternalResultError` into a `KukaiError` and optionally log it to the central logger
 	public static func fromOperationError(_ opError: OperationResponseInternalResultError, requestURL: URL?, andLog: Bool = true) -> KukaiError {
 		let errorWithoutProtocol = opError.id.removeLeadingProtocolFromRPCError()
-		var errorToReturn = KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: errorWithoutProtocol, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
+		var errorToReturn = KukaiError(errorType: .rpc, knownErrorMessage: nil, subType: nil, rpcErrorString: "RPC error code: \(errorWithoutProtocol ?? "Unknown")", failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 		
-		if (errorWithoutProtocol == "michelson_v1.runtime_error" || errorWithoutProtocol == "michelson_v1.script_rejected"), let withError = opError.with {
+		
+		if let result = knownRPCErrorString(rpcStringWithoutLeadingProtocol: errorWithoutProtocol, with: opError.with) {
+			errorToReturn = KukaiError.rpcError(rpcErrorString: result, andFailWith: opError.with, requestURL: requestURL)
+			
+		} else if (errorWithoutProtocol == "michelson_v1.runtime_error" || errorWithoutProtocol == "michelson_v1.script_rejected"), let withError = opError.with  {
 			
 			if let failwith = withError.int, let failwithInt = Int(failwith) {
 				// Smart contract failwith reached with an Int denoting an error code
@@ -263,6 +267,56 @@ public class ErrorHandlingService {
 		
 		if andLog { logAndCallback(withKukaiError: errorToReturn) }
 		return errorToReturn
+	}
+	
+	public static func knownRPCErrorString(rpcStringWithoutLeadingProtocol: String?, with: FailWith?) -> String? {
+		guard let rpcStringWithoutLeadingProtocol = rpcStringWithoutLeadingProtocol else { return nil }
+		
+		switch rpcStringWithoutLeadingProtocol {
+			
+			// top level protocol errors
+			case "implicit.empty_implicit_contract":
+				return "Your account has a 0 XTZ balance and is unable to pay for the fees to complete the transaction."
+			
+			case "tez.subtraction_underflow":
+				return "Your account does not have enough XTZ to complete the transaction."
+				
+			
+			// known michelson contract related errors (e.g. insufficent balance for a known token standard)
+			// can appear in 2 places
+			case "michelson_v1.script_rejected":
+				if let string = with?.string {
+					return compareInnerString(string)
+					
+				} else if let string = with?.args?.first?["string"] {
+					return compareInnerString(string)
+					
+				} else {
+					return nil
+				}
+				
+			default:
+				return nil
+		}
+	}
+	
+	private static func compareInnerString(_ remoteString: String?) -> String? {
+		switch remoteString?.lowercased() {
+			case "fa2_insufficient_balance":
+				return "Insufficient NFT/DeFi token balance to complete the transaction"
+				
+			case "fa1.2_insufficientbalance":
+				return "Insufficient DeFi token balance to complete the transaction"
+				
+			case "notenoughbalance":
+				return "Insufficient token balance to complete the transaction"
+				
+			case .none:
+				return nil
+				
+			case .some(_):
+				return nil
+		}
 	}
 	
 	/// Search an `OperationResponse` to see does it contain any errors, if so return the last one as a `KukaiError` and optionally log it to the central logger
@@ -311,7 +365,8 @@ public class ErrorHandlingService {
 				let lastError = errorArray.last,
 				let errorString = lastError.id.removeLeadingProtocolFromRPCError()
 			{
-				errorToReturn = KukaiError.rpcError(rpcErrorString: errorString, andFailWith: lastError.with, requestURL: requestURL)
+				let updatedString = knownRPCErrorString(rpcStringWithoutLeadingProtocol: errorString, with: lastError.with)
+				errorToReturn = KukaiError.rpcError(rpcErrorString: updatedString ?? "RPC error code: \(errorString)", andFailWith: lastError.with, requestURL: requestURL)
 			} else {
 				errorToReturn.addNetworkData(requestURL: requestURL, requestJSON: requestData, responseJSON: data, httpStatusCode: httpResponse.statusCode)
 			}
