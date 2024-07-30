@@ -87,6 +87,12 @@ public class Token: Codable, CustomStringConvertible {
 	/// Recording if the position the index the user chose for the favourite token to appear
 	public var favouriteSortIndex: Int? = nil
 	
+	/// The block level where the token was first seen
+	public var firstlevel: Decimal
+	
+	/// The block level where the token was last seen
+	public var lastLevel: Decimal
+	
 	/// The individual NFT's owned of this token type
 	public var nfts: [NFT]?
 	
@@ -126,6 +132,8 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenId = tokenId
 		self.nfts = nfts
 		self.mintingTool = mintingTool
+		self.firstlevel = 0
+		self.lastLevel = 0
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
@@ -136,23 +144,25 @@ public class Token: Codable, CustomStringConvertible {
 	/**
 	 Init a `Token` from an object returned by the TzKT API
 	 */
-	public init(from: TzKTBalanceToken, andTokenAmount: TokenAmount, stakedTokenAmount: TokenAmount? = nil, unstakedTokenAmount: TokenAmount? = nil) {
-		let decimalsString = from.metadata?.decimals ?? "0"
+	public init(from: TzKTBalance, andTokenAmount: TokenAmount, stakedTokenAmount: TokenAmount? = nil, unstakedTokenAmount: TokenAmount? = nil) {
+		let decimalsString = from.token.metadata?.decimals ?? "0"
 		let decimalsInt = Int(decimalsString) ?? 0
-		let isNFT = (from.metadata?.artifactUri != nil && decimalsInt == 0 && from.standard == .fa2)
+		let isNFT = (from.token.metadata?.artifactUri != nil && decimalsInt == 0 && from.token.standard == .fa2)
 		
-		self.name = from.contract.alias
-		self.symbol = isNFT ? from.contract.alias ?? "" : from.displaySymbol
+		self.name = from.token.contract.alias
+		self.symbol = isNFT ? from.token.contract.alias ?? "" : from.token.displaySymbol
 		self.tokenType = isNFT ? .nonfungible : .fungible
-		self.faVersion = from.standard
+		self.faVersion = from.token.standard
 		self.balance = andTokenAmount
 		self.stakedBalance = stakedTokenAmount ?? .zeroBalance(decimalPlaces: andTokenAmount.decimalPlaces)
 		self.unstakedBalance = unstakedTokenAmount ?? .zeroBalance(decimalPlaces: andTokenAmount.decimalPlaces)
-		self.thumbnailURL = from.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.contract.address)
-		self.tokenContractAddress = from.contract.address
-		self.tokenId = Decimal(string: from.tokenId) ?? 0
+		self.thumbnailURL = from.token.metadata?.thumbnailURL ?? TzKTClient.avatarURL(forToken: from.token.contract.address)
+		self.tokenContractAddress = from.token.contract.address
+		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
 		self.nfts = []
-		self.mintingTool = from.metadata?.mintingTool
+		self.mintingTool = from.token.metadata?.mintingTool
+		self.firstlevel = from.firstLevel
+		self.lastLevel = from.lastLevel
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {
@@ -183,6 +193,8 @@ public class Token: Codable, CustomStringConvertible {
 		self.tokenId = Decimal(string: from.token.tokenId) ?? 0
 		self.nfts = []
 		self.mintingTool = from.mintingTool
+		self.firstlevel = from.level
+		self.lastLevel = from.level
 		
 		// TODO: make failable init
 		if let faVersion = faVersion, faVersion == .fa2 && tokenId == nil {

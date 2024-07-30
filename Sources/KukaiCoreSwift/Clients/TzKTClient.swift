@@ -923,7 +923,7 @@ public class TzKTClient {
 				continue
 			} else if balance.token.metadata != nil {
 				// Else create a Token object and put into array, if we have valid metadata (e.g. able to tell how many decimals it has)
-				tokens.append(Token(from: balance.token, andTokenAmount: balance.tokenAmount))
+				tokens.append(Token(from: balance, andTokenAmount: balance.tokenAmount))
 			}
 		}
 		
