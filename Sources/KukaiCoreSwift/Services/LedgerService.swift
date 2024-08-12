@@ -143,6 +143,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private var bag_connection = Set<AnyCancellable>()
 	private var bag_writer = Set<AnyCancellable>()
 	private var bag_apdu = Set<AnyCancellable>()
+	private var bag_addressFetcher = Set<AnyCancellable>()
 	private var counter = 0
 	
 	/// Public shared instace to avoid having multiple copies of the underlying `JSContext` created
@@ -327,6 +328,29 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			self.bag_apdu.removeAll()
 			self.bag_writer.removeAll()
 		}).eraseToAnyPublisher()
+	}
+	
+	/**
+	 Get a TZ address and public key from the current connected Ledger device
+	 - parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
+	 - parameter curve: Optional. The `EllipticalCurve` to use to extract the address
+	 - parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
+	 - returns: An async `Result` object, allowing code to be triggered via while loops more easily
+	 */
+	public func getAddress(forDerivationPath derivationPath: String = HD.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) async -> Result<(address: String, publicKey: String), KukaiError> {
+		return await withCheckedContinuation({ continuation in
+			var cancellable: AnyCancellable!
+			cancellable = getAddress(forDerivationPath: derivationPath, curve: curve, verify: verify)
+				.sink(onError: { error in
+					continuation.resume(returning: Result.failure(error))
+				}, onSuccess: { addressObj in
+					continuation.resume(returning: Result.success(addressObj))
+				}, onComplete: { [weak self] in
+					self?.bag_addressFetcher.remove(cancellable)
+				})
+			
+			cancellable.store(in: &bag_addressFetcher)
+		})
 	}
 	
 	/**
