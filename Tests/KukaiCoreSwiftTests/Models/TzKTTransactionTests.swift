@@ -78,7 +78,7 @@ final class TzKTTransactionTests: XCTestCase {
 	}
 	
 	func testPlaceholders() {
-		let source = WalletMetadata(address: "tz1abc", hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		let source = WalletMetadata(address: "tz1abc", hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true, customDerivationPath: nil)
 		let placeholder1 = TzKTTransaction.placeholder(withStatus: .unconfirmed, id: 567, opHash: "abc123", type: .transaction, counter: 0, fromWallet: source, newDelegate: TzKTAddress(alias: "Baking Benjamins", address: "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"))
 		
 		let placeholder2 = TzKTTransaction.placeholder(withStatus: .unconfirmed, id: 456, opHash: "def456", type: .transaction, counter: 1, fromWallet: source, destination: TzKTAddress(alias: nil, address: "tz1def"), xtzAmount: .init(fromNormalisedAmount: 4.17, decimalPlaces: 6), parameters: nil, primaryToken: nil, baker: nil, kind: nil)

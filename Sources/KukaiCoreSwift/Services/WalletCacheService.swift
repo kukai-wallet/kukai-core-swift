@@ -85,7 +85,7 @@ public class WalletCacheService {
 	 - Parameter childOfIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
-	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) throws {
+	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool, customDerivationPath: String? = nil) throws {
 		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
 			Logger.walletCache.error("cache - Unable to cache wallet, as can't decrypt existing wallets")
 			throw WalletCacheError.unableToDecrypt
@@ -99,44 +99,93 @@ public class WalletCacheService {
 		var newWallets = existingWallets
 		newWallets[wallet.address] = wallet
 		
-		var newMetadata = readMetadataFromDiskAndDecrypt()
+		let newMetadata = readMetadataFromDiskAndDecrypt()
+		var array = metadataArray(forType: wallet.type, fromMeta: newMetadata)
+		
 		if let index = childOfIndex {
-			if index >= newMetadata.hdWallets.count {
-				Logger.walletCache.error("WalletCacheService metadata insertion issue. Requested to add to HDWallet at index \"\(index)\", when there are currently only \"\(newMetadata.hdWallets.count)\" items")
+			
+			// If child index is present, update the correct sub array to include this new item, checking forst that we have the correct details
+			if index >= array.count {
+				Logger.walletCache.error("WalletCacheService metadata insertion issue. Requested to add at index \"\(index)\", when there are currently only \"\(array.count)\" items")
 				throw WalletCacheError.requestedIndexTooHigh
 			}
 			
-			newMetadata.hdWallets[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
+			array[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
 			
-		} else if let _ = wallet as? HDWallet {
+		} else if wallet.type == .hd || wallet.type == .ledger {
+			
+			// If its HD or Ledger (also a HD), these wallets display grouped together with a custom name. Compute the new default name based off existing data and then add
+			var groupNameStart = ""
+			switch wallet.type {
+				case .hd:
+					groupNameStart = "HD Wallet "
+				case .ledger:
+					groupNameStart = "Ledger Wallet "
+				case .social, .regular, .regularShifted:
+					groupNameStart = ""
+			}
 			
 			var newNumber = 0
-			if let lastDefaultName = newMetadata.hdWallets.reversed().first(where: { $0.hdWalletGroupName?.prefix(10) == "HD Wallet " }) {
-				let numberOnly = lastDefaultName.hdWalletGroupName?.replacingOccurrences(of: "HD Wallet ", with: "")
+			if let lastDefaultName = array.reversed().first(where: { $0.hdWalletGroupName?.prefix(groupNameStart.count) ?? " " == groupNameStart }) {
+				let numberOnly = lastDefaultName.hdWalletGroupName?.replacingOccurrences(of: groupNameStart, with: "")
 				newNumber = (Int(numberOnly ?? "0") ?? 0) + 1
 			}
 			
 			if newNumber == 0 {
-				newNumber = newMetadata.hdWallets.count + 1
+				newNumber = array.count + 1
 			}
 			
-			newMetadata.hdWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "HD Wallet \(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
+			array.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "\(groupNameStart)\(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
-			newMetadata.socialWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUsername, socialUserId: torusWallet.socialUserId, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
-		} else if let _ = wallet as? LedgerWallet {
-			newMetadata.ledgerWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
+			// If social, cast and fetch special attributes
+			array.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUsername, socialUserId: torusWallet.socialUserId, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
 			
 		} else {
-			newMetadata.linearWallets.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
+			
+			// Else, add basic wallet to the list its supposed to go to
+			array.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
 		}
 		
-		
+		// Update wallet metadata array, and then commit to disk
+		updateMetadataArray(forType: wallet.type, withNewArray: array, frorMeta: newMetadata)
 		if encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata) == false {
 			throw WalletCacheError.unableToEncryptAndWrite
 		} else {
 			removeNewAddressFromWatchListIfExists(wallet.address, list: newMetadata)
+		}
+	}
+	
+	/// Helper method to return the appropriate sub array for the type, to reduce code compelxity
+	private func metadataArray(forType: WalletType, fromMeta: WalletMetadataList) -> [WalletMetadata] {
+		switch forType {
+			case .regular:
+				return fromMeta.linearWallets
+			case .regularShifted:
+				return fromMeta.linearWallets
+			case .hd:
+				return fromMeta.hdWallets
+			case .social:
+				return fromMeta.socialWallets
+			case .ledger:
+				return fromMeta.ledgerWallets
+		}
+	}
+	
+	/// Helper method to take ina  new sub array and update and existing reference, to reduce code complexity
+	private func updateMetadataArray(forType: WalletType, withNewArray: [WalletMetadata], frorMeta: WalletMetadataList) {
+		switch forType {
+			case .regular:
+				frorMeta.linearWallets = withNewArray
+			case .regularShifted:
+				frorMeta.linearWallets = withNewArray
+			case .hd:
+				frorMeta.hdWallets = withNewArray
+			case .social:
+				frorMeta.socialWallets = withNewArray
+			case .ledger:
+				frorMeta.ledgerWallets = withNewArray
 		}
 	}
 	
@@ -150,7 +199,7 @@ public class WalletCacheService {
 	 Cahce a watch wallet metadata obj, only. Metadata cahcing handled via wallet cache method
 	 */
 	public func cacheWatchWallet(metadata: WalletMetadata) throws {
-		var list = readMetadataFromDiskAndDecrypt()
+		let list = readMetadataFromDiskAndDecrypt()
 		
 		if let _ = list.addresses().first(where: { $0 == metadata.address }) {
 			Logger.walletCache.error("cacheWatchWallet - Unable to cache wallet, wallet already exists")
@@ -177,37 +226,31 @@ public class WalletCacheService {
 		}
 		
 		var newWallets = existingWallets
+		let type = existingWallets[withAddress]?.type ?? .hd
 		newWallets.removeValue(forKey: withAddress)
 		
-		var newMetadata = readMetadataFromDiskAndDecrypt()
+		let newMetadata = readMetadataFromDiskAndDecrypt()
+		var array = metadataArray(forType: type, fromMeta: newMetadata)
+		
 		if let hdWalletIndex = parentIndex {
-			guard hdWalletIndex < newMetadata.hdWallets.count, let childIndex = newMetadata.hdWallets[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
+			guard hdWalletIndex < array.count, let childIndex = array[hdWalletIndex].children.firstIndex(where: { $0.address == withAddress }) else {
 				Logger.walletCache.error("Unable to locate wallet")
 				return false
 			}
 			
-			let _ = newMetadata.hdWallets[hdWalletIndex].children.remove(at: childIndex)
+			let _ = array[hdWalletIndex].children.remove(at: childIndex)
 			
 		} else {
-			if let index = newMetadata.hdWallets.firstIndex(where: { $0.address == withAddress }) {
+			if let index = array.firstIndex(where: { $0.address == withAddress }) {
 				
 				// Children will be removed from metadata automatically, as they are contained inside the parent, however they won't from the encrypted cache
 				// Remove them from encrypted first, then parent from metadata
-				let children = newMetadata.hdWallets[index].children
+				let children = array[index].children
 				for child in children {
 					newWallets.removeValue(forKey: child.address)
 				}
 				
-				let _ = newMetadata.hdWallets.remove(at: index)
-				
-			} else if let index = newMetadata.socialWallets.firstIndex(where: { $0.address == withAddress }) {
-				let _ = newMetadata.socialWallets.remove(at: index)
-				
-			} else if let index = newMetadata.linearWallets.firstIndex(where: { $0.address == withAddress }) {
-				let _ = newMetadata.linearWallets.remove(at: index)
-				
-			} else if let index = newMetadata.ledgerWallets.firstIndex(where: { $0.address == withAddress }) {
-				let _ = newMetadata.ledgerWallets.remove(at: index)
+				let _ = array.remove(at: index)
 				
 			} else {
 				Logger.walletCache.error("Unable to locate wallet")
@@ -222,7 +265,7 @@ public class WalletCacheService {
 	 Clear a watch wallet meatadata obj from the metadata cache only, does not affect actual wallet cache
 	 */
 	public func deleteWatchWallet(address: String) -> Bool {
-		var list = readMetadataFromDiskAndDecrypt()
+		let list = readMetadataFromDiskAndDecrypt()
 		list.watchWallets.removeAll(where: { $0.address == address })
 		
 		return encryptAndWriteMetadataToDisk(list)

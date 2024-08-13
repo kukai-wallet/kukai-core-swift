@@ -8,7 +8,7 @@
 import Foundation
 
 /// Container to store groups of WalletMetadata based on type
-public struct WalletMetadataList: Codable, Hashable {
+public class WalletMetadataList: Codable, Hashable {
 	public var socialWallets: [WalletMetadata]
 	public var hdWallets: [WalletMetadata]
 	public var linearWallets: [WalletMetadata]
@@ -85,7 +85,7 @@ public struct WalletMetadataList: Codable, Hashable {
 		return nil
 	}
 	
-	public mutating func update(address: String, with newMetadata: WalletMetadata) -> Bool {
+	public func update(address: String, with newMetadata: WalletMetadata) -> Bool {
 		for (index, metadata) in socialWallets.enumerated() {
 			if metadata.address == address { socialWallets[index] = newMetadata; return true }
 		}
@@ -113,8 +113,8 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(mainnetDomain: TezosDomainsReverseRecord?, ghostnetDomain: TezosDomainsReverseRecord?, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
+	public func set(mainnetDomain: TezosDomainsReverseRecord?, ghostnetDomain: TezosDomainsReverseRecord?, forAddress address: String) -> Bool {
+		let meta = metadata(forAddress: address)
 		
 		if let mainnet = mainnetDomain {
 			meta?.mainnetDomains = [mainnet]
@@ -131,8 +131,8 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(nickname: String?, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
+	public func set(nickname: String?, forAddress address: String) -> Bool {
+		let meta = metadata(forAddress: address)
 		meta?.walletNickname = nickname
 		
 		if let meta = meta, update(address: address, with: meta) {
@@ -142,8 +142,8 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(hdWalletGroupName: String, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
+	public func set(hdWalletGroupName: String, forAddress address: String) -> Bool {
+		let meta = metadata(forAddress: address)
 		meta?.hdWalletGroupName = hdWalletGroupName
 		
 		if let meta = meta, update(address: address, with: meta) {
@@ -224,6 +224,22 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		return temp
 	}
+	
+	public static func == (lhs: WalletMetadataList, rhs: WalletMetadataList) -> Bool {
+		return lhs.socialWallets == rhs.socialWallets &&
+		lhs.hdWallets == rhs.hdWallets &&
+		lhs.linearWallets == rhs.linearWallets &&
+		lhs.ledgerWallets == rhs.ledgerWallets &&
+		lhs.watchWallets == rhs.watchWallets
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(socialWallets)
+		hasher.combine(hdWallets)
+		hasher.combine(linearWallets)
+		hasher.combine(ledgerWallets)
+		hasher.combine(watchWallets)
+	}
 }
 
 
@@ -231,7 +247,7 @@ public struct WalletMetadataList: Codable, Hashable {
 
 
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
-public struct WalletMetadata: Codable, Hashable {
+public class WalletMetadata: Codable, Hashable {
 	public var address: String
 	public var hdWalletGroupName: String?
 	public var walletNickname: String?
@@ -246,6 +262,7 @@ public struct WalletMetadata: Codable, Hashable {
 	public var isWatchOnly: Bool
 	public var bas58EncodedPublicKey: String
 	public var backedUp: Bool
+	public var customDerivationPath: String?
 	
 	public func hasMainnetDomain() -> Bool {
 		return (mainnetDomains ?? []).count > 0
@@ -287,7 +304,12 @@ public struct WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
+	public func childCountExcludingCustomDerivationPaths() -> Int {
+		let excluded = children.filter { $0.customDerivationPath == nil }
+		return excluded.count
+	}
+	
+	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool, customDerivationPath: String?) {
 		self.address = address
 		self.hdWalletGroupName = hdWalletGroupName
 		self.walletNickname = walletNickname
@@ -302,6 +324,7 @@ public struct WalletMetadata: Codable, Hashable {
 		self.isWatchOnly = isWatchOnly
 		self.bas58EncodedPublicKey = bas58EncodedPublicKey
 		self.backedUp = backedUp
+		self.customDerivationPath = customDerivationPath
 	}
 	
 	public static func == (lhs: WalletMetadata, rhs: WalletMetadata) -> Bool {
