@@ -66,6 +66,10 @@ public class WalletMetadataList: Codable, Hashable {
 		
 		for metadata in ledgerWallets {
 			if metadata.address == address { return metadata }
+			
+			for childMetadata in metadata.children {
+				if childMetadata.address == address { return childMetadata }
+			}
 		}
 		
 		for metaData in watchWallets {
@@ -104,6 +108,10 @@ public class WalletMetadataList: Codable, Hashable {
 		
 		for (index, metadata) in ledgerWallets.enumerated() {
 			if metadata.address == address { ledgerWallets[index] = newMetadata; return true }
+			
+			for (childIndex, childMetadata) in metadata.children.enumerated() {
+				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return true }
+			}
 		}
 		
 		for (index, metadata) in watchWallets.enumerated() {
@@ -154,9 +162,13 @@ public class WalletMetadataList: Codable, Hashable {
 	}
 	
 	public func count() -> Int {
-		var total = (socialWallets.count + linearWallets.count + ledgerWallets.count + watchWallets.count)
+		var total = (socialWallets.count + linearWallets.count + watchWallets.count)
 		
 		for wallet in hdWallets {
+			total += (1 + wallet.children.count)
+		}
+		
+		for wallet in ledgerWallets {
 			total += (1 + wallet.children.count)
 		}
 		
@@ -184,6 +196,10 @@ public class WalletMetadataList: Codable, Hashable {
 		
 		for metadata in ledgerWallets {
 			temp.append(metadata.address)
+			
+			for childMetadata in metadata.children {
+				temp.append(childMetadata.address)
+			}
 		}
 		
 		for metadata in watchWallets {
