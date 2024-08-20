@@ -98,7 +98,7 @@ public class WalletMetadataList: Codable, Hashable {
 			if metadata.address == address { hdWallets[index] = newMetadata; return true }
 			
 			for (childIndex, childMetadata) in metadata.children.enumerated() {
-				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return true }
+				if childMetadata.address == address { hdWallets[index].children[childIndex] = newMetadata; return true }
 			}
 		}
 		
@@ -110,7 +110,7 @@ public class WalletMetadataList: Codable, Hashable {
 			if metadata.address == address { ledgerWallets[index] = newMetadata; return true }
 			
 			for (childIndex, childMetadata) in metadata.children.enumerated() {
-				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return true }
+				if childMetadata.address == address { ledgerWallets[index].children[childIndex] = newMetadata; return true }
 			}
 		}
 		
