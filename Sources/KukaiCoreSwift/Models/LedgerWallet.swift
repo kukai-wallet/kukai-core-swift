@@ -78,8 +78,14 @@ public class LedgerWallet: Wallet {
 		let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)
-			.flatMap { _ -> AnyPublisher<String, KukaiError> in
+			.timeout(.seconds(10), scheduler: RunLoop.main, customError: {
+				return KukaiError.knownErrorMessage("Timed out waiting for device to connect. Check device/bluetooth is turned on and try again")
+			})
+			.flatMap { _ -> Publishers.Timeout<AnyPublisher<String, KukaiError>, RunLoop> in
 				return LedgerService.shared.sign(hex: hex, parse: isWatermarkedOperation)
+					.timeout(.seconds(10), scheduler: RunLoop.main, customError: {
+						return KukaiError.knownErrorMessage("Timed out waiting for device to connect. Check device/bluetooth is turned on and try again")
+					})
 			}
 			.sink(onError: { error in
 				completion(Result.failure(error))
