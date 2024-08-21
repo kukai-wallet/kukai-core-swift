@@ -124,14 +124,16 @@ public class OperationService {
 	/// Internal function to group together operations for readability sake
 	private func signPreapplyAndInject(wallet: Wallet, forgedHash: String, operationPayload: OperationPayload, operationMetadata: OperationMetadata, completion: @escaping ((Result<String, KukaiError>) -> Void)) {
 		var stringToSign = forgedHash
+		var isOperation = true
 		
 		if wallet.type == .ledger {
 			stringToSign = ledgerStringToSign(forgedHash: forgedHash, operationPayload: operationPayload)
+			isOperation = operationPayloadCanBeParsedByLedger(operationPayload)
 		}
 		
 		
 		// Sign whatever string is required, and move on to preapply / inject
-		wallet.sign(stringToSign, isOperation: true) { [weak self] result in
+		wallet.sign(stringToSign, isOperation: isOperation) { [weak self] result in
 			guard let signature = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
 				return
@@ -139,6 +141,19 @@ public class OperationService {
 			
 			self?.preapplyAndInject(forgedOperation: forgedHash, signature: signature, signatureCurve: wallet.privateKeyCurve(), operationPayload: operationPayload, operationMetadata: operationMetadata, completion: completion)
 		}
+	}
+	
+	private func operationPayloadCanBeParsedByLedger(_ operationPayload: OperationPayload) -> Bool {
+		if operationPayload.contents.count == 1, let first = operationPayload.contents.first {
+			if first is OperationReveal || first is OperationDelegation {
+				return true
+				
+			} else if first is OperationTransaction, let transOp = first as? OperationTransaction, transOp.parameters == nil {
+				return true
+			}
+		}
+		
+		return false
 	}
 	
 	/**

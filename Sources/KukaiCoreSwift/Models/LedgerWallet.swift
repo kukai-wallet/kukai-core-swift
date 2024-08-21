@@ -75,11 +75,11 @@ public class LedgerWallet: Wallet {
 	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
 	*/
 	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
-		let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
+		//let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)
 			.flatMap { _ -> AnyPublisher<String, KukaiError> in
-				return LedgerService.shared.sign(hex: hex, parse: isWatermarkedOperation)
+				return LedgerService.shared.sign(hex: hex, parse: isOperation)
 			}
 			.sink(onError: { error in
 				completion(Result.failure(error))
