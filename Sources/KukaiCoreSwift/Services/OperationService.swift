@@ -160,7 +160,7 @@ public class OperationService {
 			ledgerCanParse = true
 		}
 		
-		return (ledgerCanParse ? watermarkedOp : blakeHashString)
+		return watermarkedOp //(ledgerCanParse ? watermarkedOp : blakeHashString)
 	}
 	
 	/**
