@@ -128,7 +128,7 @@ public class OperationService {
 		
 		if wallet.type == .ledger {
 			stringToSign = ledgerStringToSign(forgedHash: forgedHash, operationPayload: operationPayload)
-			isOperation = operationPayloadCanBeParsedByLedger(operationPayload)
+			isOperation = true //operationPayloadCanBeParsedByLedger(operationPayload)
 		}
 		
 		
