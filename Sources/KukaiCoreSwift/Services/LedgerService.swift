@@ -185,7 +185,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			
 			
 			// Convert the supplied data into an APDU. Returns a single string per ADPU, but broken up into chunks, seperated by spaces for each maximum sized data packet
-			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(apdu)\", 156)").toString() else {
+			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(apdu)\", 20)").toString() else {
 				self?.deviceConnectedPublisher.send(false)
 				return
 			}
