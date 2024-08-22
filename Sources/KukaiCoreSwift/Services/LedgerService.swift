@@ -265,7 +265,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	 - returns: Publisher which will indicate true / false, or return an `KukaiError` if it can't connect to bluetooth
 	*/
 	public func connectTo(uuid: String) -> AnyPublisher<Bool, KukaiError> {
-		if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid {
+		if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid, self.connectedDevice?.state == .connected {
 			return AnyPublisher.just(true)
 		}
 		
@@ -299,7 +299,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	 - returns: a string if it can be found
 	*/
 	public func getConnectedDeviceUUID() -> String? {
-		return self.connectedDevice?.identifier.uuidString
+		if self.connectedDevice?.state == .connected {
+			return self.connectedDevice?.identifier.uuidString
+		} else {
+			return nil
+		}
 	}
 	
 	/**
@@ -439,6 +443,18 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 				return
 			}
 		}
+	}
+	
+	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
+		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
+		self.connectedDevice = nil
+		self.deviceConnectedPublisher.send(false)
+	}
+	
+	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: (any Error)?) {
+		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
+		self.connectedDevice = nil
+		self.deviceConnectedPublisher.send(false)
 	}
 	
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition

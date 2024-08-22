@@ -79,8 +79,8 @@ public class LedgerWallet: Wallet {
 		}
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)
-			.flatMap { _ -> AnyPublisher<String, KukaiError> in
-				return LedgerService.shared.sign(hex: hexToSign, parse: true)
+			.flatMap { [weak self] _ -> AnyPublisher<String, KukaiError> in
+				return LedgerService.shared.sign(hex: hexToSign, forDerivationPath: self?.derivationPath ?? HD.defaultDerivationPath, parse: true)
 			}
 			.sink(onError: { error in
 				completion(Result.failure(error))
