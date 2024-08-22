@@ -77,6 +77,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		case LICENSING = "6f42"
 		case HALTED = "6faa"
 		
+		case APP_CLOSED = "6e01"
 		case DEVICE_LOCKED = "009000"
 		case UNKNOWN = "99999999"
 		case NO_WRITE_CHARACTERISTIC = "99999996"

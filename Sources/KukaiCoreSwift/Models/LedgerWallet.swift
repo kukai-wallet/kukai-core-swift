@@ -75,11 +75,26 @@ public class LedgerWallet: Wallet {
 	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
 	*/
 	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
-		//let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
+		guard let bytes = Sodium.shared.utils.hex2bin(hex) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+			return
+		}
+		
+		var bytesToSign: [UInt8] = []
+		if isOperation {
+			bytesToSign = bytes.addOperationWatermarkAndHash() ?? []
+		} else {
+			bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
+		}
+		
+		guard let hexString = Sodium.shared.utils.bin2hex(bytesToSign) else {
+			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
+			return
+		}
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)
 			.flatMap { _ -> AnyPublisher<String, KukaiError> in
-				return LedgerService.shared.sign(hex: hex, parse: isOperation)
+				return LedgerService.shared.sign(hex: hexString, parse: true)
 			}
 			.sink(onError: { error in
 				completion(Result.failure(error))
@@ -94,6 +109,50 @@ public class LedgerWallet: Wallet {
 			})
 			.store(in: &bag)
 	}
+	
+	/*
+	/**
+	 Ledger can only parse operations under certain conditions. These conditions are not documented well. This function will attempt to determine whether the payload can be parsed or not, and returnt he appropriate string for the LedgerWallet sign function
+	 It seems to be able to parse the payload if it contains 1 operation, of the below types. Combining types (like Reveal + Transation) causes a parse error
+	 If the payload structure passes the conditions we are aware of, allow parsing to take place. If not, sign blake2b hash instead
+	 */
+	public func ledgerStringToSign(forgedHash: String, operationPayload: OperationPayload) -> String {
+		let watermarkedOp = "03" + forgedHash
+		let watermarkedBytes = Sodium.shared.utils.hex2bin(watermarkedOp) ?? []
+		let blakeHash = Sodium.shared.genericHash.hash(message: watermarkedBytes, outputLength: 32)
+		let blakeHashString = blakeHash?.toHexString() ?? ""
+		
+		// Ledger can only parse operations under certain conditions. These conditions are not documented well.
+		// It seems to be able to parse the payload if it contains 1 operation, of the below types. Combining types (like Reveal + Transation) causes a parse error
+		// If the payload structure passes the conditions we are aware of, allow parsing to take place. If not, sign blake2b hash instead
+		var ledgerCanParse = false
+		if operationPayload.contents.count == 1, let first = operationPayload.contents.first, (first is OperationReveal || first is OperationDelegation || first is OperationTransaction) {
+			ledgerCanParse = true
+		}
+		
+		return watermarkedOp //(ledgerCanParse ? watermarkedOp : blakeHashString)
+	}
+	*/
+	
+	
+	/*
+	private func operationPayloadCanBeParsedByLedger(_ operationPayload: OperationPayload) -> Bool {
+		if operationPayload.contents.count == 1, let first = operationPayload.contents.first {
+			if first is OperationReveal || first is OperationDelegation {
+				return true
+				
+			} else if first is OperationTransaction, let transOp = first as? OperationTransaction, transOp.parameters == nil {
+				return true
+			}
+		}
+		
+		return false
+	}
+	*/
+	
+	
+	
+	
 	
 	/**
 	Function to extract the curve used to create the public key
