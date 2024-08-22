@@ -30,7 +30,7 @@ class ErrorHandlingServiceTests: XCTestCase {
 		
 		let error4 = KukaiError.internalApplicationError(error: URLError(URLError.unknown))
 		XCTAssert(error4.rpcErrorString == nil, error4.rpcErrorString ?? "-")
-		XCTAssert(error4.description == "Internal Application Error: The operation couldn’t be completed. (NSURLErrorDomain error -1.)", error4.description)
+		XCTAssert(error4.description == "Internal Application Error: Error Domain=NSURLErrorDomain Code=-1 \"(null)\"", error4.description)
 		
 		let error5 = KukaiError.systemError(subType: URLError(URLError.unknown))
 		XCTAssert(error5.rpcErrorString == nil, error5.rpcErrorString ?? "-")

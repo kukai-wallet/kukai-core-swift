@@ -70,9 +70,7 @@ public class LedgerWallet: Wallet {
 	
 	/**
 	 Sign a hex string.
-	 If the string starts with "03" and is not 32 characters long, it will be treated as a watermarked operation and Ledger will be asked to parse + display the operation details.
-	 Else it will be treated as an unknown operation and will simply display the Blake2b hash.
-	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
+	 If its an operation "03" will be prefix to the start, if not the hex will be passed directly to the ledger as it now supports parsing strings directly, but requires them to be unhashed
 	*/
 	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
 		var hexToSign = hex
@@ -97,50 +95,6 @@ public class LedgerWallet: Wallet {
 			})
 			.store(in: &bag)
 	}
-	
-	/*
-	/**
-	 Ledger can only parse operations under certain conditions. These conditions are not documented well. This function will attempt to determine whether the payload can be parsed or not, and returnt he appropriate string for the LedgerWallet sign function
-	 It seems to be able to parse the payload if it contains 1 operation, of the below types. Combining types (like Reveal + Transation) causes a parse error
-	 If the payload structure passes the conditions we are aware of, allow parsing to take place. If not, sign blake2b hash instead
-	 */
-	public func ledgerStringToSign(forgedHash: String, operationPayload: OperationPayload) -> String {
-		let watermarkedOp = "03" + forgedHash
-		let watermarkedBytes = Sodium.shared.utils.hex2bin(watermarkedOp) ?? []
-		let blakeHash = Sodium.shared.genericHash.hash(message: watermarkedBytes, outputLength: 32)
-		let blakeHashString = blakeHash?.toHexString() ?? ""
-		
-		// Ledger can only parse operations under certain conditions. These conditions are not documented well.
-		// It seems to be able to parse the payload if it contains 1 operation, of the below types. Combining types (like Reveal + Transation) causes a parse error
-		// If the payload structure passes the conditions we are aware of, allow parsing to take place. If not, sign blake2b hash instead
-		var ledgerCanParse = false
-		if operationPayload.contents.count == 1, let first = operationPayload.contents.first, (first is OperationReveal || first is OperationDelegation || first is OperationTransaction) {
-			ledgerCanParse = true
-		}
-		
-		return watermarkedOp //(ledgerCanParse ? watermarkedOp : blakeHashString)
-	}
-	*/
-	
-	
-	/*
-	private func operationPayloadCanBeParsedByLedger(_ operationPayload: OperationPayload) -> Bool {
-		if operationPayload.contents.count == 1, let first = operationPayload.contents.first {
-			if first is OperationReveal || first is OperationDelegation {
-				return true
-				
-			} else if first is OperationTransaction, let transOp = first as? OperationTransaction, transOp.parameters == nil {
-				return true
-			}
-		}
-		
-		return false
-	}
-	*/
-	
-	
-	
-	
 	
 	/**
 	Function to extract the curve used to create the public key
