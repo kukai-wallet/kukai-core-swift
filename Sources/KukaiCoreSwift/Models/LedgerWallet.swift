@@ -75,26 +75,14 @@ public class LedgerWallet: Wallet {
 	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
 	*/
 	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
-		guard let bytes = Sodium.shared.utils.hex2bin(hex) else {
-			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
-			return
-		}
-		
-		var bytesToSign: [UInt8] = []
+		var hexToSign = hex
 		if isOperation {
-			bytesToSign = bytes.addOperationWatermarkAndHash() ?? []
-		}/* else {
-			bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
-		}*/
-		
-		guard let hexString = Sodium.shared.utils.bin2hex(bytesToSign) else {
-			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
-			return
+			hexToSign = "03"+hex
 		}
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)
 			.flatMap { _ -> AnyPublisher<String, KukaiError> in
-				return LedgerService.shared.sign(hex: hexString, parse: true)
+				return LedgerService.shared.sign(hex: hexToSign, parse: true)
 			}
 			.sink(onError: { error in
 				completion(Result.failure(error))
