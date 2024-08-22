@@ -81,11 +81,11 @@ public class LedgerWallet: Wallet {
 		}
 		
 		var bytesToSign: [UInt8] = []
-		//if isOperation {
+		if isOperation {
 			bytesToSign = bytes.addOperationWatermarkAndHash() ?? []
-		//} else {
-		//	bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
-		//}
+		}/* else {
+			bytesToSign = Sodium.shared.genericHash.hash(message: bytes, outputLength: 32) ?? []
+		}*/
 		
 		guard let hexString = Sodium.shared.utils.bin2hex(bytesToSign) else {
 			completion(Result.failure(KukaiError.internalApplicationError(error: WalletError.signatureError)))
