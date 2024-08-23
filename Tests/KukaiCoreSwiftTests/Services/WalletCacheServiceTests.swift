@@ -405,12 +405,25 @@ class WalletCacheServiceTests: XCTestCase {
 			try walletCacheService.cache(wallet: ledgerWalletChild2, childOfIndex: 0, backedUp: true)
 			try walletCacheService.cache(wallet: ledgerWalletChild3, childOfIndex: 0, backedUp: true, customDerivationPath: ledgerWalletChild3.derivationPath)
 			
-			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
-			let ledgers = list.ledgerWallets
-			let excludedCount = ledgers[0].childCountExcludingCustomDerivationPaths()
-			XCTAssert(ledgers.count == 1, ledgers.count.description)
-			XCTAssert(ledgers[0].children.count == 3, ledgers[0].children.count.description)
+			let list1 = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let ledgers1 = list1.ledgerWallets
+			let excludedCount = ledgers1[0].childCountExcludingCustomDerivationPaths()
+			XCTAssert(ledgers1.count == 1, ledgers1.count.description)
+			XCTAssert(ledgers1[0].children.count == 3, ledgers1[0].children.count.description)
 			XCTAssert(excludedCount == 2, excludedCount.description)
+			
+			
+			let _ = WalletCacheService().deleteWallet(withAddress: "tz1abc", parentIndex: nil)
+			let list2 = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let ledgers2 = list2.ledgerWallets
+			XCTAssert(ledgers2.count == 0, ledgers2.count.description)
+			
+			let testWalletsGone1 = WalletCacheService().fetchWallet(forAddress: "tz1abc")
+			XCTAssert(testWalletsGone1 == nil)
+			
+			let testWalletsGone2 = WalletCacheService().fetchWallet(forAddress: "tz1def")
+			XCTAssert(testWalletsGone2 == nil)
+			
 		} catch let error {
 			XCTFail("Should not error: \(error)")
 		}

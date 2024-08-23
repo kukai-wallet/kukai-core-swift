@@ -149,7 +149,7 @@ public class WalletCacheService {
 		}
 		
 		// Update wallet metadata array, and then commit to disk
-		updateMetadataArray(forType: wallet.type, withNewArray: array, frorMeta: newMetadata)
+		updateMetadataArray(forType: wallet.type, withNewArray: array, forMeta: newMetadata)
 		if encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata) == false {
 			throw WalletCacheError.unableToEncryptAndWrite
 		} else {
@@ -174,18 +174,18 @@ public class WalletCacheService {
 	}
 	
 	/// Helper method to take ina  new sub array and update and existing reference, to reduce code complexity
-	private func updateMetadataArray(forType: WalletType, withNewArray: [WalletMetadata], frorMeta: WalletMetadataList) {
+	private func updateMetadataArray(forType: WalletType, withNewArray: [WalletMetadata], forMeta: WalletMetadataList) {
 		switch forType {
 			case .regular:
-				frorMeta.linearWallets = withNewArray
+				forMeta.linearWallets = withNewArray
 			case .regularShifted:
-				frorMeta.linearWallets = withNewArray
+				forMeta.linearWallets = withNewArray
 			case .hd:
-				frorMeta.hdWallets = withNewArray
+				forMeta.hdWallets = withNewArray
 			case .social:
-				frorMeta.socialWallets = withNewArray
+				forMeta.socialWallets = withNewArray
 			case .ledger:
-				frorMeta.ledgerWallets = withNewArray
+				forMeta.ledgerWallets = withNewArray
 		}
 	}
 	
@@ -258,6 +258,7 @@ public class WalletCacheService {
 			}
 		}
 		
+		updateMetadataArray(forType: type, withNewArray: array, forMeta: newMetadata)
 		return encryptAndWriteWalletsToDisk(wallets: newWallets) && encryptAndWriteMetadataToDisk(newMetadata)
 	}
 	
