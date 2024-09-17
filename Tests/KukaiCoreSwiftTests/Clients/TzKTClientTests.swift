@@ -510,4 +510,25 @@ class TzKTClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 120)
 	}
+    
+    func testBakersMainnet() {
+        let expectation = XCTestExpectation(description: "tzkt-bakers-mainent")
+        
+        MockConstants.shared.tzktClient.bakers { result in
+            switch result {
+                case .success(let bakers):
+                    XCTAssert(bakers.count == 40, bakers.count.description)
+                    XCTAssert(bakers[0].name == "ECAD Labs Baker", bakers[0].name ?? "")
+                    XCTAssert(bakers[0].address == "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP", bakers[0].address)
+                    
+                case .failure(let error):
+                    XCTFail("Error: \(error)")
+            }
+            
+            
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 120)
+    }
 }

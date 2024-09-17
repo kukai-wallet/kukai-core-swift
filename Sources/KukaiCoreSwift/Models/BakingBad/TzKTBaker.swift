@@ -7,27 +7,62 @@
 
 import Foundation
 
-/// The stability of the bakers server
-public enum TzKTBakerHealth: String, Codable {
+
+/*
+ 
+ {
+         "address": "tz1PWCDnz783NNGGQjEFFsHtrcK5yBW4E2rm",
+         "name": "Melange",
+         "status": "active",
+         "balance": 578321.906329,
+         "features": [],
+         "delegation": {
+             "enabled": true,
+             "minBalance": 5,
+             "fee": 0.1499,
+             "capacity": 5146004.090457,
+             "freeSpace": 1970337.090154,
+             "estimatedApy": 0.0720,
+             "features": []
+         },
+         "staking": {
+             "enabled": true,
+             "minBalance": 0,
+             "fee": 0.0099,
+             "capacity": 2858891.161365,
+             "freeSpace": 2858165.485216,
+             "estimatedApy": 0.1678,
+             "features": []
+         }
+     }
+ 
+ */
+
+
+/// Whether the baker is actively running or not
+public enum TzKTBakerStatus: String, Codable {
 	case active
 	case closed
-	case dead
 }
 
-/// The accuracy of the bakers payments
-public enum TzKTBakerAccuracy: String, Codable {
-	case precise
-	case inaccurate
-	case suspicious
-	case no_data
+/// Object to denote the delegation parameters of the baker
+public struct TzKTBakerDelegation: Codable {
+    let enabled: Bool
+    let minBalance: Decimal
+    let fee: Double
+    let capacity: Decimal
+    let freeSpace: Decimal
+    let estimatedApy: Double
 }
 
-/// The reliability of the bakers payouts
-public enum TzKTBakerTiming: String, Codable {
-	case stable
-	case unstable
-	case suspicious
-	case no_data
+/// Object to denote the staking parameters of the baker
+public struct TzKTBakerStaking: Codable {
+    let enabled: Bool
+    let minBalance: Decimal
+    let fee: Double
+    let capacity: Decimal
+    let freeSpace: Decimal
+    let estimatedApy: Double
 }
 
 /// Data representing a baker from TzKT or Baking-Bad
@@ -35,69 +70,37 @@ public struct TzKTBaker: Codable, Hashable {
 	
 	public let address: String
 	public let name: String?
-	public let logo: String?
-	public let balance: Decimal
-	public let stakingBalance: Decimal
-	public let stakingCapacity: Decimal
-	public let maxStakingBalance: Decimal
-	public let freeSpace: Decimal
-	public let fee: Double
-	public let minDelegation: Decimal
-	public let payoutDelay: Int
-	public let payoutPeriod: Int
-	public let openForDelegation: Bool
-	public let estimatedRoi: Decimal
-	public let serviceHealth: TzKTBakerHealth
-	public let serviceType: String
-	public let payoutTiming: TzKTBakerTiming
-	public let payoutAccuracy: TzKTBakerAccuracy
-	public let config: TzKTBakerConfig?
-	
+    public let status: TzKTBakerStatus
+    public let balance: Decimal
+    public let delegation: TzKTBakerDelegation
+    public let staking: TzKTBakerStaking
+    public let config: TzKTBakerConfig?
+    
+    public var logo: URL? {
+        get {
+            return TzKTClient.avatarURL(forToken: address)
+        }
+    }
+    
 	/// Helper to create a TzKTBaker from the data available from the `Account` object
-	public init(address: String, name: String?, logo: String?) {
+	public init(address: String, name: String?) {
 		self.address = address
 		self.name = name
-		self.logo = logo
-		
+        self.status = .active
 		self.balance = 0
-		self.stakingBalance = 0
-		self.stakingCapacity = 0
-		self.maxStakingBalance = 0
-		self.freeSpace = 0
-		self.fee = 0
-		self.minDelegation = 0
-		self.payoutDelay = 0
-		self.payoutPeriod = 0
-		self.openForDelegation = false
-		self.estimatedRoi = 0
-		self.serviceHealth = .dead
-		self.serviceType = "unknown"
-		self.payoutTiming = .no_data
-		self.payoutAccuracy = .no_data
-		self.config = nil
+        self.delegation = TzKTBakerDelegation(enabled: true, minBalance: 0, fee: 0, capacity: 0, freeSpace: 0, estimatedApy: 0)
+        self.staking = TzKTBakerStaking(enabled: true, minBalance: 0, fee: 0, capacity: 0, freeSpace: 0, estimatedApy: 0)
+        self.config = nil
 	}
-	
-	public init(address: String, name: String?, logo: String?, balance: Decimal, stakingBalance: Decimal, stakingCapacity: Decimal, maxStakingBalance: Decimal, freeSpace: Decimal, fee: Double, minDelegation: Decimal, payoutDelay: Int, payoutPeriod: Int, openForDelegation: Bool, estimatedRoi: Decimal, serviceHealth: TzKTBakerHealth, serviceType: String, payoutTiming: TzKTBakerTiming, payoutAccuracy: TzKTBakerAccuracy, config: TzKTBakerConfig?) {
-		
+    
+    public init(address: String, name: String?, status: TzKTBakerStatus, balance: Decimal, delegation: TzKTBakerDelegation, staking: TzKTBakerStaking, config: TzKTBakerConfig?) {
 		self.address = address
 		self.name = name
-		self.logo = logo
 		self.balance = balance
-		self.stakingBalance = stakingBalance
-		self.stakingCapacity = stakingCapacity
-		self.maxStakingBalance = maxStakingBalance
-		self.freeSpace = freeSpace
-		self.fee = fee
-		self.minDelegation = minDelegation
-		self.payoutDelay = payoutDelay
-		self.payoutPeriod = payoutPeriod
-		self.openForDelegation = openForDelegation
-		self.estimatedRoi = estimatedRoi
-		self.serviceHealth = serviceHealth
-		self.serviceType = serviceType
-		self.payoutTiming = payoutTiming
-		self.payoutAccuracy = payoutAccuracy
-		self.config = config
+        self.status = status
+        self.delegation = delegation
+        self.staking = staking
+        self.config = config
 	}
 	
 	/// Ghostnet has a different setup for bakers, but we need to display and interact with them the same way.
@@ -110,7 +113,9 @@ public struct TzKTBaker: Codable, Hashable {
 		let name = data[1] as? String
 		let normalisedBalance = balance/1000000
 		let normalisedStakingBal = stakingBalance/1000000
-		return TzKTBaker(address: address, name: name, logo: nil, balance: normalisedBalance, stakingBalance: normalisedStakingBal, stakingCapacity: normalisedStakingBal, maxStakingBalance: normalisedStakingBal, freeSpace: normalisedStakingBal, fee: 0.05, minDelegation: 0, payoutDelay: 6, payoutPeriod: 1, openForDelegation: true, estimatedRoi: 0.05, serviceHealth: .active, serviceType: "tezos_only", payoutTiming: .no_data, payoutAccuracy: .no_data, config: nil)
+        let delegation = TzKTBakerDelegation(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
+        let staking = TzKTBakerStaking(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
+        return TzKTBaker(address: address, name: name, status: .active, balance: normalisedBalance, delegation: delegation, staking: staking, config: nil)
 	}
 	
 	/// Convert con-chain data into a meaningful, readable object

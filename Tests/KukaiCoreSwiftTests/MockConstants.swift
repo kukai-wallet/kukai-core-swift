@@ -19,11 +19,13 @@ public struct MockConstants {
 	// MARK: - Config / Services
 	
 	public var config: TezosNodeClientConfig
+    public var configMainent: TezosNodeClientConfig
 	public let loggingConfig: LoggingConfig
 	public let networkService: NetworkService
 	public let tezosNodeClient: TezosNodeClient
 	public let betterCallDevClient: BetterCallDevClient
 	public let tzktClient: TzKTClient
+    public let tzktClientMainent: TzKTClient
 	public let tezosDomainsClient: TezosDomainsClient
 	public let dipDupClient: DipDupClient
 	public let objktClient: ObjktClient
@@ -37,6 +39,7 @@ public struct MockConstants {
 	
 	private init() {
 		config = TezosNodeClientConfig(withDefaultsForNetworkType: .ghostnet)
+        configMainent = TezosNodeClientConfig(withDefaultsForNetworkType: .mainnet)
 		loggingConfig = LoggingConfig(logNetworkFailures: true, logNetworkSuccesses: true)
 		
 		let sessionConfig = URLSessionConfiguration.ephemeral // Uses no caching / storage
@@ -49,6 +52,7 @@ public struct MockConstants {
 		let secondBaseURL = config.nodeURLs[1]
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
+        let tzktURLMainent = configMainent.tzktURL
 		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
 		
 		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/ithacanet/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/token_balances")
@@ -96,19 +100,21 @@ public struct MockConstants {
 		var tzktDelegatorRewardsNoneURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac")
 		tzktDelegatorRewardsNoneURL.appendQueryItem(name: "limit", value: 25)
 		
-		var bakingBadConfigURL1 = bakingBadURL.appendingPathComponent("v2/bakers/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")
+        var bakingBadBakersURL = bakingBadURL.appendingPathComponent("v3/bakers")
+        
+		var bakingBadConfigURL1 = bakingBadURL.appendingPathComponent("v3/bakers/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")
 		bakingBadConfigURL1.appendQueryItem(name: "configs", value: "true")
 		
-		var bakingBadConfigURL2 = bakingBadURL.appendingPathComponent("v2/bakers/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
+		var bakingBadConfigURL2 = bakingBadURL.appendingPathComponent("v3/bakers/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
 		bakingBadConfigURL2.appendQueryItem(name: "configs", value: "true")
 		
-		var bakingBadConfigURL3 = bakingBadURL.appendingPathComponent("v2/bakers/tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur")
+		var bakingBadConfigURL3 = bakingBadURL.appendingPathComponent("v3/bakers/tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur")
 		bakingBadConfigURL3.appendQueryItem(name: "configs", value: "true")
 		
-		var bakingBadConfigURL4 = bakingBadURL.appendingPathComponent("v2/bakers/tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM")
+		var bakingBadConfigURL4 = bakingBadURL.appendingPathComponent("v3/bakers/tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM")
 		bakingBadConfigURL4.appendQueryItem(name: "configs", value: "true")
 		
-		var bakingBadConfigURL5 = bakingBadURL.appendingPathComponent("v2/bakers/tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
+		var bakingBadConfigURL5 = bakingBadURL.appendingPathComponent("v3/bakers/tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
 		bakingBadConfigURL5.appendQueryItem(name: "configs", value: "true")
 		
 		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")
@@ -206,6 +212,7 @@ public struct MockConstants {
 			tzktDelegatorRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards"), MockConstants.http200),
 			tzktDelegatorRewardsNoPreviousURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards-no-previous"), MockConstants.http200),
 			tzktDelegatorRewardsNoneURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards-none"), MockConstants.http200),
+            bakingBadBakersURL: (MockConstants.jsonStub(fromFilename: "tzkt_bakers"), MockConstants.http200),
 			bakingBadConfigURL1: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa"), MockConstants.http200),
 			bakingBadConfigURL2: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv"), MockConstants.http200),
 			bakingBadConfigURL3: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"), MockConstants.http200),
@@ -303,6 +310,7 @@ public struct MockConstants {
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
 		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
 		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient, dipDupClient: dipDupClient)
+        tzktClientMainent = TzKTClient(networkService: networkService, config: configMainent, betterCallDevClient: betterCallDevClient, dipDupClient: dipDupClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: networkService, config: config)
 	}
 	

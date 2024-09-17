@@ -1,0 +1,4911 @@
+[
+    {
+        "address": "tz1PWCDnz783NNGGQjEFFsHtrcK5yBW4E2rm",
+        "name": "Melange",
+        "status": "active",
+        "balance": 578321.906329,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.1499,
+            "capacity": 5146004.090457,
+            "freeSpace": 1970337.090154,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0099,
+            "capacity": 2858891.161365,
+            "freeSpace": 2858165.485216,
+            "estimatedApy": 0.1678,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1dRKU4FQ9QRRQPdaH4zCR6gmCmXfcvcgtB",
+        "name": "Spice",
+        "status": "active",
+        "balance": 391360.964918,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1499,
+            "capacity": 3484682.064351,
+            "freeSpace": 1503350.813250,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0099,
+            "capacity": 1935934.480195,
+            "freeSpace": 1766319.341735,
+            "estimatedApy": 0.1678,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1NuAqi3T35CPZV7tQu94wa3urCCzJrV7zc",
+        "name": "Baking Cookies",
+        "status": "active",
+        "balance": 9585.145115,
+        "features": [],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1.0,
+            "capacity": 85911.922152,
+            "freeSpace": 82488.898390,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.019,
+            "capacity": 47728.845640,
+            "freeSpace": 47403.196571,
+            "estimatedApy": 0.1663,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gtNc2o4nrByZ81BEheRa4u7Vncfg1ZvK1",
+        "name": "Odins Bakery",
+        "status": "active",
+        "balance": 27901.026493,
+        "features": [],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1.0,
+            "capacity": 244048.256775,
+            "freeSpace": 222104.067526,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.02,
+            "capacity": 135582.364875,
+            "freeSpace": 116.423551,
+            "estimatedApy": 0.1661,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1KkkHxdHByHRB7x1qMUthmU38fUmCrwnZW",
+        "name": "ASICBAKER",
+        "status": "active",
+        "balance": 98431.014699,
+        "features": [],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1.0,
+            "capacity": 885857.057532,
+            "freeSpace": 885244.701958,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.02,
+            "capacity": 492142.809740,
+            "freeSpace": 297979.594269,
+            "estimatedApy": 0.1661,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ffYUjwjduZkoquw8ryKRQaUjoWJviFVK6",
+        "name": "Tez Nebraska",
+        "status": "active",
+        "balance": 14496.232103,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.03,
+            "capacity": 129910.219884,
+            "freeSpace": 33821.669133,
+            "estimatedApy": 0.0822,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.03,
+            "capacity": 72172.344380,
+            "freeSpace": 1349.715034,
+            "estimatedApy": 0.1644,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1hcDWEF9wtcc6p81wsbJu52qFzZPxrXMge",
+        "name": "UrsaMajor",
+        "status": "active",
+        "balance": 9757.40036,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.04,
+            "capacity": 87472.803447,
+            "freeSpace": 8600.381693,
+            "estimatedApy": 0.0814,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.04,
+            "capacity": 48596.001915,
+            "freeSpace": 46971.225754,
+            "estimatedApy": 0.1627,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1baXkUCgDWAxC8X2yuH1iTCDZYbHbdkSoi",
+        "name": "Popty",
+        "status": "active",
+        "balance": 10059.412697,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 15,
+            "fee": 0.04,
+            "capacity": 89334.289206,
+            "freeSpace": -1934.433736,
+            "estimatedApy": 0.0796,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.04,
+            "capacity": 49630.160670,
+            "freeSpace": 41691.307532,
+            "estimatedApy": 0.1627,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1V3yg82mcrPJbegqVCPn6bC8w1CSTRp3f8",
+        "name": "Staking Shop",
+        "status": "active",
+        "balance": 89967.776867,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.08,
+            "capacity": 809559.803655,
+            "freeSpace": 167599.688799,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.04,
+            "capacity": 449755.446475,
+            "freeSpace": 411657.221281,
+            "estimatedApy": 0.1627,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
+        "name": "The Shire",
+        "status": "active",
+        "balance": 44186.887544,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.042,
+            "capacity": 392203.815714,
+            "freeSpace": -2383.259962,
+            "estimatedApy": 0.0807,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.042,
+            "capacity": 217891.008730,
+            "freeSpace": 5909.343940,
+            "estimatedApy": 0.1624,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
+        "name": "Bake Nug",
+        "status": "active",
+        "balance": 177331.820378,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.1498,
+            "capacity": 1595338.507431,
+            "freeSpace": 152700.935702,
+            "estimatedApy": 0.0721,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0498,
+            "capacity": 744491.303468,
+            "freeSpace": 456494.454160,
+            "estimatedApy": 0.1611,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1T1fRJmpPp1pN2z45sivxdbKNQtyatzCVx",
+        "name": "Zir0h's bakery",
+        "status": "active",
+        "balance": 19816.273704,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 176479.953048,
+            "freeSpace": 14571.867240,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 98044.418360,
+            "freeSpace": 10739.075773,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Lc87p6zRaDwzJs9kHvdpm7XzeWE8QTwVB",
+        "name": "Dashmaster",
+        "status": "active",
+        "balance": 161837.542291,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 50,
+            "fee": 0.05,
+            "capacity": 1428410.849346,
+            "freeSpace": 186212.757695,
+            "estimatedApy": 0.0805,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 793561.582970,
+            "freeSpace": 711761.970482,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1TsxQ66ZJQd3yvBC7E5j99q5TfnsJcGMyM",
+        "name": "Baking Bangkok",
+        "status": "active",
+        "balance": 85472.066522,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.05,
+            "capacity": 763590.709791,
+            "freeSpace": 746562.197998,
+            "estimatedApy": 0.0805,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                },
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates missed baking rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 424217.060995,
+            "freeSpace": 300331.733969,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aLhL5fiu27Ux66qAvTcYp24UnH51vBMh2",
+        "name": "Anchorlight Baking",
+        "status": "active",
+        "balance": 14033.70606,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.059,
+            "capacity": 122162.300163,
+            "freeSpace": 25253.094649,
+            "estimatedApy": 0.0797,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 67867.944535,
+            "freeSpace": 54312.962456,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fJHFn6sWEd3NnBPngACuw2dggTv6nQZ7g",
+        "name": "Baking Team",
+        "status": "active",
+        "balance": 54863.333382,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.04,
+            "capacity": 493450.61175,
+            "freeSpace": -15037.515680,
+            "estimatedApy": 0.0790,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 274139.22875,
+            "freeSpace": 68192.314568,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1brWSr91ZygR4gi5o19yo8QMff926y2B5e",
+        "name": "AgeaenesBakery",
+        "status": "active",
+        "balance": 15060.886345,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0.1,
+            "fee": 0.05,
+            "capacity": 134098.890876,
+            "freeSpace": -28386.925607,
+            "estimatedApy": 0.0664,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 74499.383820,
+            "freeSpace": 74320.568116,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1hZvgjekGo7DmQjWh7XnY5eLQD8wNYPczE",
+        "name": "TzC - BakeBuddy #2",
+        "status": "active",
+        "balance": 71616.450234,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "TezCapital",
+                    "link": "https://tez.capital/"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 10,
+            "fee": 1,
+            "capacity": 642551.095215,
+            "freeSpace": 642322.378834,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 356972.830675,
+            "freeSpace": 166083.456113,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Q7eNkwYGTKZNqQ2mq31rcZtNvCjwhTwU2",
+        "name": "Bakerman_CH",
+        "status": "active",
+        "balance": 549042.641242,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.065,
+            "capacity": 4940409.762063,
+            "freeSpace": 3438928.091353,
+            "estimatedApy": 0.0792,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                },
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates missed baking rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.065,
+            "capacity": 2744672.090035,
+            "freeSpace": 22442.824056,
+            "estimatedApy": 0.1585,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WmoPVuCJMjsVGyfBLi7wuRPyRSM2WtBTw",
+        "name": "BAGUETTE",
+        "status": "active",
+        "balance": 6224.111881,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.07,
+            "capacity": 54068.044428,
+            "freeSpace": 20806.971983,
+            "estimatedApy": 0.0788,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.07,
+            "capacity": 30037.802460,
+            "freeSpace": 21675.445602,
+            "estimatedApy": 0.1576,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1RQBCiyXKZimFoRaw5x3XwRQEvX8AM3k4Z",
+        "name": "TrapDesuUwU Baker",
+        "status": "active",
+        "balance": 6895.483906,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.075,
+            "capacity": 59519.554632,
+            "freeSpace": 46438.608816,
+            "estimatedApy": 0.0784,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.07,
+            "capacity": 33066.419240,
+            "freeSpace": 25049.468445,
+            "estimatedApy": 0.1576,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gg5bjopPcr9agjamyu9BbXKLibNc2rbAq",
+        "name": "hodl.farm",
+        "status": "active",
+        "balance": 37111.152568,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Tezos on Kubernetes",
+                    "link": "https://github.com/hodl-dot-farm/tezos-on-gke"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 322022.941956,
+            "freeSpace": 1077.647251,
+            "estimatedApy": 0.0805,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay network fee, denunciation and revelation rewards"
+                },
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates missed baking and attestation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.075,
+            "capacity": 178901.634420,
+            "freeSpace": 83846.745162,
+            "estimatedApy": 0.1568,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ewtWje28RQJrRnaKzJi5BVgdG3UTYeC59",
+        "name": "Block Bakery",
+        "status": "active",
+        "balance": 6076.9058,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 54182.130579,
+            "freeSpace": 43809.716481,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.075,
+            "capacity": 30101.183655,
+            "freeSpace": 27377.457952,
+            "estimatedApy": 0.1568,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gjwq9ybKEmqQrTmzCoVB3HESYV1Ekc5up",
+        "name": "Pool of Stake",
+        "status": "active",
+        "balance": 213298.577449,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.0777,
+            "capacity": 1841297.511987,
+            "freeSpace": 352735.513901,
+            "estimatedApy": 0.0782,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0777,
+            "capacity": 1022943.062215,
+            "freeSpace": 732823.250376,
+            "estimatedApy": 0.1563,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY",
+        "name": "La Boulange",
+        "status": "active",
+        "balance": 30996.380393,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.06,
+            "capacity": 277563.267819,
+            "freeSpace": 105094.373600,
+            "estimatedApy": 0.0797,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 154201.815455,
+            "freeSpace": 7412.117810,
+            "estimatedApy": 0.1559,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gXwZnDuTfD17uA9GTtwTGmEfh4ABCHSmE",
+        "name": "iiaku.tez ꜩ's Baker",
+        "status": "active",
+        "balance": 12039.254799,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.06,
+            "capacity": 102870.144468,
+            "freeSpace": 69814.729348,
+            "estimatedApy": 0.0797,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                },
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates missed baking rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 57150.080260,
+            "freeSpace": 42885.196583,
+            "estimatedApy": 0.1559,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1XXayQohB8XRXN7kMoHbf2NFwNiH3oMRQQ",
+        "name": "Bit Cat",
+        "status": "active",
+        "balance": 199047.07498,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.08,
+            "capacity": 1645285.23738,
+            "freeSpace": 402838.706276,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 365618.94164,
+            "freeSpace": 365318.505967,
+            "estimatedApy": 0.1559,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM",
+        "name": "Everstake",
+        "status": "active",
+        "balance": 5587485.106263,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 41322648.73635,
+            "freeSpace": 10849568.676015,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 22957027.07575,
+            "freeSpace": 10905033.538804,
+            "estimatedApy": 0.1559,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Yjryh3tpFHQG73dofJNatR21KUdRDu7mH",
+        "name": "Canadian Bakin'",
+        "status": "active",
+        "balance": 18079.034609,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 161552.775825,
+            "freeSpace": 72016.823092,
+            "estimatedApy": 0.0771,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 89751.542125,
+            "freeSpace": 37072.687696,
+            "estimatedApy": 0.1542,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gVC3dVsJWk6jiZSeQnGj2QAJWS84pA8VE",
+        "name": "Tezio Bakery",
+        "status": "active",
+        "balance": 19017.744929,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.09,
+            "capacity": 164457.064242,
+            "freeSpace": 56099.913544,
+            "estimatedApy": 0.0771,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 91365.035690,
+            "freeSpace": 91158.582021,
+            "estimatedApy": 0.1542,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1UNkf4sWzC5vsKP7FnejSeJsXdc6z8Kzk4",
+        "name": "Adi_daz Barrio Bakery",
+        "status": "active",
+        "balance": 72378.513916,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 200,
+            "fee": 0.1,
+            "capacity": 651405.94371,
+            "freeSpace": 617554.496690,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 361892.19095,
+            "freeSpace": 356567.416185,
+            "estimatedApy": 0.1542,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1P6WKJu2rcbxKiKRZHKQKmKrpC9TfW1AwM",
+        "name": "TzC - BakeBuddy #1",
+        "status": "active",
+        "balance": 12147.309601,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "TezCapital",
+                    "link": "https://tez.capital/"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.11,
+            "capacity": 105949.334322,
+            "freeSpace": 60086.810092,
+            "estimatedApy": 0.0754,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 58860.741290,
+            "freeSpace": 14139.689409,
+            "estimatedApy": 0.1542,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aqcYgG6NuViML5vdWhohHJBYxcDVLNUsE",
+        "name": "Blockshard",
+        "status": "active",
+        "balance": 20908.949763,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.149,
+            "capacity": 182613.43602,
+            "freeSpace": 6722.086653,
+            "estimatedApy": 0.0721,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 101451.90890,
+            "freeSpace": 71689.548638,
+            "estimatedApy": 0.1542,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Y7939nK18ogD32jAkun8sCCH8Ab2tQfvv",
+        "name": "Electric Bakery",
+        "status": "active",
+        "balance": 83361.753748,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.099,
+            "capacity": 210081.319596,
+            "freeSpace": 14222.732610,
+            "estimatedApy": 0.0764,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.099,
+            "capacity": 116711.844220,
+            "freeSpace": 116710.844136,
+            "estimatedApy": 0.1527,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1bHKi24yP4kDdjtbzznfrsjLR93yZvUkBR",
+        "name": "Bake Nug ᵈᵉˡᵘˣᵉ",
+        "status": "active",
+        "balance": 297721.391645,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.0499,
+            "capacity": 2678661.282051,
+            "freeSpace": 483548.637474,
+            "estimatedApy": 0.0805,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0995,
+            "capacity": 1488145.156695,
+            "freeSpace": 629559.886511,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1NRGxXV9h6SdNaZLcgmjuLx3hyy2f8YoGN",
+        "name": "Baking Bangkok",
+        "status": "active",
+        "balance": 14115.264999,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.05,
+            "capacity": 126356.336937,
+            "freeSpace": 20518.569651,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 70197.964965,
+            "freeSpace": 62681.808306,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4",
+        "name": "Teztillery",
+        "status": "active",
+        "balance": 2410.668772,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.0499,
+            "capacity": 21409.136271,
+            "freeSpace": 347.575716,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 11893.964595,
+            "freeSpace": 10151.166828,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1XjsQfzmaxNsbuHjuZHAcuUukVGRq4tg24",
+        "name": "Tezex Bakery",
+        "status": "active",
+        "balance": 45260.255977,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.055,
+            "capacity": 403355.030076,
+            "freeSpace": 193950.900685,
+            "estimatedApy": 0.0801,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 224086.127820,
+            "freeSpace": 150479.485306,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1eCYp6E1yZL8zqdF7zPSC3UVYubFJHDuVF",
+        "name": "The Bakers Man",
+        "status": "active",
+        "balance": 6458.787985,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.07,
+            "capacity": 55705.928679,
+            "freeSpace": 39185.295468,
+            "estimatedApy": 0.0788,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 30947.738155,
+            "freeSpace": 30696.902251,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1MbhmEwEAzzfb3naSr7vTp4mDxB8HsknA9",
+        "name": "Digital Mango",
+        "status": "active",
+        "balance": 30083.507405,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.07,
+            "capacity": 197723.806704,
+            "freeSpace": 56922.236277,
+            "estimatedApy": 0.0788,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 109846.559280,
+            "freeSpace": 39035.122586,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aKxnrzx5PXZJe7unufEswVRCMU9yafmfb",
+        "name": "Tezos Canada",
+        "status": "active",
+        "balance": 127726.429484,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.08,
+            "capacity": 1121627.393082,
+            "freeSpace": 37383.608108,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 623126.329490,
+            "freeSpace": 446694.279847,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1c8JTzmA6c7cm6ZmUwR7WES6akdiMa1kwt",
+        "name": "Bäckeranlage",
+        "status": "active",
+        "balance": 23009.759243,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.08,
+            "capacity": 180290.065428,
+            "freeSpace": 23747.701911,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 100161.147460,
+            "freeSpace": 98506.723603,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1RV1MBbZMR68tacosb7Mwj6LkbPSUS1er1",
+        "name": "Baking Tacos",
+        "status": "active",
+        "balance": 101679.723741,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Tezos Reward Distributor",
+                    "link": "https://github.com/habanoz/tezos-reward-distributor"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 903054.689595,
+            "freeSpace": 72406.585913,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 200678.819910,
+            "freeSpace": 171494.011788,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz3e7LbZvUtoXhpUD1yb6wuFodZpfYRb9nWJ",
+        "name": "EcoTez",
+        "status": "active",
+        "balance": 170463.152611,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.099,
+            "capacity": 976062.007611,
+            "freeSpace": 197958.275814,
+            "estimatedApy": 0.0764,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 542256.670895,
+            "freeSpace": 381702.731860,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1PrQdsb9i9UcsYoQwYXihzRAngSu1oHniS",
+        "name": "Proof of Pastry Bakery",
+        "status": "active",
+        "balance": 17164.545863,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 15718.770864,
+            "freeSpace": 253.947213,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 8732.650480,
+            "freeSpace": 8732.650480,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz3bEQoFCZEEfZMskefZ8q8e4eiHH1pssRax",
+        "name": "Ceibo XTZ",
+        "status": "active",
+        "balance": 38852.642141,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1,
+            "capacity": 316370.170782,
+            "freeSpace": 106217.302009,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 175761.205990,
+            "freeSpace": 157581.457932,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1L6UDJ4EEvhpY84YjJpBg51bKMG1Usyrgz",
+        "name": "Baker of Chains",
+        "status": "active",
+        "balance": 13932.875108,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 109079.758854,
+            "freeSpace": 103370.451698,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 60599.866030,
+            "freeSpace": 60599.866030,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ei4WtWEMEJekSv8qDnu9PExG6Q8HgRGr3",
+        "name": "BakeTz",
+        "status": "active",
+        "balance": 653045.458943,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 5772210.646491,
+            "freeSpace": 1351883.096341,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 1924070.215497,
+            "freeSpace": 1817696.245295,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1b23jSuHcadDQjtEZmD4ZHigpHGN7bRXAK",
+        "name": "Andalucia Tezos",
+        "status": "active",
+        "balance": 5621.854714,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1,
+            "capacity": 46679.123061,
+            "freeSpace": 41223.888972,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 25932.846145,
+            "freeSpace": 24495.421268,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1VQnqCCqX4K5sP3FNkVSNKTdCAMJDd3E1n",
+        "name": "pos.dog",
+        "status": "active",
+        "balance": 6417389.496688,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.1,
+            "capacity": 57607941.616884,
+            "freeSpace": 27965095.396034,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 32004412.009380,
+            "freeSpace": 21961243.056635,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1MJx9vhaNRSimcuXPK2rW4fLccQnDAnVKJ",
+        "name": "AirGap",
+        "status": "active",
+        "balance": 975014.161371,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 7911231.075837,
+            "freeSpace": 2479174.631318,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 4395128.375465,
+            "freeSpace": 883640.670127,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1R4PuhxUxBBZhfLJDx2nNjbr7WorAPX1oC",
+        "name": "Baktz",
+        "status": "active",
+        "balance": 372514.070753,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1,
+            "capacity": 3338972.250768,
+            "freeSpace": 3056471.907608,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 1854984.583760,
+            "freeSpace": 1833143.519535,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1RCFbB9GpALpsZtu6J58sb74dm8qe6XBzv",
+        "name": "Staked",
+        "status": "active",
+        "balance": 1415149.232517,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 11950400.402388,
+            "freeSpace": 5497131.274199,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 6639111.334660,
+            "freeSpace": 5614382.346373,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1V4qCyvPKZ5UeqdH14HN42rxvNPQfc9UZg",
+        "name": "Shake 'n Bake",
+        "status": "active",
+        "balance": 288029.582328,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 2524937.835717,
+            "freeSpace": 638138.772346,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 1402743.242065,
+            "freeSpace": 1044358.145885,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cSoWttzYi9taqyHfcKS86b5M31SoaTQdg",
+        "name": "Pinnacle Bakery",
+        "status": "active",
+        "balance": 57811.135675,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 467412.085215,
+            "freeSpace": 167194.035463,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 259673.380675,
+            "freeSpace": 173728.990907,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1hk59GLCY65onRt4vT75d57CMVutsLtFsx",
+        "name": "Anon Bakery",
+        "status": "active",
+        "balance": 145118.982097,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 1304849.080242,
+            "freeSpace": 1253888.261894,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 724916.155690,
+            "freeSpace": 642617.190468,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1V1LGi1uDoZNr7XFHY4gE2jsqq9ckN4shr",
+        "name": "sunrisetezbakery.tez",
+        "status": "active",
+        "balance": 8025.956681,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.1,
+            "capacity": 72128.919249,
+            "freeSpace": 72117.286929,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Minimum payout is 1 XTZ. Rewards will be paid-out as they are released"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 40071.621805,
+            "freeSpace": 40071.621805,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1KfEsrtDaA1sX7vdM4qmEPWuSytuqCDp5j",
+        "name": "XTZMaster",
+        "status": "active",
+        "balance": 323227.883239,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.15,
+            "capacity": 2836510.091496,
+            "freeSpace": 751491.597832,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 1575838.939720,
+            "freeSpace": 875780.142894,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1bZ8vsMAXmaWEV7FRnyhcuUs2fYMaQ6Hkk",
+        "name": "GOLD TZ",
+        "status": "active",
+        "balance": 18159.687395,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 500,
+            "fee": 0.15,
+            "capacity": 163037.400408,
+            "freeSpace": 58186.900402,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 90576.333560,
+            "freeSpace": 74852.513308,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1SohptP53wDPZhzTWzDUFAUcWF6DMBpaJV",
+        "name": "Hayek Lab",
+        "status": "active",
+        "balance": 107754.130945,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.15,
+            "capacity": 948766.810473,
+            "freeSpace": 238410.303873,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 527092.672485,
+            "freeSpace": 184894.819689,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur",
+        "name": "Baking Benjamins",
+        "status": "active",
+        "balance": 105545.501452,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "BakeBuddy",
+                    "link": "https://www.bakebuddy.xyz/"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0.01,
+            "fee": 0.2,
+            "capacity": 947128.202037,
+            "freeSpace": 433176.718332,
+            "estimatedApy": 0.0678,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 526182.334465,
+            "freeSpace": 112732.508367,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1LVqmufjrmV67vNmZWXRDPMwSCh7mLBnS3",
+        "name": "BakerIsland",
+        "status": "active",
+        "balance": 53923.333136,
+        "features": [],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 485274.136437,
+            "freeSpace": 417637.579481,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 269596.742465,
+            "freeSpace": 157419.954224,
+            "estimatedApy": 0.1526,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1KwafrdmM8RwxUMxdbbtWyZuKLWSPVxe9u",
+        "name": "Tezberry Pie",
+        "status": "active",
+        "balance": 14893.646104,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.12,
+            "capacity": 130078.631259,
+            "freeSpace": 72684.496567,
+            "estimatedApy": 0.0746,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.12,
+            "capacity": 72265.906255,
+            "freeSpace": 13637.191914,
+            "estimatedApy": 0.1492,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1i36vhJwdv75p4zfRu3TPyqhaXyxDWGoz9",
+        "name": "LibertéZ",
+        "status": "active",
+        "balance": 9656.050574,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.2,
+            "capacity": 86323.150008,
+            "freeSpace": 44461.044691,
+            "estimatedApy": 0.0678,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 47957.305560,
+            "freeSpace": -2732.819905,
+            "estimatedApy": 0.1456,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1hAYfexyzPGG6RhZZMpDvAHifubsbb6kgn",
+        "name": "Swiss Staking",
+        "status": "active",
+        "balance": 75844.501515,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.1,
+            "capacity": 633076.328988,
+            "freeSpace": 70104.995121,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 351709.071660,
+            "freeSpace": 351709.071660,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cXUERthGxHcDVAdKsFiFa4sSWbuGorghY",
+        "name": "TEZ Blocks",
+        "status": "active",
+        "balance": 43558.355131,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 390359.009691,
+            "freeSpace": 101424.769155,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 216866.116495,
+            "freeSpace": 65463.165996,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Scdr2HsZiQjc7bHMeBbmDRXYVvdhjJbBh",
+        "name": "Chorus One - 2",
+        "status": "active",
+        "balance": 213159.15949,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.15,
+            "capacity": 1427358.463794,
+            "freeSpace": 176288.541717,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 792976.924330,
+            "freeSpace": 792966.831276,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Lhf4J9Qxoe3DZ2nfe8FGDnvVj7oKjnMY6",
+        "name": "Tez Baker",
+        "status": "active",
+        "balance": 279805.921129,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 2439642.81249,
+            "freeSpace": 1214976.034878,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 1355357.11805,
+            "freeSpace": 1122160.647993,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1NEKxGEHsFufk87CVZcrqWu8o22qh46GK6",
+        "name": "Money Every 3 Days",
+        "status": "active",
+        "balance": 591916.674559,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.15,
+            "capacity": 5230196.745246,
+            "freeSpace": 889047.873912,
+            "estimatedApy": 0.0720,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 2905664.858470,
+            "freeSpace": 2832971.497227,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WnfXMPaNTBmH7DBPwqCWs9cPDJdkGBTZ8",
+        "name": "TezosHODL",
+        "status": "active",
+        "balance": 354301.630126,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.15,
+            "capacity": 3124011.558663,
+            "freeSpace": 2388464.099852,
+            "estimatedApy": 0.0720,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 1735561.977035,
+            "freeSpace": 116754.190515,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1eEnQhbwf6trb8Q8mPb2RaPkNk2rN7BKi8",
+        "name": "Chorus One",
+        "status": "active",
+        "balance": 1602412.6436,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.15,
+            "capacity": 13624741.549602,
+            "freeSpace": -98726.153958,
+            "estimatedApy": 0.0715,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 7569300.860890,
+            "freeSpace": 7569290.770140,
+            "estimatedApy": 0.1441,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Ldzz6k1BHdhuKvAtMRX7h5kJSMHESMHLC",
+        "name": "PayTezos",
+        "status": "active",
+        "balance": 1045123.378049,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1,
+            "capacity": 9078273.287532,
+            "freeSpace": 5761930.673451,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.2,
+            "capacity": 5043485.159740,
+            "freeSpace": 4607292.429006,
+            "estimatedApy": 0.1356,
+            "features": []
+        }
+    },
+    {
+        "address": "tz3LV9aGKHDnAZHCtC9SjNtTrKRu678FqSki",
+        "name": "Ledger by Kiln",
+        "status": "active",
+        "balance": 1125931.81428,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.12,
+            "capacity": 10119925.986912,
+            "freeSpace": -15707.217987,
+            "estimatedApy": 0.0745,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.2,
+            "capacity": 5622181.103840,
+            "freeSpace": 5441210.753126,
+            "estimatedApy": 0.1356,
+            "features": []
+        }
+    },
+    {
+        "address": "tz3dKooaL9Av4UY15AUx9uRGL5H6YyqoGSPV",
+        "name": "Kiln",
+        "status": "active",
+        "balance": 719218.88642,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.15,
+            "capacity": 6455956.760631,
+            "freeSpace": 21894.576540,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.2,
+            "capacity": 3586642.644795,
+            "freeSpace": 3582820.237221,
+            "estimatedApy": 0.1356,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aDiEJf9ztRrAJEXZfcG3CKimoKsGhwVAi",
+        "name": "KryptStar",
+        "status": "active",
+        "balance": 47417.797878,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.85,
+            "capacity": 354704.92533,
+            "freeSpace": 11230.718308,
+            "estimatedApy": 0.0127,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.28,
+            "capacity": 197058.29185,
+            "freeSpace": 196047.682043,
+            "estimatedApy": 0.1220,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1eu3mkvEjzPgGoRMuKY7EHHtSwz88VxS31",
+        "name": "Tezos Spain",
+        "status": "active",
+        "balance": 48950.387718,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Taezars",
+                    "link": "https://taezars.com/"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.0475,
+            "capacity": 408834.960408,
+            "freeSpace": 6719.161244,
+            "estimatedApy": 0.0807,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.035,
+            "capacity": 227130.533560,
+            "freeSpace": -124703.614951,
+            "estimatedApy": 0.1122,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fXRwGcgoz81Fsksx9L2rVD5wE6CpTMkLz",
+        "name": "ByteBlock-Baker",
+        "status": "active",
+        "balance": 13764.651804,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.04,
+            "capacity": 97069.080636,
+            "freeSpace": 3252.722977,
+            "estimatedApy": 0.0814,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fUyqYH7H4pRHN1roWY17giXhy1RvxjgUV",
+        "name": "Citadel.one",
+        "status": "active",
+        "balance": 75914.017278,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.05,
+            "capacity": 679819.342167,
+            "freeSpace": 84950.968803,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gcna2xxZj2eNp1LaMyAhVJ49mEFj4FH26",
+        "name": "Exaion Baker",
+        "status": "active",
+        "balance": 49567.728633,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.0575,
+            "capacity": 372508.631658,
+            "freeSpace": 23893.288145,
+            "estimatedApy": 0.0799,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Kf25fX1VdmYGSEzwFy1wNmkbSEZ2V83sY",
+        "name": "Tezos Seoul",
+        "status": "active",
+        "balance": 156591.895439,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.07,
+            "capacity": 1396782.820818,
+            "freeSpace": -5270.042094,
+            "estimatedApy": 0.0785,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay network fee rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1MUhFMBCuECo6USUK2vzW4Mt88qfgUANe4",
+        "name": "Bitwick Staking",
+        "status": "active",
+        "balance": 22297.791566,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.08,
+            "capacity": 68697.852282,
+            "freeSpace": 29765.562684,
+            "estimatedApy": 0.0780,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gXWW1q8NcXtVy2oVVcc2s4XKNzv9CryWd",
+        "name": "GreenTez",
+        "status": "active",
+        "balance": 30630.621224,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 50,
+            "fee": 0.08,
+            "capacity": 272998.683702,
+            "freeSpace": 259356.439442,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1N7fL6KvRzD5Umy7yeX5uBa5wFsC5veuN2",
+        "name": "Zerostake",
+        "status": "active",
+        "balance": 19870.28919,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 152794.350738,
+            "freeSpace": 42100.828903,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cSj7fTex3JPd1p1LN1fwek6AV1kH93Wwc",
+        "name": "Norn Delegate",
+        "status": "active",
+        "balance": 115625.203867,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.08,
+            "capacity": 1023728.61033,
+            "freeSpace": 386225.171919,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1P2Po7YM526ughEsRbY4oR9zaUPDZjxFrb",
+        "name": "P2P.org",
+        "status": "active",
+        "balance": 1977843.066278,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0995,
+            "capacity": 17697014.554581,
+            "freeSpace": 598851.178516,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz2BPbakwgRGwtnjdouvCiQFBdKeSiiYL9E5",
+        "name": "Colossus",
+        "status": "active",
+        "balance": 55711.519384,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.1,
+            "capacity": 304287.159978,
+            "freeSpace": 2573.220988,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1MKkLaFh39wnY1mEa2LoHJVWgUPeUwBRpM",
+        "name": "NordBaker",
+        "status": "active",
+        "balance": 3011.359943,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 13367.235213,
+            "freeSpace": 897.923309,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.000000,
+            "freeSpace": 0.000000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1S6H83gugqK4dR5Had9jWR9M1ZdAAVgU5e",
+        "name": "Blockhouse",
+        "status": "active",
+        "balance": 38600.272346,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1,
+            "capacity": 335676.95784,
+            "freeSpace": 88331.290322,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Payment period",
+                    "content": "Baker pays once per 6 cycles"
+                },
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.00000,
+            "freeSpace": 0.00000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1h4ar7F5wC6Ae2cfkrmrRP6nrPk9gGFaxg",
+        "name": "Postchain.io",
+        "status": "active",
+        "balance": 12861.281132,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 70681.647897,
+            "freeSpace": 993.571369,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1LnWa4AiFCjMezTgSNa65QFoo7DQGEWgEU",
+        "name": "Tezeract",
+        "status": "active",
+        "balance": 33396.832812,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.1,
+            "capacity": 160854.087114,
+            "freeSpace": 3915.207693,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1LmaFsWRkjr7QMCx5PtV6xTUz3AmEpKQiF",
+        "name": "Blockpower Staking",
+        "status": "active",
+        "balance": 127875.443477,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 877825.072512,
+            "freeSpace": -1210.808031,
+            "estimatedApy": 0.0762,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ZcTRk5uxD86EFEn1vvNffWWqJy7q5eVhc",
+        "name": "Ateza",
+        "status": "active",
+        "balance": 184040.864915,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 25,
+            "fee": 0.125,
+            "capacity": 1275237.300915,
+            "freeSpace": 406497.196078,
+            "estimatedApy": 0.0742,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1dbfppLAAxXZNtf2SDps7rch3qfUznKSoK",
+        "name": "Coinhouse",
+        "status": "active",
+        "balance": 241230.783867,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.0999,
+            "capacity": 1576427.759721,
+            "freeSpace": -60678.671138,
+            "estimatedApy": 0.0735,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz2FCNBrERXtaTtNX6iimR1UJ5JSDxvdHM93",
+        "name": "Stake.fish",
+        "status": "active",
+        "balance": 2389530.217375,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 21347172.444978,
+            "freeSpace": 4895459.324922,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1abmz7jiCV2GH2u81LRrGgAFFgvQgiDiaf",
+        "name": "Tessellated Geometry",
+        "status": "active",
+        "balance": 43262.224558,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 50,
+            "fee": 0.15,
+            "capacity": 385939.83681,
+            "freeSpace": 16132.509808,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.00000,
+            "freeSpace": 0.00000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1MQJPGNMijnXnVoBENFz9rUhaPt3S7rWoz",
+        "name": "Tezmania",
+        "status": "active",
+        "balance": 205403.435,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.2,
+            "capacity": 736038.530523,
+            "freeSpace": 34748.821318,
+            "estimatedApy": 0.0678,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cb8xcmJWcdVU7cNAd93MfEReorvP52P8x",
+        "name": "Mint Capital",
+        "status": "active",
+        "balance": 10007.677919,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.3499,
+            "capacity": 73576.165437,
+            "freeSpace": 5768.343760,
+            "estimatedApy": 0.0551,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1X69UV5ddc3mkGhVHeU2JLN8KohKvAF9Qm",
+        "name": "VF Validierung \uD83C\uDDE9\uD83C\uDDEA",
+        "status": "active",
+        "balance": 6494.693379,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.04,
+            "capacity": 28155.12795,
+            "freeSpace": -20197.712999,
+            "estimatedApy": 0.0474,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.00000,
+            "freeSpace": 0.00000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1i9KWDKEf7nvdveXYLbHZCRaxbdADGmyAD",
+        "name": "Home Baker",
+        "status": "active",
+        "balance": 0.000062,
+        "features": [],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 5,
+            "fee": 1,
+            "capacity": 0.000549,
+            "freeSpace": -31676.613661,
+            "estimatedApy": 0,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.000000,
+            "freeSpace": 0.000000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1VceyYUpq1gk5dtp6jXQRtCtY8hm5DKt72",
+        "name": "TeZetetic",
+        "status": "not_responding",
+        "balance": 32155.048914,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 279000.239742,
+            "freeSpace": 117621.032672,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 155000.133190,
+            "freeSpace": 131468.727447,
+            "estimatedApy": 0.1610,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1QHEAXGd4DFPBc5yq5gxQw99fTvNEmpKLE",
+        "name": "Vanader Baker",
+        "status": "not_responding",
+        "balance": 14118.678923,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.06,
+            "capacity": 125171.941455,
+            "freeSpace": 101823.188976,
+            "estimatedApy": 0.0797,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.06,
+            "capacity": 69539.967475,
+            "freeSpace": 69539.967475,
+            "estimatedApy": 0.1593,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cX93Q3KsiTADpCC4f12TBvAmS5tw7CW19",
+        "name": "Tz Bakery Legacy",
+        "status": "not_responding",
+        "balance": 13296.892092,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 2000,
+            "fee": 0.1,
+            "capacity": 118567.456173,
+            "freeSpace": 4657.683969,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.25,
+            "capacity": 65870.808985,
+            "freeSpace": 65870.808985,
+            "estimatedApy": 0.1271,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1PFeoTuFen8jAMRHajBySNyCwLmY5RqF9M",
+        "name": "Paradigm Bakery",
+        "status": "not_responding",
+        "balance": 42290.18498,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.0499,
+            "capacity": 357685.037262,
+            "freeSpace": 73596.542209,
+            "estimatedApy": 0.0805,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1XBiMXZr3bt93jkayZrYYLeMq5dteCqRF3",
+        "name": "StakeX",
+        "status": "not_responding",
+        "balance": 20543.478518,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 5,
+            "fee": 0.09,
+            "capacity": 46980.639171,
+            "freeSpace": 10597.558577,
+            "estimatedApy": 0.0771,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1STeamwbp68THcny9zk3LsbG3H36DMvbRK",
+        "name": "Staking Team",
+        "status": "not_responding",
+        "balance": 121475.598495,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.099,
+            "capacity": 348298.705089,
+            "freeSpace": 17302.670846,
+            "estimatedApy": 0.0764,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1KzSC1J9aBxKp7u8TUnpN8L7S65PBRkgdF",
+        "name": "HashKey Cloud",
+        "status": "not_responding",
+        "balance": 62509.001162,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 430038.158931,
+            "freeSpace": 12905.997047,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1b9MYGrbN1NAxphLEsPPNT9JC7aNFc5nA4",
+        "name": "TezosRus",
+        "status": "not_responding",
+        "balance": 8006.161522,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 59569.881246,
+            "freeSpace": 2955.980835,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1i8u2x5TJw3U92V1Q4JMZzvfr26dMPChWD",
+        "name": "Cerberus_Bakery",
+        "status": "not_responding",
+        "balance": 9997.706436,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0.001,
+            "fee": 0.1,
+            "capacity": 22439.200284,
+            "freeSpace": 2610.052928,
+            "estimatedApy": 0.0763,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.000000,
+            "freeSpace": 0.000000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1VmiY38m3y95HqQLjMwqnMS7sdMfGomzKi",
+        "name": "Lucid Mining",
+        "status": "not_responding",
+        "balance": 83946.726668,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 615469.545117,
+            "freeSpace": 28908.676600,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1R664EP6wjcM1RSUVJ7nrJisTpBW9QyJzP",
+        "name": "Sebuh.net",
+        "status": "not_responding",
+        "balance": 23213.240131,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.15,
+            "capacity": 47024.035893,
+            "freeSpace": 10646.961518,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1eCzNtidHvVgeRzQ38C81FPcYnxMsCEL6Z",
+        "name": "TezLoom",
+        "status": "not_responding",
+        "balance": 8822.120273,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.2,
+            "capacity": 79214.224401,
+            "freeSpace": 16872.570063,
+            "estimatedApy": 0.0678,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Z1WwoqgRFbLE3YNdYRpCx44NSfiMJzeAG",
+        "name": "Bakemon",
+        "status": "not_responding",
+        "balance": 23170.367784,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.085,
+            "capacity": 196815.367755,
+            "freeSpace": -52385.269136,
+            "estimatedApy": 0.0612,
+            "features": [
+                {
+                    "title": "Payment period",
+                    "content": "Baker pays once per 5 cycles"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fb7c66UwePkkfDXz4ajFaBP9hVNLdS7JJ",
+        "name": "Tezos.nu",
+        "status": "closed",
+        "balance": 71405.894732,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.07,
+            "capacity": 575398.999332,
+            "freeSpace": 190867.096205,
+            "estimatedApy": 0.0788,
+            "features": []
+        },
+        "staking": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 191799.666444,
+            "freeSpace": 46791.666444,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1UvkANVPWppVgMkLnvN7BwYZsCP7vm6NVd",
+        "name": "Neokta Labs",
+        "status": "closed",
+        "balance": 0.143113,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 500,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": -156735.833351,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 0,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.1695,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WvL7MKyCuUHfC3FxPFyiXcy8hHTBT3vjE",
+        "name": "Stakkt",
+        "status": "closed",
+        "balance": 1071.726593,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 9249.438879,
+            "freeSpace": 494.463101,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.000000,
+            "freeSpace": 0.000000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1UJs3VwbzqGMYHhpEg95z6YgN8vA4pcc7a",
+        "name": "Tezos NY",
+        "status": "closed",
+        "balance": 12458.759371,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.05,
+            "capacity": 99956.617632,
+            "freeSpace": 3385.412329,
+            "estimatedApy": 0.0805,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1XYqU64ydQwNmcb847JGztxauBZUoBFDcj",
+        "name": "[DELISTED]",
+        "status": "closed",
+        "balance": 10425.452214,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.05,
+            "capacity": 82007.444673,
+            "freeSpace": 19223.187985,
+            "estimatedApy": 0.0805,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1UJvHTgpVzcKWhTazGxVcn5wsHru5Gietg",
+        "name": "Tezry",
+        "status": "closed",
+        "balance": 26951.598497,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.08,
+            "capacity": 229420.159587,
+            "freeSpace": 31997.170995,
+            "estimatedApy": 0.0780,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1YhNsiRRU8aHNGg7NK3uuP6UDAyacJernB",
+        "name": "Tezbaguette",
+        "status": "closed",
+        "balance": 156213.083423,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 500,
+            "fee": 0.08,
+            "capacity": 1401119.23842,
+            "freeSpace": 1058398.661269,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ZWePaZfsSeHYT2Dvq3LeZVNUyfm5PHrmx",
+        "name": "Closed Down June 2024",
+        "status": "closed",
+        "balance": 14777.48576,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 116882.003871,
+            "freeSpace": 34980.986394,
+            "estimatedApy": 0.0763,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Tnjaxk6tbAeC2TmMApPh8UsrEVQvhHvx5",
+        "name": "CryptoDelegate",
+        "status": "closed",
+        "balance": 724598.085812,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10000,
+            "fee": 0.14,
+            "capacity": 824481.811989,
+            "freeSpace": 28320.392980,
+            "estimatedApy": 0.0729,
+            "features": [
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates all missed rewards and losses"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aiYKXmSRckyJ9EybKmpVry373rfyngJU8",
+        "name": "ViewNodes",
+        "status": "closed",
+        "balance": 2697.025245,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 24273.177498,
+            "freeSpace": 14639.137520,
+            "estimatedApy": 0.0720,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0.000000,
+            "freeSpace": 0.000000,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1QLXqnfN51dkjeghXvKHkJfhvGiM5gK4tc",
+        "name": "FreshTezos",
+        "status": "closed",
+        "balance": 199362.950904,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 500,
+            "fee": 0.2999,
+            "capacity": 247211.706456,
+            "freeSpace": 4369.169889,
+            "estimatedApy": 0.0593,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1g8vkmcde6sWKaG2NN9WKzCkDM6Rziq194",
+        "name": "[DELISTED]",
+        "status": "closed",
+        "balance": 52678.808392,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Tezos Reward Distributor",
+                    "link": "https://github.com/habanoz/tezos-reward-distributor"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.2499,
+            "capacity": 465690.453201,
+            "freeSpace": -281421.321449,
+            "estimatedApy": 0.0396,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Q8QkSBS63ZQnH3fBTiAMPes9R666Rn6Sc",
+        "name": "YieldWallet.io",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -102762.233991,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1gjXEtwqybbBZ45amJm9CHRciLQQhSndCv",
+        "name": "Stake.tez",
+        "status": "closed",
+        "balance": 17.865911,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -69460.867099,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WkFWDQXsHahmXtbrTVuEF2B7urEkxRsxG",
+        "name": "Just-Mining",
+        "status": "closed",
+        "balance": 0.532359,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.09,
+            "capacity": 0,
+            "freeSpace": -130.394588,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1PeZx7FXy7QRuMREGXGxeipb24RsMMzUNe",
+        "name": "Tezos Panda",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -628781.663678,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1LCTAwdwSrRmisS8Mxwz6oj378PSeLzxMf",
+        "name": "TezosTNA",
+        "status": "closed",
+        "balance": 1638.599821,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -3263.634975,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1bMFzs2aECPn4aCRmKQWHSLHF8ZnZbYcah",
+        "name": "[DELISTED]",
+        "status": "closed",
+        "balance": 0.007799,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": -1296.494180,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Zcxkfa5jKrRbBThG765GP29bUCU3C4ok5",
+        "name": "Tezz City",
+        "status": "closed",
+        "balance": 33051.622235,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -46555.294376,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Payment period",
+                    "content": "Baker pays once per 7 cycles"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Z2jXfEXL7dXhs6bsLmyLFLfmAkXBzA9WE",
+        "name": "Tezos Boutique",
+        "status": "closed",
+        "balance": 30454.245649,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -88347.588889,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fHn9ZSqMwp1WNwdCLqnh52yPgzQ4QydTm",
+        "name": "NFTBakery",
+        "status": "closed",
+        "balance": 12.137191,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.099,
+            "capacity": 0,
+            "freeSpace": -4246.264320,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1ZKi4VrDMEQpypn2NTn9pPbZL3xLRkETLA",
+        "name": "XTZ-Baker",
+        "status": "closed",
+        "balance": 9013.450349,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -9013.707349,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1VJQr7EtCH8KWtd5etEq6vw1oyAtJmMVd3",
+        "name": "Tezos-Senegal",
+        "status": "closed",
+        "balance": 1106.112012,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 3,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -1106.112012,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1RNoDLWUjbqqs6uCHtJKgSLAegutbD8cNe",
+        "name": "Tezorican MD Baking",
+        "status": "closed",
+        "balance": 0.92575,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -1017.823696,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Uoy4PdQDDiHRRec77pJEQJ21tSyksarur",
+        "name": "Sentry & Legate",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Breadcrumbs",
+                    "link": "https://github.com/kalouo/breadcrumbs"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 500,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -6755.856686,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1bL51EFNCV8zXyHn4Kev4LMR7yhGRYGYir",
+        "name": "Agile Baking",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -9031.208442,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1VHFxUuBhwopxC9YC9gm5s2MHBHLyCtvN1",
+        "name": "Hyper Blocks Pro",
+        "status": "closed",
+        "balance": 840.861162,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 0,
+            "freeSpace": -3348.952637,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1QGtMpkbdSM8Y1eHTru3WY51sXhFikbaAC",
+        "name": "Tezos Nigeria",
+        "status": "closed",
+        "balance": 53.838795,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -4175.925749,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1NMNQYrYrfNpmUqQrMhJypf6ovnaDZhJHM",
+        "name": "SmartNode",
+        "status": "closed",
+        "balance": 0.003675,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.2,
+            "capacity": 0,
+            "freeSpace": -25732.989349,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Xj13rZahD37z6vahm632quvWB7gLeNfgn",
+        "name": "Crispy Bakin",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.07,
+            "capacity": 0,
+            "freeSpace": -58.612475,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1QL4C1vUPRaGfRFgoYx53h5F2RCctGUgoA",
+        "name": "Montaigne conseil",
+        "status": "closed",
+        "balance": 0.424727,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.065,
+            "capacity": 0,
+            "freeSpace": -24131.397475,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz3e75hU4EhDU3ukyJueh5v6UvEHzGwkg3yC",
+        "name": "At James",
+        "status": "closed",
+        "balance": 0.999,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.12,
+            "capacity": 0,
+            "freeSpace": -19481.456731,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Payment period",
+                    "content": "Baker pays once per 5 cycles"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fqRos6byDAwP4aUWXy3vHnqGEGbWFRXb7",
+        "name": "imToken",
+        "status": "closed",
+        "balance": 0.004895,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0.1,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -1061.220435,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Payment period",
+                    "content": "Baker pays once per 10 cycles"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WApynBLihFFfDpaDdFerYvQE4dsZyfocn",
+        "name": "3S main baker",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -64.99741,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1fbumHTEhLMBmtT1GjagbMnhnTD5YZAJh2",
+        "name": "Ipocamp",
+        "status": "closed",
+        "balance": 8604.886875,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -10029.747984,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WCd2jm4uSt4vntk4vSuUWoZQGhLcDuR9q",
+        "name": "Happy Tezos",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Tezos Websocket API",
+                    "link": "https://www.tezoslive.io/"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 0,
+            "freeSpace": -1471816.944839,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Z9M4biBHSiH38k5ciRMjR5bgk89yEgLTz",
+        "name": "Tezoris",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -41777.617984,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay network fee, denunciation and revelation rewards"
+                },
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates missed baking and attestation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1eyL3DAtSLgaxRkpKKW9Jvn5yKLHcsHgmc",
+        "name": "OneOf Baker",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.06,
+            "capacity": 0,
+            "freeSpace": -6830.042038,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Compensated loss",
+                    "content": "Baker compensates missed baking rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1d6Fx42mYgVFnHUW8T8A7WBfJ6nD9pVok8",
+        "name": "MyTezosBaking",
+        "status": "closed",
+        "balance": 19.416499,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1000,
+            "fee": 0.14,
+            "capacity": 0,
+            "freeSpace": -216000.389068,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cZfFQpcYhwDp7y1njZXDsZqCrn2NqmVof",
+        "name": "Tezos.Rio",
+        "status": "closed",
+        "balance": 0.932756,
+        "features": [
+            {
+                "title": "Contribution",
+                "content": {
+                    "project": "Tezos Java SDK",
+                    "link": "https://github.com/tezosrio"
+                }
+            }
+        ],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.25,
+            "capacity": 0,
+            "freeSpace": -13576.285226,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cM8Xc7ZP1TrjkTeKq4PeRhtbnwXSBR6Sw",
+        "name": "Tez Phoenix Reborn 2.0",
+        "status": "closed",
+        "balance": 0.002644,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -4789.510867,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1eE8JBX3DfeWn3K6r6qQY2zkpKk9cJTAwh",
+        "name": "Seedyz Croissant Boulangerie",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -446.838856,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1YiuvpfeVAHbnU8akcWErNfQGFHNQ7F45z",
+        "name": "Smartlink Baker",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -37283.786771,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1dNVDWPf3Q59SdJqnjdnu277iyvReiRS9M",
+        "name": "Steak.and.Bake",
+        "status": "closed",
+        "balance": 0.000003,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.09,
+            "capacity": 0,
+            "freeSpace": -1096456.731422,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1S8e9GgdZG78XJRB3NqabfWeM37GnhZMWQ",
+        "name": "0xb1 / PlusMinus",
+        "status": "closed",
+        "balance": 2.88188,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.099,
+            "capacity": 0,
+            "freeSpace": -409310.864434,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Qrbo9FgSjz4RQP3iry9h3KFtoeu1KjFXV",
+        "name": "Lisbona Baker",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -134.947441,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1W1f1JrE7VsqgpUpj1iiDobqP5TixgZhDk",
+        "name": "Elite Tezos",
+        "status": "closed",
+        "balance": 30853.229071,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -51898.644175,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1go7f6mEQfT2xX2LuHAqgnRGN6c2zHPf5c",
+        "name": "Stakery",
+        "status": "closed",
+        "balance": 10.314643,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": -27973.650436,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1QXrzaHrGACVn15UiCg33aLCJ6npWdQb3J",
+        "name": "Test",
+        "status": "closed",
+        "balance": 0.755126,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 0,
+            "freeSpace": -33673.083010,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1axcnVN9tZnCe4sQQhC6f3tfSEXdjPaXPY",
+        "name": "Devil's Delegate",
+        "status": "closed",
+        "balance": 0.533328,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.0666,
+            "capacity": 0,
+            "freeSpace": -172788.272440,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cYufsxHXJcvANhvS55h3aY32a9BAFB494",
+        "name": "Bakery-IL",
+        "status": "closed",
+        "balance": 20274.219532,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -318317.858436,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1bnFiSQMhiR7k3kqG2M5NbspHmySDkwzPL",
+        "name": "theMETAFI.co",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 20,
+            "fee": 0.0299,
+            "capacity": 0,
+            "freeSpace": -36089.471771,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1NKnczKg77PwF5NxrRohjT5j4PmPXw6hhL",
+        "name": "Mavryk Dynamics Bakery",
+        "status": "closed",
+        "balance": 1.604747,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -1845.156325,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1hWB6QV5GBQKdEJN8EowHhLJyCMPhH18sA",
+        "name": "Tezos Cameroon",
+        "status": "closed",
+        "balance": 195.268335,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -1147.578211,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1RSRhQCg3KYjr9QPFCLgGKciaB93oGTRh2",
+        "name": "Cohen's Bakery",
+        "status": "closed",
+        "balance": 29522.506721,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 1,
+            "capacity": 265288.794237,
+            "freeSpace": 212024.398018,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1SCmznQQrawNcGcdinKVwZSS7QBUUed3BP",
+        "name": "StakeSeeker by BTCS",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": -51.815897,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1NkFRjmkqqcGkAhqe78fdgemDNKXvL7Bod",
+        "name": "bald.tez",
+        "status": "closed",
+        "balance": 0.105896,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.05,
+            "capacity": 0,
+            "freeSpace": -806.936129,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1WjqUNbgYDvGV9SU37FzvyAeyggjyFo9HC",
+        "name": "Artery by AndreFuchs",
+        "status": "closed",
+        "balance": 0.998015,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 1,
+            "fee": 0.19,
+            "capacity": 0,
+            "freeSpace": -1097.745921,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1XhnCdVENzgko5x1MMswLHSoQbJ5NPwLZ6",
+        "name": "Anonstake",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 100,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -32117.047244,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1cig1EHyvZd7J2k389moM9PxVgPQvmFkvi",
+        "name": "BlocksWell",
+        "status": "closed",
+        "balance": 0,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.15,
+            "capacity": 0,
+            "freeSpace": -9903.261909,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1Kka8PBj1FwQwYkfjtqu3epMkxKUWC47dk",
+        "name": "Baking Tribes",
+        "status": "closed",
+        "balance": 0.000001,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 50,
+            "fee": 0.09,
+            "capacity": 0,
+            "freeSpace": -23.521176,
+            "estimatedApy": 0.0000,
+            "features": [
+                {
+                    "title": "Distributed rewards",
+                    "content": "Baker doesn't pay denunciation and revelation rewards"
+                }
+            ]
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1d9ek6HrScY6QRZ71NJdB85MNz8gKGBjrv",
+        "name": "Guarda Wallet",
+        "status": "closed",
+        "balance": 27800.990525,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -205079.511868,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1TcH4Nb3aHNDJ7CGZhU7jgAK1BkSP4Lxds",
+        "name": "XTZ Antipodes",
+        "status": "closed",
+        "balance": 70953.062628,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 200,
+            "fee": 0.08,
+            "capacity": 0,
+            "freeSpace": -124788.654453,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1i5PPsXa711EuZzped9jqPS8hGKsrCMB9f",
+        "name": "Thebakery",
+        "status": "closed",
+        "balance": 1.009996,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 10,
+            "fee": 0.0498,
+            "capacity": 0,
+            "freeSpace": -78726.829512,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1R6Ej25VSerE3MkSoEEeBjKHCDTFbpKuSX",
+        "name": "TezosSEAsia",
+        "status": "closed",
+        "balance": 0.0095,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 30000,
+            "fee": 0.095,
+            "capacity": 0,
+            "freeSpace": -217.065487,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1iMAHAVpkCVegF9FLGWUpQQeiAHh4ffdLQ",
+        "name": "Wetez",
+        "status": "closed",
+        "balance": 0.270465,
+        "features": [],
+        "delegation": {
+            "enabled": true,
+            "minBalance": 0,
+            "fee": 0.1,
+            "capacity": 0,
+            "freeSpace": -105376.890488,
+            "estimatedApy": 0.0000,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    },
+    {
+        "address": "tz1aU7vU1iR21k6CAB7RZ6kQKu4MHZo6pCnN",
+        "name": "[DELISTED]",
+        "status": "closed",
+        "balance": 8002.857918,
+        "features": [],
+        "delegation": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 0.08,
+            "capacity": 57680.211546,
+            "freeSpace": 39768.378689,
+            "estimatedApy": 0.0780,
+            "features": []
+        },
+        "staking": {
+            "enabled": false,
+            "minBalance": 0,
+            "fee": 1,
+            "capacity": 0,
+            "freeSpace": 0,
+            "estimatedApy": 0.0000,
+            "features": []
+        }
+    }
+]

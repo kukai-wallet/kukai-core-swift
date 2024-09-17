@@ -150,12 +150,12 @@ public class TzKTClient {
 	// MARK: Baking and Rewards
 	
 	/**
-	 Call https://api.baking-bad.org/v2/bakers/ for a list of public bakers if on mainnet, else search for all accounts self delegating on testnet
+	 Call https://api.baking-bad.org/v3/bakers/ for a list of public bakers if on mainnet, else search for all accounts self delegating on testnet
 	 */
 	public func bakers(completion: @escaping ((Result<[TzKTBaker], KukaiError>) -> Void)) {
 		
 		// TzKT still relies on the baking bad API to deliver the public baker info on mainnet
-		if config.networkType == .mainnet, let url = URL(string: "https://api.baking-bad.org/v2/bakers/") {
+		if config.networkType == .mainnet, let url = URL(string: "https://api.baking-bad.org/v3/bakers/") {
 			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBaker].self, completion: completion)
 			
 		} else {
@@ -297,8 +297,8 @@ public class TzKTClient {
 				if let config = bakerConfigs[tx.sender.address] {
 					alias = config.name
 					avatarURL = TzKTClient.avatarURL(forToken: config.address)
-					fee = config.fee
-					indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - (config.payoutDelay - 1))
+                    fee = config.delegation.fee
+                    indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - (config.delegation.payoutDelay - 1))
 					
 				}
 				// If the tx came from a known payout address, match it to the baker address and grab the config
@@ -400,7 +400,7 @@ public class TzKTClient {
 	
 	/// Helper to create a `RewardDetails` in a single line
 	private func rewardDetail(fromConfig config: TzKTBaker, rewards: [TzKTDelegatorReward], cycles: [TzKTCycle], selectedIndex: Int, dateForDisplay: Date) -> RewardDetails {
-		let fee = config.fee
+        let fee = config.delegation.fee
 		let cycle = cycles[selectedIndex]
 		let alias = config.name
 		let address = config.address
@@ -408,7 +408,7 @@ public class TzKTClient {
 		let reward = rewards[selectedIndex]
 		let amount = reward.estimatedReward(withFee: fee, andRewardStruct: config.rewardStruct())
 		
-		return RewardDetails(bakerAlias: alias, bakerLogo: logo, paymentAddress: address, amount: amount, cycle: cycle.index, fee: fee, date: dateForDisplay, meetsMinDelegation: (reward.balance >= config.minDelegation))
+        return RewardDetails(bakerAlias: alias, bakerLogo: logo, paymentAddress: address, amount: amount, cycle: cycle.index, fee: fee, date: dateForDisplay, meetsMinDelegation: (reward.balance >= config.delegation.minBalance))
 	}
 	
 	/// Filter list of `TzKTDelegatorReward` and return the most recent unqiue bakers from the list (max 2, going no further back than 25 cycles)
