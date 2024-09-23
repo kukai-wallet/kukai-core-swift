@@ -127,7 +127,7 @@ public class WalletCacheService {
 				case .hd:
 					groupNameStart = "HD Wallet "
 				case .ledger:
-					groupNameStart = "Ledger Wallet "
+					groupNameStart = "Ledger Device "
 				case .social, .regular, .regularShifted:
 					groupNameStart = ""
 			}
