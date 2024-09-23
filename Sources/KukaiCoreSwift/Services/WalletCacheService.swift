@@ -85,7 +85,7 @@ public class WalletCacheService {
 	 - Parameter childOfIndex: An optional `Int` to denote the index of the HD wallet that this wallet is a child of
 	 - Returns: Bool, indicating if the storage was successful or not
 	 */
-	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool, customDerivationPath: String? = nil) throws {
+	public func cache<T: Wallet>(wallet: T, childOfIndex: Int?, backedUp: Bool) throws {
 		guard let existingWallets = readWalletsFromDiskAndDecrypt() else {
 			Logger.walletCache.error("cache - Unable to cache wallet, as can't decrypt existing wallets")
 			throw WalletCacheError.unableToDecrypt
@@ -102,6 +102,13 @@ public class WalletCacheService {
 		let newMetadata = readMetadataFromDiskAndDecrypt()
 		var array = metadataArray(forType: wallet.type, fromMeta: newMetadata)
 		
+		var path: String? = nil
+		if wallet.type == .hd, let w = wallet as? HDWallet {
+			path = w.derivationPath
+		} else if wallet.type == .ledger, let w = wallet as? LedgerWallet {
+			path = w.derivationPath
+		}
+		
 		if let index = childOfIndex {
 			
 			// If child index is present, update the correct sub array to include this new item, checking forst that we have the correct details
@@ -110,7 +117,7 @@ public class WalletCacheService {
 				throw WalletCacheError.requestedIndexTooHigh
 			}
 			
-			array[index].children.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
+			array[index].children.append(WalletMetadata(address: wallet.address, derivationPath: path, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, type: wallet.type, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else if wallet.type == .hd || wallet.type == .ledger {
 			
@@ -135,17 +142,17 @@ public class WalletCacheService {
 				newNumber = array.count + 1
 			}
 			
-			array.append(WalletMetadata(address: wallet.address, hdWalletGroupName: "\(groupNameStart)\(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
+			array.append(WalletMetadata(address: wallet.address, derivationPath: path, hdWalletGroupName: "\(groupNameStart)\(newNumber)", walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else if let torusWallet = wallet as? TorusWallet {
 			
 			// If social, cast and fetch special attributes
-			array.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUsername, socialUserId: torusWallet.socialUserId, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
+			array.append(WalletMetadata(address: wallet.address, derivationPath: path, hdWalletGroupName: nil, walletNickname: nil, socialUsername: torusWallet.socialUsername, socialUserId: torusWallet.socialUserId, socialType: torusWallet.authProvider, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 			
 		} else {
 			
 			// Else, add basic wallet to the list its supposed to go to
-			array.append(WalletMetadata(address: wallet.address, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp, customDerivationPath: customDerivationPath))
+			array.append(WalletMetadata(address: wallet.address, derivationPath: path, hdWalletGroupName: nil, walletNickname: nil, socialUsername: nil, socialType: nil, type: wallet.type, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: wallet.publicKeyBase58encoded(), backedUp: backedUp))
 		}
 		
 		// Update wallet metadata array, and then commit to disk
