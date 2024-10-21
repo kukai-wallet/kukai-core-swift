@@ -257,6 +257,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	*/
 	public func stopListening() {
 		self.centralManager?.stopScan()
+		self.deviceList = [:]
 		self.deviceListPublisher.send(completion: .finished)
 	}
 	
