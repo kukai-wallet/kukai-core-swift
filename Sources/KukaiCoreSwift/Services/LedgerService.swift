@@ -292,6 +292,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		if let device = self.connectedDevice {
 			self.centralManager?.cancelPeripheralConnection(device)
 		}
+		
+		requestedUUID = nil
 	}
 	
 	/**
@@ -425,6 +427,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		Logger.ledger.info("Failed to connect to \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
 		self.connectedDevice = nil
+		self.requestedUUID = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
@@ -433,6 +436,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		guard let services = peripheral.services else {
 			Logger.ledger.info("Unable to locate services for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
+			self.requestedUUID = nil
 			self.deviceConnectedPublisher.send(false)
 			return
 		}
@@ -448,12 +452,14 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
 		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 		self.connectedDevice = nil
+		self.requestedUUID = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
 	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: (any Error)?) {
 		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 		self.connectedDevice = nil
+		self.requestedUUID = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
@@ -462,6 +468,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		guard let characteristics = service.characteristics else {
 			Logger.ledger.info("Unable to locate characteristics for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
+			self.requestedUUID = nil
 			self.deviceConnectedPublisher.send(false)
 			return
 		}
