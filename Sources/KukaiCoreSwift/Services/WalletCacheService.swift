@@ -293,6 +293,29 @@ public class WalletCacheService {
 	}
 	
 	/**
+	 Migrate a LedgerWallet and its children to a new physical device, denoted by a new UUID
+	 */
+	public func migrateLedger(metadata: WalletMetadata, toNewUUID: String) -> Bool {
+		guard let cacheItems = readWalletsFromDiskAndDecrypt() else {
+			Logger.walletCache.error("Unable to read wallet items")
+			return false
+		}
+		
+		var addressesToMigrate = [metadata.address]
+		addressesToMigrate.append(contentsOf: metadata.children.map({ $0.address }))
+		
+		for address in addressesToMigrate {
+			guard let ledgerWallet = cacheItems[address] as? LedgerWallet else {
+				return false
+			}
+			
+			ledgerWallet.ledgerUUID = toNewUUID
+		}
+		
+		return encryptAndWriteWalletsToDisk(wallets: cacheItems)
+	}
+	
+	/**
 	 Delete the cached files and the assoicate keys used to encrypt it
 	 - Returns: Bool, indicating if the process was successful or not
 	 */

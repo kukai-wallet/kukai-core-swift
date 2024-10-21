@@ -427,4 +427,39 @@ class WalletCacheServiceTests: XCTestCase {
 			XCTFail("Should not error: \(error)")
 		}
 	}
+	
+	func testLedgerWalletMigrate() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		let ledgerWallet = LedgerWallet(address: "tz1abc", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		let ledgerWalletChild1 = LedgerWallet(address: "tz1def", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		let ledgerWalletChild2 = LedgerWallet(address: "tz1ghi", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		
+		do {
+			try walletCacheService.cache(wallet: ledgerWallet, childOfIndex: nil, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild1, childOfIndex: 0, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild2, childOfIndex: 0, backedUp: true)
+			
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
+			guard let ledger = list.ledgerWallets.first else {
+				XCTFail("Ledger list empty")
+				return
+			}
+			
+			XCTAssert(walletCacheService.migrateLedger(metadata: ledger, toNewUUID: "migrated"))
+			
+			let ledgerParent = walletCacheService.fetchWallet(forAddress: ledgerWallet.address) as? LedgerWallet
+			XCTAssert(ledgerParent?.ledgerUUID == "migrated")
+			
+			let ledgerChild1 = walletCacheService.fetchWallet(forAddress: ledgerWalletChild1.address) as? LedgerWallet
+			XCTAssert(ledgerChild1?.ledgerUUID == "migrated")
+			
+			let ledgerChild2 = walletCacheService.fetchWallet(forAddress: ledgerWalletChild2.address) as? LedgerWallet
+			XCTAssert(ledgerChild2?.ledgerUUID == "migrated")
+			
+			
+		} catch let error {
+			XCTFail("Should not error: \(error)")
+		}
+	}
 }
