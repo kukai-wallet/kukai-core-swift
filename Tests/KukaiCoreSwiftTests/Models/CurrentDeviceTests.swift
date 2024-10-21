@@ -23,6 +23,6 @@ class CurrentDeviceTests: XCTestCase {
 	}
 	
 	func testBiometrics() {
-		XCTAssert(CurrentDevice.biometricTypeSupported() == .none)
+		XCTAssert(CurrentDevice.biometricTypeSupported() == .faceID)
 	}
 }

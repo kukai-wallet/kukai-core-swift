@@ -429,6 +429,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		Logger.ledger.info("Failed to connect to \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
 		self.connectedDevice = nil
 		self.requestedUUID = nil
+		self.notifyCharacteristic = nil
+		self.writeCharacteristic = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
@@ -438,6 +440,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			Logger.ledger.info("Unable to locate services for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
 			self.requestedUUID = nil
+			self.notifyCharacteristic = nil
+			self.writeCharacteristic = nil
 			self.deviceConnectedPublisher.send(false)
 			return
 		}
@@ -454,6 +458,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 		self.connectedDevice = nil
 		self.requestedUUID = nil
+		self.notifyCharacteristic = nil
+		self.writeCharacteristic = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
@@ -461,6 +467,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 		self.connectedDevice = nil
 		self.requestedUUID = nil
+		self.notifyCharacteristic = nil
+		self.writeCharacteristic = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
@@ -470,6 +478,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			Logger.ledger.info("Unable to locate characteristics for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
 			self.requestedUUID = nil
+			self.notifyCharacteristic = nil
+			self.writeCharacteristic = nil
 			self.deviceConnectedPublisher.send(false)
 			return
 		}
