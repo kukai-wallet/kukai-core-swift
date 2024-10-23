@@ -273,7 +273,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		self.setupBluetoothConnection()
 			.sink { [weak self] value in
 				if !value {
-					self?.deviceConnectedPublisher.send(completion: .failure(KukaiError.unknown()))
+					self?.deviceConnectedPublisher.send(false)
 				}
 				
 				self?.requestedUUID = uuid
