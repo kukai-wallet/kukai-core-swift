@@ -108,6 +108,6 @@ public class LedgerWallet: Wallet {
 	*/
 	public func publicKeyBase58encoded() -> String {
 		let publicKeyData = Data(hexString: publicKey) ?? Data()
-		return Base58Check.encode(message: publicKeyData.bytes, prefix: Prefix.Keys.Ed25519.public)
+		return Base58Check.encode(message: publicKeyData.bytes(), prefix: Prefix.Keys.Ed25519.public)
 	}
 }
