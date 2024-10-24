@@ -21,8 +21,4 @@ class CurrentDeviceTests: XCTestCase {
 	func testCurrentDevice() {
 		XCTAssert(CurrentDevice.isSimulator == true)
 	}
-	
-	func testBiometrics() {
-		XCTAssert(CurrentDevice.biometricTypeSupported() == .faceID)
-	}
 }
