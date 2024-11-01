@@ -250,7 +250,7 @@ public class TorusAuthService: NSObject {
 						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 				}
 				
-				let accessToken = data.userInfo["accessToken"] as? String
+				let accessToken = data.userInfo["access_token"] as? String
 				
 				// Twitter API doesn't give us the bloody "@" handle for some reason. Fetch that first and overwrite the username property with the handle, if found
 				if authType == .twitter {
