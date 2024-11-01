@@ -216,6 +216,42 @@ public class NetworkService {
 		}.eraseToAnyPublisher()
 	}
 	
+	/**
+	 Send a HTTP DELETE to a given URL
+	 */
+	public func delete(url: URL, completion: @escaping ((Result<Bool, KukaiError>) -> Void)) {
+		var request = URLRequest(url: url)
+		request.addValue("application/json", forHTTPHeaderField: "Accept")
+		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.httpMethod = "DELETE"
+		
+		urlSession.dataTask(with: request) { (data, response, error) in
+			if let err = error {
+				completion(Result.failure(KukaiError.internalApplicationError(error: err)))
+			} else {
+				completion(Result.success(true))
+			}
+		}.resume()
+		NetworkService.logRequestStart(loggingConfig: loggingConfig, fullURL: url)
+	}
+	
+	/**
+	 Send a HTTP DELETE to a given URL
+	 */
+	public func delete(url: URL) -> AnyPublisher<Bool, KukaiError> {
+		return Future<Bool, KukaiError> { [weak self] promise in
+			self?.delete(url: url, completion: { result in
+				guard let output = try? result.get() else {
+					let error = (try? result.getError()) ?? KukaiError.unknown()
+					promise(.failure(error))
+					return
+				}
+				
+				promise(.success(output))
+			})
+		}.eraseToAnyPublisher()
+	}
+	
 	func checkForRPCOperationErrors(parsedResponse: Any, withRequestURL: URL?, requestPayload: Data?, responsePayload: Data?, httpStatusCode: Int?) -> KukaiError? {
 		var operations: [OperationResponse] = []
 		

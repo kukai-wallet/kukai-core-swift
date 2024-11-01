@@ -250,21 +250,22 @@ public class TorusAuthService: NSObject {
 						completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.missingVerifier)))
 				}
 				
+				let accessToken = data.userInfo["accessToken"] as? String
 				
 				// Twitter API doesn't give us the bloody "@" handle for some reason. Fetch that first and overwrite the username property with the handle, if found
 				if authType == .twitter {
 					twitterHandleLookup(id: userId ?? "") { [weak self] result in
 						switch result {
 							case .success(let actualUsername):
-								self?.createTorusWalletAndContinue(pk: pk, authType: authType, username: actualUsername, userId: userId, profile: profile, completion: completion)
+							self?.createTorusWalletAndContinue(pk: pk, authType: authType, username: actualUsername, userId: userId, profile: profile, accessToken: accessToken, completion: completion)
 								
 							case .failure(_):
-								self?.createTorusWalletAndContinue(pk: pk, authType: authType, username: username, userId: userId, profile: profile, completion: completion)
+								self?.createTorusWalletAndContinue(pk: pk, authType: authType, username: username, userId: userId, profile: profile, accessToken: accessToken, completion: completion)
 						}
 					}
 					
 				} else {
-					createTorusWalletAndContinue(pk: pk, authType: authType, username: username, userId: userId, profile: profile, completion: completion)
+					createTorusWalletAndContinue(pk: pk, authType: authType, username: username, userId: userId, profile: profile, accessToken: accessToken, completion: completion)
 				}
 				
 			} catch {
@@ -275,14 +276,20 @@ public class TorusAuthService: NSObject {
 		}
 	}
 	
-	private func createTorusWalletAndContinue(pk: String?, authType: TorusAuthProvider, username: String?, userId: String?, profile: String?, completion: @escaping ((Result<TorusWallet, KukaiError>) -> Void)) {
+	private func createTorusWalletAndContinue(pk: String?, authType: TorusAuthProvider, username: String?, userId: String?, profile: String?, accessToken: String?, completion: @escaping ((Result<TorusWallet, KukaiError>) -> Void)) {
 		guard let privateKeyString = pk, let wallet = TorusWallet(authProvider: authType, username: username, userId: userId, profilePicture: profile, torusPrivateKey: privateKeyString) else {
 			Logger.torus.error("Error torus contained no, or invlaid private key")
 			completion(Result.failure(KukaiError.internalApplicationError(error: TorusAuthError.invalidTorusResponse)))
 			return
 		}
 		
-		completion(Result.success(wallet))
+		if authType == .facebook, let token = accessToken, let url = URL(string: "https://graph.facebook.com/me/permissions?access_token=\(token)") {
+			networkService.delete(url: url) { result in
+				completion(Result.success(wallet))
+			}
+		} else {
+			completion(Result.success(wallet))
+		}
 	}
 	
 	
