@@ -8,7 +8,7 @@
 import Foundation
 
 /// Container to store groups of WalletMetadata based on type
-public struct WalletMetadataList: Codable, Hashable {
+public class WalletMetadataList: Codable, Hashable {
 	public var socialWallets: [WalletMetadata]
 	public var hdWallets: [WalletMetadata]
 	public var linearWallets: [WalletMetadata]
@@ -66,6 +66,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		for metadata in ledgerWallets {
 			if metadata.address == address { return metadata }
+			
+			for childMetadata in metadata.children {
+				if childMetadata.address == address { return childMetadata }
+			}
 		}
 		
 		for metaData in watchWallets {
@@ -85,7 +89,7 @@ public struct WalletMetadataList: Codable, Hashable {
 		return nil
 	}
 	
-	public mutating func update(address: String, with newMetadata: WalletMetadata) -> Bool {
+	public func update(address: String, with newMetadata: WalletMetadata) -> Bool {
 		for (index, metadata) in socialWallets.enumerated() {
 			if metadata.address == address { socialWallets[index] = newMetadata; return true }
 		}
@@ -94,7 +98,7 @@ public struct WalletMetadataList: Codable, Hashable {
 			if metadata.address == address { hdWallets[index] = newMetadata; return true }
 			
 			for (childIndex, childMetadata) in metadata.children.enumerated() {
-				if childMetadata.address == address {  hdWallets[index].children[childIndex] = newMetadata; return true }
+				if childMetadata.address == address { hdWallets[index].children[childIndex] = newMetadata; return true }
 			}
 		}
 		
@@ -104,6 +108,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		for (index, metadata) in ledgerWallets.enumerated() {
 			if metadata.address == address { ledgerWallets[index] = newMetadata; return true }
+			
+			for (childIndex, childMetadata) in metadata.children.enumerated() {
+				if childMetadata.address == address { ledgerWallets[index].children[childIndex] = newMetadata; return true }
+			}
 		}
 		
 		for (index, metadata) in watchWallets.enumerated() {
@@ -113,8 +121,8 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(mainnetDomain: TezosDomainsReverseRecord?, ghostnetDomain: TezosDomainsReverseRecord?, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
+	public func set(mainnetDomain: TezosDomainsReverseRecord?, ghostnetDomain: TezosDomainsReverseRecord?, forAddress address: String) -> Bool {
+		let meta = metadata(forAddress: address)
 		
 		if let mainnet = mainnetDomain {
 			meta?.mainnetDomains = [mainnet]
@@ -131,8 +139,8 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(nickname: String?, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
+	public func set(nickname: String?, forAddress address: String) -> Bool {
+		let meta = metadata(forAddress: address)
 		meta?.walletNickname = nickname
 		
 		if let meta = meta, update(address: address, with: meta) {
@@ -142,8 +150,8 @@ public struct WalletMetadataList: Codable, Hashable {
 		return false
 	}
 	
-	public mutating func set(hdWalletGroupName: String, forAddress address: String) -> Bool {
-		var meta = metadata(forAddress: address)
+	public func set(hdWalletGroupName: String, forAddress address: String) -> Bool {
+		let meta = metadata(forAddress: address)
 		meta?.hdWalletGroupName = hdWalletGroupName
 		
 		if let meta = meta, update(address: address, with: meta) {
@@ -154,9 +162,13 @@ public struct WalletMetadataList: Codable, Hashable {
 	}
 	
 	public func count() -> Int {
-		var total = (socialWallets.count + linearWallets.count + ledgerWallets.count + watchWallets.count)
+		var total = (socialWallets.count + linearWallets.count + watchWallets.count)
 		
 		for wallet in hdWallets {
+			total += (1 + wallet.children.count)
+		}
+		
+		for wallet in ledgerWallets {
 			total += (1 + wallet.children.count)
 		}
 		
@@ -184,6 +196,10 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		for metadata in ledgerWallets {
 			temp.append(metadata.address)
+			
+			for childMetadata in metadata.children {
+				temp.append(childMetadata.address)
+			}
 		}
 		
 		for metadata in watchWallets {
@@ -224,6 +240,22 @@ public struct WalletMetadataList: Codable, Hashable {
 		
 		return temp
 	}
+	
+	public static func == (lhs: WalletMetadataList, rhs: WalletMetadataList) -> Bool {
+		return lhs.socialWallets == rhs.socialWallets &&
+		lhs.hdWallets == rhs.hdWallets &&
+		lhs.linearWallets == rhs.linearWallets &&
+		lhs.ledgerWallets == rhs.ledgerWallets &&
+		lhs.watchWallets == rhs.watchWallets
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(socialWallets)
+		hasher.combine(hdWallets)
+		hasher.combine(linearWallets)
+		hasher.combine(ledgerWallets)
+		hasher.combine(watchWallets)
+	}
 }
 
 
@@ -231,8 +263,9 @@ public struct WalletMetadataList: Codable, Hashable {
 
 
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
-public struct WalletMetadata: Codable, Hashable {
+public class WalletMetadata: Codable, Hashable {
 	public var address: String
+	public var derivationPath: String?
 	public var hdWalletGroupName: String?
 	public var walletNickname: String?
 	public var socialUsername: String?
@@ -287,8 +320,9 @@ public struct WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
+	public init(address: String, derivationPath: String?, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
 		self.address = address
+		self.derivationPath = derivationPath
 		self.hdWalletGroupName = hdWalletGroupName
 		self.walletNickname = walletNickname
 		self.socialUsername = socialUsername

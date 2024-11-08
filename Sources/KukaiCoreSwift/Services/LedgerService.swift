@@ -77,6 +77,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		case LICENSING = "6f42"
 		case HALTED = "6faa"
 		
+		case APP_CLOSED = "6e01"
 		case DEVICE_LOCKED = "009000"
 		case UNKNOWN = "99999999"
 		case NO_WRITE_CHARACTERISTIC = "99999996"
@@ -143,6 +144,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	private var bag_connection = Set<AnyCancellable>()
 	private var bag_writer = Set<AnyCancellable>()
 	private var bag_apdu = Set<AnyCancellable>()
+	private var bag_addressFetcher = Set<AnyCancellable>()
 	private var counter = 0
 	
 	/// Public shared instace to avoid having multiple copies of the underlying `JSContext` created
@@ -184,7 +186,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			
 			
 			// Convert the supplied data into an APDU. Returns a single string per ADPU, but broken up into chunks, seperated by spaces for each maximum sized data packet
-			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(apdu)\", 156)").toString() else {
+			guard let sendAPDU = self?.jsContext.evaluateScript("ledger_app_tezos.sendAPDU(\"\(apdu)\", 20)").toString() else {
 				self?.deviceConnectedPublisher.send(false)
 				return
 			}
@@ -255,6 +257,7 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	*/
 	public func stopListening() {
 		self.centralManager?.stopScan()
+		self.deviceList = [:]
 		self.deviceListPublisher.send(completion: .finished)
 	}
 	
@@ -263,14 +266,14 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	 - returns: Publisher which will indicate true / false, or return an `KukaiError` if it can't connect to bluetooth
 	*/
 	public func connectTo(uuid: String) -> AnyPublisher<Bool, KukaiError> {
-		if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid {
+		if self.connectedDevice != nil, self.connectedDevice?.identifier.uuidString == uuid, self.connectedDevice?.state == .connected {
 			return AnyPublisher.just(true)
 		}
 		
 		self.setupBluetoothConnection()
 			.sink { [weak self] value in
 				if !value {
-					self?.deviceConnectedPublisher.send(completion: .failure(KukaiError.unknown()))
+					self?.deviceConnectedPublisher.send(false)
 				}
 				
 				self?.requestedUUID = uuid
@@ -290,6 +293,8 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		if let device = self.connectedDevice {
 			self.centralManager?.cancelPeripheralConnection(device)
 		}
+		
+		requestedUUID = nil
 	}
 	
 	/**
@@ -297,7 +302,11 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	 - returns: a string if it can be found
 	*/
 	public func getConnectedDeviceUUID() -> String? {
-		return self.connectedDevice?.identifier.uuidString
+		if self.connectedDevice?.state == .connected {
+			return self.connectedDevice?.identifier.uuidString
+		} else {
+			return nil
+		}
 	}
 	
 	/**
@@ -327,6 +336,29 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 			self.bag_apdu.removeAll()
 			self.bag_writer.removeAll()
 		}).eraseToAnyPublisher()
+	}
+	
+	/**
+	 Get a TZ address and public key from the current connected Ledger device
+	 - parameter forDerivationPath: Optional. The derivation path to use to extract the address from the underlying HD wallet
+	 - parameter curve: Optional. The `EllipticalCurve` to use to extract the address
+	 - parameter verify: Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches
+	 - returns: An async `Result` object, allowing code to be triggered via while loops more easily
+	 */
+	public func getAddress(forDerivationPath derivationPath: String = HD.defaultDerivationPath, curve: EllipticalCurve = .ed25519, verify: Bool) async -> Result<(address: String, publicKey: String), KukaiError> {
+		return await withCheckedContinuation({ continuation in
+			var cancellable: AnyCancellable!
+			cancellable = getAddress(forDerivationPath: derivationPath, curve: curve, verify: verify)
+				.sink(onError: { error in
+					continuation.resume(returning: Result.failure(error))
+				}, onSuccess: { addressObj in
+					continuation.resume(returning: Result.success(addressObj))
+				}, onComplete: { [weak self] in
+					self?.bag_addressFetcher.remove(cancellable)
+				})
+			
+			cancellable.store(in: &bag_addressFetcher)
+		})
 	}
 	
 	/**
@@ -396,6 +428,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		Logger.ledger.info("Failed to connect to \(peripheral.name ?? ""), \(peripheral.identifier.uuidString)")
 		self.connectedDevice = nil
+		self.requestedUUID = nil
+		self.notifyCharacteristic = nil
+		self.writeCharacteristic = nil
 		self.deviceConnectedPublisher.send(false)
 	}
 	
@@ -404,6 +439,9 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		guard let services = peripheral.services else {
 			Logger.ledger.info("Unable to locate services for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
+			self.requestedUUID = nil
+			self.notifyCharacteristic = nil
+			self.writeCharacteristic = nil
 			self.deviceConnectedPublisher.send(false)
 			return
 		}
@@ -416,11 +454,32 @@ public class LedgerService: NSObject, CBPeripheralDelegate, CBCentralManagerDele
 		}
 	}
 	
+	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?) {
+		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
+		self.connectedDevice = nil
+		self.requestedUUID = nil
+		self.notifyCharacteristic = nil
+		self.writeCharacteristic = nil
+		self.deviceConnectedPublisher.send(false)
+	}
+	
+	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: (any Error)?) {
+		Logger.ledger.info("Disconnected: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
+		self.connectedDevice = nil
+		self.requestedUUID = nil
+		self.notifyCharacteristic = nil
+		self.writeCharacteristic = nil
+		self.deviceConnectedPublisher.send(false)
+	}
+	
 	/// CBCentralManagerDelegate function, must be marked public because of protocol definition
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 		guard let characteristics = service.characteristics else {
 			Logger.ledger.info("Unable to locate characteristics for: \(peripheral.name ?? ""), \(peripheral.identifier.uuidString). Error: \(error)")
 			self.connectedDevice = nil
+			self.requestedUUID = nil
+			self.notifyCharacteristic = nil
+			self.writeCharacteristic = nil
 			self.deviceConnectedPublisher.send(false)
 			return
 		}

@@ -16,7 +16,8 @@ public struct TezosNodeClientConfig {
 	/// An enum indicating whether the network is mainnet or testnet
 	public enum NetworkType: String {
 		case mainnet
-		case testnet
+		case ghostnet
+		case protocolnet
 	}
 	
 	/// Allow switching between local forging or remote forging+parsing
@@ -49,7 +50,7 @@ public struct TezosNodeClientConfig {
 	}
 	
 	/// Preconfigured struct with all the URL's needed to work with Tezos testnet
-	public struct defaultTestnetURLs {
+	public struct defaultGhostnetURLs {
 		
 		/// The default testnet URLs to use for estimating and injecting operations
 		public static let nodeURLs = [URL(string: "https://ghostnet.smartpy.io")!, URL(string: "https://rpc.ghostnet.tzboot.net")!]
@@ -141,13 +142,16 @@ public struct TezosNodeClientConfig {
 				tezosDomainsURL = TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL
 				objktApiURL = TezosNodeClientConfig.defaultMainnetURLs.objktApiURL
 			
-			case .testnet:
-				nodeURLs = TezosNodeClientConfig.defaultTestnetURLs.nodeURLs
+			case .ghostnet:
+				nodeURLs = TezosNodeClientConfig.defaultGhostnetURLs.nodeURLs
 				forgingType = .local
-				tzktURL = TezosNodeClientConfig.defaultTestnetURLs.tzktURL
-				betterCallDevURL = TezosNodeClientConfig.defaultTestnetURLs.betterCallDevURL
-				tezosDomainsURL = TezosNodeClientConfig.defaultTestnetURLs.tezosDomainsURL
-				objktApiURL = TezosNodeClientConfig.defaultTestnetURLs.objktApiURL
+				tzktURL = TezosNodeClientConfig.defaultGhostnetURLs.tzktURL
+				betterCallDevURL = TezosNodeClientConfig.defaultGhostnetURLs.betterCallDevURL
+				tezosDomainsURL = TezosNodeClientConfig.defaultGhostnetURLs.tezosDomainsURL
+				objktApiURL = TezosNodeClientConfig.defaultGhostnetURLs.objktApiURL
+			
+			case .protocolnet:
+				fatalError("No defaults for networkType protocolnet. Must be user supplied")
 		}
 	}
 	

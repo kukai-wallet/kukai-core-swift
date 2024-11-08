@@ -64,6 +64,12 @@ public struct NFT: Codable, Hashable {
 		return favouriteSortIndex != nil
 	}
 	
+	/// The block level where the token was first seen
+	public var firstlevel: Decimal
+	
+	/// The block level where the token was last seen
+	public var lastLevel: Decimal
+	
 	
 	/**
 	 Create a more developer friednly `NFT` from a generic `TzKTBalance` object
@@ -83,6 +89,8 @@ public struct NFT: Codable, Hashable {
 		displayURI = URL(string: tzkt.token.metadata?.displayUri ?? "")
 		thumbnailURI = URL(string: tzkt.token.metadata?.thumbnailUri ?? "")
 		metadata = tzkt.token.metadata
+		firstlevel = tzkt.firstLevel
+		lastLevel = tzkt.lastLevel
 	}
 	
 	/// Confomring to Equatable

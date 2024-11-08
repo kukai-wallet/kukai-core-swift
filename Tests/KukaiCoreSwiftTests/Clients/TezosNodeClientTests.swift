@@ -101,7 +101,7 @@ class TezosNodeClientTests: XCTestCase {
 					XCTFail("Should have failed, got opHash instead")
 					
 				case .failure(let error):
-					XCTAssert(error.description == "RPC: contract.counter_in_the_future", error.description)
+					XCTAssert(error.description == "RPC error code: contract.counter_in_the_future", error.description)
 			}
 			
 			expectation.fulfill()

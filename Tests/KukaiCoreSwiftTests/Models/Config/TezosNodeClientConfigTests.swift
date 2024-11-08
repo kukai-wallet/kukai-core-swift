@@ -20,7 +20,7 @@ class TezosNodeClientConfigTests: XCTestCase {
     }
 	
 	func testDefaults() {
-		let config1 = TezosNodeClientConfig(withDefaultsForNetworkType: .testnet)
+		let config1 = TezosNodeClientConfig(withDefaultsForNetworkType: .ghostnet)
 		XCTAssert(config1.nodeURLs[0].absoluteString == "https://ghostnet.smartpy.io", config1.nodeURLs[0].absoluteString)
 		XCTAssert(config1.nodeURLs[1].absoluteString == "https://rpc.ghostnet.tzboot.net", config1.nodeURLs[1].absoluteString)
 		XCTAssert(config1.betterCallDevURL.absoluteString == "https://api.better-call.dev/", config1.betterCallDevURL.absoluteString)

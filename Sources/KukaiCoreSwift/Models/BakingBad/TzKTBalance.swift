@@ -21,6 +21,12 @@ public struct TzKTBalance: Codable {
 	/// Details about the Token
 	public let token: TzKTBalanceToken
 	
+	/// The block level where the token was first seen
+	public let firstLevel: Decimal
+	
+	/// The block level where the token was last seen
+	public let lastLevel: Decimal
+	
 	/// Helper to convert the RPC token balance to a `TokenAmount` object
 	public var tokenAmount: TokenAmount {
 		return TokenAmount(fromRpcAmount: balance, decimalPlaces: token.metadata?.decimalsInt ?? 0) ?? .zero()

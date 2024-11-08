@@ -211,7 +211,6 @@ class WalletCacheServiceTests: XCTestCase {
 			XCTFail("Should not error: \(error)")
 		}
 		
-		
 		// Update one and check
 		let _ = list.set(hdWalletGroupName: "Blah 2", forAddress: hdWallet2.address)
 		let _ = walletCacheService.encryptAndWriteMetadataToDisk(list)
@@ -250,22 +249,22 @@ class WalletCacheServiceTests: XCTestCase {
 	func testMetadata() {
 		let mainentDomain = [TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.tez", address: "tz1abc123"))]
 		let ghostnetDomain = [TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.gho", address: "tz1abc123"))]
-		let metadata1 = WalletMetadata(address: "tz1abc123", hdWalletGroupName: nil, mainnetDomains: mainentDomain, ghostnetDomains: ghostnetDomain, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		let metadata1 = WalletMetadata(address: "tz1abc123", derivationPath: nil, hdWalletGroupName: nil, mainnetDomains: mainentDomain, ghostnetDomains: ghostnetDomain, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
 		
 		XCTAssert(metadata1.hasMainnetDomain())
 		XCTAssert(metadata1.hasGhostnetDomain())
 		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.mainnet))
-		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.testnet))
+		XCTAssert(metadata1.hasDomain(onNetwork: TezosNodeClientConfig.NetworkType.ghostnet))
 		XCTAssert(metadata1.mainnetDomains?.first?.domain.name == "blah.tez")
 		XCTAssert(metadata1.ghostnetDomains?.first?.domain.name == "blah.gho")
 		XCTAssert(metadata1.primaryMainnetDomain()?.domain.name == "blah.tez")
 		XCTAssert(metadata1.primaryGhostnetDomain()?.domain.name == "blah.gho")
 		XCTAssert(metadata1.primaryDomain(onNetwork: .mainnet)?.domain.name == "blah.tez")
-		XCTAssert(metadata1.primaryDomain(onNetwork: .testnet)?.domain.name == "blah.gho")
+		XCTAssert(metadata1.primaryDomain(onNetwork: .ghostnet)?.domain.name == "blah.gho")
 		
 		
 		
-		let metadata2 = WalletMetadata(address: "tz1def456", hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		let metadata2 = WalletMetadata(address: "tz1def456", derivationPath: nil, hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
 		
 		XCTAssert(!metadata2.hasMainnetDomain())
 		XCTAssert(!metadata2.hasGhostnetDomain())
@@ -274,23 +273,23 @@ class WalletCacheServiceTests: XCTestCase {
 	func testMetadataList() {
 		let mainentDomain = TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.tez", address: "tz1abc123"))
 		let ghostnetDomain = TezosDomainsReverseRecord(id: "123", address: "tz1abc123", owner: "tz1abc123", expiresAtUtc: nil, domain: TezosDomainsDomain(name: "blah.gho", address: "tz1abc123"))
-		let child = WalletMetadata(address: "tz1child", hdWalletGroupName: nil, type: .hd, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
-		let updatedWatch = WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "blah", backedUp: true)
+		let child = WalletMetadata(address: "tz1child", derivationPath: nil, hdWalletGroupName: nil, type: .hd, children: [], isChild: true, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+		let updatedWatch = WalletMetadata(address: "tz1jkl", derivationPath: nil, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "blah", backedUp: true)
 		
 		let hd: [WalletMetadata] = [
-			WalletMetadata(address: "tz1abc123", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [child], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+			WalletMetadata(address: "tz1abc123", derivationPath: nil, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [child], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
 		]
 		let social: [WalletMetadata] = [
-			WalletMetadata(address: "tz1def", hdWalletGroupName: nil, socialUsername: "test@gmail.com", socialType: .google, type: .social, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+			WalletMetadata(address: "tz1def", derivationPath: nil, hdWalletGroupName: nil, socialUsername: "test@gmail.com", socialType: .google, type: .social, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
 		]
 		let linear: [WalletMetadata] = [
-			WalletMetadata(address: "tz1ghi", hdWalletGroupName: nil, type: .regular, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
+			WalletMetadata(address: "tz1ghi", derivationPath: nil, hdWalletGroupName: nil, type: .regular, children: [], isChild: false, isWatchOnly: false, bas58EncodedPublicKey: "", backedUp: true)
 		]
 		let watch: [WalletMetadata] = [
-			WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+			WalletMetadata(address: "tz1jkl", derivationPath: nil, hdWalletGroupName: nil, type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
 		]
 		
-		var list = WalletMetadataList(socialWallets: social, hdWallets: hd, linearWallets: linear, ledgerWallets: [], watchWallets: watch)
+		let list = WalletMetadataList(socialWallets: social, hdWallets: hd, linearWallets: linear, ledgerWallets: [], watchWallets: watch)
 		
 		let addresses = list.addresses()
 		XCTAssert(addresses == ["tz1def", "tz1abc123", "tz1child", "tz1ghi", "tz1jkl"], addresses.description)
@@ -334,14 +333,132 @@ class WalletCacheServiceTests: XCTestCase {
 	func testWatchWallet() {
 		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
 		
-		let watchWallet = WalletMetadata(address: "tz1jkl", hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		let watchWallet = WalletMetadata(address: "tz1jkl", derivationPath: nil, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
 		
 		do {
 			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
-			let list =  walletCacheService.readMetadataFromDiskAndDecrypt()
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
 			let watch = list.watchWallets
 			XCTAssert(watch.count == 1, watch.count.description)
 		} catch {
+			XCTFail("Should not error: \(error)")
+		}
+	}
+	
+	func testWatchWalletThatAlreadyExists() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		do {
+			try walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)
+		} catch {
+			XCTFail("Should not error: \(error)")
+		}
+		
+		let watchWallet = WalletMetadata(address: MockConstants.defaultLinearWallet.address, derivationPath: nil, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		
+		do {
+			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
+			XCTFail("Already exists, should be rejected")
+		} catch let error {
+			XCTAssert(error.localizedDescription == "The operation couldn’t be completed. (KukaiCoreSwift.WalletCacheError error 8.)", error.localizedDescription)
+		}
+	}
+	
+	func testWatchWalletRemovedAfterImported() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		// Add watch and confirm
+		let watchWallet = WalletMetadata(address: MockConstants.defaultLinearWallet.address, derivationPath: nil, hdWalletGroupName: nil, mainnetDomains: [], ghostnetDomains: [], type: .hd, children: [], isChild: false, isWatchOnly: true, bas58EncodedPublicKey: "", backedUp: true)
+		
+		do {
+			try walletCacheService.cacheWatchWallet(metadata: watchWallet)
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let watch = list.watchWallets
+			XCTAssert(watch.count == 1, watch.count.description)
+		} catch let error {
+			XCTFail("Should not error: \(error)")
+		}
+		
+		
+		// Add the wallet via an import, test watch is now been removed
+		do {
+			try walletCacheService.cache(wallet: MockConstants.defaultLinearWallet, childOfIndex: nil, backedUp: false)
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let watch = list.watchWallets
+			XCTAssert(watch.count == 0, watch.count.description)
+		} catch {
+			XCTFail("Should not error: \(error)")
+		}
+	}
+	
+	func testLedgerWalletCaching() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		let ledgerWallet = LedgerWallet(address: "tz1abc", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		let ledgerWalletChild1 = LedgerWallet(address: "tz1def", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah2")!
+		let ledgerWalletChild2 = LedgerWallet(address: "tz1ghi", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah3")!
+		let ledgerWalletChild3 = LedgerWallet(address: "tz1jkl", publicKey: "edpks1234", derivationPath: "m/44'/1729'/147'/62'", curve: .ed25519, ledgerUUID: "blah4")!
+		
+		do {
+			try walletCacheService.cache(wallet: ledgerWallet, childOfIndex: nil, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild1, childOfIndex: 0, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild2, childOfIndex: 0, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild3, childOfIndex: 0, backedUp: true)
+			
+			let list1 = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let ledgers1 = list1.ledgerWallets
+			XCTAssert(ledgers1.count == 1, ledgers1.count.description)
+			XCTAssert(ledgers1[0].children.count == 3, ledgers1[0].children.count.description)
+			XCTAssert(ledgers1[0].children.last?.derivationPath == "m/44'/1729'/147'/62'", ledgers1[0].children.last?.derivationPath ?? "-")
+			
+			
+			let _ = WalletCacheService().deleteWallet(withAddress: "tz1abc", parentIndex: nil)
+			let list2 = walletCacheService.readMetadataFromDiskAndDecrypt()
+			let ledgers2 = list2.ledgerWallets
+			XCTAssert(ledgers2.count == 0, ledgers2.count.description)
+			
+			let testWalletsGone1 = WalletCacheService().fetchWallet(forAddress: "tz1abc")
+			XCTAssert(testWalletsGone1 == nil)
+			
+			let testWalletsGone2 = WalletCacheService().fetchWallet(forAddress: "tz1def")
+			XCTAssert(testWalletsGone2 == nil)
+			
+		} catch let error {
+			XCTFail("Should not error: \(error)")
+		}
+	}
+	
+	func testLedgerWalletMigrate() {
+		XCTAssert(walletCacheService.deleteAllCacheAndKeys())
+		
+		let ledgerWallet = LedgerWallet(address: "tz1abc", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		let ledgerWalletChild1 = LedgerWallet(address: "tz1def", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		let ledgerWalletChild2 = LedgerWallet(address: "tz1ghi", publicKey: "edpks1234", derivationPath: HD.defaultDerivationPath, curve: .ed25519, ledgerUUID: "blah1")!
+		
+		do {
+			try walletCacheService.cache(wallet: ledgerWallet, childOfIndex: nil, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild1, childOfIndex: 0, backedUp: true)
+			try walletCacheService.cache(wallet: ledgerWalletChild2, childOfIndex: 0, backedUp: true)
+			
+			let list = walletCacheService.readMetadataFromDiskAndDecrypt()
+			guard let ledger = list.ledgerWallets.first else {
+				XCTFail("Ledger list empty")
+				return
+			}
+			
+			XCTAssert(walletCacheService.migrateLedger(metadata: ledger, toNewUUID: "migrated"))
+			
+			let ledgerParent = walletCacheService.fetchWallet(forAddress: ledgerWallet.address) as? LedgerWallet
+			XCTAssert(ledgerParent?.ledgerUUID == "migrated")
+			
+			let ledgerChild1 = walletCacheService.fetchWallet(forAddress: ledgerWalletChild1.address) as? LedgerWallet
+			XCTAssert(ledgerChild1?.ledgerUUID == "migrated")
+			
+			let ledgerChild2 = walletCacheService.fetchWallet(forAddress: ledgerWalletChild2.address) as? LedgerWallet
+			XCTAssert(ledgerChild2?.ledgerUUID == "migrated")
+			
+			
+		} catch let error {
 			XCTFail("Should not error: \(error)")
 		}
 	}

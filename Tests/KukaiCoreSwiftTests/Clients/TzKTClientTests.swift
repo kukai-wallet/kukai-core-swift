@@ -434,6 +434,62 @@ class TzKTClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 120)
 	}
 	
+	func testEstimateRewardsNoPrevious() {
+		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewardsNoPrevious")
+		let delegate = TzKTAccountDelegate(alias: "The Shire", address: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv", active: true)
+		
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr", delegate: delegate) { result in
+			switch result {
+				case .success(let rewards):
+					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
+					
+					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.000368", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.042", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "743", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "The Shire", rewards.estimatedNextReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
+	func testEstimateRewardsNone() {
+		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewardsNone")
+		let delegate = TzKTAccountDelegate(alias: "Teztillery", address: "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4", active: true)
+		
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac", delegate: delegate) { result in
+			switch result {
+				case .success(let rewards):
+					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
+					
+					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.0499", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "745", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Teztillery", rewards.estimatedNextReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
 	func testBakers() {
 		let expectation = XCTestExpectation(description: "tzkt-bakers")
 		
