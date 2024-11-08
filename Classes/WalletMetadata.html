@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>WalletMetadata Structure Reference</title>
+    <title>WalletMetadata Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Struct/WalletMetadata" class="dashAnchor"></a>
-    <a title="WalletMetadata Structure Reference"></a>
+    <a name="//apple_ref/swift/Class/WalletMetadata" class="dashAnchor"></a>
+    <a title="WalletMetadata Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (100% documented)</p>
@@ -30,9 +30,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">Index</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Structs.html">Structures</a>
+        <a href="../Classes.html">Classes</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        KukaiCoreSwift.WalletMetadata Structure Reference
+        KukaiCoreSwift.WalletMetadata Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -235,6 +235,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletMetadataList.html">WalletMetadataList</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/XTZAmount.html">XTZAmount</a>
@@ -605,7 +611,7 @@
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+                <a href="../Structs/TezosNodeClientConfig/defaultGhostnetURLs.html">– defaultGhostnetURLs</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
@@ -685,12 +691,6 @@
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
               </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
-              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -719,7 +719,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WalletMetadata</span> <span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">WalletMetadata</span> <span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
 
                 </div>
               </div>
@@ -732,9 +732,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV7addressSSvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC7addressSSvp"></a>
                     <a name="//apple_ref/swift/Property/address" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV7addressSSvp">address</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC7addressSSvp">address</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -758,9 +758,35 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV02hdD9GroupNameSSSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC14derivationPathSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/derivationPath" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC14derivationPathSSSgvp">derivationPath</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">derivationPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC02hdD9GroupNameSSSgvp"></a>
                     <a name="//apple_ref/swift/Property/hdWalletGroupName" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV02hdD9GroupNameSSSgvp">hdWalletGroupName</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC02hdD9GroupNameSSSgvp">hdWalletGroupName</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -784,9 +810,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV14walletNicknameSSSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC14walletNicknameSSSgvp"></a>
                     <a name="//apple_ref/swift/Property/walletNickname" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV14walletNicknameSSSgvp">walletNickname</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC14walletNicknameSSSgvp">walletNickname</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -810,9 +836,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV14socialUsernameSSSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC14socialUsernameSSSgvp"></a>
                     <a name="//apple_ref/swift/Property/socialUsername" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV14socialUsernameSSSgvp">socialUsername</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC14socialUsernameSSSgvp">socialUsername</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -836,9 +862,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV12socialUserIdSSSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC12socialUserIdSSSgvp"></a>
                     <a name="//apple_ref/swift/Property/socialUserId" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV12socialUserIdSSSgvp">socialUserId</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC12socialUserIdSSSgvp">socialUserId</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -862,9 +888,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV14mainnetDomainsSayAA05TezosG13ReverseRecordVGSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC14mainnetDomainsSayAA05TezosG13ReverseRecordVGSgvp"></a>
                     <a name="//apple_ref/swift/Property/mainnetDomains" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV14mainnetDomainsSayAA05TezosG13ReverseRecordVGSgvp">mainnetDomains</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC14mainnetDomainsSayAA05TezosG13ReverseRecordVGSgvp">mainnetDomains</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -888,9 +914,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV15ghostnetDomainsSayAA05TezosG13ReverseRecordVGSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC15ghostnetDomainsSayAA05TezosG13ReverseRecordVGSgvp"></a>
                     <a name="//apple_ref/swift/Property/ghostnetDomains" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV15ghostnetDomainsSayAA05TezosG13ReverseRecordVGSgvp">ghostnetDomains</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC15ghostnetDomainsSayAA05TezosG13ReverseRecordVGSgvp">ghostnetDomains</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -914,9 +940,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV10socialTypeAA17TorusAuthProviderOSgvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC10socialTypeAA17TorusAuthProviderOSgvp"></a>
                     <a name="//apple_ref/swift/Property/socialType" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV10socialTypeAA17TorusAuthProviderOSgvp">socialType</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC10socialTypeAA17TorusAuthProviderOSgvp">socialType</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -940,9 +966,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV4typeAA0D4TypeOvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC4typeAA0D4TypeOvp"></a>
                     <a name="//apple_ref/swift/Property/type" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV4typeAA0D4TypeOvp">type</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC4typeAA0D4TypeOvp">type</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -966,9 +992,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV8childrenSayACGvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC8childrenSayACGvp"></a>
                     <a name="//apple_ref/swift/Property/children" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV8childrenSayACGvp">children</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC8childrenSayACGvp">children</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -992,9 +1018,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV7isChildSbvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC7isChildSbvp"></a>
                     <a name="//apple_ref/swift/Property/isChild" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV7isChildSbvp">isChild</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC7isChildSbvp">isChild</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1018,9 +1044,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV11isWatchOnlySbvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC11isWatchOnlySbvp"></a>
                     <a name="//apple_ref/swift/Property/isWatchOnly" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV11isWatchOnlySbvp">isWatchOnly</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC11isWatchOnlySbvp">isWatchOnly</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1044,9 +1070,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV21bas58EncodedPublicKeySSvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC21bas58EncodedPublicKeySSvp"></a>
                     <a name="//apple_ref/swift/Property/bas58EncodedPublicKey" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV21bas58EncodedPublicKeySSvp">bas58EncodedPublicKey</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC21bas58EncodedPublicKeySSvp">bas58EncodedPublicKey</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1070,9 +1096,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV8backedUpSbvp"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC8backedUpSbvp"></a>
                     <a name="//apple_ref/swift/Property/backedUp" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV8backedUpSbvp">backedUp</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC8backedUpSbvp">backedUp</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1096,9 +1122,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV16hasMainnetDomainSbyF"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC16hasMainnetDomainSbyF"></a>
                     <a name="//apple_ref/swift/Method/hasMainnetDomain()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV16hasMainnetDomainSbyF">hasMainnetDomain()</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC16hasMainnetDomainSbyF">hasMainnetDomain()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1122,9 +1148,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV17hasGhostnetDomainSbyF"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC17hasGhostnetDomainSbyF"></a>
                     <a name="//apple_ref/swift/Method/hasGhostnetDomain()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV17hasGhostnetDomainSbyF">hasGhostnetDomain()</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC17hasGhostnetDomainSbyF">hasGhostnetDomain()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1148,9 +1174,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV9hasDomain9onNetworkSbAA21TezosNodeClientConfigV0I4TypeO_tF"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC9hasDomain9onNetworkSbAA21TezosNodeClientConfigV0I4TypeO_tF"></a>
                     <a name="//apple_ref/swift/Method/hasDomain(onNetwork:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV9hasDomain9onNetworkSbAA21TezosNodeClientConfigV0I4TypeO_tF">hasDomain(onNetwork:<wbr>)</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC9hasDomain9onNetworkSbAA21TezosNodeClientConfigV0I4TypeO_tF">hasDomain(onNetwork:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1174,9 +1200,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV20primaryMainnetDomainAA25TezosDomainsReverseRecordVSgyF"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC20primaryMainnetDomainAA25TezosDomainsReverseRecordVSgyF"></a>
                     <a name="//apple_ref/swift/Method/primaryMainnetDomain()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV20primaryMainnetDomainAA25TezosDomainsReverseRecordVSgyF">primaryMainnetDomain()</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC20primaryMainnetDomainAA25TezosDomainsReverseRecordVSgyF">primaryMainnetDomain()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1200,9 +1226,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV21primaryGhostnetDomainAA25TezosDomainsReverseRecordVSgyF"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC21primaryGhostnetDomainAA25TezosDomainsReverseRecordVSgyF"></a>
                     <a name="//apple_ref/swift/Method/primaryGhostnetDomain()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV21primaryGhostnetDomainAA25TezosDomainsReverseRecordVSgyF">primaryGhostnetDomain()</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC21primaryGhostnetDomainAA25TezosDomainsReverseRecordVSgyF">primaryGhostnetDomain()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1226,9 +1252,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV13primaryDomain9onNetworkAA25TezosDomainsReverseRecordVSgAA0J16NodeClientConfigV0I4TypeO_tF"></a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC13primaryDomain9onNetworkAA25TezosDomainsReverseRecordVSgAA0J16NodeClientConfigV0I4TypeO_tF"></a>
                     <a name="//apple_ref/swift/Method/primaryDomain(onNetwork:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV13primaryDomain9onNetworkAA25TezosDomainsReverseRecordVSgAA0J16NodeClientConfigV0I4TypeO_tF">primaryDomain(onNetwork:<wbr>)</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC13primaryDomain9onNetworkAA25TezosDomainsReverseRecordVSgAA0J16NodeClientConfigV0I4TypeO_tF">primaryDomain(onNetwork:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1252,9 +1278,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14WalletMetadataV7address02hdD9GroupName14walletNickname14socialUsername0L6UserId14mainnetDomains08ghostnetQ00L4Type4type8children7isChild0V9WatchOnly21bas58EncodedPublicKey8backedUpACSS_SSSgA3RSayAA05TezosQ13ReverseRecordVGSgAvA17TorusAuthProviderOSgAA0dS0OSayACGS2bSSSbtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(address:hdWalletGroupName:walletNickname:socialUsername:socialUserId:mainnetDomains:ghostnetDomains:socialType:type:children:isChild:isWatchOnly:bas58EncodedPublicKey:backedUp:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataV7address02hdD9GroupName14walletNickname14socialUsername0L6UserId14mainnetDomains08ghostnetQ00L4Type4type8children7isChild0V9WatchOnly21bas58EncodedPublicKey8backedUpACSS_SSSgA3RSayAA05TezosQ13ReverseRecordVGSgAvA17TorusAuthProviderOSgAA0dS0OSayACGS2bSSSbtcfc">init(address:<wbr>hdWalletGroupName:<wbr>walletNickname:<wbr>socialUsername:<wbr>socialUserId:<wbr>mainnetDomains:<wbr>ghostnetDomains:<wbr>socialType:<wbr>type:<wbr>children:<wbr>isChild:<wbr>isWatchOnly:<wbr>bas58EncodedPublicKey:<wbr>backedUp:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift14WalletMetadataC7address14derivationPath02hdD9GroupName14walletNickname14socialUsername0N6UserId14mainnetDomains08ghostnetS00N4Type4type8children7isChild0X9WatchOnly21bas58EncodedPublicKey8backedUpACSS_SSSgA4SSayAA05TezosS13ReverseRecordVGSgAwA17TorusAuthProviderOSgAA0dU0OSayACGS2bSSSbtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(address:derivationPath:hdWalletGroupName:walletNickname:socialUsername:socialUserId:mainnetDomains:ghostnetDomains:socialType:type:children:isChild:isWatchOnly:bas58EncodedPublicKey:backedUp:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14WalletMetadataC7address14derivationPath02hdD9GroupName14walletNickname14socialUsername0N6UserId14mainnetDomains08ghostnetS00N4Type4type8children7isChild0X9WatchOnly21bas58EncodedPublicKey8backedUpACSS_SSSgA4SSayAA05TezosS13ReverseRecordVGSgAwA17TorusAuthProviderOSgAA0dU0OSayACGS2bSSSbtcfc">init(address:<wbr>derivationPath:<wbr>hdWalletGroupName:<wbr>walletNickname:<wbr>socialUsername:<wbr>socialUserId:<wbr>mainnetDomains:<wbr>ghostnetDomains:<wbr>socialType:<wbr>type:<wbr>children:<wbr>isChild:<wbr>isWatchOnly:<wbr>bas58EncodedPublicKey:<wbr>backedUp:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1268,7 +1294,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">hdWalletGroupName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">walletNickname</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">socialUsername</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">socialUserId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">mainnetDomains</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/TezosDomainsReverseRecord.html">TezosDomainsReverseRecord</a></span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">ghostnetDomains</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/TezosDomainsReverseRecord.html">TezosDomainsReverseRecord</a></span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">socialType</span><span class="p">:</span> <span class="kt"><a href="../Enums/TorusAuthProvider.html">TorusAuthProvider</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/WalletType.html">WalletType</a></span><span class="p">,</span> <span class="nv">children</span><span class="p">:</span> <span class="p">[</span><span class="kt">WalletMetadata</span><span class="p">],</span> <span class="nv">isChild</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">isWatchOnly</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">bas58EncodedPublicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">backedUp</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">derivationPath</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">hdWalletGroupName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">walletNickname</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">socialUsername</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">socialUserId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">mainnetDomains</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/TezosDomainsReverseRecord.html">TezosDomainsReverseRecord</a></span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">ghostnetDomains</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/TezosDomainsReverseRecord.html">TezosDomainsReverseRecord</a></span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">socialType</span><span class="p">:</span> <span class="kt"><a href="../Enums/TorusAuthProvider.html">TorusAuthProvider</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/WalletType.html">WalletType</a></span><span class="p">,</span> <span class="nv">children</span><span class="p">:</span> <span class="p">[</span><span class="kt">WalletMetadata</span><span class="p">],</span> <span class="nv">isChild</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">isWatchOnly</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">bas58EncodedPublicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">backedUp</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1332,8 +1358,8 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>

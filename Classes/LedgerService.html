@@ -237,6 +237,12 @@
                 <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletMetadataList.html">WalletMetadataList</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/XTZAmount.html">XTZAmount</a>
               </li>
             </ul>
@@ -605,7 +611,7 @@
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+                <a href="../Structs/TezosNodeClientConfig/defaultGhostnetURLs.html">– defaultGhostnetURLs</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
@@ -684,12 +690,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
               </li>
             </ul>
           </li>
@@ -1144,6 +1144,83 @@ This can be useful to indicate to users that the request has succeed, but s wait
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14KukaiCoreSwift13LedgerServiceC10getAddress17forDerivationPath5curve6verifys6ResultOySS7address_SS9publicKeytAA0A5ErrorVGSS_0a6CryptoC015EllipticalCurveOSbtYaF"></a>
+                    <a name="//apple_ref/swift/Method/getAddress(forDerivationPath:curve:verify:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift13LedgerServiceC10getAddress17forDerivationPath5curve6verifys6ResultOySS7address_SS9publicKeytAA0A5ErrorVGSS_0a6CryptoC015EllipticalCurveOSbtYaF">getAddress(forDerivationPath:<wbr>curve:<wbr>verify:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get a TZ address and public key from the current connected Ledger device</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getAddress</span><span class="p">(</span><span class="n">forDerivationPath</span> <span class="nv">derivationPath</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kt">HD</span><span class="o">.</span><span class="n">defaultDerivationPath</span><span class="p">,</span> <span class="nv">curve</span><span class="p">:</span> <span class="kt">EllipticalCurve</span> <span class="o">=</span> <span class="o">.</span><span class="n">ed25519</span><span class="p">,</span> <span class="nv">verify</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">publicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">),</span> <span class="kt"><a href="../Structs/KukaiError.html">KukaiError</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>forDerivationPath</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional. The derivation path to use to extract the address from the underlying HD wallet</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>curve</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional. The <code>EllipticalCurve</code> to use to extract the address</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>verify</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether or not to ask the ledger device to prompt the user to show them what the TZ address should be, to ensure the mobile matches</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An async <code>Result</code> object, allowing code to be triggered via while loops more easily</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14KukaiCoreSwift13LedgerServiceC4sign3hex17forDerivationPath5parse7Combine12AnyPublisherVySSAA0A5ErrorVGSS_SSSbtF"></a>
                     <a name="//apple_ref/swift/Method/sign(hex:forDerivationPath:parse:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift13LedgerServiceC4sign3hex17forDerivationPath5parse7Combine12AnyPublisherVySSAA0A5ErrorVGSS_SSSbtF">sign(hex:<wbr>forDerivationPath:<wbr>parse:<wbr>)</a>
@@ -1366,6 +1443,58 @@ This can be useful to indicate to users that the request has succeed, but s wait
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:@M@KukaiCoreSwift@objc(cs)LedgerService(im)centralManager:didDisconnectPeripheral:error:"></a>
+                    <a name="//apple_ref/swift/Method/centralManager(_:didDisconnectPeripheral:error:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KukaiCoreSwift@objc(cs)LedgerService(im)centralManager:didDisconnectPeripheral:error:">centralManager(_:<wbr>didDisconnectPeripheral:<wbr>error:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">centralManager</span><span class="p">(</span><span class="n">_</span> <span class="nv">central</span><span class="p">:</span> <span class="kt">CBCentralManager</span><span class="p">,</span> <span class="n">didDisconnectPeripheral</span> <span class="nv">peripheral</span><span class="p">:</span> <span class="kt">CBPeripheral</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="p">(</span><span class="kd">any</span> <span class="kt">Error</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@KukaiCoreSwift@objc(cs)LedgerService(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:"></a>
+                    <a name="//apple_ref/swift/Method/centralManager(_:didDisconnectPeripheral:timestamp:isReconnecting:error:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@KukaiCoreSwift@objc(cs)LedgerService(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:">centralManager(_:<wbr>didDisconnectPeripheral:<wbr>timestamp:<wbr>isReconnecting:<wbr>error:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">centralManager</span><span class="p">(</span><span class="n">_</span> <span class="nv">central</span><span class="p">:</span> <span class="kt">CBCentralManager</span><span class="p">,</span> <span class="n">didDisconnectPeripheral</span> <span class="nv">peripheral</span><span class="p">:</span> <span class="kt">CBPeripheral</span><span class="p">,</span> <span class="nv">timestamp</span><span class="p">:</span> <span class="kt">CFAbsoluteTime</span><span class="p">,</span> <span class="nv">isReconnecting</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="p">(</span><span class="kd">any</span> <span class="kt">Error</span><span class="p">)?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:@M@KukaiCoreSwift@objc(cs)LedgerService(im)peripheral:didDiscoverCharacteristicsForService:error:"></a>
                     <a name="//apple_ref/swift/Method/peripheral(_:didDiscoverCharacteristicsFor:error:)" class="dashAnchor"></a>
                     <a class="token" href="#/c:@M@KukaiCoreSwift@objc(cs)LedgerService(im)peripheral:didDiscoverCharacteristicsForService:error:">peripheral(_:<wbr>didDiscoverCharacteristicsFor:<wbr>error:<wbr>)</a>
@@ -1449,8 +1578,8 @@ This can be useful to indicate to users that the request has succeed, but s wait
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>

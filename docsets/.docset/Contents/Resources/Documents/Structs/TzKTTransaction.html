@@ -237,6 +237,12 @@
                 <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletMetadataList.html">WalletMetadataList</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/XTZAmount.html">XTZAmount</a>
               </li>
             </ul>
@@ -605,7 +611,7 @@
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+                <a href="../Structs/TezosNodeClientConfig/defaultGhostnetURLs.html">– defaultGhostnetURLs</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
@@ -684,12 +690,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
               </li>
             </ul>
           </li>
@@ -1843,9 +1843,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11destination9xtzAmount10parameters12primaryToken5baker4kindA2C011TransactionH0O_So9NSDecimalaSSAC0X4TypeOAtA0O8MetadataVAA0D9KTAddressVAA0uR0CSDyS2SGSgAA0U0CSgAZSgSSSgtFZ"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11destination9xtzAmount10parameters12primaryToken5baker4kindA2C011TransactionH0O_So9NSDecimalaSSAC0X4TypeOAtA0O8MetadataCAA0D9KTAddressVAA0uR0CSDyS2SGSgAA0U0CSgAZSgSSSgtFZ"></a>
                     <a name="//apple_ref/swift/Method/placeholder(withStatus:id:opHash:type:counter:fromWallet:destination:xtzAmount:parameters:primaryToken:baker:kind:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11destination9xtzAmount10parameters12primaryToken5baker4kindA2C011TransactionH0O_So9NSDecimalaSSAC0X4TypeOAtA0O8MetadataVAA0D9KTAddressVAA0uR0CSDyS2SGSgAA0U0CSgAZSgSSSgtFZ">placeholder(withStatus:<wbr>id:<wbr>opHash:<wbr>type:<wbr>counter:<wbr>fromWallet:<wbr>destination:<wbr>xtzAmount:<wbr>parameters:<wbr>primaryToken:<wbr>baker:<wbr>kind:<wbr>)</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11destination9xtzAmount10parameters12primaryToken5baker4kindA2C011TransactionH0O_So9NSDecimalaSSAC0X4TypeOAtA0O8MetadataCAA0D9KTAddressVAA0uR0CSDyS2SGSgAA0U0CSgAZSgSSSgtFZ">placeholder(withStatus:<wbr>id:<wbr>opHash:<wbr>type:<wbr>counter:<wbr>fromWallet:<wbr>destination:<wbr>xtzAmount:<wbr>parameters:<wbr>primaryToken:<wbr>baker:<wbr>kind:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1860,7 +1860,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">placeholder</span><span class="p">(</span><span class="n">withStatus</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionStatus.html">TransactionStatus</a></span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">opHash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionType.html">TransactionType</a></span><span class="p">,</span> <span class="nv">counter</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">fromWallet</span><span class="p">:</span> <span class="kt"><a href="../Structs/WalletMetadata.html">WalletMetadata</a></span><span class="p">,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">,</span> <span class="nv">xtzAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?,</span> <span class="nv">primaryToken</span><span class="p">:</span> <span class="kt"><a href="../Classes/Token.html">Token</a></span><span class="p">?,</span> <span class="nv">baker</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">?,</span> <span class="nv">kind</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TzKTTransaction</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">placeholder</span><span class="p">(</span><span class="n">withStatus</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionStatus.html">TransactionStatus</a></span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">opHash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionType.html">TransactionType</a></span><span class="p">,</span> <span class="nv">counter</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">fromWallet</span><span class="p">:</span> <span class="kt"><a href="../Classes/WalletMetadata.html">WalletMetadata</a></span><span class="p">,</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">,</span> <span class="nv">xtzAmount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?,</span> <span class="nv">primaryToken</span><span class="p">:</span> <span class="kt"><a href="../Classes/Token.html">Token</a></span><span class="p">?,</span> <span class="nv">baker</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">?,</span> <span class="nv">kind</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TzKTTransaction</span></code></pre>
 
                         </div>
                       </div>
@@ -1870,9 +1870,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11newDelegateA2C011TransactionH0O_So9NSDecimalaSSAC0R4TypeOAoA0O8MetadataVAA0D9KTAddressVSgtFZ"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11newDelegateA2C011TransactionH0O_So9NSDecimalaSSAC0R4TypeOAoA0O8MetadataCAA0D9KTAddressVSgtFZ"></a>
                     <a name="//apple_ref/swift/Method/placeholder(withStatus:id:opHash:type:counter:fromWallet:newDelegate:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11newDelegateA2C011TransactionH0O_So9NSDecimalaSSAC0R4TypeOAoA0O8MetadataVAA0D9KTAddressVSgtFZ">placeholder(withStatus:<wbr>id:<wbr>opHash:<wbr>type:<wbr>counter:<wbr>fromWallet:<wbr>newDelegate:<wbr>)</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV11placeholder10withStatus2id6opHash4type7counter10fromWallet11newDelegateA2C011TransactionH0O_So9NSDecimalaSSAC0R4TypeOAoA0O8MetadataCAA0D9KTAddressVSgtFZ">placeholder(withStatus:<wbr>id:<wbr>opHash:<wbr>type:<wbr>counter:<wbr>fromWallet:<wbr>newDelegate:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1887,7 +1887,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">placeholder</span><span class="p">(</span><span class="n">withStatus</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionStatus.html">TransactionStatus</a></span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">opHash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionType.html">TransactionType</a></span><span class="p">,</span> <span class="nv">counter</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">fromWallet</span><span class="p">:</span> <span class="kt"><a href="../Structs/WalletMetadata.html">WalletMetadata</a></span><span class="p">,</span> <span class="nv">newDelegate</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TzKTTransaction</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">placeholder</span><span class="p">(</span><span class="n">withStatus</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionStatus.html">TransactionStatus</a></span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">opHash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionType.html">TransactionType</a></span><span class="p">,</span> <span class="nv">counter</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">,</span> <span class="nv">fromWallet</span><span class="p">:</span> <span class="kt"><a href="../Classes/WalletMetadata.html">WalletMetadata</a></span><span class="p">,</span> <span class="nv">newDelegate</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">TzKTTransaction</span></code></pre>
 
                         </div>
                       </div>
@@ -2176,8 +2176,8 @@ e.g. DipDup client can fetch all tokens from dexes, containing all token info. U
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>

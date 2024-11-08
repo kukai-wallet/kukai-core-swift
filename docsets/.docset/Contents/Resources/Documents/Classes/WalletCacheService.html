@@ -237,6 +237,12 @@
                 <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletMetadataList.html">WalletMetadataList</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/XTZAmount.html">XTZAmount</a>
               </li>
             </ul>
@@ -605,7 +611,7 @@
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+                <a href="../Structs/TezosNodeClientConfig/defaultGhostnetURLs.html">– defaultGhostnetURLs</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
@@ -684,12 +690,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
               </li>
             </ul>
           </li>
@@ -845,9 +845,9 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC010cacheWatchD08metadatayAA0D8MetadataV_tKF"></a>
+                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC010cacheWatchD08metadatayAA0D8MetadataC_tKF"></a>
                     <a name="//apple_ref/swift/Method/cacheWatchWallet(metadata:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC010cacheWatchD08metadatayAA0D8MetadataV_tKF">cacheWatchWallet(metadata:<wbr>)</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC010cacheWatchD08metadatayAA0D8MetadataC_tKF">cacheWatchWallet(metadata:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -862,7 +862,7 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cacheWatchWallet</span><span class="p">(</span><span class="nv">metadata</span><span class="p">:</span> <span class="kt"><a href="../Structs/WalletMetadata.html">WalletMetadata</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cacheWatchWallet</span><span class="p">(</span><span class="nv">metadata</span><span class="p">:</span> <span class="kt"><a href="../Classes/WalletMetadata.html">WalletMetadata</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
 
                         </div>
                       </div>
@@ -992,6 +992,33 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC13migrateLedger8metadata9toNewUUIDSbAA0D8MetadataC_SStF"></a>
+                    <a name="//apple_ref/swift/Method/migrateLedger(metadata:toNewUUID:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC13migrateLedger8metadata9toNewUUIDSbAA0D8MetadataC_SStF">migrateLedger(metadata:<wbr>toNewUUID:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Migrate a LedgerWallet and its children to a new physical device, denoted by a new UUID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">migrateLedger</span><span class="p">(</span><span class="nv">metadata</span><span class="p">:</span> <span class="kt"><a href="../Classes/WalletMetadata.html">WalletMetadata</a></span><span class="p">,</span> <span class="nv">toNewUUID</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14KukaiCoreSwift18WalletCacheServiceC09deleteAllE7AndKeysSbyF"></a>
                     <a name="//apple_ref/swift/Method/deleteAllCacheAndKeys()" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC09deleteAllE7AndKeysSbyF">deleteAllCacheAndKeys()</a>
@@ -1098,9 +1125,9 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC29encryptAndWriteMetadataToDiskySbAA0dJ4ListVF"></a>
+                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC29encryptAndWriteMetadataToDiskySbAA0dJ4ListCF"></a>
                     <a name="//apple_ref/swift/Method/encryptAndWriteMetadataToDisk(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC29encryptAndWriteMetadataToDiskySbAA0dJ4ListVF">encryptAndWriteMetadataToDisk(_:<wbr>)</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC29encryptAndWriteMetadataToDiskySbAA0dJ4ListCF">encryptAndWriteMetadataToDisk(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1108,14 +1135,14 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Write an ordered array of <code><a href="../Structs/WalletMetadata.html">WalletMetadata</a></code> to disk, replacing existing file if exists</p>
+                        <p>Write an ordered array of <code><a href="../Classes/WalletMetadata.html">WalletMetadata</a></code> to disk, replacing existing file if exists</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">encryptAndWriteMetadataToDisk</span><span class="p">(</span><span class="n">_</span> <span class="nv">metadata</span><span class="p">:</span> <span class="kt"><a href="../Structs/WalletMetadataList.html">WalletMetadataList</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">encryptAndWriteMetadataToDisk</span><span class="p">(</span><span class="n">_</span> <span class="nv">metadata</span><span class="p">:</span> <span class="kt"><a href="../Classes/WalletMetadataList.html">WalletMetadataList</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -1125,9 +1152,9 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC30readMetadataFromDiskAndDecryptAA0dH4ListVyF"></a>
+                    <a name="/s:14KukaiCoreSwift18WalletCacheServiceC30readMetadataFromDiskAndDecryptAA0dH4ListCyF"></a>
                     <a name="//apple_ref/swift/Method/readMetadataFromDiskAndDecrypt()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC30readMetadataFromDiskAndDecryptAA0dH4ListVyF">readMetadataFromDiskAndDecrypt()</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift18WalletCacheServiceC30readMetadataFromDiskAndDecryptAA0dH4ListCyF">readMetadataFromDiskAndDecrypt()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1135,14 +1162,14 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Return an ordered array of <code><a href="../Structs/WalletMetadata.html">WalletMetadata</a></code> if present on disk</p>
+                        <p>Return an ordered array of <code><a href="../Classes/WalletMetadata.html">WalletMetadata</a></code> if present on disk</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">readMetadataFromDiskAndDecrypt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/WalletMetadataList.html">WalletMetadataList</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">readMetadataFromDiskAndDecrypt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/WalletMetadataList.html">WalletMetadataList</a></span></code></pre>
 
                         </div>
                       </div>
@@ -1362,8 +1389,8 @@ This class will also store non senstiivve &ldquo;metadata&rdquo; about wallets, 
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>

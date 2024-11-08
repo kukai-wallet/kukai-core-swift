@@ -237,6 +237,12 @@
                 <a href="../Classes/WalletCacheService.html">WalletCacheService</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/WalletMetadata.html">WalletMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/WalletMetadataList.html">WalletMetadataList</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/XTZAmount.html">XTZAmount</a>
               </li>
             </ul>
@@ -605,7 +611,7 @@
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/TezosNodeClientConfig/defaultTestnetURLs.html">– defaultTestnetURLs</a>
+                <a href="../Structs/TezosNodeClientConfig/defaultGhostnetURLs.html">– defaultGhostnetURLs</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTAccount.html">TzKTAccount</a>
@@ -684,12 +690,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadata.html">WalletMetadata</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/WalletMetadataList.html">WalletMetadataList</a>
               </li>
             </ul>
           </li>
@@ -1106,35 +1106,6 @@ This function will complete all of those steps and return an OperationID or an E
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift16OperationServiceC18ledgerStringToSign10forgedHash16operationPayloadS2S_AA0dM0VtF"></a>
-                    <a name="//apple_ref/swift/Method/ledgerStringToSign(forgedHash:operationPayload:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift16OperationServiceC18ledgerStringToSign10forgedHash16operationPayloadS2S_AA0dM0VtF">ledgerStringToSign(forgedHash:<wbr>operationPayload:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Ledger can only parse operations under certain conditions. These conditions are not documented well. This function will attempt to determine whether the payload can be parsed or not, and returnt he appropriate string for the LedgerWallet sign function
-It seems to be able to parse the payload if it contains 1 operation, of the below types. Combining types (like Reveal + Transation) causes a parse error
-If the payload structure passes the conditions we are aware of, allow parsing to take place. If not, sign blake2b hash instead</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">ledgerStringToSign</span><span class="p">(</span><span class="nv">forgedHash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">operationPayload</span><span class="p">:</span> <span class="kt"><a href="../Structs/OperationPayload.html">OperationPayload</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:14KukaiCoreSwift16OperationServiceC17preapplyAndInject06forgedD09signature0J5Curve16operationPayload0L8Metadata10completionySS_Says5UInt8VG0a6CryptoC0010EllipticalK0OAA0dM0VAA0dN0Vys6ResultOySSAA0A5ErrorVGctF"></a>
                     <a name="//apple_ref/swift/Method/preapplyAndInject(forgedOperation:signature:signatureCurve:operationPayload:operationMetadata:completion:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift16OperationServiceC17preapplyAndInject06forgedD09signature0J5Curve16operationPayload0L8Metadata10completionySS_Says5UInt8VG0a6CryptoC0010EllipticalK0OAA0dM0VAA0dN0Vys6ResultOySSAA0A5ErrorVGctF">preapplyAndInject(forgedOperation:<wbr>signature:<wbr>signatureCurve:<wbr>operationPayload:<wbr>operationMetadata:<wbr>completion:<wbr>)</a>
@@ -1523,8 +1494,8 @@ If the payload structure passes the conditions we are aware of, allow parsing to
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-19)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>
