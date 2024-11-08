@@ -27,7 +27,7 @@ jobs:
          languages: "swift"
 
       - name: Test
-        run: xcodebuild -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=17.2,name=iPhone 15"
+        run: xcodebuild -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=17.2,name=iPhone 15" -resultBundlePath "~/xcode-$NOW.xcresult"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

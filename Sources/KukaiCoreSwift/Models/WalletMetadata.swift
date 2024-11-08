@@ -265,6 +265,7 @@ public class WalletMetadataList: Codable, Hashable {
 /// Object to store UI related info about wallets, seperated from the wallet object itself to avoid issues merging together
 public class WalletMetadata: Codable, Hashable {
 	public var address: String
+	public var derivationPath: String?
 	public var hdWalletGroupName: String?
 	public var walletNickname: String?
 	public var socialUsername: String?
@@ -278,7 +279,6 @@ public class WalletMetadata: Codable, Hashable {
 	public var isWatchOnly: Bool
 	public var bas58EncodedPublicKey: String
 	public var backedUp: Bool
-	public var customDerivationPath: String?
 	
 	public func hasMainnetDomain() -> Bool {
 		return (mainnetDomains ?? []).count > 0
@@ -320,13 +320,9 @@ public class WalletMetadata: Codable, Hashable {
 		}
 	}
 	
-	public func childCountExcludingCustomDerivationPaths() -> Int {
-		let excluded = children.filter { $0.customDerivationPath == nil }
-		return excluded.count
-	}
-	
-	public init(address: String, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool, customDerivationPath: String?) {
+	public init(address: String, derivationPath: String?, hdWalletGroupName: String?, walletNickname: String? = nil, socialUsername: String? = nil, socialUserId: String? = nil, mainnetDomains: [TezosDomainsReverseRecord]? = nil, ghostnetDomains: [TezosDomainsReverseRecord]? = nil, socialType: TorusAuthProvider? = nil, type: WalletType, children: [WalletMetadata], isChild: Bool, isWatchOnly: Bool, bas58EncodedPublicKey: String, backedUp: Bool) {
 		self.address = address
+		self.derivationPath = derivationPath
 		self.hdWalletGroupName = hdWalletGroupName
 		self.walletNickname = walletNickname
 		self.socialUsername = socialUsername
@@ -340,7 +336,6 @@ public class WalletMetadata: Codable, Hashable {
 		self.isWatchOnly = isWatchOnly
 		self.bas58EncodedPublicKey = bas58EncodedPublicKey
 		self.backedUp = backedUp
-		self.customDerivationPath = customDerivationPath
 	}
 	
 	public static func == (lhs: WalletMetadata, rhs: WalletMetadata) -> Bool {

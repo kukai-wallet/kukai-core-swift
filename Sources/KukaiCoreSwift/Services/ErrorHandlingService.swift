@@ -151,7 +151,7 @@ public struct KukaiError: CustomStringConvertible, Error {
 					
 				case .internalApplication:
 					if let subType = subType {
-						return "Internal Application Error: \(subType.localizedDescription)"
+						return "Internal Application Error: \(subType)"
 					}
 					return "Internal Application Error: Unknown"
 				

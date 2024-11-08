@@ -70,16 +70,17 @@ public class LedgerWallet: Wallet {
 	
 	/**
 	 Sign a hex string.
-	 If the string starts with "03" and is not 32 characters long, it will be treated as a watermarked operation and Ledger will be asked to parse + display the operation details.
-	 Else it will be treated as an unknown operation and will simply display the Blake2b hash.
-	 Please be careful when asking the Ledger to parse (passing in an operation), Ledgers have very limited display ability. Keep it to a single operation, not invoking a smart contract
+	 If its an operation "03" will be prefix to the start, if not the hex will be passed directly to the ledger as it now supports parsing strings directly, but requires them to be unhashed
 	*/
 	public func sign(_ hex: String, isOperation: Bool, completion: @escaping ((Result<[UInt8], KukaiError>) -> Void)) {
-		let isWatermarkedOperation = (String(hex.prefix(2)) == "03") && hex.count != 32
+		var hexToSign = hex
+		if isOperation {
+			hexToSign = "03"+hex
+		}
 		
 		LedgerService.shared.connectTo(uuid: ledgerUUID)
-			.flatMap { _ -> AnyPublisher<String, KukaiError> in
-				return LedgerService.shared.sign(hex: hex, parse: isWatermarkedOperation)
+			.flatMap { [weak self] _ -> AnyPublisher<String, KukaiError> in
+				return LedgerService.shared.sign(hex: hexToSign, forDerivationPath: self?.derivationPath ?? HD.defaultDerivationPath, parse: true)
 			}
 			.sink(onError: { error in
 				completion(Result.failure(error))
@@ -107,6 +108,6 @@ public class LedgerWallet: Wallet {
 	*/
 	public func publicKeyBase58encoded() -> String {
 		let publicKeyData = Data(hexString: publicKey) ?? Data()
-		return Base58Check.encode(message: publicKeyData.bytes, prefix: Prefix.Keys.Ed25519.public)
+		return Base58Check.encode(message: publicKeyData.bytes(), prefix: Prefix.Keys.Ed25519.public)
 	}
 }
