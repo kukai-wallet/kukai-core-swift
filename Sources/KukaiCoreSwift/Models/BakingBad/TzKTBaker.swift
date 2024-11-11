@@ -7,59 +7,17 @@
 
 import Foundation
 
-
-/*
- 
- {
-         "address": "tz1PWCDnz783NNGGQjEFFsHtrcK5yBW4E2rm",
-         "name": "Melange",
-         "status": "active",
-         "balance": 578321.906329,
-         "features": [],
-         "delegation": {
-             "enabled": true,
-             "minBalance": 5,
-             "fee": 0.1499,
-             "capacity": 5146004.090457,
-             "freeSpace": 1970337.090154,
-             "estimatedApy": 0.0720,
-             "features": []
-         },
-         "staking": {
-             "enabled": true,
-             "minBalance": 0,
-             "fee": 0.0099,
-             "capacity": 2858891.161365,
-             "freeSpace": 2858165.485216,
-             "estimatedApy": 0.1678,
-             "features": []
-         }
-     }
- 
- */
-
-
 /// Whether the baker is actively running or not
 public enum TzKTBakerStatus: String, Codable {
 	case active
 	case closed
 }
 
-/// Object to denote the delegation parameters of the baker
-public struct TzKTBakerDelegation: Codable {
+/// Object to denote the the setting parameters of the baker. Can be used seperately for both delegation and staking
+public struct TzKTBakerSettings: Codable {
     let enabled: Bool
     let minBalance: Decimal
-    let fee: Double
-    let capacity: Decimal
-    let freeSpace: Decimal
-    let estimatedApy: Double
-}
-
-/// Object to denote the staking parameters of the baker
-public struct TzKTBakerStaking: Codable {
-    let enabled: Bool
-    let minBalance: Decimal
-    let fee: Double
+	let fee: Double
     let capacity: Decimal
     let freeSpace: Decimal
     let estimatedApy: Double
@@ -72,9 +30,11 @@ public struct TzKTBaker: Codable, Hashable {
 	public let name: String?
     public let status: TzKTBakerStatus
     public let balance: Decimal
-    public let delegation: TzKTBakerDelegation
-    public let staking: TzKTBakerStaking
-    public let config: TzKTBakerConfig?
+    public let delegation: TzKTBakerSettings
+    public let staking: TzKTBakerSettings
+	
+	public var limitOfStakingOverBaking: Decimal?
+	public var edgeOfBakingOverStaking: Decimal?
     
     public var logo: URL? {
         get {
@@ -88,19 +48,17 @@ public struct TzKTBaker: Codable, Hashable {
 		self.name = name
         self.status = .active
 		self.balance = 0
-        self.delegation = TzKTBakerDelegation(enabled: true, minBalance: 0, fee: 0, capacity: 0, freeSpace: 0, estimatedApy: 0)
-        self.staking = TzKTBakerStaking(enabled: true, minBalance: 0, fee: 0, capacity: 0, freeSpace: 0, estimatedApy: 0)
-        self.config = nil
+        self.delegation = TzKTBakerSettings(enabled: true, minBalance: 0, fee: 0, capacity: 0, freeSpace: 0, estimatedApy: 0)
+        self.staking = TzKTBakerSettings(enabled: true, minBalance: 0, fee: 0, capacity: 0, freeSpace: 0, estimatedApy: 0)
 	}
     
-    public init(address: String, name: String?, status: TzKTBakerStatus, balance: Decimal, delegation: TzKTBakerDelegation, staking: TzKTBakerStaking, config: TzKTBakerConfig?) {
+    public init(address: String, name: String?, status: TzKTBakerStatus, balance: Decimal, delegation: TzKTBakerSettings, staking: TzKTBakerSettings) {
 		self.address = address
 		self.name = name
 		self.balance = balance
         self.status = status
         self.delegation = delegation
         self.staking = staking
-        self.config = config
 	}
 	
 	/// Ghostnet has a different setup for bakers, but we need to display and interact with them the same way.
@@ -113,11 +71,12 @@ public struct TzKTBaker: Codable, Hashable {
 		let name = data[1] as? String
 		let normalisedBalance = balance/1000000
 		let normalisedStakingBal = stakingBalance/1000000
-        let delegation = TzKTBakerDelegation(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
-        let staking = TzKTBakerStaking(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
-        return TzKTBaker(address: address, name: name, status: .active, balance: normalisedBalance, delegation: delegation, staking: staking, config: nil)
+        let delegation = TzKTBakerSettings(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
+        let staking = TzKTBakerSettings(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
+        return TzKTBaker(address: address, name: name, status: .active, balance: normalisedBalance, delegation: delegation, staking: staking)
 	}
 	
+	/*
 	/// Convert con-chain data into a meaningful, readable object
 	public func rewardStruct() -> TzKTBakerConfigRewardStruct? {
 		guard let config = config, let rewardStructInt = config.latestRewardStruct() else {
@@ -126,6 +85,7 @@ public struct TzKTBaker: Codable, Hashable {
 		
 		return TzKTBakerConfigRewardStruct.fromConfigInt(rewardStructInt)
 	}
+	*/
 	
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(address)
@@ -136,6 +96,7 @@ public struct TzKTBaker: Codable, Hashable {
 	}
 }
 
+/*
 /// The bakers config file for details on when fees, min delegation etc change
 public struct TzKTBakerConfig: Codable {
 
@@ -177,7 +138,9 @@ public struct TzKTBakerConfig: Codable {
 		return rewardStruct.first?.value
 	}
 }
+*/
 
+/*
 public struct TzKTBakerConfigDoubleValue: Codable {
 	public let cycle: Int
 	public let value: Double
@@ -187,7 +150,9 @@ public struct TzKTBakerConfigIntValue: Codable {
 	public let cycle: Int
 	public let value: Int
 }
+*/
 
+/*
 /// Baker config payout flags
 public struct TzKTBakerConfigRewardStruct: Codable {
 	public let blocks: Bool
@@ -226,3 +191,4 @@ public struct TzKTBakerConfigRewardStruct: Codable {
 										   revelationLosses: revelationLosses)
 	}
 }
+*/
