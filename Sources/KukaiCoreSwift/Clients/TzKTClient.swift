@@ -194,7 +194,7 @@ public class TzKTClient {
 	 Then call tzkt api: v1/operations/set_delegate_parameters... to fetch details on staking config (limitOfStakingOverBaking, edgeOfBakingOverStaking)
 	 */
 	public func bakerConfig(forAddress: String, completion: @escaping ((Result<TzKTBaker, KukaiError>) -> Void)) {
-		guard let url = URL(string: "https://api.baking-bad.org/v2/bakers/\(forAddress)") else {
+		guard let url = URL(string: "https://api.baking-bad.org/v3/bakers/\(forAddress)") else {
 			completion(Result.failure(KukaiError.unknown()))
 			return
 		}
@@ -208,8 +208,7 @@ public class TzKTClient {
 				return
 			}
 			
-			var stakingUrl = self?.config.tzktURL
-			stakingUrl?.appendPathComponent("v1/operations/set_delegate_parameters")
+			var stakingUrl = self?.config.tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
 			stakingUrl?.appendQueryItem(name: "sender", value: forAddress)
 			stakingUrl?.appendQueryItem(name: "status", value: "applied")
 			stakingUrl?.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
@@ -321,12 +320,12 @@ public class TzKTClient {
 			if currentDelegatorRewards.count > TzKTClient.numberOfFutureCyclesReturned+1 {
 				// If we have more delegatorRewards than the number of future cycles + the current in-progress cycle, we can compute previous real transaction (if relevant), and estimate previous + next
 				
-				let lastCompleteReward = currentDelegatorRewards[TzKTClient.numberOfFutureCyclesReturned+2]
+				let lastCompleteReward = currentDelegatorRewards[TzKTClient.numberOfFutureCyclesReturned+1]
 				let lastCompleteBaker = bakerConfigs[lastCompleteReward.baker.address]
 				let lastCompleteCycle = TzKTClient.cycleForIndex(cycles: currentCycles, index: lastCompleteReward.cycle)
 				estimatedPreviousReward = TzKTClient.rewardDetail(fromConfig: lastCompleteBaker, reward: lastCompleteReward, dateForDisplay: lastCompleteCycle?.endDate ?? Date())
 				
-				let inProgressReward = currentDelegatorRewards[TzKTClient.numberOfFutureCyclesReturned+1]
+				let inProgressReward = currentDelegatorRewards[TzKTClient.numberOfFutureCyclesReturned]
 				let inProgressBaker = bakerConfigs[lastCompleteReward.baker.address]
 				let inProgressCycle = TzKTClient.cycleForIndex(cycles: currentCycles, index: inProgressReward.cycle)
 				estimatedNextReward = TzKTClient.rewardDetail(fromConfig: inProgressBaker, reward: inProgressReward, dateForDisplay: inProgressCycle?.endDate ?? Date())
@@ -351,7 +350,7 @@ public class TzKTClient {
 					let alias = bakerConfig.name
 					let avatarURL = TzKTClient.avatarURL(forToken: bakerConfig.address)
 					let fee = bakerConfig.delegation.fee
-					let indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - 1)
+					let indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived)
 					previousReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date(), meetsMinDelegation: true)
 				}
 				
@@ -365,129 +364,8 @@ public class TzKTClient {
 			}
 			
 			DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: previousReward, estimatedPreviousReward: estimatedPreviousReward, estimatedNextReward: estimatedNextReward))) }
-			
-			
-			
-			
-			/*
-			// If we have the last transaction received. Use the list of cycles, delegatorRewards and baker configs, to see can we get the additional data
-			var pReward: RewardDetails? = nil
-			if let tx = mostRecentTransaction {
-				let cycleIndexPaymentReceived = self?.cycleForLevel(cycles: currentCycles, level: tx.level)?.index ?? 0
-				let amount = (tx.amount as? XTZAmount) ?? .zero()
-				
-				var alias = tx.sender.alias
-				var avatarURL = TzKTClient.avatarURL(forToken: tx.sender.address)
-				var fee = 0.0
-				var indexOfCyclePaymentIsFor = cycleIndexPaymentReceived
-				
-				// If the tx came from the baker directly, grab the config and apply
-				if let config = bakerConfigs[tx.sender.address] {
-					alias = config.name
-					avatarURL = TzKTClient.avatarURL(forToken: config.address)
-                    fee = config.delegation.fee
-                    indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - 1)
-					
-				}
-				// If the tx came from a known payout address, match it to the baker address and grab the config
-				else {
-					for pair in bakerPayoutAddresses {
-						if pair.value.address == tx.sender.address, let config = bakerConfigs[pair.key] {
-							alias = config.name
-							avatarURL = TzKTClient.avatarURL(forToken: config.address)
-							fee = config.delegation.fee
-							indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived - 1)
-						}
-					}
-				}
-				
-				// Group up data into something usuable
-				pReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date(), meetsMinDelegation: true)
-			}
-			
-			
-			// Whether we have the previous transaction or not, try to estimate the previous transaction and the next
-			var estimatedPreviousReward: RewardDetails? = nil
-			var estimatedNextReward: RewardDetails? = nil
-			
-			// Check if we have enough rewards to bring us up to the current cycle
-			guard TzKTClient.numberOfFutureCyclesReturned >= 0,
-				  currentDelegatorRewards.count > TzKTClient.numberOfFutureCyclesReturned,
-				  let currentBakerConfig = bakerConfigs[delegate.address],
-				  let inProgresCycleBakerConfig = bakerConfigs[currentDelegatorRewards[TzKTClient.numberOfFutureCyclesReturned].baker.address] else {
-				
-				let nextPossibleReward = self?.tryToGetFutureRewardFromLimitedData(bakerConfigs: bakerConfigs, rewards: currentDelegatorRewards, cycles: currentCycles)
-				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: nextPossibleReward))) }
-				return
-			}
-			
-			
-			var configToUse = (currentBakerConfig.payoutDelay < inProgresCycleBakerConfig.payoutDelay) ? currentBakerConfig : inProgresCycleBakerConfig
-			var previousRewardIndex = TzKTClient.numberOfFutureCyclesReturned + configToUse.payoutDelay
-			
-			
-			// If we don't have enough objects to fetch, can't compute previous, early exit
-			if currentDelegatorRewards.count-1 < previousRewardIndex {
-				let nextPossibleReward = self?.tryToGetFutureRewardFromLimitedData(bakerConfigs: bakerConfigs, rewards: currentDelegatorRewards, cycles: currentCycles)
-				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: nextPossibleReward))) }
-				return
-			}
-			// If the selected cycle reward and the config baker don't match, then wallet has just changed baker and we need to use the other config
-			else if currentDelegatorRewards[previousRewardIndex].baker.address != configToUse.address {
-				configToUse = (currentBakerConfig.payoutDelay < inProgresCycleBakerConfig.payoutDelay) ? inProgresCycleBakerConfig : currentBakerConfig
-				previousRewardIndex = TzKTClient.numberOfFutureCyclesReturned + configToUse.payoutDelay
-				
-				// Check we have enough again
-				if currentDelegatorRewards.count < previousRewardIndex {
-					let nextPossibleReward = self?.tryToGetFutureRewardFromLimitedData(bakerConfigs: bakerConfigs, rewards: currentDelegatorRewards, cycles: currentCycles)
-					DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: nextPossibleReward))) }
-					return
-				}
-			}
-			// Inactive baker, display next reward as zero
-			else if previousRewardIndex == 0 {
-				let futureCycle = currentCycles.first
-				let futureReward = RewardDetails(bakerAlias: pReward?.bakerAlias,
-												 bakerLogo: pReward?.bakerLogo,
-												 paymentAddress: pReward?.paymentAddress ?? configToUse.address,
-												 amount: .zero(),
-												 cycle: futureCycle?.index ?? 0,
-												 fee: 0,
-												 date: futureCycle?.endDate ?? Date(),
-												 meetsMinDelegation: pReward?.meetsMinDelegation ?? true)
-				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: nil, estimatedNextReward: futureReward))) }
-				return
-			}
-			
-			
-			let lastCompleteCycle = currentCycles[TzKTClient.numberOfFutureCyclesReturned + 1]
-			estimatedPreviousReward = self?.rewardDetail(fromConfig: configToUse, rewards: currentDelegatorRewards, cycles: currentCycles, selectedIndex: previousRewardIndex, dateForDisplay: lastCompleteCycle.endDate ?? Date())
-			
-			let nextBakerAddress = currentDelegatorRewards[previousRewardIndex-1].baker.address
-			guard let nextConfig = bakerConfigs[nextBakerAddress] else {
-				// Unable to find baker config for next block, shouldn't be possible to hit here ... but life will find a way
-				DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: estimatedPreviousReward, estimatedNextReward: nil))) }
-				return
-			}
-			
-			let currentInProgressCycle = currentCycles[TzKTClient.numberOfFutureCyclesReturned]
-			estimatedNextReward = self?.rewardDetail(fromConfig: nextConfig, rewards: currentDelegatorRewards, cycles: currentCycles, selectedIndex: previousRewardIndex-1, dateForDisplay: currentInProgressCycle.endDate ?? Date())
-			DispatchQueue.main.async { completion(Result.success(AggregateRewardInformation(previousReward: pReward, estimatedPreviousReward: estimatedPreviousReward, estimatedNextReward: estimatedNextReward))) }
-			*/
 		}
 	}
-	
-	/*
-	/// Helper for sitautions where we don't have enough rewards to get a past reward, but likely we can get a future reward
-	private func tryToGetFutureRewardFromLimitedData(bakerConfigs: [String: TzKTBaker], rewards: [TzKTDelegatorReward], cycles: [TzKTCycle]) -> RewardDetails? {
-		guard rewards.count > 0, let nextPossibleReward = rewards.last, let bakerConfig = bakerConfigs[nextPossibleReward.baker.address] else {
-			return nil
-		}
-		
-		let cycleItShouldBeRecieved = cycles[(rewards.count-1)]
-		return rewardDetail(fromConfig: bakerConfig, rewards: rewards, cycles: cycles, selectedIndex: rewards.count-1, dateForDisplay: cycleItShouldBeRecieved.endDate ?? Date())
-	}
-	*/
 	
 	/// Helper to create a `RewardDetails` in a single line, only accepts optional config to help with implementation details and reduce code, config is necessary
 	private static func rewardDetail(fromConfig config: TzKTBaker?, reward: TzKTDelegatorReward, dateForDisplay: Date) -> RewardDetails? {
@@ -649,7 +527,10 @@ public class TzKTClient {
 				if reward.futureBlocks == 0 {
 					// Number of future cycles is 1 less than the index of the first reward where `futureBlocks` is equal to zero
 					// The first non zero is the current, in-progress block
-					TzKTClient.numberOfFutureCyclesReturned = (index-1)
+					let temp = (index-1)
+					if temp > 0 {
+						TzKTClient.numberOfFutureCyclesReturned = (index-1)
+					}
 					break
 				}
 			}

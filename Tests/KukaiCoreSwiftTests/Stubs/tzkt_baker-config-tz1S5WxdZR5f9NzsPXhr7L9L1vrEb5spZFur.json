@@ -1,135 +1,38 @@
 {
     "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur",
     "name": "Baking Benjamins",
-    "logo": "https://services.tzkt.io/v1/avatars/tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur",
-    "balance": 63510.843938,
-    "stakingBalance": 626388.733175,
-    "stakingCapacity": 635108.43938,
-    "maxStakingBalance": 635108.43938,
-    "freeSpace": 8719.706205000053,
-    "fee": 0.2,
-    "minDelegation": 0.01,
-    "payoutDelay": 1,
-    "payoutPeriod": 1,
-    "openForDelegation": true,
-    "estimatedRoi": 0.049882,
-    "serviceType": "tezos_only",
-    "serviceHealth": "active",
-    "payoutTiming": "stable",
-    "payoutAccuracy": "inaccurate",
-    "audit": "6064b1d379aafa90137ab034",
-    "insuranceCoverage": 0,
-    "config": {
-        "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur",
-        "fee": [
-            {
-                "cycle": 438,
-                "value": 0.2
-            },
-            {
-                "cycle": 334,
-                "value": 0.1
-            },
-            {
-                "cycle": 246,
-                "value": 0.06
-            },
-            {
-                "cycle": 0,
-                "value": 0.08
+    "status": "active",
+    "balance": 118183.29685,
+    "features": [
+        {
+            "title": "Contribution",
+            "content": {
+                "project": "BakeBuddy",
+                "link": "https://www.bakebuddy.xyz/"
             }
-        ],
-        "minDelegation": [
+        }
+    ],
+    "delegation": {
+        "enabled": true,
+        "minBalance": 0.01,
+        "fee": 0.2,
+        "capacity": 1057926.02382,
+        "freeSpace": 544368.071318,
+        "estimatedApy": 0.0584,
+        "features": [
             {
-                "cycle": 569,
-                "value": 0.01
-            },
-            {
-                "cycle": 278,
-                "value": 1
-            },
-            {
-                "cycle": 244,
-                "value": 50
-            },
-            {
-                "cycle": 0,
-                "value": 100
-            }
-        ],
-        "payoutFee": [
-            {
-                "cycle": 0,
-                "value": false
-            }
-        ],
-        "payoutDelay": [
-            {
-                "cycle": 245,
-                "value": 1
-            },
-            {
-                "cycle": 244,
-                "value": 2
-            },
-            {
-                "cycle": 243,
-                "value": 3
-            },
-            {
-                "cycle": 242,
-                "value": 4
-            },
-            {
-                "cycle": 241,
-                "value": 5
-            },
-            {
-                "cycle": 0,
-                "value": 6
-            }
-        ],
-        "payoutPeriod": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "minPayout": [
-            {
-                "cycle": 0,
-                "value": 0
-            }
-        ],
-        "rewardStruct": [
-            {
-                "cycle": 0,
-                "value": 21
-            }
-        ],
-        "payoutRatio": [
-            {
-                "cycle": 0,
-                "value": 666
-            }
-        ],
-        "maxStakingThreshold": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "openForDelegation": [
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ],
-        "allocationFee": [
-            {
-                "cycle": 0,
-                "value": true
+                "title": "Distributed rewards",
+                "content": "Baker doesn't pay denunciation and revelation rewards"
             }
         ]
+    },
+    "staking": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.1,
+        "capacity": 587736.67990,
+        "freeSpace": 158081.761914,
+        "estimatedApy": 0.1315,
+        "features": []
     }
 }

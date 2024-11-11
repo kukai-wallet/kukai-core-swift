@@ -100,22 +100,61 @@ public struct MockConstants {
 		var tzktDelegatorRewardsNoneURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac")
 		tzktDelegatorRewardsNoneURL.appendQueryItem(name: "limit", value: 25)
 		
+		
+		
         var bakingBadBakersURL = bakingBadURL.appendingPathComponent("v3/bakers")
         
 		var bakingBadConfigURL1 = bakingBadURL.appendingPathComponent("v3/bakers/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")
 		bakingBadConfigURL1.appendQueryItem(name: "configs", value: "true")
 		
+		var tzktStakingConfigURL1 = tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
+		tzktStakingConfigURL1.appendQueryItem(name: "sender", value: "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")
+		tzktStakingConfigURL1.appendQueryItem(name: "status", value: "applied")
+		tzktStakingConfigURL1.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+		tzktStakingConfigURL1.appendQueryItem(name: "sort.desc", value: "id")
+		tzktStakingConfigURL1.appendQueryItem(name: "limit", value: 1)
+		
 		var bakingBadConfigURL2 = bakingBadURL.appendingPathComponent("v3/bakers/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
 		bakingBadConfigURL2.appendQueryItem(name: "configs", value: "true")
+		
+		var tzktStakingConfigURL2 = tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
+		tzktStakingConfigURL2.appendQueryItem(name: "sender", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv")
+		tzktStakingConfigURL2.appendQueryItem(name: "status", value: "applied")
+		tzktStakingConfigURL2.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+		tzktStakingConfigURL2.appendQueryItem(name: "sort.desc", value: "id")
+		tzktStakingConfigURL2.appendQueryItem(name: "limit", value: 1)
 		
 		var bakingBadConfigURL3 = bakingBadURL.appendingPathComponent("v3/bakers/tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur")
 		bakingBadConfigURL3.appendQueryItem(name: "configs", value: "true")
 		
+		var tzktStakingConfigURL3 = tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
+		tzktStakingConfigURL3.appendQueryItem(name: "sender", value: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur")
+		tzktStakingConfigURL3.appendQueryItem(name: "status", value: "applied")
+		tzktStakingConfigURL3.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+		tzktStakingConfigURL3.appendQueryItem(name: "sort.desc", value: "id")
+		tzktStakingConfigURL3.appendQueryItem(name: "limit", value: 1)
+		
 		var bakingBadConfigURL4 = bakingBadURL.appendingPathComponent("v3/bakers/tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM")
 		bakingBadConfigURL4.appendQueryItem(name: "configs", value: "true")
 		
+		var tzktStakingConfigURL4 = tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
+		tzktStakingConfigURL4.appendQueryItem(name: "sender", value: "tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM")
+		tzktStakingConfigURL4.appendQueryItem(name: "status", value: "applied")
+		tzktStakingConfigURL4.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+		tzktStakingConfigURL4.appendQueryItem(name: "sort.desc", value: "id")
+		tzktStakingConfigURL4.appendQueryItem(name: "limit", value: 1)
+		
 		var bakingBadConfigURL5 = bakingBadURL.appendingPathComponent("v3/bakers/tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
 		bakingBadConfigURL5.appendQueryItem(name: "configs", value: "true")
+		
+		var tzktStakingConfigURL5 = tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
+		tzktStakingConfigURL5.appendQueryItem(name: "sender", value: "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
+		tzktStakingConfigURL5.appendQueryItem(name: "status", value: "applied")
+		tzktStakingConfigURL5.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+		tzktStakingConfigURL5.appendQueryItem(name: "sort.desc", value: "id")
+		tzktStakingConfigURL5.appendQueryItem(name: "limit", value: 1)
+		
+		
 		
 		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")
 		tzktsuggestURL1.appendQueryItem(name: "limit", value: 1)
@@ -145,17 +184,22 @@ public struct MockConstants {
 		var tzktLastBakerRewardURL3 = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktLastBakerRewardURL3.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL3.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
+		tzktLastBakerRewardURL3.appendQueryItem(name: "sender.in", value: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
 		
-		var tzktLastBakerRewardURL4 = tzktURL.appendingPathComponent("v1/accounts/tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr/operations")
+		var tzktLastBakerRewardURL4 = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktLastBakerRewardURL4.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL4.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL4.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC")
+		tzktLastBakerRewardURL4.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
 		
-		var tzktLastBakerRewardURL5 = tzktURL.appendingPathComponent("v1/accounts/tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac/operations")
+		var tzktLastBakerRewardURL5 = tzktURL.appendingPathComponent("v1/accounts/tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr/operations")
 		tzktLastBakerRewardURL5.appendQueryItem(name: "limit", value: 1)
 		tzktLastBakerRewardURL5.appendQueryItem(name: "type", value: "transaction")
-		tzktLastBakerRewardURL5.appendQueryItem(name: "sender.in", value: "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
+		tzktLastBakerRewardURL5.appendQueryItem(name: "sender.in", value: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv,tz1ShireJgwr8ag5dETMY4RNqkXeu1YgyDYC")
+		
+		var tzktLastBakerRewardURL6 = tzktURL.appendingPathComponent("v1/accounts/tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac/operations")
+		tzktLastBakerRewardURL6.appendQueryItem(name: "limit", value: 1)
+		tzktLastBakerRewardURL6.appendQueryItem(name: "type", value: "transaction")
+		tzktLastBakerRewardURL6.appendQueryItem(name: "sender.in", value: "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
 		
 		var tzktDelegatesURL = tzktURL.appendingPathComponent("v1/delegates")
 		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")
@@ -214,10 +258,15 @@ public struct MockConstants {
 			tzktDelegatorRewardsNoneURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards-none"), MockConstants.http200),
             bakingBadBakersURL: (MockConstants.jsonStub(fromFilename: "tzkt_bakers"), MockConstants.http200),
 			bakingBadConfigURL1: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa"), MockConstants.http200),
+			tzktStakingConfigURL1: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa"), MockConstants.http200),
 			bakingBadConfigURL2: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv"), MockConstants.http200),
+			tzktStakingConfigURL2: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv"), MockConstants.http200),
 			bakingBadConfigURL3: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"), MockConstants.http200),
+			tzktStakingConfigURL3: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"), MockConstants.http200),
 			bakingBadConfigURL4: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM"), MockConstants.http200),
+			tzktStakingConfigURL4: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM"), MockConstants.http200),
 			bakingBadConfigURL5: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4"), MockConstants.http200),
+			tzktStakingConfigURL5: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4"), MockConstants.http200),
 			tzktsuggestURL1: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-bake-nug"), MockConstants.http200),
 			tzktsuggestURL2: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire"), MockConstants.http200),
 			tzktsuggestURL3: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire_updated"), MockConstants.http200),
@@ -225,9 +274,10 @@ public struct MockConstants {
 			tzktsuggestURL5: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-teztillery"), MockConstants.http200),
 			tzktLastBakerRewardURL: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL2: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
-			tzktLastBakerRewardURL3: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
+			tzktLastBakerRewardURL3: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment"), MockConstants.http200),
 			tzktLastBakerRewardURL4: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktLastBakerRewardURL5: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
+			tzktLastBakerRewardURL6: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktDelegatesURL: (MockConstants.jsonStub(fromFilename: "tzkt_ghostnet-bakers"), MockConstants.http200),
 			
 			// Media proxy

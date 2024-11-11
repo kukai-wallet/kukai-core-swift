@@ -1,21 +1,25 @@
 {
     "address": "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4",
     "name": "Teztillery",
-    "logo": "https://services.tzkt.io/v1/avatars/tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4",
-    "balance": 2187.553015,
-    "stakingBalance": 10120.963766,
-    "stakingCapacity": 11897.932014,
-    "maxStakingBalance": 11897.932014,
-    "freeSpace": 3098.9606940000003,
-    "fee": 0.0499,
-    "minDelegation": 10,
-    "payoutDelay": 1,
-    "payoutPeriod": 1,
-    "openForDelegation": true,
-    "estimatedRoi": 0.05916,
-    "serviceType": "tezos_only",
-    "serviceHealth": "active",
-    "payoutTiming": "no_data",
-    "payoutAccuracy": "no_data",
-    "insuranceCoverage": 0
+    "status": "active",
+    "balance": 2525.282654,
+    "features": [],
+    "delegation": {
+        "enabled": true,
+        "minBalance": 10,
+        "fee": 0.0499,
+        "capacity": 22091.479308,
+        "freeSpace": 1272.813162,
+        "estimatedApy": 0.0694,
+        "features": []
+    },
+    "staking": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.05,
+        "capacity": 12273.044060,
+        "freeSpace": 10379.879386,
+        "estimatedApy": 0.1388,
+        "features": []
     }
+}

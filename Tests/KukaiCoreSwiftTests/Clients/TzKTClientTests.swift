@@ -371,24 +371,24 @@ class TzKTClientTests: XCTestCase {
 	
 	func testEstimateRewards() {
 		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewards")
-		let delegate = TzKTAccountDelegate(alias: "The Shire", address: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv", active: true)
+		let delegate = TzKTAccountDelegate(alias: "Baking Benjamins", address: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur", active: true)
 		
 		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate) { result in
 			switch result {
 				case .success(let rewards):
-					XCTAssert(rewards.previousReward?.amount.description == "0.5598", rewards.previousReward?.amount.description ?? "")
+					XCTAssert(rewards.previousReward?.amount.description == "0.926578", rewards.previousReward?.amount.description ?? "")
 					XCTAssert(rewards.previousReward?.fee.description == "0.2", rewards.previousReward?.fee.description ?? "")
-					XCTAssert(rewards.previousReward?.cycle.description == "742", rewards.previousReward?.cycle.description ?? "")
+					XCTAssert(rewards.previousReward?.cycle.description == "797", rewards.previousReward?.cycle.description ?? "")
 					XCTAssert(rewards.previousReward?.bakerAlias == "Baking Benjamins", rewards.previousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.5598", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "742", rewards.estimatedPreviousReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "797", rewards.estimatedPreviousReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.722042", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
 					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.cycle.description == "743", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "798", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
 					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
@@ -412,14 +412,14 @@ class TzKTClientTests: XCTestCase {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.5598", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "742", rewards.estimatedPreviousReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "797", rewards.estimatedPreviousReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.722042", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
 					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.cycle.description == "743", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "798", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
 					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
@@ -445,9 +445,9 @@ class TzKTClientTests: XCTestCase {
 					
 					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.000368", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.000369", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
 					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.042", rewards.estimatedNextReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.cycle.description == "743", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "748", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "The Shire", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
 					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
@@ -475,7 +475,7 @@ class TzKTClientTests: XCTestCase {
 					
 					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
 					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.0499", rewards.estimatedNextReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.cycle.description == "745", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "752", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Teztillery", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
 					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)

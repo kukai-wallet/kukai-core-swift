@@ -1,111 +1,25 @@
 {
     "address": "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
     "name": "Bake Nug",
-    "logo": "https://services.tzkt.io/v1/avatars/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
-    "balance": 187878.327672,
-    "stakingBalance": 1663793.545668,
-    "stakingCapacity": 1878783.27672,
-    "maxStakingBalance": 1878783.27672,
-    "freeSpace": 214989.73105200008,
-    "fee": 0.1498,
-    "minDelegation": 5,
-    "payoutDelay": 6,
-    "payoutPeriod": 1,
-    "openForDelegation": true,
-    "estimatedRoi": 0.053012,
-    "serviceType": "tezos_only",
-    "serviceHealth": "active",
-    "payoutTiming": "stable",
-    "payoutAccuracy": "precise",
-    "audit": "62542a13d0970a602a90d40b",
-    "insuranceCoverage": 0,
-    "config": {
-        "address": "tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa",
-        "fee": [
-            {
-                "cycle": 690,
-                "value": 0.1498
-            },
-            {
-                "cycle": 551,
-                "value": 0.0795
-            },
-            {
-                "cycle": 392,
-                "value": 0.05
-            },
-            {
-                "cycle": 363,
-                "value": 0.0595
-            },
-            {
-                "cycle": 0,
-                "value": 0.0777
-            }
-        ],
-        "minDelegation": [
-            {
-                "cycle": 392,
-                "value": 5
-            },
-            {
-                "cycle": 0,
-                "value": 7.77
-            }
-        ],
-        "payoutFee": [
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ],
-        "payoutDelay": [
-            {
-                "cycle": 0,
-                "value": 6
-            }
-        ],
-        "payoutPeriod": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "minPayout": [
-            {
-                "cycle": 0,
-                "value": 0
-            }
-        ],
-        "rewardStruct": [
-            {
-                "cycle": 0,
-                "value": 981
-            }
-        ],
-        "payoutRatio": [
-            {
-                "cycle": 0,
-                "value": 666
-            }
-        ],
-        "maxStakingThreshold": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "openForDelegation": [
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ],
-        "allocationFee": [
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ]
+    "status": "active",
+    "balance": 185744.084126,
+    "features": [],
+    "delegation": {
+        "enabled": true,
+        "minBalance": 5,
+        "fee": 0.1498,
+        "capacity": 1664134.139673,
+        "freeSpace": 406832.629586,
+        "estimatedApy": 0.0621,
+        "features": []
+    },
+    "staking": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.0495,
+        "capacity": 924518.966485,
+        "freeSpace": 319824.500671,
+        "estimatedApy": 0.1389,
+        "features": []
     }
 }

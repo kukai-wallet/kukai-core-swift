@@ -1,0 +1,6 @@
+[
+    {
+        "limitOfStakingOverBaking": 5000000,
+        "edgeOfBakingOverStaking": 100000000
+    }
+]

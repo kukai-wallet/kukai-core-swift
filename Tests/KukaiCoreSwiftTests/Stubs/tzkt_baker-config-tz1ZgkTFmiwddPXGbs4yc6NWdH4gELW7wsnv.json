@@ -1,99 +1,25 @@
 {
     "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
     "name": "The Shire",
-    "logo": "https://services.tzkt.io/v1/avatars/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
-    "balance": 40340.153319,
-    "stakingBalance": 405649.076449,
-    "stakingCapacity": 400000,
-    "maxStakingBalance": 400000,
-    "freeSpace": -5649.076448999986,
-    "fee": 0.042,
-    "minDelegation": 0,
-    "payoutDelay": 1,
-    "payoutPeriod": 1,
-    "openForDelegation": true,
-    "estimatedRoi": 0.058902,
-    "serviceType": "tezos_only",
-    "serviceHealth": "active",
-    "payoutTiming": "stable",
-    "payoutAccuracy": "precise",
-    "audit": "6565bfaaa6632298f27ed779",
-    "insuranceCoverage": 0,
-    "config": {
-        "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
-        "fee": [
-            {
-                "cycle": 0,
-                "value": 0.042
-            }
-        ],
-        "minDelegation": [
-            {
-                "cycle": 0,
-                "value": 0
-            }
-        ],
-        "payoutFee": [
-            {
-                "cycle": 617,
-                "value": true
-            },
-            {
-                "cycle": 529,
-                "value": false
-            },
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ],
-        "payoutDelay": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "payoutPeriod": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "minPayout": [
-            {
-                "cycle": 0,
-                "value": 0.001
-            }
-        ],
-        "rewardStruct": [
-            {
-                "cycle": 0,
-                "value": 981
-            }
-        ],
-        "payoutRatio": [
-            {
-                "cycle": 0,
-                "value": 2
-            }
-        ],
-        "maxStakingThreshold": [
-            {
-                "cycle": 0,
-                "value": 1
-            }
-        ],
-        "openForDelegation": [
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ],
-        "allocationFee": [
-            {
-                "cycle": 0,
-                "value": true
-            }
-        ]
+    "status": "active",
+    "balance": 45149.000284,
+    "features": [],
+    "delegation": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.042,
+        "capacity": 403963.468083,
+        "freeSpace": 2876.121426,
+        "estimatedApy": 0.0700,
+        "features": []
+    },
+    "staking": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.042,
+        "capacity": 224424.148935,
+        "freeSpace": 1793.528085,
+        "estimatedApy": 0.1400,
+        "features": []
     }
 }

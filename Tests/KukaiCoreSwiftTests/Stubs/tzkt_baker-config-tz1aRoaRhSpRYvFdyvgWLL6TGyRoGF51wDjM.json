@@ -1,139 +1,25 @@
 {
-    "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
-    "name": "The Shire",
-    "logo": "https://services.tzkt.io/v1/avatars/tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
-    "balance": 5326177.599918,
-    "stakingBalance": 44473420.298689,
-    "stakingCapacity": 53261775.99918,
-    "maxStakingBalance": 53261775.99918,
-    "freeSpace": 8788355.700490996,
-    "fee": 0.15,
-    "minDelegation": 0,
-    "payoutDelay": 1,
-    "payoutPeriod": 1,
-    "openForDelegation": true,
-    "estimatedRoi": 0.053113,
-    "serviceType": "multiasset",
-    "serviceHealth": "active",
-    "payoutTiming": "stable",
-    "payoutAccuracy": "precise",
-    "audit": "601aabbe5e0a85c68fb18d13",
-    "insuranceCoverage": 0,
-    "config": {
-    "address": "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv",
-    "fee": [
-    {
-    "cycle": 559,
-    "value": 0.15
+    "address": "tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM",
+    "name": "Everstake",
+    "status": "active",
+    "balance": 5715710.484106,
+    "features": [],
+    "delegation": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.15,
+        "capacity": 42661065.27717,
+        "freeSpace": 10924398.855280,
+        "estimatedApy": 0.0621,
+        "features": []
     },
-    {
-    "cycle": 473,
-    "value": 0.109
-    },
-    {
-    "cycle": 468,
-    "value": 0.05
-    },
-    {
-    "cycle": 440,
-    "value": 0.109
-    },
-    {
-    "cycle": 437,
-    "value": 0.12
-    },
-    {
-    "cycle": 407,
-    "value": 0.15
-    },
-    {
-    "cycle": 265,
-    "value": 0.08
-    },
-    {
-    "cycle": 0,
-    "value": 0.05
+    "staking": {
+        "enabled": true,
+        "minBalance": 0,
+        "fee": 0.08,
+        "capacity": 23700591.82065,
+        "freeSpace": 20912717.444526,
+        "estimatedApy": 0.1344,
+        "features": []
     }
-    ],
-    "minDelegation": [
-    {
-    "cycle": 0,
-    "value": 0
-    }
-    ],
-    "payoutFee": [
-    {
-    "cycle": 0,
-    "value": false
-    }
-    ],
-    "payoutDelay": [
-    {
-    "cycle": 467,
-    "value": 1
-    },
-    {
-    "cycle": 466,
-    "value": 2
-    },
-    {
-    "cycle": 465,
-    "value": 3
-    },
-    {
-    "cycle": 464,
-    "value": 4
-    },
-    {
-    "cycle": 463,
-    "value": 5
-    },
-    {
-    "cycle": 0,
-    "value": 6
-    }
-    ],
-    "payoutPeriod": [
-    {
-    "cycle": 0,
-    "value": 1
-    }
-    ],
-    "minPayout": [
-    {
-    "cycle": 0,
-    "value": 0.001
-    }
-    ],
-    "rewardStruct": [
-    {
-    "cycle": 0,
-    "value": 981
-    }
-    ],
-    "payoutRatio": [
-    {
-    "cycle": 0,
-    "value": 666
-    }
-    ],
-    "maxStakingThreshold": [
-    {
-    "cycle": 0,
-    "value": 1
-    }
-    ],
-    "openForDelegation": [
-    {
-    "cycle": 0,
-    "value": true
-    }
-    ],
-    "allocationFee": [
-    {
-    "cycle": 0,
-    "value": false
-    }
-    ]
-    }
-    }
+}

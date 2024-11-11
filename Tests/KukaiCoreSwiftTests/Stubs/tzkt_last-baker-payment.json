@@ -1,12 +1,12 @@
 [
     {
         "type": "transaction",
-        "id": 1125742357250048,
-        "level": 5727733,
-        "timestamp": "2024-06-05T02:38:50Z",
-        "block": "BMLMy9rfnR45wuzxo9J9cuqwP6LWJrBjGqJ7sSTTZcRQgt5vKEW",
-        "hash": "ootitBsB6Jc9gtj8uqejR4FH4Zbm4SRn7uUnb25E8sX35s6CtcV",
-        "counter": 19165199,
+        "id": 1423979771330560,
+        "level": 7078548,
+        "timestamp": "2024-11-10T07:48:55Z",
+        "block": "BKtnHvDkMLZ9iThd88eghuEt7BgosHE8WsahQQDgnpDh6WD8UXh",
+        "hash": "op9ecyfF7KjvPrxi1y2NBEw23ooHbrtHkVuLr3RgRojc3KJtNdf",
+        "counter": 19185785,
         "sender": {
             "alias": "Baking Benjamins Payouts",
             "address": "tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h"
@@ -21,7 +21,7 @@
         "target": {
             "address": "tz1Nzj8BKu3F6KhyaJYZXEfXkyN51HBNJixi"
         },
-        "amount": 559800,
+        "amount": 926578,
         "status": "applied",
         "hasInternals": false
     }
