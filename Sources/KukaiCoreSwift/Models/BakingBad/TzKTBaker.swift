@@ -15,12 +15,12 @@ public enum TzKTBakerStatus: String, Codable {
 
 /// Object to denote the the setting parameters of the baker. Can be used seperately for both delegation and staking
 public struct TzKTBakerSettings: Codable {
-    let enabled: Bool
-    let minBalance: Decimal
-	let fee: Double
-    let capacity: Decimal
-    let freeSpace: Decimal
-    let estimatedApy: Double
+    public let enabled: Bool
+	public let minBalance: Decimal
+	public let fee: Double
+	public let capacity: Decimal
+	public let freeSpace: Decimal
+	public let estimatedApy: Double
 }
 
 /// Data representing a baker from TzKT or Baking-Bad
