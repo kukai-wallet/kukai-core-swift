@@ -11,6 +11,7 @@ import Foundation
 public enum TzKTBakerStatus: String, Codable {
 	case active
 	case closed
+	case notResponding = "not_responding"
 }
 
 /// Object to denote the the setting parameters of the baker. Can be used seperately for both delegation and staking
