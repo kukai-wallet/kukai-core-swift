@@ -854,7 +854,7 @@ public class TzKTClient {
 				
 			} else {
 				groupedData = self?.groupBalances(tokenBalances, filteringOutLiquidityTokens: []) ?? (tokens: [], nftGroups: [], recentNFTs: [])
-				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, xtzStakedBalance: tzktAccount.xtzUnstakedBalance, xtzUnstakedBalance: tzktAccount.xtzUnstakedBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
+				let account = Account(walletAddress: address, xtzBalance: tzktAccount.xtzBalance, xtzStakedBalance: tzktAccount.xtzStakedBalance, xtzUnstakedBalance: tzktAccount.xtzUnstakedBalance, tokens: groupedData.tokens, nfts: groupedData.nftGroups, recentNFTs: groupedData.recentNFTs, liquidityTokens: [], delegate: tzktAccount.delegate, delegationLevel: tzktAccount.delegationLevel)
 				
 				completion(Result.success(account))
 			}
