@@ -285,7 +285,7 @@ public class TorusAuthService: NSObject {
 		
 		if authType == .facebook, let token = accessToken, let url = URL(string: "https://graph.facebook.com/me/permissions?access_token=\(token)") {
 			networkService.delete(url: url) { result in
-				completion(Result.success(wallet))
+				DispatchQueue.main.async { completion(Result.success(wallet)) }
 			}
 		} else {
 			completion(Result.success(wallet))
