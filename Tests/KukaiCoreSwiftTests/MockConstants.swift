@@ -52,7 +52,6 @@ public struct MockConstants {
 		let secondBaseURL = config.nodeURLs[1]
 		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
-        let tzktURLMainent = configMainent.tzktURL
 		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
 		
 		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/ithacanet/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/token_balances")
@@ -100,9 +99,17 @@ public struct MockConstants {
 		var tzktDelegatorRewardsNoneURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac")
 		tzktDelegatorRewardsNoneURL.appendQueryItem(name: "limit", value: 25)
 		
+		var tzktVotingPeriodsURL = tzktURL.appendingPathComponent("v1/voting/periods")
+		tzktVotingPeriodsURL.appendQueryItem(name: "sort.desc", value: "id")
+		tzktVotingPeriodsURL.appendQueryItem(name: "limit", value: 5)
+		
+		var tzktBakerVotesURL = tzktURL.appendingPathComponent("v1/accounts/tz1abc123/operations")
+		tzktBakerVotesURL.appendQueryItem(name: "type", value: "ballot,proposal")
+		tzktBakerVotesURL.appendQueryItem(name: "limit", value: 5)
 		
 		
-        var bakingBadBakersURL = bakingBadURL.appendingPathComponent("v3/bakers")
+		
+        let bakingBadBakersURL = bakingBadURL.appendingPathComponent("v3/bakers")
         
 		var bakingBadConfigURL1 = bakingBadURL.appendingPathComponent("v3/bakers/tz1fwnfJNgiDACshK9avfRfFbMaXrs3ghoJa")
 		bakingBadConfigURL1.appendQueryItem(name: "configs", value: "true")
@@ -279,6 +286,8 @@ public struct MockConstants {
 			tzktLastBakerRewardURL5: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktLastBakerRewardURL6: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktDelegatesURL: (MockConstants.jsonStub(fromFilename: "tzkt_ghostnet-bakers"), MockConstants.http200),
+			tzktVotingPeriodsURL: (MockConstants.jsonStub(fromFilename: "tzkt_voting-periods"), MockConstants.http200),
+			tzktBakerVotesURL: (MockConstants.jsonStub(fromFilename: "tzkt_voting-transactions"), MockConstants.http200),
 			
 			// Media proxy
 			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.ipfsResponseWithHeaders),

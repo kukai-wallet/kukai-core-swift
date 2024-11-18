@@ -24,6 +24,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case partiallyConfirmed
 		case confirmed
 		case unknown
+		
+		public init(from decoder: Decoder) throws {
+			self = try .init(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+		}
 	}
 	
 	public enum TransactionType: String, Codable {
@@ -33,7 +37,13 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case staking
 		case reveal
 		case batch
+		case proposal
+		case ballot
 		case unknown
+		
+		public init(from decoder: Decoder) throws {
+			self = try .init(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+		}
 	}
 	
 	public enum TransactionSubType: String, Codable {
@@ -48,6 +58,10 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		case finaliseUnstake
 		case batch
 		case unknown
+		
+		public init(from decoder: Decoder) throws {
+			self = try .init(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+		}
 	}
 	
 	public struct TransactionError: Codable {
@@ -63,23 +77,25 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public let level: Decimal
 	public let timestamp: String
 	public let hash: String
-	public let counter: Decimal
+	public let counter: Decimal?
 	public let initiater: TzKTAddress?
-	public let sender: TzKTAddress
-	public var bakerFee: XTZAmount
-	public var storageFee: XTZAmount
-	public var allocationFee: XTZAmount
+	public let sender: TzKTAddress?
+	public var bakerFee: XTZAmount?
+	public var storageFee: XTZAmount?
+	public var allocationFee: XTZAmount?
 	public var target: TzKTAddress?
 	public let prevDelegate: TzKTAddress?
 	public let newDelegate: TzKTAddress?
 	public let baker: TzKTAddress?
-	public var amount: TokenAmount
+	public let period: TzKTVotingPeriod?
+	public var amount: TokenAmount?
 	public let parameter: [String: String]?
-	public let status: TransactionStatus
+	public let status: TransactionStatus?
 	public let hasInternals: Bool
 	public let tokenTransfersCount: Decimal?
 	public let errors: [TransactionError]?
 	public let kind: String?
+	
 	
 	public let date: Date?
 	public var tzktTokenTransfer: TzKTTokenTransfer? = nil {
@@ -96,7 +112,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - CustomStringConvertible
 	
 	public var description: String {
-		return "\nHash: \(hash),\(type.rawValue), subtype: \(subType ?? .unknown), entrypointCalled: \(entrypointCalled ?? "-"), Sender: \(sender.address), Target: \(target?.address ?? "-"), primaryToken: \(primaryToken?.balance.normalisedRepresentation ?? "-") \(primaryToken?.symbol ?? "-")\n"
+		return "\nHash: \(hash),\(type.rawValue), subtype: \(subType ?? .unknown), entrypointCalled: \(entrypointCalled ?? "-"), Sender: \(sender?.address ?? "-"), Target: \(target?.address ?? "-"), primaryToken: \(primaryToken?.balance.normalisedRepresentation ?? "-") \(primaryToken?.symbol ?? "-")\n"
 	}
 	
 	
@@ -116,7 +132,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - Codable Protocol
 	
 	public enum CodingKeys: String, CodingKey {
-		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, baker, amount, parameter, status, subType, entrypointCalled, primaryToken, hasInternals, tokenTransfersCount, errors, kind
+		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, baker, period, amount, parameter, status, subType, entrypointCalled, primaryToken, hasInternals, tokenTransfersCount, errors, kind
 	}
 	
 	/// Manually init a `TzKTTransaction`
@@ -137,6 +153,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.prevDelegate = prevDelegate
 		self.newDelegate = newDelegate
 		self.baker = baker
+		self.period = nil
 		self.amount = amount
 		self.parameter = parameter
 		self.status = status
@@ -169,6 +186,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.baker = nil
 		self.amount = from.tokenAmount()
 		self.parameter = nil
+		self.period = nil
 		self.status = .applied
 		self.hasInternals = false
 		self.tokenTransfersCount = nil
@@ -190,13 +208,14 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		level = try container.decode(Decimal.self, forKey: .level)
 		timestamp = try container.decode(String.self, forKey: .timestamp)
 		hash = try container.decode(String.self, forKey: .hash)
-		counter = try container.decode(Decimal.self, forKey: .counter)
+		counter = try container.decodeIfPresent(Decimal.self, forKey: .counter)
 		initiater = try? container.decode(TzKTAddress.self, forKey: .initiater)
-		sender = try container.decode(TzKTAddress.self, forKey: .sender)
+		sender = try container.decodeIfPresent(TzKTAddress.self, forKey: .sender)
 		target = try? container.decode(TzKTAddress.self, forKey: .target)
 		prevDelegate = try? container.decode(TzKTAddress.self, forKey: .prevDelegate)
 		newDelegate = try? container.decode(TzKTAddress.self, forKey: .newDelegate)
 		baker = try? container.decodeIfPresent(TzKTAddress.self, forKey: .baker)
+		period = try? container.decodeIfPresent(TzKTVotingPeriod.self, forKey: .period)
 		parameter = try? container.decodeIfPresent([String: String].self, forKey: .parameter)
 		
 		
@@ -215,8 +234,8 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		
 		
 		// Convert status to enum
-		let statusString = try container.decode(String.self, forKey: .status)
-		status = TransactionStatus(rawValue: statusString) ?? .unknown
+		let statusString = try? container.decode(String.self, forKey: .status)
+		status = TransactionStatus(rawValue: statusString ?? "unknown") ?? .unknown
 		
 		hasInternals = (try? container.decode(Bool.self, forKey: .hasInternals)) ?? false
 		tokenTransfersCount = try? container.decodeIfPresent(Decimal.self, forKey: .tokenTransfersCount)
@@ -250,11 +269,11 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		try container.encode(newDelegate, forKey: .newDelegate)
 		try container.encodeIfPresent(baker, forKey: .baker)
 		try container.encode(parameter, forKey: .parameter)
-		try container.encode(bakerFee.toRpcDecimal(), forKey: .bakerFee)
-		try container.encode(storageFee.toRpcDecimal(), forKey: .storageFee)
-		try container.encode(allocationFee.toRpcDecimal(), forKey: .allocationFee)
-		try container.encode(amount.toRpcDecimal(), forKey: .amount)
-		try container.encode(status.rawValue, forKey: .status)
+		try container.encodeIfPresent(bakerFee?.toRpcDecimal(), forKey: .bakerFee)
+		try container.encodeIfPresent(storageFee?.toRpcDecimal(), forKey: .storageFee)
+		try container.encodeIfPresent(allocationFee?.toRpcDecimal(), forKey: .allocationFee)
+		try container.encodeIfPresent(amount?.toRpcDecimal(), forKey: .amount)
+		try container.encodeIfPresent(status?.rawValue, forKey: .status)
 		try container.encode(hasInternals, forKey: .hasInternals)
 		try container.encode(tokenTransfersCount, forKey: .tokenTransfersCount)
 		
@@ -331,7 +350,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 			self.entrypointCalled = entrypoint
 			self.primaryToken = createPrimaryToken()
 			
-			if self.sender.address != currentWalletAddress && self.initiater?.address != currentWalletAddress {
+			if self.sender?.address != currentWalletAddress && self.initiater?.address != currentWalletAddress {
 				self.subType = .receive
 			} else {
 				self.subType = .send
@@ -384,7 +403,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		if let tokenTransfer = self.tzktTokenTransfer {
 			return Token(from: tokenTransfer)
 			
-		} else if self.amount != .zero() {
+		} else if let amount = self.amount, amount != .zero() {
 			return Token.xtz(withAmount: amount)
 			
 		} else if let token = self.getFaTokenTransferData() {

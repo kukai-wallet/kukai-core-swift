@@ -231,7 +231,7 @@ class TzKTClientTests: XCTestCase {
 					case 19:
 						XCTAssert(group.groupType == .unstake, group.groupType.rawValue)
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
-						XCTAssert(group.transactions.first?.amount.description == "1", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.transactions.first?.amount?.description == "1", group.transactions.first?.amount?.description ?? "-")
 						XCTAssert(group.transactions.first?.primaryToken?.balance.description == "1", group.transactions.first?.primaryToken?.balance.description ?? "-")
 						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
 						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
@@ -241,7 +241,7 @@ class TzKTClientTests: XCTestCase {
 					case 20:
 						XCTAssert(group.groupType == .stake, group.groupType.rawValue)
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
-						XCTAssert(group.transactions.first?.amount.description == "10", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.transactions.first?.amount?.description == "10", group.transactions.first?.amount?.description ?? "-")
 						XCTAssert(group.transactions.first?.primaryToken?.balance.description == "10", group.transactions.first?.primaryToken?.balance.description ?? "-")
 						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
 						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
@@ -251,7 +251,7 @@ class TzKTClientTests: XCTestCase {
 					case 21:
 						XCTAssert(group.groupType == .finaliseUnstake, group.groupType.rawValue)
 						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
-						XCTAssert(group.transactions.first?.amount.description == "400333", group.transactions.first?.amount.description ?? "-")
+						XCTAssert(group.transactions.first?.amount?.description == "400333", group.transactions.first?.amount?.description ?? "-")
 						XCTAssert(group.transactions.first?.primaryToken?.balance.description == "400333", group.transactions.first?.primaryToken?.balance.description ?? "-")
 						XCTAssert(group.transactions.first?.baker?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", group.transactions.first?.baker?.address ?? "-")
 						XCTAssert(group.transactions.first?.baker?.alias == "Baking Benjamins", group.transactions.first?.baker?.alias ?? "-")
@@ -531,4 +531,25 @@ class TzKTClientTests: XCTestCase {
         
         wait(for: [expectation], timeout: 120)
     }
+	
+	func testBakerVoteParticipation() {
+		let expectation = XCTestExpectation(description: "tzkt-vote-participation")
+		
+		MockConstants.shared.tzktClient.checkBakerVoteParticipation(forAddress: "tz1abc123", completion: { result in
+			switch result {
+				case .success(let votes):
+				XCTAssert(votes.count == 5, votes.count.description)
+				
+				let filterOnlyTrue = votes.filter({ $0 }).count
+				XCTAssert(filterOnlyTrue == 5, filterOnlyTrue.description)
+				
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		})
+		
+		wait(for: [expectation], timeout: 120)
+	}
 }

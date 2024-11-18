@@ -12,6 +12,11 @@ public enum TzKTBakerStatus: String, Codable {
 	case active
 	case closed
 	case notResponding = "not_responding"
+	case unknown
+	
+	public init(from decoder: Decoder) throws {
+		self = try .init(rawValue: decoder.singleValueContainer().decode(RawValue.self)) ?? .unknown
+	}
 }
 
 /// Object to denote the the setting parameters of the baker. Can be used seperately for both delegation and staking

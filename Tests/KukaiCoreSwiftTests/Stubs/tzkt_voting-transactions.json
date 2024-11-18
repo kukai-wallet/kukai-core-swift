@@ -1,0 +1,132 @@
+[
+    {
+        "type": "proposal",
+        "id": 1424735510462464,
+        "level": 7081743,
+        "timestamp": "2024-11-10T16:46:55Z",
+        "block": "BMUAvEGbaWudHBjDYCFMuzDJcLLs1hSmsQdF1U8S4U8zpYNENPB",
+        "hash": "oo9HNK3F7acy87RMh1rup4cZbHse6HXJ8Tw5CchYuqSsxmyxdfJ",
+        "period": {
+            "index": 135,
+            "epoch": 69,
+            "kind": "proposal",
+            "firstLevel": 7077889,
+            "lastLevel": 7200768
+        },
+        "proposal": {
+            "alias": "Q3NA",
+            "hash": "PsQ3NAxQC3pXSizDrKEkPHsarkKD78T58X9CXBfYaiXAi2rsvsD"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1056359484902,
+        "duplicated": false,
+        "rolls": 176
+    },
+    {
+        "type": "ballot",
+        "id": 1400304774938624,
+        "level": 6970301,
+        "timestamp": "2024-10-28T17:28:50Z",
+        "block": "BL4MmqPTHoiWBueruvxGkt1o7Gh2dnt9JSCMD3pn2cBRsJiq2dx",
+        "hash": "ooxZGNNwVGEeu2vfDS91JpQP1ZHGBCmS6DugpGPqrpTqqUdc1Le",
+        "period": {
+            "index": 134,
+            "epoch": 68,
+            "kind": "exploration",
+            "firstLevel": 6955009,
+            "lastLevel": 7077888
+        },
+        "proposal": {
+            "alias": "Qena42",
+            "hash": "PsQEna427TJJ2dYatjWS12qKihty5huvBDmNHNAgCeTzWCpF673"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1082782920428,
+        "vote": "yay",
+        "rolls": 180
+    },
+    {
+        "type": "proposal",
+        "id": 1370533865193472,
+        "level": 6834651,
+        "timestamp": "2024-10-12T22:34:45Z",
+        "block": "BMR2rdrumchY4gzLaoWLnMT7xtDbFiuDkfe2Xu95yZWGFTs5ju7",
+        "hash": "ooNcPE5PSswYDBeLvpdmRpejaGLySpGbUnxsY4gSYQevs3KTdKL",
+        "period": {
+            "index": 133,
+            "epoch": 68,
+            "kind": "proposal",
+            "firstLevel": 6832129,
+            "lastLevel": 6955008
+        },
+        "proposal": {
+            "alias": "Qena42",
+            "hash": "PsQEna427TJJ2dYatjWS12qKihty5huvBDmNHNAgCeTzWCpF673"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1050625708424,
+        "duplicated": false,
+        "rolls": 175
+    },
+    {
+        "type": "ballot",
+        "id": 1344537283788800,
+        "level": 6715164,
+        "timestamp": "2024-09-29T00:49:25Z",
+        "block": "BLPvW7dP5XtFJvPNWG9ZUmWvAuVSnMaS23zuL6UQ2E1ScersnM1",
+        "hash": "oo82EqPcWiCfFqmUGs4Qpzai3zkNTB8s1d5hwhMcL9TAo59ynfC",
+        "period": {
+            "index": 132,
+            "epoch": 67,
+            "kind": "exploration",
+            "firstLevel": 6709249,
+            "lastLevel": 6832128
+        },
+        "proposal": {
+            "alias": "Qena",
+            "hash": "PsqenaVwjhUUm1JJXbrZTB1T5RVyQHBGDricbLPXjcZkxogDeTJ"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1038587747676,
+        "vote": "yay",
+        "rolls": 173
+    },
+    {
+        "type": "proposal",
+        "id": 1323030133342208,
+        "level": 6616105,
+        "timestamp": "2024-09-17T11:52:00Z",
+        "block": "BL3PDY8bExNB2jqPNtBy34rbAgHooe1xey1jWF8xuo8DwhYqPK8",
+        "hash": "opCb5wZP8H57oWrYofSpnt8ziGKQqy5CzCxS5fAdJz3C9ppFSKj",
+        "period": {
+            "index": 131,
+            "epoch": 67,
+            "kind": "proposal",
+            "firstLevel": 6586369,
+            "lastLevel": 6709248
+        },
+        "proposal": {
+            "alias": "Qena",
+            "hash": "PsqenaVwjhUUm1JJXbrZTB1T5RVyQHBGDricbLPXjcZkxogDeTJ"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 992908014038,
+        "duplicated": false,
+        "rolls": 165
+    }
+]

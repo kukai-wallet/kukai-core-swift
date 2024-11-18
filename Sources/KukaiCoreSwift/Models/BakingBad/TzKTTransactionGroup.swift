@@ -36,7 +36,7 @@ public struct TzKTTransactionGroup: Codable, Hashable, Identifiable, CustomStrin
 		self.hash = first.hash
 		self.transactions = transactions
 		self.groupType = .unknown
-		self.status = first.status
+		self.status = first.status ?? .unknown
 		
 		
 		if transactions.count == 1 {

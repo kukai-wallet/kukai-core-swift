@@ -84,7 +84,7 @@ final class TzKTTransactionTests: XCTestCase {
 		let placeholder2 = TzKTTransaction.placeholder(withStatus: .unconfirmed, id: 456, opHash: "def456", type: .transaction, counter: 1, fromWallet: source, destination: TzKTAddress(alias: nil, address: "tz1def"), xtzAmount: .init(fromNormalisedAmount: 4.17, decimalPlaces: 6), parameters: nil, primaryToken: nil, baker: nil, kind: nil)
 		
 		XCTAssert(placeholder1.newDelegate?.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", placeholder1.newDelegate?.address ?? "-")
-		XCTAssert(placeholder2.amount.description == "4.17", placeholder2.amount.description)
+		XCTAssert(placeholder2.amount?.description == "4.17", placeholder2.amount?.description ?? "-")
 	}
 	
 	func testEncoding() {

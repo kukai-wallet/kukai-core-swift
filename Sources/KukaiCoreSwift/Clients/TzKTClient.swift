@@ -147,6 +147,76 @@ public class TzKTClient {
 	}
 	
 	
+	
+	// MARK: Voting
+	
+	
+	/// Get the last N voting periods
+	public func votingPeriods(limit: Int = 5, completion: @escaping ((Result<[TzKTVotingPeriod], KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/voting/periods")
+		url.appendQueryItem(name: "sort.desc", value: "id")
+		url.appendQueryItem(name: "limit", value: limit)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTVotingPeriod].self, completion: completion)
+	}
+	
+	/// Get the last N transactions a given baker has performed related to voting (e.g. casting ballot or upvoting a proposal)
+	public func bakerVotes(forAddress: String, limit: Int = 5, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
+		url.appendQueryItem(name: "type", value: "ballot,proposal")
+		url.appendQueryItem(name: "limit", value: limit)
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTTransaction].self, completion: completion)
+	}
+	
+	/// Check how many of the last N voting periods that a given baker has particiapted in. This does not track what way the baker voted, merely that they cast a ballot one way or the other, or upvoted a proposal
+	public func checkBakerVoteParticipation(forAddress: String, limit: Int = 5, completion: @escaping ((Result<[Bool], KukaiError>) -> Void)) {
+		let dispatchGroupVoting = DispatchGroup()
+		dispatchGroupVoting.enter()
+		dispatchGroupVoting.enter()
+		
+		var periods: [TzKTVotingPeriod] = []
+		var transactions: [TzKTTransaction] = []
+		
+		votingPeriods { votingResult in
+			guard let votingRes = try? votingResult.get() else {
+				completion(Result.failure(votingResult.getFailure()))
+				return
+			}
+			
+			periods = votingRes
+			dispatchGroupVoting.leave()
+		}
+		
+		bakerVotes(forAddress: forAddress) { votesResult in
+			guard let votesRes = try? votesResult.get() else {
+				completion(Result.failure(votesResult.getFailure()))
+				return
+			}
+			
+			transactions = votesRes
+			dispatchGroupVoting.leave()
+		}
+		
+		
+		dispatchGroupVoting.notify(queue: .global(qos: .background)) {
+			var results: [Bool] = []
+			for period in periods {
+				if transactions.contains(where: { $0.period?.index == period.index }) {
+					results.append(true)
+				} else {
+					results.append(false)
+				}
+			}
+			
+			DispatchQueue.main.async { completion(Result.success(results)) }
+		}
+	}
+	
+	
+	
 	// MARK: Baking and Rewards
 	
 	/**
@@ -332,16 +402,16 @@ public class TzKTClient {
 				
 				
 				// Figure out missing details for last transaction received, if relevant
-				if let tx = mostRecentTransaction {
+				if let tx = mostRecentTransaction, let senderAddress = tx.sender?.address {
 					let cycleIndexPaymentReceived = TzKTClient.cycleForLevel(cycles: currentCycles, level: tx.level)?.index ?? 0
 					let amount = (tx.amount as? XTZAmount) ?? .zero()
 					var bakerConfig = TzKTBaker(address: "", name: "")
 					
-					if let config = bakerConfigs[tx.sender.address] {
+					if let config = bakerConfigs[senderAddress] {
 						bakerConfig = config
 					} else {
 						for pair in bakerPayoutAddresses {
-							if pair.value.address == tx.sender.address, let config = bakerConfigs[pair.key] {
+							if pair.value.address == senderAddress, let config = bakerConfigs[pair.key] {
 								bakerConfig = config
 							}
 						}
@@ -351,7 +421,7 @@ public class TzKTClient {
 					let avatarURL = TzKTClient.avatarURL(forToken: bakerConfig.address)
 					let fee = bakerConfig.delegation.fee
 					let indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived)
-					previousReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: tx.sender.address, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date(), meetsMinDelegation: true)
+					previousReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: senderAddress, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date(), meetsMinDelegation: true)
 				}
 				
 			} else if currentDelegatorRewards.count > 0 {
@@ -1069,7 +1139,7 @@ public class TzKTClient {
 		for tran in transactions {
 			
 			// Filter out internal operations
-			if tran.hasInternals == false && (tran.sender.address != currentWalletAddress && tran.target?.address != currentWalletAddress) {
+			if tran.hasInternals == false && (tran.sender?.address != currentWalletAddress && tran.target?.address != currentWalletAddress) {
 				continue
 			}
 			
@@ -1110,7 +1180,7 @@ public class TzKTClient {
 		// Split out any operation that didn't come from the wallet, as this is likely a receive, which we want to display seperately
 		var indexesToRemove: [Int] = []
 		for (index, tempTran) in tempTrans.enumerated() {
-			if tempTran.sender.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: [tempTran], currentWalletAddress: currentWalletAddress) {
+			if tempTran.sender?.address != currentWalletAddress, let group = TzKTTransactionGroup(withTransactions: [tempTran], currentWalletAddress: currentWalletAddress) {
 				indexesToRemove.append(index)
 				tempGroups.append(group)
 			}
