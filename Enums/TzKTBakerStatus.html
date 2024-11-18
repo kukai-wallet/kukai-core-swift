@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>TzKTBakerConfigIntValue Structure Reference</title>
+    <title>TzKTBakerStatus Enumeration Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Struct/TzKTBakerConfigIntValue" class="dashAnchor"></a>
-    <a title="TzKTBakerConfigIntValue Structure Reference"></a>
+    <a name="//apple_ref/swift/Enum/TzKTBakerStatus" class="dashAnchor"></a>
+    <a title="TzKTBakerStatus Enumeration Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (100% documented)</p>
@@ -30,9 +30,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">Index</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Structs.html">Structures</a>
+        <a href="../Enums.html">Enumerations</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        KukaiCoreSwift.TzKTBakerConfigIntValue Structure Reference
+        KukaiCoreSwift.TzKTBakerStatus Enumeration Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -293,13 +293,7 @@
                 <a href="../Enums/TorusAuthProvider.html">TorusAuthProvider</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Enums/TzKTBakerAccuracy.html">TzKTBakerAccuracy</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/TzKTBakerHealth.html">TzKTBakerHealth</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/TzKTBakerTiming.html">TzKTBakerTiming</a>
+                <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -626,16 +620,7 @@
                 <a href="../Structs/TzKTBaker.html">TzKTBaker</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Structs/TzKTBakerConfig.html">TzKTBakerConfig</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/TzKTBakerConfigDoubleValue.html">TzKTBakerConfigDoubleValue</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/TzKTBakerConfigIntValue.html">TzKTBakerConfigIntValue</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/TzKTBakerConfigRewardStruct.html">TzKTBakerConfigRewardStruct</a>
+                <a href="../Structs/TzKTBakerSettings.html">TzKTBakerSettings</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTBalance.html">TzKTBalance</a>
@@ -715,15 +700,16 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>TzKTBakerConfigIntValue</h1>
+            <h1>TzKTBakerStatus</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBakerConfigIntValue</span> <span class="p">:</span> <span class="kt">Codable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TzKTBakerStatus</span> <span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">Codable</span></code></pre>
 
                 </div>
               </div>
-            
+            <p>Whether the baker is actively running or not</p>
+
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -731,9 +717,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift23TzKTBakerConfigIntValueV5cycleSivp"></a>
-                    <a name="//apple_ref/swift/Property/cycle" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift23TzKTBakerConfigIntValueV5cycleSivp">cycle</a>
+                    <a name="/s:14KukaiCoreSwift15TzKTBakerStatusO6activeyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/active" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTBakerStatusO6activeyA2CmF">active</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -747,7 +733,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">cycle</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">active</span></code></pre>
 
                         </div>
                       </div>
@@ -757,9 +743,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift23TzKTBakerConfigIntValueV5valueSivp"></a>
-                    <a name="//apple_ref/swift/Property/value" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift23TzKTBakerConfigIntValueV5valueSivp">value</a>
+                    <a name="/s:14KukaiCoreSwift15TzKTBakerStatusO6closedyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/closed" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTBakerStatusO6closedyA2CmF">closed</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -773,7 +759,33 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">closed</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift15TzKTBakerStatusO13notRespondingyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/notResponding" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTBakerStatusO13notRespondingyA2CmF">notResponding</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">notResponding</span> <span class="o">=</span> <span class="s">"not_responding"</span></code></pre>
 
                         </div>
                       </div>
@@ -785,7 +797,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

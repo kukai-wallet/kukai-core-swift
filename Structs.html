@@ -291,13 +291,7 @@
                 <a href="Enums/TorusAuthProvider.html">TorusAuthProvider</a>
               </li>
               <li class="nav-group-task">
-                <a href="Enums/TzKTBakerAccuracy.html">TzKTBakerAccuracy</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Enums/TzKTBakerHealth.html">TzKTBakerHealth</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Enums/TzKTBakerTiming.html">TzKTBakerTiming</a>
+                <a href="Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="Enums/WalletCacheError.html">WalletCacheError</a>
@@ -624,16 +618,7 @@
                 <a href="Structs/TzKTBaker.html">TzKTBaker</a>
               </li>
               <li class="nav-group-task">
-                <a href="Structs/TzKTBakerConfig.html">TzKTBakerConfig</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/TzKTBakerConfigDoubleValue.html">TzKTBakerConfigDoubleValue</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/TzKTBakerConfigIntValue.html">TzKTBakerConfigIntValue</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/TzKTBakerConfigRewardStruct.html">TzKTBakerConfigRewardStruct</a>
+                <a href="Structs/TzKTBakerSettings.html">TzKTBakerSettings</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/TzKTBalance.html">TzKTBalance</a>
@@ -1173,6 +1158,34 @@ This struct abstract the developer away from knowing all these details, and inst
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14KukaiCoreSwift17TzKTBakerSettingsV"></a>
+                    <a name="//apple_ref/swift/Struct/TzKTBakerSettings" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift17TzKTBakerSettingsV">TzKTBakerSettings</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Object to denote the the setting parameters of the baker. Can be used seperately for both delegation and staking</p>
+
+                        <a href="Structs/TzKTBakerSettings.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBakerSettings</span> <span class="p">:</span> <span class="kt">Codable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14KukaiCoreSwift9TzKTBakerV"></a>
                     <a name="//apple_ref/swift/Struct/TzKTBaker" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift9TzKTBakerV">TzKTBaker</a>
@@ -1192,116 +1205,6 @@ This struct abstract the developer away from knowing all these details, and inst
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBaker</span> <span class="p">:</span> <span class="kt">Codable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTBakerConfigV"></a>
-                    <a name="//apple_ref/swift/Struct/TzKTBakerConfig" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTBakerConfigV">TzKTBakerConfig</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The bakers config file for details on when fees, min delegation etc change</p>
-
-                        <a href="Structs/TzKTBakerConfig.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBakerConfig</span> <span class="p">:</span> <span class="kt">Codable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift26TzKTBakerConfigDoubleValueV"></a>
-                    <a name="//apple_ref/swift/Struct/TzKTBakerConfigDoubleValue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift26TzKTBakerConfigDoubleValueV">TzKTBakerConfigDoubleValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                        <a href="Structs/TzKTBakerConfigDoubleValue.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBakerConfigDoubleValue</span> <span class="p">:</span> <span class="kt">Codable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift23TzKTBakerConfigIntValueV"></a>
-                    <a name="//apple_ref/swift/Struct/TzKTBakerConfigIntValue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift23TzKTBakerConfigIntValueV">TzKTBakerConfigIntValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                        <a href="Structs/TzKTBakerConfigIntValue.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBakerConfigIntValue</span> <span class="p">:</span> <span class="kt">Codable</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift27TzKTBakerConfigRewardStructV"></a>
-                    <a name="//apple_ref/swift/Struct/TzKTBakerConfigRewardStruct" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift27TzKTBakerConfigRewardStructV">TzKTBakerConfigRewardStruct</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Baker config payout flags</p>
-
-                        <a href="Structs/TzKTBakerConfigRewardStruct.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TzKTBakerConfigRewardStruct</span> <span class="p">:</span> <span class="kt">Codable</span></code></pre>
 
                         </div>
                       </div>
@@ -3303,7 +3206,7 @@ Comes with helpers to extract meaning from RPC errors, optionally includes all t
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-08)</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
