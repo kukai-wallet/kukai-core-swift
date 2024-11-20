@@ -100,7 +100,7 @@ public class OperationFactory {
 	- parameter amount: The XTZ amount to stake.
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func stakeOperation(from: String, amount: XTZAmount) -> [Operation] {
+	public static func stakeOperation(from: String, amount: TokenAmount) -> [Operation] {
 		return [OperationTransaction(amount: amount, source: from, destination: from, parameters: ["entrypoint": "stake", "value": ["prim": "Unit"]])]
 	}
 	
@@ -110,7 +110,7 @@ public class OperationFactory {
 	- parameter amount: The XTZ amount to unstake.
 	- returns: An array of `Operation` subclasses.
 	*/
-	public static func unstakeOperation(from: String, amount: XTZAmount) -> [Operation] {
+	public static func unstakeOperation(from: String, amount: TokenAmount) -> [Operation] {
 		return [OperationTransaction(amount: amount, source: from, destination: from, parameters: ["entrypoint": "unstake", "value": ["prim": "Unit"]])]
 	}
 	
