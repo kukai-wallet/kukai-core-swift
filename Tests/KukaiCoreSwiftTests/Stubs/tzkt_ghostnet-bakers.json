@@ -1,242 +1,322 @@
 [
     [
-        "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP",
-        "ECAD Labs Baker",
-        10060293577420,
-        31142143302756
-    ],
-    [
-        "tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8",
-        "Dictator Baker",
-        4486212451244,
-        23091259702414
-    ],
-    [
-        "tz1V16tR1LMKRernkmXzngkfznmEcTGXwDuk",
-        "Marigold Baker",
-        13183011388534,
-        13243756989093
+        "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD",
+        "Baking Benjamins",
+        76085528855595,
+        105993254372738,
+        5000000,
+        330000000
     ],
     [
         "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
         "A Kishino",
-        5881955197553,
-        11655343838702
+        55322835865345,
+        96523706745808,
+        5000000,
+        100000000
     ],
     [
-        "tz1Qf1pSbJzMN4VtGFfVJRgbXhBksRv36TxW",
-        "Oxhead Alpha Baker",
-        9888675694815,
-        9906234180122
-    ],
-    [
-        "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD",
-        "Baking Benjamins",
-        1028462430292,
-        7130285787757
-    ],
-    [
-        "tz1iZ9LkpAhN8X1L6RpBtfy3wxpEWzFrXz8j",
-        "StakeNow",
-        2695575433546,
-        5759574257580
-    ],
-    [
-        "tz1PirbogVqfmBT9XCuYJ1KnDx4bnMSYfGru",
-        "NL PB",
-        3522343691870,
-        3538544711938
-    ],
-    [
-        "tz1cg5EqC3WdZgRSvGJeW328S4KQNrT4jvyv",
-        "Albin",
-        3122575955130,
-        3127782448333
+        "tz3ZmB8oWUmi8YZXgeRpgAcPnEMD8VgUa4Ve",
+        "Tezos Foundation Ghost Baker",
+        69508922504016,
+        69545710105107,
+        5000000,
+        1000000000
     ],
     [
         "tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs",
         "Marco S",
-        2540340822469,
-        2969217166076
+        57752598176630,
+        58181474520237,
+        null,
+        null
     ],
     [
-        "tz3ZmB8oWUmi8YZXgeRpgAcPnEMD8VgUa4Ve",
+        "tz1PZY3tEWmXGasYeehXYqwXuw2Z3iZ6QDnA",
         null,
-        2781232972938,
-        2783229973938
+        40377408905689,
+        40388738486733,
+        5000000,
+        900000000
     ],
     [
         "tz1NiaviJwtMbpEcNqSP6neeoBYj8Brb3QPv",
         "Pierrick",
-        2472559733811,
-        2498432420093
+        31404868219848,
+        31436769226006,
+        null,
+        null
     ],
     [
-        "tz1M9b1sKoh5GB7AiBiqdMrjMMyvuhsZua5n",
+        "tz1cg5EqC3WdZgRSvGJeW328S4KQNrT4jvyv",
+        "Albin",
+        27247720175507,
+        27285655224179,
         null,
-        2172186503979,
-        2258792184332
+        null
+    ],
+    [
+        "tz1UMMZHpwmrQBHjAdwcL8uMe3fjZSecEz3F",
+        "Sagotch",
+        26679881284052,
+        26691881283772,
+        null,
+        null
+    ],
+    [
+        "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP",
+        "ECAD Labs Baker",
+        4103471371759,
+        25145730077627,
+        null,
+        null
     ],
     [
         "tz1TGKSrZrBpND3PELJ43nVdyadoeiM1WMzb",
         "Germán",
-        2079854118182,
-        2159163835554
-    ],
-    [
-        "tz1YtjpWwWsTzjoRpSi56eTQnUdomTAtFJih",
-        "Blockshard",
-        604118004969,
-        1728113653050
-    ],
-    [
-        "tz1NFs6yP2sXd5vAAbR43bbDRpV2nahDZope",
-        null,
-        1664497518513,
-        1664510518513
+        19252056329269,
+        19332000921626,
+        5000000,
+        1000000000
     ],
     [
         "tz1bQMn5xYFbX6geRxqvuAiTywsCtNywawxH",
         null,
-        820578383417,
-        1632825324155
-    ],
-    [
-        "tz1e42w8ZaGAbM3gucbBy8iRypdbnqUj7oWY",
-        "Kwelxá;:lxw",
-        1495352388201,
-        1495352388201
-    ],
-    [
-        "tz3btDQsDkqq2G7eBdrrLqetaAfLVw6BnPez",
-        null,
-        625084837358,
-        1293301529496
-    ],
-    [
-        "tz1VPHFLg6A5G97X37eN1xP7g7qmHQigZLdc",
-        null,
-        1119006956499,
-        1119006956499
-    ],
-    [
-        "tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD",
-        "ECAD Labs",
-        633111111881,
-        662485243158
-    ],
-    [
-        "tz1XGs8fKHXSoMmQ2Bh7Jmmn1rBFEa3z124B",
-        null,
-        422438704691,
-        650274814941
+        15927998156387,
+        16829264259598,
+        5000000,
+        1000000000
     ],
     [
         "tz1XMiZwHpHZ8a1AfwRWKfzLskJgZNyV8PHs",
         "V XTZMaster",
-        417030977920,
-        420945765614
+        14801582094408,
+        14829718365609,
+        5000000,
+        200000000
     ],
     [
-        "tz1NGS7FEGGfEFp5XRVkHBqVqSQ8VuumF9j3",
-        null,
-        327237335197,
-        365226335197
+        "tz1YtjpWwWsTzjoRpSi56eTQnUdomTAtFJih",
+        "Blockshard",
+        8283832031184,
+        14728115821449,
+        5000000,
+        200000000
     ],
     [
-        "tz1XZ5mH65EnsEiJNXTZ1CLufzm9TowbHqjr",
+        "tz1iZ9LkpAhN8X1L6RpBtfy3wxpEWzFrXz8j",
+        "StakeNow",
+        7924247725557,
+        11000411349604,
         null,
-        181651291038,
-        181651291038
+        null
+    ],
+    [
+        "tz1ha7kscNYSgJ76k5gZD8mhBueCv3gqfMsA",
+        null,
+        8974869790333,
+        10493593208857,
+        5000000,
+        150000000
+    ],
+    [
+        "tz1gjJfsjbB2ZwBfG7SiCxXUKWLvyLEEvP7U",
+        "Tez Nebraska",
+        8974588230640,
+        9353512806546,
+        5000000,
+        30000000
+    ],
+    [
+        "tz3btDQsDkqq2G7eBdrrLqetaAfLVw6BnPez",
+        null,
+        5558159409947,
+        8464417084296,
+        null,
+        null
+    ],
+    [
+        "tz1M9b1sKoh5GB7AiBiqdMrjMMyvuhsZua5n",
+        null,
+        6809974345510,
+        6999245462769,
+        5000000,
+        100000000
+    ],
+    [
+        "tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD",
+        "ECAD Labs",
+        5509508585126,
+        5564113878908,
+        5000000,
+        1000000000
+    ],
+    [
+        "tz1ccniXhg7WdHVJfvnXMVMihxitQTijQeEd",
+        null,
+        4915897728416,
+        5357390557449,
+        5000000,
+        100000000
+    ],
+    [
+        "tz1N29q5T3jJ2i1JEWHax7q1NRkDMADj6fof",
+        "Capt Stake's Test Baker",
+        2481773409999,
+        2481773409999,
+        5000000,
+        100000000
+    ],
+    [
+        "tz1huPxQctUreu3JEVjPhtUqcqKT9knxp6Tu",
+        null,
+        2465767541271,
+        2465767541271,
+        null,
+        null
     ],
     [
         "tz3eP8NTdMvV1GxNqA1E6uYFX6KTWpRPLY16",
         null,
-        170477416117,
-        180477416117
+        2443062362907,
+        2455230853518,
+        null,
+        null
+    ],
+    [
+        "tz1iqPCdikxC4xAtg1XgbnmKZ9DFrVHMGbdD",
+        null,
+        1275076757149,
+        1275076757149,
+        null,
+        null
     ],
     [
         "tz3MqMeWuG1Ess8AWuQf1MXRNqK8DpicGcMR",
         null,
-        168188795728,
-        179114407756
+        1026170313307,
+        1037095925335,
+        null,
+        null
     ],
     [
         "tz1TAuZaNgQz3GpQVLegbNC8V9vWoGzsQcWB",
         null,
-        173573789310,
-        173573789310
+        1024564055527,
+        1024564055527,
+        null,
+        null
     ],
     [
-        "tz3cpZyzsqEMk5RGHYL7m7obnLFtq7LxvCLA",
+        "tz1eop37r13zgJncsMBrir1M3bu3g3HV6oXY",
         null,
-        72588579437,
-        163452601650
-    ],
-    [
-        "tz1PAs5pbwLgS42JBVEtFETu4Hw6bhJP7XwA",
-        null,
-        100066873480,
-        129052658242
-    ],
-    [
-        "tz1e7uhpwmiKp8Yd2KwFwmVhoT31L478KUe3",
-        null,
-        104377208446,
-        117921871213
+        530451952985,
+        710221796940,
+        5000000,
+        150000000
     ],
     [
         "tz3f86ncuuXnaGBZZAXi8CDrQ4ASVgoFUT7p",
         null,
-        114470839635,
-        114470839635
+        683595312158,
+        683595312158,
+        null,
+        null
     ],
     [
         "tz1MbwKSdbL5qyqhVNw9kafZjMVZKuM7EjHj",
         null,
-        53527644143,
-        69535508800
+        435173111844,
+        515750987649,
+        10000000,
+        50000000
     ],
     [
-        "tz1e9v8ifaAZqvuqzffqUVeL7FnvtkZdSJMg",
+        "tz1T1jwPTXSA5kfBB9WFYgj3uW2XirqPq384",
         null,
-        65089798977,
-        65089798977
+        207286298159,
+        326699166524,
+        5000000,
+        50000000
     ],
     [
-        "tz1c5qXpNDh4RA3Wb4kwSKjxM2EgEdYNS8Uv",
+        "tz1e7uhpwmiKp8Yd2KwFwmVhoT31L478KUe3",
         null,
-        29857014008,
-        38519742840
+        270412890836,
+        293138043462,
+        5000000,
+        150000000
     ],
     [
-        "tz1baker3x4XiTAigp2UjoSnbFXFyegU8SWT",
+        "tz1cexSjeNiYmLDkzEXBCi3fy7DhJ7TyrV2T",
         null,
-        12873938732,
-        22876443559
+        78800842831,
+        208693170366,
+        5000000,
+        100000000
+    ],
+    [
+        "tz1ZsNfzL1VoVtKNZJgZMUYPVe6Y4vhq8Dvu",
+        null,
+        156255008707,
+        156255008707,
+        null,
+        null
+    ],
+    [
+        "tz1NoaANNo3968ii9mGntwFNQgteBS63ThNp",
+        null,
+        150531223591,
+        150531223591,
+        null,
+        null
+    ],
+    [
+        "tz1b5zY87MngtSCEH9w6Dxqoq5tFo2iHbeGz",
+        null,
+        119746009318,
+        120125995768,
+        5000000,
+        1000000000
     ],
     [
         "tz2C87aV3ugBdkeKyU1YxcLM7MbvS4utDCQW",
         null,
-        16343948545,
-        16363701952
+        112733400774,
+        113755311402,
+        null,
+        null
     ],
     [
-        "tz1hD7VdzRpWG3nmYpCyW2gNc8mQNs3TCgxu",
+        "tz1Rwf85671wFKxHr2oaasdPs6ym2m2evzT4",
         null,
-        14817171031,
-        14817171031
+        72356592032,
+        85056591592,
+        null,
+        null
     ],
     [
-        "tz1MX9yjNbXx3VEbu7Vn8BTSziqkjP6gEhKc",
+        "tz3bzRAYNfzZ9oTrStppPS2Y4jBDqSHMwGKN",
         null,
-        8437342297,
-        14438341120
+        16985360256,
+        35285359889,
+        5000000,
+        1000000000
     ],
     [
-        "tz1Seuur37snYmUwidyTYdkK3eBxpMk2ip8P",
+        "tz3ee6FAz6sbks2o5FuaDVEsr6kRfdLLBYRv",
         null,
-        13220775826,
-        13220775826
+        34282836920,
+        34282836920,
+        null,
+        null
+    ],
+    [
+        "tz1ipKGZ6YnRd4UVgzqkqNqqDA7b4XYGSfGf",
+        null,
+        23102841826,
+        23102841826,
+        5000000,
+        10000000
     ]
 ]

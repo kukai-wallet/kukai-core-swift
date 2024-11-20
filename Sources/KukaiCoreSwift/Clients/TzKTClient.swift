@@ -231,7 +231,7 @@ public class TzKTClient {
 		} else {
 			var url = config.tzktURL
 			url.appendPathComponent("v1/delegates")
-			url.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")
+			url.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
 			url.appendQueryItem(name: "active", value: "true")
 			url.appendQueryItem(name: "sort.desc", value: "stakingBalance")
 			url.appendQueryItem(name: "limit", value: 10)
@@ -263,46 +263,82 @@ public class TzKTClient {
 	 Call https://api.baking-bad.org/v2/bakers/...?configs=true to get the config settings for the given baker
 	 Then call tzkt api: v1/operations/set_delegate_parameters... to fetch details on staking config (limitOfStakingOverBaking, edgeOfBakingOverStaking)
 	 */
-	public func bakerConfig(forAddress: String, completion: @escaping ((Result<TzKTBaker, KukaiError>) -> Void)) {
-		guard let url = URL(string: "https://api.baking-bad.org/v3/bakers/\(forAddress)") else {
-			completion(Result.failure(KukaiError.unknown()))
-			return
-		}
+	public func bakerConfig(forAddress: String, forceMainnet: Bool = false, completion: @escaping ((Result<TzKTBaker, KukaiError>) -> Void)) {
 		
-		var tempURL = url
-		tempURL.appendQueryItem(name: "configs", value: "true")
 		
-		networkService.request(url: tempURL, isPOST: false, withBody: nil, forReturnType: TzKTBaker.self) { [weak self] result in
-			guard let res = try? result.get() else {
-				completion(Result.failure(result.getFailure()))
+		// TzKT still relies on the baking bad API to deliver the public baker info on mainnet
+		if config.networkType == .mainnet || forceMainnet {
+			guard let url = URL(string: "https://api.baking-bad.org/v3/bakers/\(forAddress)") else {
+				completion(Result.failure(KukaiError.unknown()))
 				return
 			}
 			
-			var stakingUrl = self?.config.tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
-			stakingUrl?.appendQueryItem(name: "sender", value: forAddress)
-			stakingUrl?.appendQueryItem(name: "status", value: "applied")
-			stakingUrl?.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
-			stakingUrl?.appendQueryItem(name: "sort.desc", value: "id")
-			stakingUrl?.appendQueryItem(name: "limit", value: 1)
+			var tempURL = url
+			tempURL.appendQueryItem(name: "configs", value: "true")
 			
-			guard let sURL = stakingUrl else {
-				completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidURL)))
-				return
-			}
-			
-			self?.networkService.request(url: sURL, isPOST: false, withBody: nil, forReturnType: [[String: Decimal]].self) { result2 in
-				guard let res2 = try? result2.get() else {
-					completion(Result.failure(result2.getFailure()))
+			networkService.request(url: tempURL, isPOST: false, withBody: nil, forReturnType: TzKTBaker.self) { [weak self] result in
+				guard let res = try? result.get() else {
+					completion(Result.failure(result.getFailure()))
 					return
 				}
 				
-				var baker = res
-				if res2.count > 0, let limit = res2.first?["limitOfStakingOverBaking"], let edge = res2.first?["edgeOfBakingOverStaking"] {
-					baker.limitOfStakingOverBaking = limit
-					baker.limitOfStakingOverBaking = edge
+				var stakingUrl = self?.config.tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
+				stakingUrl?.appendQueryItem(name: "sender", value: forAddress)
+				stakingUrl?.appendQueryItem(name: "status", value: "applied")
+				stakingUrl?.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+				stakingUrl?.appendQueryItem(name: "sort.desc", value: "id")
+				stakingUrl?.appendQueryItem(name: "limit", value: 1)
+				
+				guard let sURL = stakingUrl else {
+					completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidURL)))
+					return
 				}
 				
-				completion(Result.success(baker))
+				self?.networkService.request(url: sURL, isPOST: false, withBody: nil, forReturnType: [[String: Decimal]].self) { result2 in
+					guard let res2 = try? result2.get() else {
+						completion(Result.failure(result2.getFailure()))
+						return
+					}
+					
+					var baker = res
+					if res2.count > 0, let limit = res2.first?["limitOfStakingOverBaking"], let edge = res2.first?["edgeOfBakingOverStaking"] {
+						baker.limitOfStakingOverBaking = limit
+						baker.limitOfStakingOverBaking = edge
+					}
+					
+					completion(Result.success(baker))
+				}
+			}
+			
+			
+		} else {
+			var url = config.tzktURL
+			url.appendPathComponent("v1/delegates/\(forAddress)")
+			
+			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: Data.self) { result in
+				guard let res = try? result.get() else {
+					completion(Result.failure(result.getFailure()))
+					return
+				}
+				
+				if let json = try? JSONSerialization.jsonObject(with: res) as? [String: Any],
+					let address = json["address"],
+					let alias = json["alias"],
+					let balance = json["balance"],
+					let stakingBalance = json["stakingBalance"],
+					let limit = json["limitOfStakingOverBaking"],
+					let edge = json["edgeOfBakingOverStaking"] {
+					
+					let dataArray: [Any] = [address, alias, balance, stakingBalance, limit, edge]
+					if let baker = TzKTBaker.fromTestnetArray(dataArray) {
+						completion(Result.success(baker))
+					} else {
+						completion(Result.failure(KukaiError.unknown(withString: "Unable to parse testnet baker array")))
+					}
+					
+				} else {
+					completion(Result.failure(KukaiError.unknown(withString: "Unable to parse testnet baker array")))
+				}
 			}
 		}
 	}
@@ -321,7 +357,7 @@ public class TzKTClient {
 	/**
 	 Make many different calls to attempt to figure out the previous reward the user should have received, and the next potential reward
 	 */
-	public func estimateLastAndNextReward(forAddress: String, delegate: TzKTAccountDelegate, completion: @escaping ((Result<AggregateRewardInformation, KukaiError>) -> Void)) {
+	public func estimateLastAndNextReward(forAddress: String, delegate: TzKTAccountDelegate, forceMainnet: Bool = false, completion: @escaping ((Result<AggregateRewardInformation, KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
 		
 		var currentCycles: [TzKTCycle] = []
@@ -349,7 +385,7 @@ public class TzKTClient {
 			// fetch baker configs in a loop
 			for bakerAddress in uniqueBakers {
 				dispatchGroup.enter()
-				self?.bakerConfig(forAddress: bakerAddress.address, completion: { bakerResult in
+				self?.bakerConfig(forAddress: bakerAddress.address, forceMainnet: forceMainnet, completion: { bakerResult in
 					guard let bakerRes = try? bakerResult.get() else {
 						DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get baker config"))) }
 						return

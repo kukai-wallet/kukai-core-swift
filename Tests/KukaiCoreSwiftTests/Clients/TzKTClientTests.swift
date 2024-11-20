@@ -369,11 +369,45 @@ class TzKTClientTests: XCTestCase {
 		XCTAssert(url?.absoluteString == "https://services.tzkt.io/v1/logos/KT1abc123.png", url?.absoluteString ?? "-")
 	}
 	
-	func testEstimateRewards() {
+	func testEstimateRewardsDelegateOnly() {
 		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewards")
 		let delegate = TzKTAccountDelegate(alias: "Baking Benjamins", address: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur", active: true)
 		
-		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate) { result in
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate, forceMainnet: true) { result in
+			switch result {
+				case .success(let rewards):
+					XCTAssert(rewards.previousReward?.amount.description == "0.926578", rewards.previousReward?.amount.description ?? "")
+					XCTAssert(rewards.previousReward?.fee.description == "0.2", rewards.previousReward?.fee.description ?? "")
+					XCTAssert(rewards.previousReward?.cycle.description == "797", rewards.previousReward?.cycle.description ?? "")
+					XCTAssert(rewards.previousReward?.bakerAlias == "Baking Benjamins", rewards.previousReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "797", rewards.estimatedPreviousReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "798", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
+					
+					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
+	func testEstimateRewardsDelegateAndStake() {
+		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewards")
+		let delegate = TzKTAccountDelegate(alias: "Baking Benjamins", address: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur", active: true)
+		
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultLinearWallet.address, delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward?.amount.description == "0.926578", rewards.previousReward?.amount.description ?? "")
@@ -407,7 +441,7 @@ class TzKTClientTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewardsNoPayoutAddress")
 		let delegate = TzKTAccountDelegate(alias: "The", address: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv", active: true)
 		
-		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate) { result in
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
@@ -438,7 +472,7 @@ class TzKTClientTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewardsNoPrevious")
 		let delegate = TzKTAccountDelegate(alias: "The Shire", address: "tz1ZgkTFmiwddPXGbs4yc6NWdH4gELW7wsnv", active: true)
 		
-		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr", delegate: delegate) { result in
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr", delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
@@ -466,7 +500,7 @@ class TzKTClientTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "tzkt-testEstimateRewardsNone")
 		let delegate = TzKTAccountDelegate(alias: "Teztillery", address: "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4", active: true)
 		
-		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac", delegate: delegate) { result in
+		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac", delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
 					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
@@ -496,9 +530,9 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.bakers { result in
 			switch result {
 				case .success(let bakers):
-					XCTAssert(bakers.count == 40, bakers.count.description)
-					XCTAssert(bakers[0].name == "ECAD Labs Baker", bakers[0].name ?? "")
-					XCTAssert(bakers[0].address == "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP", bakers[0].address)
+					XCTAssert(bakers.count == 22, bakers.count.description)
+					XCTAssert(bakers[0].name == "Baking Benjamins", bakers[0].name ?? "")
+					XCTAssert(bakers[0].address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", bakers[0].address)
 					
 				case .failure(let error):
 					XCTFail("Error: \(error)")
@@ -517,9 +551,9 @@ class TzKTClientTests: XCTestCase {
         MockConstants.shared.tzktClient.bakers { result in
             switch result {
                 case .success(let bakers):
-                    XCTAssert(bakers.count == 40, bakers.count.description)
-                    XCTAssert(bakers[0].name == "ECAD Labs Baker", bakers[0].name ?? "")
-                    XCTAssert(bakers[0].address == "tz1RuHDSj9P7mNNhfKxsyLGRDahTX5QD1DdP", bakers[0].address)
+                    XCTAssert(bakers.count == 22, bakers.count.description)
+                    XCTAssert(bakers[0].name == "Baking Benjamins", bakers[0].name ?? "")
+                    XCTAssert(bakers[0].address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", bakers[0].address)
                     
                 case .failure(let error):
                     XCTFail("Error: \(error)")
@@ -542,6 +576,26 @@ class TzKTClientTests: XCTestCase {
 				
 				let filterOnlyTrue = votes.filter({ $0 }).count
 				XCTAssert(filterOnlyTrue == 5, filterOnlyTrue.description)
+				
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		})
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
+	func testGhostnetBakerConfig() {
+		let expectation = XCTestExpectation(description: "tzkt-ghostnet-baker-config")
+		
+		MockConstants.shared.tzktClient.bakerConfig(forAddress: "tz1abc123", forceMainnet: false, completion: { result in
+			switch result {
+				case .success(let baker):
+				XCTAssert(baker.name == "Baking Benjamins", baker.name ?? "-")
+				XCTAssert(baker.address == "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD", baker.address)
+				XCTAssert(baker.balance.description == "76085813.531722", baker.balance.description)
 				
 				case .failure(let error):
 					XCTFail("Error: \(error)")

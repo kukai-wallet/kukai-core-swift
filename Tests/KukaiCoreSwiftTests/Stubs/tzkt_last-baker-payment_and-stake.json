@@ -1,0 +1,28 @@
+[
+    {
+        "type": "transaction",
+        "id": 1440254791778304,
+        "level": 7152271,
+        "timestamp": "2024-11-18T22:01:10Z",
+        "block": "BLjohapgrFdtMiwXWoXqntUindoFPmBnfJE8dwSC7fc2tydkhCK",
+        "hash": "opNdhqpzbBpLK7L6UEd9CeFRTTA6F17j5awE3yzQsbjsHfJuHrY",
+        "counter": 19186695,
+        "sender": {
+            "alias": "Baking Benjamins Payouts",
+            "address": "tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h"
+        },
+        "gasLimit": 201,
+        "gasUsed": 101,
+        "storageLimit": 0,
+        "storageUsed": 0,
+        "bakerFee": 279,
+        "storageFee": 0,
+        "allocationFee": 0,
+        "target": {
+            "address": "tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy"
+        },
+        "amount": 7642117,
+        "status": "applied",
+        "hasInternals": false
+    }
+]

@@ -93,6 +93,9 @@ public struct MockConstants {
 		var tzktDelegatorRewardsURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss")
 		tzktDelegatorRewardsURL.appendQueryItem(name: "limit", value: 25)
 		
+		var tzktDelegatorRewardsAndStakeURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy")
+		tzktDelegatorRewardsAndStakeURL.appendQueryItem(name: "limit", value: 25)
+		
 		var tzktDelegatorRewardsNoPreviousURL = tzktURL.appendingPathComponent("v1/rewards/delegators/tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr")
 		tzktDelegatorRewardsNoPreviousURL.appendQueryItem(name: "limit", value: 25)
 		
@@ -161,6 +164,7 @@ public struct MockConstants {
 		tzktStakingConfigURL5.appendQueryItem(name: "sort.desc", value: "id")
 		tzktStakingConfigURL5.appendQueryItem(name: "limit", value: 1)
 		
+		var ghostnetBakerConfigURL = tzktURL.appendingPathComponent("v1/delegates/tz1abc123")
 		
 		
 		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")
@@ -208,8 +212,13 @@ public struct MockConstants {
 		tzktLastBakerRewardURL6.appendQueryItem(name: "type", value: "transaction")
 		tzktLastBakerRewardURL6.appendQueryItem(name: "sender.in", value: "tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4")
 		
+		var tzktLastBakerRewardURL7 = tzktURL.appendingPathComponent("v1/accounts/tz1iQpiBTKtzfbVgogjyhPiGrrV5zAKUKNvy/operations")
+		tzktLastBakerRewardURL7.appendQueryItem(name: "limit", value: 1)
+		tzktLastBakerRewardURL7.appendQueryItem(name: "type", value: "transaction")
+		tzktLastBakerRewardURL7.appendQueryItem(name: "sender.in", value: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
+		
 		var tzktDelegatesURL = tzktURL.appendingPathComponent("v1/delegates")
-		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance")
+		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
 		tzktDelegatesURL.appendQueryItem(name: "active", value: "true")
 		tzktDelegatesURL.appendQueryItem(name: "sort.desc", value: "stakingBalance")
 		tzktDelegatesURL.appendQueryItem(name: "limit", value: 10)
@@ -261,6 +270,7 @@ public struct MockConstants {
 			tzktBalancePageURL: (MockConstants.jsonStub(fromFilename: "tzkt_balance-page"), MockConstants.http200),
 			tzktCyclesURL: (MockConstants.jsonStub(fromFilename: "tzkt_cycles"), MockConstants.http200),
 			tzktDelegatorRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards"), MockConstants.http200),
+			tzktDelegatorRewardsAndStakeURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards_delegate-and-stake"), MockConstants.http200),
 			tzktDelegatorRewardsNoPreviousURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards-no-previous"), MockConstants.http200),
 			tzktDelegatorRewardsNoneURL: (MockConstants.jsonStub(fromFilename: "tzkt_delegator-rewards-none"), MockConstants.http200),
             bakingBadBakersURL: (MockConstants.jsonStub(fromFilename: "tzkt_bakers"), MockConstants.http200),
@@ -274,6 +284,7 @@ public struct MockConstants {
 			tzktStakingConfigURL4: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1aRoaRhSpRYvFdyvgWLL6TGyRoGF51wDjM"), MockConstants.http200),
 			bakingBadConfigURL5: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4"), MockConstants.http200),
 			tzktStakingConfigURL5: (MockConstants.jsonStub(fromFilename: "tzkt_baker-config-stake-tz1bdTgmF8pzBH9chtJptsjjrh5UfSXp1SQ4"), MockConstants.http200),
+			ghostnetBakerConfigURL: (MockConstants.jsonStub(fromFilename: "tzkt_ghostnet-baker-config"), MockConstants.http200),
 			tzktsuggestURL1: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-bake-nug"), MockConstants.http200),
 			tzktsuggestURL2: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire"), MockConstants.http200),
 			tzktsuggestURL3: (MockConstants.jsonStub(fromFilename: "tzkt_suggest-the-shire_updated"), MockConstants.http200),
@@ -285,6 +296,7 @@ public struct MockConstants {
 			tzktLastBakerRewardURL4: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktLastBakerRewardURL5: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktLastBakerRewardURL6: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
+			tzktLastBakerRewardURL7: (MockConstants.jsonStub(fromFilename: "tzkt_last-baker-payment_updated"), MockConstants.http200),
 			tzktDelegatesURL: (MockConstants.jsonStub(fromFilename: "tzkt_ghostnet-bakers"), MockConstants.http200),
 			tzktVotingPeriodsURL: (MockConstants.jsonStub(fromFilename: "tzkt_voting-periods"), MockConstants.http200),
 			tzktBakerVotesURL: (MockConstants.jsonStub(fromFilename: "tzkt_voting-transactions"), MockConstants.http200),

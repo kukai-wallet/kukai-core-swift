@@ -70,7 +70,12 @@ public struct TzKTBaker: Codable, Hashable {
 	/// Ghostnet has a different setup for bakers, but we need to display and interact with them the same way.
 	/// So this helper extract what it can from the API and creates semi-real baker objects to help users deal with Ghostnet
 	public static func fromTestnetArray(_ data: [Any]) -> TzKTBaker? {
-		guard data.count == 4, let address = data[0] as? String, let balance = (data[2] as? NSNumber)?.decimalValue, let stakingBalance = (data[3] as? NSNumber)?.decimalValue else {
+		guard data.count == 6,
+				let address = data[0] as? String,
+				let balance = (data[2] as? NSNumber)?.decimalValue,
+				let stakingBalance = (data[3] as? NSNumber)?.decimalValue,
+				let limitOfStakingOverBaking = (data[4] as? NSNumber)?.decimalValue,
+				let edgeOfBakingOverStaking = (data[5] as? NSNumber)?.decimalValue else {
 			return nil
 		}
 		
@@ -79,7 +84,12 @@ public struct TzKTBaker: Codable, Hashable {
 		let normalisedStakingBal = stakingBalance/1000000
         let delegation = TzKTBakerSettings(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
         let staking = TzKTBakerSettings(enabled: true, minBalance: 0, fee: 0.05, capacity: normalisedStakingBal, freeSpace: normalisedStakingBal, estimatedApy: 0.05)
-        return TzKTBaker(address: address, name: name, status: .active, balance: normalisedBalance, delegation: delegation, staking: staking)
+		
+		var baker = TzKTBaker(address: address, name: name, status: .active, balance: normalisedBalance, delegation: delegation, staking: staking)
+		baker.limitOfStakingOverBaking = limitOfStakingOverBaking
+		baker.edgeOfBakingOverStaking = edgeOfBakingOverStaking
+		
+        return baker
 	}
 	
 	public func hash(into hasher: inout Hasher) {
