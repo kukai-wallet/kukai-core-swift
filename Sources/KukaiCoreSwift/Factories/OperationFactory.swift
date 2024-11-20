@@ -95,6 +95,35 @@ public class OperationFactory {
 	}
 	
 	/**
+	Create the operations necessary to stake an amount of XTZ
+	- parameter from: The address that wishes to stake.
+	- parameter amount: The XTZ amount to stake.
+	- returns: An array of `Operation` subclasses.
+	*/
+	public static func stakeOperation(from: String, amount: XTZAmount) -> [Operation] {
+		return [OperationTransaction(amount: amount, source: from, destination: from, parameters: ["entrypoint": "stake", "value": ["prim": "Unit"]])]
+	}
+	
+	/**
+	Create the operations necessary to unstake an amount of XTZ
+	- parameter from: The address that wishes to unstake.
+	- parameter amount: The XTZ amount to unstake.
+	- returns: An array of `Operation` subclasses.
+	*/
+	public static func unstakeOperation(from: String, amount: XTZAmount) -> [Operation] {
+		return [OperationTransaction(amount: amount, source: from, destination: from, parameters: ["entrypoint": "unstake", "value": ["prim": "Unit"]])]
+	}
+	
+	/**
+	Create the operations necessary to finalise and unstake operation
+	- parameter from: The address that wishes to stake.
+	- returns: An array of `Operation` subclasses.
+	*/
+	public static func finaliseUnstakeOperation(from: String) -> [Operation] {
+		return [OperationTransaction(amount: .zero(), source: from, destination: from, parameters: ["entrypoint": "finalize_unstake", "value": ["prim": "Unit"]])]
+	}
+	
+	/**
 	Create the operations necessary to perform an exchange of XTZ for a given FA token, using a given dex
 	- parameter withDex: Enum controling which dex to use to perform the swap
 	- parameter xtzAmount: The amount of XTZ to be swaped

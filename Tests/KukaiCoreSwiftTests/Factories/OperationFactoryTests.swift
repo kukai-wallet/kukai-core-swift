@@ -114,6 +114,39 @@ class OperationFactoryTests: XCTestCase {
 		XCTAssert(op[0] is OperationDelegation)
 	}
 	
+	func testStake() {
+		let op = OperationFactory.stakeOperation(from: MockConstants.defaultHdWallet.address, amount: XTZAmount(fromNormalisedAmount: 5))
+		XCTAssert(op.count == 1)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[0] is OperationTransaction)
+		
+		XCTAssert((op[0] as? OperationTransaction)?.amount.description == "5000000", (op[0] as? OperationTransaction)?.amount.description ?? "-")
+	}
+	
+	func testUnstake() {
+		let op = OperationFactory.unstakeOperation(from: MockConstants.defaultHdWallet.address, amount: XTZAmount(fromNormalisedAmount: 6))
+		XCTAssert(op.count == 1)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[0] is OperationTransaction)
+		
+		XCTAssert((op[0] as? OperationTransaction)?.amount.description == "6000000", (op[0] as? OperationTransaction)?.amount.description ?? "-")
+	}
+	
+	func testFinaliseUnstake() {
+		let op = OperationFactory.finaliseUnstakeOperation(from: MockConstants.defaultHdWallet.address)
+		XCTAssert(op.count == 1)
+		XCTAssert(op[0].source == MockConstants.defaultHdWallet.address)
+		XCTAssert(op[0].counter == "0")
+		XCTAssert(op[0].operationKind == .transaction)
+		XCTAssert(op[0] is OperationTransaction)
+		
+		XCTAssert((op[0] as? OperationTransaction)?.amount.description == "0", (op[0] as? OperationTransaction)?.amount.description ?? "-")
+	}
+	
 	func testAllowance() {
 		let address = MockConstants.defaultHdWallet.address
 		let op = OperationFactory.allowanceOperation(standard: .fa12, tokenAddress: MockConstants.token3Decimals.tokenContractAddress ?? "", tokenId: nil, spenderAddress: address, allowance: MockConstants.token3Decimals_1, walletAddress: address)
