@@ -455,9 +455,17 @@ public class TzKTClient {
 					
 					let alias = bakerConfig.name
 					let avatarURL = TzKTClient.avatarURL(forToken: bakerConfig.address)
-					let fee = bakerConfig.delegation.fee
 					let indexOfCyclePaymentIsFor = (cycleIndexPaymentReceived == 0) ? 0 : (cycleIndexPaymentReceived)
-					previousReward = RewardDetails(bakerAlias: alias, bakerLogo: avatarURL, paymentAddress: senderAddress, amount: amount, cycle: indexOfCyclePaymentIsFor, fee: fee, date: tx.date ?? Date(), meetsMinDelegation: true)
+					previousReward = RewardDetails(bakerAlias: alias,
+												   bakerLogo: avatarURL,
+												   paymentAddress: senderAddress,
+												   delegateAmount: amount,
+												   delegateFee: bakerConfig.delegation.fee,
+												   stakeAmount: estimatedPreviousReward?.stakeAmount ?? .zero(),
+												   stakeFee: bakerConfig.staking.fee,
+												   cycle: indexOfCyclePaymentIsFor,
+												   date: tx.date ?? Date(),
+												   meetsMinDelegation: true)
 				}
 				
 			} else if currentDelegatorRewards.count > 0 {
@@ -479,13 +487,22 @@ public class TzKTClient {
 			return nil
 		}
 		
-        let fee = config.delegation.fee
+		let delegationFee = config.delegation.fee
 		let alias = config.name
 		let address = config.address
 		let logo = TzKTClient.avatarURL(forToken: address)
-		let amount = reward.estimatedReward(withFee: fee, limitOfStakingOverBaking: config.limitOfStakingOverBaking ?? 0, edgeOfBakingOverStaking: config.edgeOfBakingOverStaking ?? 0, minDelegation: config.delegation.minBalance)
+		let amount = reward.estimatedReward(withDelegationFee: delegationFee, limitOfStakingOverBaking: config.limitOfStakingOverBaking ?? 0, edgeOfBakingOverStaking: config.edgeOfBakingOverStaking ?? 0, minDelegation: config.delegation.minBalance)
 		
-		return RewardDetails(bakerAlias: alias, bakerLogo: logo, paymentAddress: address, amount: amount, cycle: reward.cycle, fee: fee, date: dateForDisplay, meetsMinDelegation: (reward.delegatedBalance >= config.delegation.minBalance))
+		return RewardDetails(bakerAlias: alias,
+							 bakerLogo: logo,
+							 paymentAddress: address,
+							 delegateAmount: amount.delegate,
+							 delegateFee: delegationFee,
+							 stakeAmount: amount.stake,
+							 stakeFee: config.staking.fee,
+							 cycle: reward.cycle,
+							 date:dateForDisplay,
+							 meetsMinDelegation: (reward.delegatedBalance >= config.delegation.minBalance))
 	}
 	
 	/// Filter list of `TzKTDelegatorReward` and return the most recent unqiue bakers from the list (max 2, going no further back than 25 cycles)

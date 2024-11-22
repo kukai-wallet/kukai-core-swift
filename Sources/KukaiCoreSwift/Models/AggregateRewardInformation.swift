@@ -59,19 +59,23 @@ public struct RewardDetails: Codable {
 	public let bakerLogo: URL?
 	public let paymentAddress: String
 	
-	public let amount: XTZAmount
+	public let delegateAmount: XTZAmount
+	public let delegateFee: Double
+	public let stakeAmount: XTZAmount
+	public let stakeFee: Double
 	public let cycle: Int
-	public let fee: Double
 	public let dateOfPayment: Date
 	public let meetsMinDelegation: Bool
 	
-	public init(bakerAlias: String?, bakerLogo: URL?, paymentAddress: String, amount: XTZAmount, cycle: Int, fee: Double, date: Date, meetsMinDelegation: Bool) {
+	public init(bakerAlias: String?, bakerLogo: URL?, paymentAddress: String, delegateAmount: XTZAmount, delegateFee: Double, stakeAmount: XTZAmount, stakeFee: Double, cycle: Int, date: Date, meetsMinDelegation: Bool) {
 		self.bakerAlias = bakerAlias
 		self.bakerLogo = bakerLogo
 		self.paymentAddress = paymentAddress
-		self.amount = amount
+		self.delegateAmount = delegateAmount
+		self.delegateFee = delegateFee
+		self.stakeAmount = stakeAmount
+		self.stakeFee = stakeFee
 		self.cycle = cycle
-		self.fee = fee
 		self.dateOfPayment = date
 		self.meetsMinDelegation = meetsMinDelegation
 	}

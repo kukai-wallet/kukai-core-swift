@@ -16,9 +16,21 @@ public struct TzKTDelegatorReward: Codable {
 	public let baker: TzKTAddress
 	
 	public let blockRewardsDelegated: Decimal
+	public let blockRewardsStakedEdge: Decimal
+	public let blockRewardsStakedShared: Decimal
+	
 	public let endorsementRewardsDelegated: Decimal
+	public let endorsementRewardsStakedEdge: Decimal
+	public let endorsementRewardsStakedShared: Decimal
+	
 	public let vdfRevelationRewardsDelegated: Decimal
+	public let vdfRevelationRewardsStakedEdge: Decimal
+	public let vdfRevelationRewardsStakedShared: Decimal
+	
 	public let nonceRevelationRewardsDelegated: Decimal
+	public let nonceRevelationRewardsStakedEdge: Decimal
+	public let nonceRevelationRewardsStakedShared: Decimal
+	
 	public let doubleBakingRewards: Decimal
 	public let doubleEndorsingRewards: Decimal
 	public let doublePreendorsingRewards: Decimal
@@ -44,7 +56,8 @@ public struct TzKTDelegatorReward: Codable {
 	public let futureEndorsementRewards: Decimal
 	
 	/// Return an estimated either for potential future or actual rewards
-	public func estimatedReward(withFee fee: Double, limitOfStakingOverBaking: Decimal, edgeOfBakingOverStaking: Decimal, minDelegation: Decimal) -> XTZAmount {
+	public func estimatedReward(withDelegationFee fee: Double, limitOfStakingOverBaking: Decimal, edgeOfBakingOverStaking: Decimal, minDelegation: Decimal) -> (delegate: XTZAmount, stake: XTZAmount) {
+		
 		let totalRewardsDelegated = blockRewardsDelegated
 									+ endorsementRewardsDelegated
 									+ vdfRevelationRewardsDelegated
@@ -65,23 +78,40 @@ public struct TzKTDelegatorReward: Codable {
 								+ doublePreendorsingLostExternalUnstaked
 								+ nonceRevelationLosses
 		
+		let totalRewardsStakedEdge = blockRewardsStakedEdge
+									+ endorsementRewardsStakedEdge
+									+ vdfRevelationRewardsStakedEdge
+									+ nonceRevelationRewardsStakedEdge
+		
+		let totalLostStakedEdge = Decimal(0)
+		
+		let totalRewardsStakedShared = blockRewardsStakedShared
+										+ endorsementRewardsStakedShared
+										+ vdfRevelationRewardsStakedShared
+										+ nonceRevelationRewardsStakedShared
+		
+		let totalLostStakedShared = Decimal(0)
+		
 		var totalFutureRewardsDelegated: Decimal = 0
-		//var totalFutureRewardsStakedOwn: Decimal = 0
-		//var totalFutureRewardsStakedEdge: Decimal = 0
-		//var totalFutureRewardsStakedShared: Decimal = 0
+		var totalFutureRewardsStakedOwn: Decimal = 0
+		var totalFutureRewardsStakedEdge: Decimal = 0
+		var totalFutureRewardsStakedShared: Decimal = 0
 		
 		
+		// Delegation rewards contain estimated future rewards, and current exact rewards
+		// Before continuing check if its future or not and grab different values if so
 		if (totalFutureRewards > 0) {
 			let stakeCap = bakerStakedBalance * limitOfStakingOverBaking
 			let actualStakedPower = bakerStakedBalance + min(externalStakedBalance, stakeCap)
 			let rewardsStaked = totalFutureRewards * actualStakedPower / bakingPower
 			totalFutureRewardsDelegated = totalFutureRewards - rewardsStaked
-			//totalFutureRewardsStakedOwn = rewardsStaked * bakerStakedBalance / actualStakedPower
-			//totalFutureRewardsStakedEdge = (rewardsStaked - totalFutureRewardsStakedOwn) * edgeOfBakingOverStaking
-			//totalFutureRewardsStakedShared = rewardsStaked - totalFutureRewardsStakedOwn - totalFutureRewardsStakedEdge
+			totalFutureRewardsStakedOwn = rewardsStaked * bakerStakedBalance / actualStakedPower
+			totalFutureRewardsStakedEdge = (rewardsStaked - totalFutureRewardsStakedOwn) * edgeOfBakingOverStaking
+			totalFutureRewardsStakedShared = rewardsStaked - totalFutureRewardsStakedOwn - totalFutureRewardsStakedEdge
 		}
 		
 		
+		// Delegate
 		let delegationFee = Decimal(fee) // might need: "Decimal(1 - fee)"
 		let totalDelegatedRewards = max(0, (totalFutureRewardsDelegated + totalRewardsDelegated - totalLostDelegated))
 		let totalDelegatedFees = totalDelegatedRewards * delegationFee
@@ -94,6 +124,21 @@ public struct TzKTDelegatorReward: Codable {
 		let delegatedFees = (isBalanceExceedMinimum ? totalDelegatedFees * delegatedShare : 0).rounded(scale: 0, roundingMode: .down)
 		let delegatedIncome = (isBalanceExceedMinimum ? delegatedRewards - delegatedFees : 0).rounded(scale: 0, roundingMode: .down)
 		
-		return XTZAmount(fromRpcAmount: delegatedIncome) ?? .zero()
+		
+		// Stake
+		let totalStakedRewards = max(0, totalFutureRewardsStakedEdge
+										+ totalFutureRewardsStakedShared
+										+ (totalRewardsStakedEdge - totalLostStakedEdge)
+										+ (totalRewardsStakedShared - totalLostStakedShared))
+		let totalStakedFees = max(0, totalFutureRewardsStakedEdge
+										+ (totalRewardsStakedEdge - totalLostStakedEdge))
+		let stakedShare = externalStakedBalance > 0 ? stakedBalance / externalStakedBalance : 0
+		let stakedRewards = (totalStakedRewards * stakedShare).rounded(scale: 0, roundingMode: .down)
+		let stakedFees = (totalStakedFees * stakedShare).rounded(scale: 0, roundingMode: .down)
+		let stakedIncome = (stakedRewards - stakedFees).rounded(scale: 0, roundingMode: .down)
+		
+		
+		// Results
+		return (delegate: XTZAmount(fromRpcAmount: delegatedIncome) ?? .zero(), stake: XTZAmount(fromRpcAmount: stakedIncome) ?? .zero())
 	}
 }

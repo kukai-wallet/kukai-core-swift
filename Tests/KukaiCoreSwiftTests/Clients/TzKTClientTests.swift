@@ -376,18 +376,24 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
-					XCTAssert(rewards.previousReward?.amount.description == "0.926578", rewards.previousReward?.amount.description ?? "")
-					XCTAssert(rewards.previousReward?.fee.description == "0.2", rewards.previousReward?.fee.description ?? "")
+					XCTAssert(rewards.previousReward?.delegateAmount.description == "0.926578", rewards.previousReward?.delegateAmount.description ?? "")
+					XCTAssert(rewards.previousReward?.stakeAmount.description == "0", rewards.previousReward?.stakeAmount.description ?? "")
+					XCTAssert(rewards.previousReward?.delegateFee.description == "0.2", rewards.previousReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.previousReward?.stakeFee.description == "0.1", rewards.previousReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.previousReward?.cycle.description == "797", rewards.previousReward?.cycle.description ?? "")
 					XCTAssert(rewards.previousReward?.bakerAlias == "Baking Benjamins", rewards.previousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.stakeAmount.normalisedRepresentation == "0", rewards.estimatedPreviousReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.delegateFee.description == "0.2", rewards.estimatedPreviousReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.stakeFee.description == "0.1", rewards.estimatedPreviousReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "797", rewards.estimatedPreviousReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation == "0", rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateFee.description == "0.2", rewards.estimatedNextReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeFee.description == "0.1", rewards.estimatedNextReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.cycle.description == "798", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
@@ -410,19 +416,20 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultLinearWallet.address, delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
-					XCTAssert(rewards.previousReward?.amount.description == "0.926578", rewards.previousReward?.amount.description ?? "")
-					XCTAssert(rewards.previousReward?.fee.description == "0.2", rewards.previousReward?.fee.description ?? "")
-					XCTAssert(rewards.previousReward?.cycle.description == "797", rewards.previousReward?.cycle.description ?? "")
-					XCTAssert(rewards.previousReward?.bakerAlias == "Baking Benjamins", rewards.previousReward?.bakerAlias ?? "")
+					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.delegateAmount.description ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "797", rewards.estimatedPreviousReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation == "7.644663", rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.stakeAmount.normalisedRepresentation == "24.145581", rewards.estimatedPreviousReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.delegateFee.description == "0.2", rewards.estimatedPreviousReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.stakeFee.description == "0.1", rewards.estimatedPreviousReward?.stakeFee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "800", rewards.estimatedPreviousReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
-					XCTAssert(rewards.estimatedNextReward?.cycle.description == "798", rewards.estimatedNextReward?.cycle.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation == "5.649137", rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation == "20.325563", rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateFee.description == "0.2", rewards.estimatedNextReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeFee.description == "0.1", rewards.estimatedNextReward?.stakeFee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.cycle.description == "801", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
 					XCTAssert(rewards.moreThan1CycleBetweenPreiousAndNext() == false)
@@ -444,15 +451,19 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: MockConstants.defaultHdWallet.address, delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
-					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
+					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.delegateAmount.description ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward?.amount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedPreviousReward?.fee.description == "0.2", rewards.estimatedPreviousReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation == "0.926949", rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.stakeAmount.normalisedRepresentation == "0", rewards.estimatedPreviousReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.delegateFee.description == "0.2", rewards.estimatedPreviousReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedPreviousReward?.stakeFee.description == "0.1", rewards.estimatedPreviousReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.cycle.description == "797", rewards.estimatedPreviousReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedPreviousReward?.bakerAlias == "Baking Benjamins", rewards.estimatedPreviousReward?.bakerAlias ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.2", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation == "0.851008", rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation == "0", rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateFee.description == "0.2", rewards.estimatedNextReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeFee.description == "0.1", rewards.estimatedNextReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.cycle.description == "798", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Baking Benjamins", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
@@ -475,12 +486,14 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1iv8r8UUCEZK5gqpLPnMPzP4VRJBJUdGgr", delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
-					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
+					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.delegateAmount.description ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0.000369", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.042", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation == "0.000369", rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation == "0", rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateFee.description == "0.042", rewards.estimatedNextReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeFee.description == "0.042", rewards.estimatedNextReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.cycle.description == "748", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "The Shire", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
@@ -503,12 +516,14 @@ class TzKTClientTests: XCTestCase {
 		MockConstants.shared.tzktClient.estimateLastAndNextReward(forAddress: "tz1ckwbvP7pdTLS1aAe6YPoiKpG2d8ENU8Ac", delegate: delegate, forceMainnet: true) { result in
 			switch result {
 				case .success(let rewards):
-					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.amount.description ?? "")
+					XCTAssert(rewards.previousReward == nil, rewards.previousReward?.delegateAmount.description ?? "")
 					
-					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.amount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedPreviousReward == nil, rewards.estimatedPreviousReward?.delegateAmount.normalisedRepresentation ?? "")
 					
-					XCTAssert(rewards.estimatedNextReward?.amount.normalisedRepresentation == "0", rewards.estimatedNextReward?.amount.normalisedRepresentation ?? "")
-					XCTAssert(rewards.estimatedNextReward?.fee.description == "0.0499", rewards.estimatedNextReward?.fee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation == "0", rewards.estimatedNextReward?.delegateAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation == "0", rewards.estimatedNextReward?.stakeAmount.normalisedRepresentation ?? "")
+					XCTAssert(rewards.estimatedNextReward?.delegateFee.description == "0.0499", rewards.estimatedNextReward?.delegateFee.description ?? "")
+					XCTAssert(rewards.estimatedNextReward?.stakeFee.description == "0.05", rewards.estimatedNextReward?.stakeFee.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.cycle.description == "752", rewards.estimatedNextReward?.cycle.description ?? "")
 					XCTAssert(rewards.estimatedNextReward?.bakerAlias == "Teztillery", rewards.estimatedNextReward?.bakerAlias ?? "")
 					
