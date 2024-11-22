@@ -667,9 +667,44 @@ public class TzKTClient {
 		}
 	}
 	
+	/**
+	 Fetch staking update operations for a given user, optionally filter by a specific type, that haven't completed yet (currentCycle - 4)
+	 */
+	public func pendingStakingUpdates(forAddress: String, ofType: String?, completion: @escaping ((Result<[TzKTStakingUpdate], KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/staking/updates")
+		url.appendQueryItem(name: "staker", value: forAddress)
+		url.appendQueryItem(name: "sort.desc", value: "id")
+		
+		head { [weak self] result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
+			}
+			
+			url.appendQueryItem(name: "cycle.ge", value: res.cycle-4)
+			
+			if let type = ofType {
+				url.appendQueryItem(name: "type", value: type)
+			}
+			
+			self?.networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTStakingUpdate].self, completion: completion)
+		}
+	}
+	
 	
 	
 	// MARK: Network
+	
+	/**
+	 Fetch the head from TzKT from `.../v1/head`
+	 */
+	public func head(completion: @escaping ((Result<TzKTHead, KukaiError>) -> Void)) {
+		var url = config.tzktURL
+		url.appendPathComponent("v1/head")
+		
+		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: TzKTHead.self, completion: completion)
+	}
 	
 	/**
 	 Call https://api.tzkt.io/v1/cycles?limit=... to get the 10 most recent cycles

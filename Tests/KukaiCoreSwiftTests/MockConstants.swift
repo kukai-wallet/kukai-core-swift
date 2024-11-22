@@ -229,6 +229,14 @@ public struct MockConstants {
 		var simulateURL2 = secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
 		simulateURL2.appendQueryItem(name: "version", value: "0")
 		
+		let tzKTHeadURL = tzktURL.appendingPathComponent("v1/head")
+		
+		var tzKTPendingStakingUpdates = tzktURL.appendingPathComponent("v1/staking/updates")
+		tzKTPendingStakingUpdates.appendQueryItem(name: "staker", value: "tz1abc123")
+		tzKTPendingStakingUpdates.appendQueryItem(name: "sort.desc", value: "id")
+		tzKTPendingStakingUpdates.appendQueryItem(name: "cycle.ge", value: 1269)
+		tzKTPendingStakingUpdates.appendQueryItem(name: "type", value: "unstake")
+		
 		
 		// Format [ URL: ( Data?, HTTPURLResponse? ) ]
 		MockURLProtocol.mockURLs = [
@@ -300,6 +308,8 @@ public struct MockConstants {
 			tzktDelegatesURL: (MockConstants.jsonStub(fromFilename: "tzkt_ghostnet-bakers"), MockConstants.http200),
 			tzktVotingPeriodsURL: (MockConstants.jsonStub(fromFilename: "tzkt_voting-periods"), MockConstants.http200),
 			tzktBakerVotesURL: (MockConstants.jsonStub(fromFilename: "tzkt_voting-transactions"), MockConstants.http200),
+			tzKTHeadURL: (MockConstants.jsonStub(fromFilename: "tzkt_head"), MockConstants.http200),
+			tzKTPendingStakingUpdates: (MockConstants.jsonStub(fromFilename: "tzkt_pending-unstake"), MockConstants.http200),
 			
 			// Media proxy
 			URL(string: "ipfs://bafybeiatpitaej7bynhsequ5hl45jbtjft2nkkho74jfocvnw4vrqlhdea")!: (nil, MockConstants.ipfsResponseWithHeaders),

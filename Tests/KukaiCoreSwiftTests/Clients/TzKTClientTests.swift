@@ -621,4 +621,24 @@ class TzKTClientTests: XCTestCase {
 		
 		wait(for: [expectation], timeout: 120)
 	}
+	
+	func testPendingStakingUpdates() {
+		let expectation = XCTestExpectation(description: "tzkt-pending-staking-updates")
+		
+		MockConstants.shared.tzktClient.pendingStakingUpdates(forAddress: "tz1abc123", ofType: "unstake") { result in
+			switch result {
+				case .success(let updates):
+					XCTAssert(updates.count == 2, updates.count.description)
+					XCTAssert(updates.first?.cycle == 1272, updates.first?.cycle.description ?? "-")
+					XCTAssert(updates.first?.xtzAmount.normalisedRepresentation == "2.999997", updates.first?.xtzAmount.normalisedRepresentation ?? "-")
+				
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
 }

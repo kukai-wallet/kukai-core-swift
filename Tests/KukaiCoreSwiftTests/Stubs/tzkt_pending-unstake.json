@@ -1,0 +1,36 @@
+[
+    {
+        "id": 9528,
+        "level": 9186898,
+        "timestamp": "2024-11-22T10:08:35Z",
+        "cycle": 1272,
+        "baker": {
+            "alias": "Baking Benjamins",
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "staker": {
+            "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
+        },
+        "type": "unstake",
+        "amount": 2999997,
+        "pseudotokens": "463593",
+        "stakingOpId": 419065898205184
+    },
+    {
+        "id": 9529,
+        "level": 9186907,
+        "timestamp": "2024-11-22T10:09:27Z",
+        "cycle": 1272,
+        "baker": {
+            "alias": "Baking Benjamins",
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "staker": {
+            "address": "tz1bQnUB6wv77AAnvvkX5rXwzKHis6RxVnyF"
+        },
+        "type": "unstake",
+        "amount": 6999995,
+        "pseudotokens": "1081716",
+        "stakingOpId": 419066297712640
+    }
+]

@@ -32,8 +32,11 @@ public struct TzKTDelegatorReward: Codable {
 	public let nonceRevelationRewardsStakedShared: Decimal
 	
 	public let doubleBakingRewards: Decimal
+	public let doubleBakingLostExternalStaked: Decimal
 	public let doubleEndorsingRewards: Decimal
+	public let doubleEndorsingLostExternalStaked: Decimal
 	public let doublePreendorsingRewards: Decimal
+	public let doublePreendorsingLostExternalStaked: Decimal
 	public let blockFees: Decimal
 	
 	public let doubleBakingLostUnstaked: Decimal
@@ -42,6 +45,9 @@ public struct TzKTDelegatorReward: Codable {
 	public let doubleEndorsingLostExternalUnstaked: Decimal
 	public let doublePreendorsingLostUnstaked: Decimal
 	public let doublePreendorsingLostExternalUnstaked: Decimal
+	public let doubleBakingLostStaked: Decimal
+	public let doubleEndorsingLostStaked: Decimal
+	public let doublePreendorsingLostStaked: Decimal
 	public let nonceRevelationLosses: Decimal
 	
 	public let bakerStakedBalance: Decimal
@@ -83,14 +89,25 @@ public struct TzKTDelegatorReward: Codable {
 									+ vdfRevelationRewardsStakedEdge
 									+ nonceRevelationRewardsStakedEdge
 		
-		let totalLostStakedEdge = Decimal(0)
-		
 		let totalRewardsStakedShared = blockRewardsStakedShared
 										+ endorsementRewardsStakedShared
 										+ vdfRevelationRewardsStakedShared
 										+ nonceRevelationRewardsStakedShared
+
+		let edge = totalRewardsStakedEdge > 0
+			? totalRewardsStakedEdge / (totalRewardsStakedEdge + totalRewardsStakedShared)
+			: 0
+
+		let totalLostStaked = doubleBakingLostStaked
+								+ doubleEndorsingLostStaked
+								+ doublePreendorsingLostStaked
+
+		let totalLostStakedOwn = totalLostStaked * (1 - edge)
+		let totalLostStakedEdge = totalLostStaked - totalLostStakedOwn
 		
-		let totalLostStakedShared = Decimal(0)
+		let totalLostStakedShared = doubleBakingLostExternalStaked
+									+ doubleEndorsingLostExternalStaked
+									+ doublePreendorsingLostExternalStaked
 		
 		var totalFutureRewardsDelegated: Decimal = 0
 		var totalFutureRewardsStakedOwn: Decimal = 0
@@ -112,7 +129,7 @@ public struct TzKTDelegatorReward: Codable {
 		
 		
 		// Delegate
-		let delegationFee = Decimal(fee) // might need: "Decimal(1 - fee)"
+		let delegationFee = Decimal(fee)
 		let totalDelegatedRewards = max(0, (totalFutureRewardsDelegated + totalRewardsDelegated - totalLostDelegated))
 		let totalDelegatedFees = totalDelegatedRewards * delegationFee
 		let delegatedShare = (bakerDelegatedBalance + externalDelegatedBalance) > 0
