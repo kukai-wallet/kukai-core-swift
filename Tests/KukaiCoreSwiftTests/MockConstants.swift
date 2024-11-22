@@ -164,7 +164,7 @@ public struct MockConstants {
 		tzktStakingConfigURL5.appendQueryItem(name: "sort.desc", value: "id")
 		tzktStakingConfigURL5.appendQueryItem(name: "limit", value: 1)
 		
-		var ghostnetBakerConfigURL = tzktURL.appendingPathComponent("v1/delegates/tz1abc123")
+		let ghostnetBakerConfigURL = tzktURL.appendingPathComponent("v1/delegates/tz1abc123")
 		
 		
 		var tzktsuggestURL1 = tzktURL.appendingPathComponent("v1/suggest/accounts/Bake Nug Payouts")

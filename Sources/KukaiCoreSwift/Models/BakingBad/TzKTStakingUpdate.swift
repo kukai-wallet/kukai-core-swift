@@ -13,6 +13,9 @@ public struct TzKTStakingUpdate: Codable {
 	/// Block level
 	public let level: Decimal
 	
+	/// Date / Time operation was submitted
+	public let timestamp: String
+	
 	/// Cycle that the operation was submitted
 	public let cycle: Int
 	
@@ -32,6 +35,14 @@ public struct TzKTStakingUpdate: Codable {
 	public var xtzAmount: XTZAmount {
 		get {
 			return XTZAmount(fromRpcAmount: amount) ?? .zero()
+		}
+	}
+	
+	public var dateTime: Date {
+		get {
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+			return dateFormatter.date(from: timestamp) ?? Date()
 		}
 	}
 }

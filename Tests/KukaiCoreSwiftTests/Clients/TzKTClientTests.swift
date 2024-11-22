@@ -631,6 +631,7 @@ class TzKTClientTests: XCTestCase {
 					XCTAssert(updates.count == 2, updates.count.description)
 					XCTAssert(updates.first?.cycle == 1272, updates.first?.cycle.description ?? "-")
 					XCTAssert(updates.first?.xtzAmount.normalisedRepresentation == "2.999997", updates.first?.xtzAmount.normalisedRepresentation ?? "-")
+					XCTAssert(updates.first?.dateTime.description == "2024-11-22 10:08:35 +0000", updates.first?.dateTime.description ?? "-")
 				
 				case .failure(let error):
 					XCTFail("Error: \(error)")
