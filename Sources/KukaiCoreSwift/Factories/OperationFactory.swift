@@ -434,11 +434,65 @@ public class OperationFactory {
 		}
 		
 		/**
-		 Filter and verify only 1 transaction exists thats setting a baker. If so return this operation, otherwise return false
+		 Filter and verify only 1 transaction exists thats setting a baker. If so return this operation, otherwise return nil
 		 */
 		public static func isDelegate(operations: [Operation]) -> OperationDelegation? {
 			let filteredOperations = filterReveal(operations: operations)
 			if filteredOperations.count == 1, let op = filteredOperations.first as? OperationDelegation {
+				return op
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Filter and verify only 1 transaction exists thats performing a stake operation. If so return this operation, otherwise return nil
+		 */
+		public static func isStake(operations: [Operation]) -> OperationTransaction? {
+			let filteredOperations = filterReveal(operations: operations)
+			if filteredOperations.count == 1,
+			   let op = filteredOperations.first as? OperationTransaction,
+			   op.parameters?["entrypoint"] as? String == "stake",
+			   let valueDict = op.parameters?["value"] as? [String: String],
+			   Array(valueDict.keys) == ["prim"],
+			   Array(valueDict.values) == ["Unit"]
+			{
+				return op
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Filter and verify only 1 transaction exists thats performing an unstake operation. If so return this operation, otherwise return nil
+		 */
+		public static func isUnstake(operations: [Operation]) -> OperationTransaction? {
+			let filteredOperations = filterReveal(operations: operations)
+			if filteredOperations.count == 1,
+			   let op = filteredOperations.first as? OperationTransaction,
+			   op.parameters?["entrypoint"] as? String == "unstake",
+			   let valueDict = op.parameters?["value"] as? [String: String],
+			   Array(valueDict.keys) == ["prim"],
+			   Array(valueDict.values) == ["Unit"]
+			{
+				return op
+			}
+			
+			return nil
+		}
+		
+		/**
+		 Filter and verify only 1 transaction exists thats performing a finalise unstake operation If so return this operation, otherwise return nil
+		 */
+		public static func isFinaliseUnstake(operations: [Operation]) -> OperationTransaction? {
+			let filteredOperations = filterReveal(operations: operations)
+			if filteredOperations.count == 1,
+			   let op = filteredOperations.first as? OperationTransaction,
+			   op.parameters?["entrypoint"] as? String == "finalize_unstake",
+			   let valueDict = op.parameters?["value"] as? [String: String],
+			   Array(valueDict.keys) == ["prim"],
+			   Array(valueDict.values) == ["Unit"]
+			{
 				return op
 			}
 			

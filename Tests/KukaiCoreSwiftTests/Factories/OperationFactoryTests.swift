@@ -583,6 +583,9 @@ class OperationFactoryTests: XCTestCase {
 		let dex = DipDupExchange(name: .quipuswap, address: "KT1abc", tezPool: "100000000000", tokenPool: "1000000000", sharesTotal: "100000", midPrice: "14", token: dexToken)
 		let swap = OperationFactory.swapXtzToToken(withDex: dex, xtzAmount: .init(fromNormalisedAmount: 14), minTokenAmount: .init(fromNormalisedAmount: 2, decimalPlaces: 3), walletAddress: "tz1abc", timeout: 60)
 		let delegate = OperationFactory.delegateOperation(to: "KT1abc", from: MockConstants.defaultHdWallet.address)
+		let stake = OperationFactory.stakeOperation(from: MockConstants.defaultHdWallet.address, amount: TokenAmount(fromNormalisedAmount: 14, decimalPlaces: 6))
+		let unstake = OperationFactory.unstakeOperation(from: MockConstants.defaultHdWallet.address, amount: TokenAmount(fromNormalisedAmount: 14, decimalPlaces: 6))
+		let finaliseUnstake = OperationFactory.finaliseUnstakeOperation(from: MockConstants.defaultHdWallet.address)
 		
 		
 		// is single transctions
@@ -604,6 +607,24 @@ class OperationFactoryTests: XCTestCase {
 		// Is Delegate
 		XCTAssert( OperationFactory.Extractor.isDelegate(operations: delegate) != nil )
 		XCTAssert( OperationFactory.Extractor.isDelegate(operations: opFA1) == nil )
+		
+		
+		// Is Stake
+		let stakeOp = OperationFactory.Extractor.isStake(operations: stake)
+		XCTAssert( stakeOp != nil )
+		XCTAssert( stakeOp?.destination == MockConstants.defaultHdWallet.address)
+		
+		
+		// Is Unstake
+		let unstakeOp = OperationFactory.Extractor.isUnstake(operations: unstake)
+		XCTAssert( unstakeOp != nil )
+		XCTAssert( unstakeOp?.destination == MockConstants.defaultHdWallet.address)
+		
+		
+		// Is FinaliseUnstake
+		let finaliseUnstakeOp = OperationFactory.Extractor.isFinaliseUnstake(operations: finaliseUnstake)
+		XCTAssert( finaliseUnstakeOp != nil )
+		XCTAssert( finaliseUnstakeOp?.destination == MockConstants.defaultHdWallet.address)
 		
 		
 		// is token transfer
