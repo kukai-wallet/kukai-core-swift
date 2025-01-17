@@ -224,10 +224,10 @@ public struct MockConstants {
 		tzktDelegatesURL.appendQueryItem(name: "limit", value: 10)
 		
 		var simulateURL1 = baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
-		simulateURL1.appendQueryItem(name: "version", value: "0")
+		simulateURL1.appendQueryItem(name: "version", value: "1")
 		
 		var simulateURL2 = secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")
-		simulateURL2.appendQueryItem(name: "version", value: "0")
+		simulateURL2.appendQueryItem(name: "version", value: "1")
 		
 		let tzKTHeadURL = tzktURL.appendingPathComponent("v1/head")
 		

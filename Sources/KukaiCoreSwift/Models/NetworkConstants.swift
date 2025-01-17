@@ -16,10 +16,9 @@ public struct NetworkConstants: Codable {
 	public let origination_size: Int
 	public let cost_per_byte: String
 	public let hard_storage_limit_per_operation: String
-	public let blocks_per_cycle: Int
 	
 	public func secondsBetweenBlocks() -> Int {
-		return Int(minimal_block_delay) ?? 10
+		return Int(minimal_block_delay) ?? 8
 	}
 	
 	public func mutezPerByte() -> Int {
@@ -35,7 +34,7 @@ public struct NetworkConstants: Codable {
 	}
 	
 	public func maxGasPerBlock() -> Int {
-		return Int(hard_gas_limit_per_block) ?? 1733333
+		return Int(hard_gas_limit_per_block) ?? 1386666
 	}
 	
 	public func maxStoragePerOperation() -> Int {
