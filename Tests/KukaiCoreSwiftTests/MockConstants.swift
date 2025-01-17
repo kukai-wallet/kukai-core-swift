@@ -104,11 +104,11 @@ public struct MockConstants {
 		
 		var tzktVotingPeriodsURL = tzktURL.appendingPathComponent("v1/voting/periods")
 		tzktVotingPeriodsURL.appendQueryItem(name: "sort.desc", value: "id")
-		tzktVotingPeriodsURL.appendQueryItem(name: "limit", value: 5)
+		tzktVotingPeriodsURL.appendQueryItem(name: "limit", value: 15)
 		
 		var tzktBakerVotesURL = tzktURL.appendingPathComponent("v1/accounts/tz1abc123/operations")
 		tzktBakerVotesURL.appendQueryItem(name: "type", value: "ballot,proposal")
-		tzktBakerVotesURL.appendQueryItem(name: "limit", value: 5)
+		tzktBakerVotesURL.appendQueryItem(name: "limit", value: 15)
 		
 		
 		

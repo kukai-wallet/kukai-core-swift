@@ -152,7 +152,7 @@ public class TzKTClient {
 	
 	
 	/// Get the last N voting periods
-	public func votingPeriods(limit: Int = 5, completion: @escaping ((Result<[TzKTVotingPeriod], KukaiError>) -> Void)) {
+	public func votingPeriods(limit: Int = 15, completion: @escaping ((Result<[TzKTVotingPeriod], KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/voting/periods")
 		url.appendQueryItem(name: "sort.desc", value: "id")
@@ -162,7 +162,7 @@ public class TzKTClient {
 	}
 	
 	/// Get the last N transactions a given baker has performed related to voting (e.g. casting ballot or upvoting a proposal)
-	public func bakerVotes(forAddress: String, limit: Int = 5, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
+	public func bakerVotes(forAddress: String, limit: Int = 15, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
 		var url = config.tzktURL
 		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
 		url.appendQueryItem(name: "type", value: "ballot,proposal")
@@ -172,7 +172,7 @@ public class TzKTClient {
 	}
 	
 	/// Check how many of the last N voting periods that a given baker has particiapted in. This does not track what way the baker voted, merely that they cast a ballot one way or the other, or upvoted a proposal
-	public func checkBakerVoteParticipation(forAddress: String, limit: Int = 5, completion: @escaping ((Result<[Bool], KukaiError>) -> Void)) {
+	public func checkBakerVoteParticipation(forAddress: String, limit: Int = 15, completion: @escaping ((Result<[Bool], KukaiError>) -> Void)) {
 		let dispatchGroupVoting = DispatchGroup()
 		dispatchGroupVoting.enter()
 		dispatchGroupVoting.enter()
@@ -180,7 +180,7 @@ public class TzKTClient {
 		var periods: [TzKTVotingPeriod] = []
 		var transactions: [TzKTTransaction] = []
 		
-		votingPeriods { votingResult in
+		votingPeriods(limit: limit) { votingResult in
 			guard let votingRes = try? votingResult.get() else {
 				completion(Result.failure(votingResult.getFailure()))
 				return
@@ -190,7 +190,7 @@ public class TzKTClient {
 			dispatchGroupVoting.leave()
 		}
 		
-		bakerVotes(forAddress: forAddress) { votesResult in
+		bakerVotes(forAddress: forAddress, limit: limit) { votesResult in
 			guard let votesRes = try? votesResult.get() else {
 				completion(Result.failure(votesResult.getFailure()))
 				return
@@ -204,10 +204,18 @@ public class TzKTClient {
 		dispatchGroupVoting.notify(queue: .global(qos: .background)) {
 			var results: [Bool] = []
 			for period in periods {
+				guard period.kind == .proposal || period.kind == .exploration || period.kind == .promotion else {
+					continue
+				}
+				
 				if transactions.contains(where: { $0.period?.index == period.index }) {
 					results.append(true)
 				} else {
 					results.append(false)
+				}
+				
+				if results.count == 5 {
+					break
 				}
 			}
 			

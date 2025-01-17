@@ -1,5 +1,57 @@
 [
     {
+        "type": "ballot",
+        "id": 1508431505653760,
+        "level": 7464560,
+        "timestamp": "2024-12-25T07:06:10Z",
+        "block": "BM4anSpmAt53EW2V5hJs8vJWmRWWUVtobWmAPMZRkcjvQZeebJ6",
+        "hash": "ooyYqLCTa4UAdMcVQHC9CH1hV3Ht2JdhuptQRh7qNKY6NFMXvSD",
+        "period": {
+            "index": 138,
+            "epoch": 69,
+            "kind": "promotion",
+            "firstLevel": 7446529,
+            "lastLevel": 7569408
+        },
+        "proposal": {
+            "alias": "Quebec",
+            "hash": "PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1170922149953,
+        "vote": "yay",
+        "rolls": 195
+    },
+    {
+        "type": "ballot",
+        "id": 1451404992446464,
+        "level": 7202346,
+        "timestamp": "2024-11-24T17:49:20Z",
+        "block": "BMaPdsZ8wNTVD65fSWvmNoCWZz2TV6TBvqNUhMcybwj7EiehCCU",
+        "hash": "opNXkL4eGk1VHcyXMVwH6ochy8FDrzdLjTDCz5EpUrVFihaTWGz",
+        "period": {
+            "index": 136,
+            "epoch": 69,
+            "kind": "exploration",
+            "firstLevel": 7200769,
+            "lastLevel": 7323648
+        },
+        "proposal": {
+            "alias": "Quebec",
+            "hash": "PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1070356194196,
+        "vote": "pass",
+        "rolls": 178
+    },
+    {
         "type": "proposal",
         "id": 1424735510462464,
         "level": 7081743,
@@ -128,5 +180,213 @@
         "votingPower": 992908014038,
         "duplicated": false,
         "rolls": 165
+    },
+    {
+        "type": "ballot",
+        "id": 1092815960408064,
+        "level": 5590023,
+        "timestamp": "2024-05-12T01:27:18Z",
+        "block": "BMDYPHzU3i17YX8c4DkB6oh3TMC79CryBXAJWEaDsp78qmrMwXe",
+        "hash": "ooY736zKE4MD7pcBjhWzMm7wJ7rtBWiLbxnQb4ZDQopaDTihr6M",
+        "period": {
+            "index": 122,
+            "epoch": 59,
+            "kind": "promotion",
+            "firstLevel": 5562369,
+            "lastLevel": 5644288
+        },
+        "proposal": {
+            "alias": "Paris B",
+            "hash": "PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 631102350513,
+        "vote": "yay",
+        "rolls": 105
+    },
+    {
+        "type": "ballot",
+        "id": 1045767025328128,
+        "level": 5398561,
+        "timestamp": "2024-04-08T14:16:11Z",
+        "block": "BL6i5N9ZraDnbHzFLjaZsBijmkaKB7eSGXPCMPhg6Mdv2CKYMmH",
+        "hash": "onk75hvYTcraYSxebEemR8VmnstabRvQP7PtYAuKZd4nfqpo3wf",
+        "period": {
+            "index": 120,
+            "epoch": 59,
+            "kind": "exploration",
+            "firstLevel": 5398529,
+            "lastLevel": 5480448
+        },
+        "proposal": {
+            "alias": "Paris B",
+            "hash": "PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 590418368445,
+        "vote": "yay",
+        "rolls": 98
+    },
+    {
+        "type": "proposal",
+        "id": 1030138746634240,
+        "level": 5335732,
+        "timestamp": "2024-03-28T13:29:10Z",
+        "block": "BKkTK7qnhgSBLcEjg5qqF1NjLjGYjh5GhzPvRHbnjq792Yf9GgA",
+        "hash": "ooHCcFWjSqkWs2TaFVhJRYpJof6T3EuYEXSQTdSpaxqZXi1854W",
+        "period": {
+            "index": 119,
+            "epoch": 59,
+            "kind": "proposal",
+            "firstLevel": 5316609,
+            "lastLevel": 5398528
+        },
+        "proposal": {
+            "alias": "Paris B",
+            "hash": "PtParisBQscdCm6Cfow6ndeU6wKJyA3aV1j4D3gQBQMsTQyJCrz"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 584970113736,
+        "duplicated": false,
+        "rolls": 97
+    },
+    {
+        "type": "ballot",
+        "id": 927355953479680,
+        "level": 4930536,
+        "timestamp": "2024-01-15T20:20:00Z",
+        "block": "BMN1vpBKmPZxw3cKvWCkfw55uG4k963egUBjr9oa3wUwk42jh5c",
+        "hash": "oonDDhRC1ZX9KUNyM7CkHLErcZUhbXZ5gu9NKd231Hy25UTmDTC",
+        "period": {
+            "index": 114,
+            "epoch": 55,
+            "kind": "promotion",
+            "firstLevel": 4907009,
+            "lastLevel": 4988928
+        },
+        "proposal": {
+            "alias": "Oxford 2",
+            "hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 644891263177,
+        "vote": "yay",
+        "rolls": 107
+    },
+    {
+        "type": "ballot",
+        "id": 892410228899840,
+        "level": 4793682,
+        "timestamp": "2023-12-22T18:19:59Z",
+        "block": "BKqciG7yh9kh2F4mE9GGErTQJKf2TcPkJwwhNV4XUhduREESJme",
+        "hash": "ooNqe4CPcfiW6pTtQy8MdBEeRq91RVMGb8S2L8aMLDv68e9H5Au",
+        "period": {
+            "index": 112,
+            "epoch": 55,
+            "kind": "exploration",
+            "firstLevel": 4743169,
+            "lastLevel": 4825088
+        },
+        "proposal": {
+            "alias": "Oxford 2",
+            "hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 502912927922,
+        "vote": "yay",
+        "rolls": 83
+    },
+    {
+        "type": "proposal",
+        "id": 867208117878784,
+        "level": 4695933,
+        "timestamp": "2023-12-05T14:48:00Z",
+        "block": "BKiqLivrGpaKgeZJSucCeGCmuDdngZMjy6GUhfo9w6w56D6UREG",
+        "hash": "oo1dMHv6Jgn1oqMAt5eVbNUyhGS7FQKbWA8TXfFjV9CPBtVcc1Q",
+        "period": {
+            "index": 111,
+            "epoch": 55,
+            "kind": "proposal",
+            "firstLevel": 4661249,
+            "lastLevel": 4743168
+        },
+        "proposal": {
+            "alias": "Oxford 2",
+            "hash": "ProxfordYmVfjWnRcgjWH36fW6PArwqykTFzotUxRs6gmTcZDuH"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 483855557729,
+        "duplicated": false,
+        "rolls": 80
+    },
+    {
+        "type": "ballot",
+        "id": 767701419032576,
+        "level": 4304737,
+        "timestamp": "2023-09-27T20:06:08Z",
+        "block": "BL7N1sBSn8bpqLtLHiNh6VvHiVuWxdmoX98pvSt1GtXRaikiM33",
+        "hash": "oneKXjhTSFhcUzxxfXWVeeFrih4ZAYsNY1Rp89iZPjxKCYyBoxN",
+        "period": {
+            "index": 106,
+            "epoch": 50,
+            "kind": "promotion",
+            "firstLevel": 4251649,
+            "lastLevel": 4333568
+        },
+        "proposal": {
+            "alias": "Oxford",
+            "hash": "ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 407644376946,
+        "vote": "nay",
+        "rolls": 67
+    },
+    {
+        "type": "ballot",
+        "id": 729858720137216,
+        "level": 4156674,
+        "timestamp": "2023-09-01T22:02:15Z",
+        "block": "BLaJy9yR1uAYUtw85iTDXtFrdcm1SGwAGNk9AxSqZf84WtAfPzy",
+        "hash": "ooXDUQB2ToJsreEDdFyAzbjSWdMhxmvw3RpH7saYvu8ohPF5ohq",
+        "period": {
+            "index": 104,
+            "epoch": 50,
+            "kind": "exploration",
+            "firstLevel": 4087809,
+            "lastLevel": 4169728
+        },
+        "proposal": {
+            "alias": "Oxford",
+            "hash": "ProxfordSW2S7fvchT1Zgj2avb5UES194neRyYVXoaDGvF9egt8"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 370163555295,
+        "vote": "yay",
+        "rolls": 61
     }
 ]
