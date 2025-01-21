@@ -14,7 +14,7 @@ let package = Package(
 	dependencies: [
 		.package(name: "KukaiCryptoSwift", url: "https://github.com/kukai-wallet/kukai-crypto-swift", from: "1.0.23" /*.branch("develop")*/),
 		.package(name: "CustomAuth", url: "https://github.com/torusresearch/customauth-swift-sdk", from: "10.0.2"),
-		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "0.8.0"),
+		.package(name: "SignalRClient", url: "https://github.com/moozzyk/SignalR-Client-Swift", from: "1.1.0"),
 		.package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.19.3")
 	],
 	targets: [
