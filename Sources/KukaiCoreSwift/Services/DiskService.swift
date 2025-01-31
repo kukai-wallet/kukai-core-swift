@@ -13,6 +13,7 @@ import os.log
 public enum DiskServiceError: Error {
 	case documentDirectoryNotFound
 	case createFolderError
+	case noDateCreatedOnFile
 	case unknown
 }
 
@@ -116,6 +117,9 @@ public class DiskService {
 	
 	// MARK: - Fetch
 	
+	/**
+	 Fetch a remote file and optionally store it in a supplied folder in the documents directory
+	 */
 	public static func fetchRemoteFile(url: URL, storeInFolder: String?, completion: @escaping ((Result<URL, Error>) -> Void)) {
 		guard let docDirectory = documentsDirectory() else {
 			completion(Result.failure(DiskServiceError.documentDirectoryNotFound))
@@ -171,6 +175,51 @@ public class DiskService {
 			}
 		}
 		task.resume()
+	}
+	
+	/**
+	 Check the contents of a folder and delete the files if older than a given date
+	 */
+	public static func clearFiles(inFolder: String, olderThanDays: Int, completion: @escaping ((Error?) -> Void)) {
+		let calendar = Calendar.current
+		
+		guard let docDirectory = documentsDirectory(), let daysAgo = calendar.date(byAdding: .day, value: olderThanDays * -1, to: Date()) else {
+			completion(DiskServiceError.documentDirectoryNotFound)
+			return
+		}
+		
+		let fullFolderPath = docDirectory.appendingPathComponent(inFolder)
+		
+		do {
+			let directoryContent = try FileManager.default.contentsOfDirectory(at: fullFolderPath, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles)
+			for url in directoryContent {
+				let resources = try url.resourceValues(forKeys: [.creationDateKey])
+				
+				guard let creationDate = resources.creationDate else {
+					completion(DiskServiceError.noDateCreatedOnFile)
+					return
+				}
+				
+				if creationDate < daysAgo {
+					try FileManager.default.removeItem(at: url)
+				}
+			}
+		}
+		catch (let error) {
+			completion(error)
+		}
+	}
+	
+	/**
+	 Return the size, in bytes, of a given folder in the documents directory
+	 */
+	public static func sizeOfFolder(_ folder: String) -> Int? {
+		guard let docDirectory = documentsDirectory() else {
+			return nil
+		}
+		
+		let fullFolderPath = docDirectory.appendingPathComponent(folder)
+		return try? fullFolderPath.resourceValues(forKeys: [.fileSizeKey]).fileSize
 	}
 	
 	
