@@ -10,9 +10,14 @@ import Foundation
 import os.log
 
 
+public enum DiskServiceError: Error {
+	case documentDirectoryNotFound
+	case createFolderError
+	case unknown
+}
+
 /// A service class to write and read data from the devices documents directory
 public class DiskService {
-	
 	
 	// MARK: - Write
 	
@@ -105,6 +110,67 @@ public class DiskService {
 			Logger.kukaiCoreSwift.error("Failed to parse decodable from \(fromFileName): \(error)")
 			return nil
 		}
+	}
+	
+	
+	
+	// MARK: - Fetch
+	
+	public static func fetchRemoteFile(url: URL, storeInFolder: String?, completion: @escaping ((Result<URL, Error>) -> Void)) {
+		guard let docDirectory = documentsDirectory() else {
+			completion(Result.failure(DiskServiceError.documentDirectoryNotFound))
+			return
+		}
+		
+		// Create filename and path, checking if the folder exists and creating if not
+		let fileName = url.lastPathComponent
+		var fullFilePath = docDirectory
+		
+		if let subDirectory = storeInFolder {
+			fullFilePath = fullFilePath.appendingPathComponent(subDirectory)
+			
+			if !FileManager.default.fileExists(atPath: fullFilePath.path) {
+				do {
+					try FileManager.default.createDirectory(at: fullFilePath, withIntermediateDirectories: true)
+				} catch {
+					completion(Result.failure(DiskServiceError.createFolderError))
+					return
+				}
+			}
+		}
+		
+		fullFilePath = fullFilePath.appendingPathComponent(fileName)
+		
+		
+		// Check if filename exists already, if so early exit
+		if FileManager.default.fileExists(atPath: fullFilePath.path) {
+			completion(Result.success(fullFilePath))
+			return
+		}
+		
+		
+		// Else download the file, move it to the location, return the path if successful
+		let sessionConfig = URLSessionConfiguration.default
+		let session = URLSession(configuration: sessionConfig)
+		let request = URLRequest(url: url)
+		
+		let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
+			guard let tempLocalUrl = tempLocalUrl, error == nil else {
+				completion(Result.failure(error ?? DiskServiceError.unknown))
+				return
+			}
+			
+			do {
+				try FileManager.default.copyItem(at: tempLocalUrl, to: fullFilePath)
+				completion(Result.success(fullFilePath))
+				return
+				
+			} catch (let writeError) {
+				completion(Result.failure(writeError))
+				return
+			}
+		}
+		task.resume()
 	}
 	
 	
