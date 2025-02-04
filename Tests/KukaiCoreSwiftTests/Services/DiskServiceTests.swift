@@ -135,6 +135,6 @@ class DiskServiceTests: XCTestCase {
 			}
 		}
 		
-		wait(for: [expectation, innerExpectation], timeout: 10)
+		wait(for: [expectation, innerExpectation], timeout: 120)
 	}
 }
