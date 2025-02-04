@@ -93,4 +93,48 @@ class DiskServiceTests: XCTestCase {
 		let deleteResult = DiskService.delete(fileName: "something-else")
 		XCTAssert(deleteResult)
 	}
+	
+	func testRemoteFetch() {
+		
+		// URLSession downloadTask doesn't care if its actually remote or not, can pass a url to a local file and it will process as though its remote
+		guard let path = Bundle.module.url(forResource: "delegate", withExtension: "json", subdirectory: "Stubs") else {
+			XCTFail("Can't find file")
+			return
+		}
+		
+		let folderName = "models"
+		let expectation = XCTestExpectation(description: "diskservice-remote")
+		let innerExpectation = XCTestExpectation(description: "diskservice-remote-2")
+		
+		
+		if let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
+			print("Documents Directory: \(documentsPath)")
+		}
+		
+		DiskService.fetchRemoteFile(url: path, storeInFolder: folderName) { result in
+			guard let _ = try? result.get() else {
+				XCTFail("returned error: \(result)")
+				return
+			}
+			
+			let size = DiskService.sizeOfFolder(folderName) ?? 0
+			XCTAssert(size > 0, "size of folder is zero")
+			expectation.fulfill()
+			
+			
+			DiskService.clearFiles(inFolder: folderName, olderThanDays: 0) { error in
+				if let err = error {
+					XCTFail("error'd removing file: \(err)")
+				} else {
+					
+					let size = DiskService.sizeOfFolder(folderName) ?? 0
+					XCTAssert(size == 0, "folder is not empty")
+				}
+				
+				innerExpectation.fulfill()
+			}
+		}
+		
+		wait(for: [expectation, innerExpectation], timeout: 10)
+	}
 }

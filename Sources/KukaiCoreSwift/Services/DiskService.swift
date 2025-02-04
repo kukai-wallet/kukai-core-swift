@@ -190,23 +190,27 @@ public class DiskService {
 		
 		let fullFolderPath = docDirectory.appendingPathComponent(inFolder)
 		
-		do {
-			let directoryContent = try FileManager.default.contentsOfDirectory(at: fullFolderPath, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles)
-			for url in directoryContent {
-				let resources = try url.resourceValues(forKeys: [.creationDateKey])
-				
-				guard let creationDate = resources.creationDate else {
-					completion(DiskServiceError.noDateCreatedOnFile)
-					return
-				}
-				
-				if creationDate < daysAgo {
-					try FileManager.default.removeItem(at: url)
+		DispatchQueue.global(qos: .background).async {
+			do {
+				let directoryContent = try FileManager.default.contentsOfDirectory(at: fullFolderPath, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles)
+				for url in directoryContent {
+					let resources = try url.resourceValues(forKeys: [.creationDateKey])
+					
+					guard let creationDate = resources.creationDate else {
+						DispatchQueue.main.async { completion(DiskServiceError.noDateCreatedOnFile) }
+						return
+					}
+					
+					if creationDate < daysAgo {
+						try FileManager.default.removeItem(at: url)
+					}
 				}
 			}
-		}
-		catch (let error) {
-			completion(error)
+			catch (let error) {
+				DispatchQueue.main.async { completion(error) }
+			}
+			
+			DispatchQueue.main.async { completion(nil) }
 		}
 	}
 	
@@ -219,7 +223,20 @@ public class DiskService {
 		}
 		
 		let fullFolderPath = docDirectory.appendingPathComponent(folder)
-		return try? fullFolderPath.resourceValues(forKeys: [.fileSizeKey]).fileSize
+		
+		guard let enumerator = FileManager.default.enumerator(at: fullFolderPath, includingPropertiesForKeys: [.fileSizeKey]) else {
+			return nil
+		}
+			
+		var size = 0
+		for case let fileURL as URL in enumerator {
+			guard let fileSize = try? fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
+				continue
+			}
+			size += fileSize
+		}
+		
+		return size
 	}
 	
 	
