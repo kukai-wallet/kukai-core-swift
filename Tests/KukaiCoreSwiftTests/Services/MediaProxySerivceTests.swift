@@ -65,6 +65,7 @@ class MediaProxySerivceTests: XCTestCase {
 		let imageFormats = [TzKTBalanceMetadataFormat(uri: MediaProxySerivceTests.ipfsURIWithoutExtension, mimeType: "image/png", dimensions: nil)]
 		let videoFormats = [TzKTBalanceMetadataFormat(uri: MediaProxySerivceTests.ipfsURIWithoutExtension, mimeType: "video/mp4", dimensions: nil)]
 		let audioFormats = [TzKTBalanceMetadataFormat(uri: MediaProxySerivceTests.ipfsURIWithoutExtension, mimeType: "audio/mp3", dimensions: nil)]
+		let modelFormats = [TzKTBalanceMetadataFormat(uri: MediaProxySerivceTests.ipfsURIWithoutExtension, mimeType: "model/gltf-binary", dimensions: nil)]
 		
 		let expectationImage = XCTestExpectation(description: "media serivce image")
 		mediaProxyService.getMediaType(fromFormats: imageFormats, orURL: URL(string: MediaProxySerivceTests.ipfsURIWithoutExtension)) { result in
@@ -108,7 +109,21 @@ class MediaProxySerivceTests: XCTestCase {
 			expectationAudio.fulfill()
 		}
 		
-		wait(for: [expectationImage, expectationVideo, expectationAudio], timeout: 120)
+		let expectationModel = XCTestExpectation(description: "media serivce model")
+		mediaProxyService.getMediaType(fromFormats: modelFormats, orURL: URL(string: MediaProxySerivceTests.ipfsURIWithoutExtension)) { result in
+			
+			switch result {
+				case .success(let mediaType):
+					XCTAssert(mediaType[0] == .model, mediaType[0].rawValue)
+					
+				case .failure(let error):
+					XCTFail("Error: \(error)")
+			}
+			
+			expectationModel.fulfill()
+		}
+		
+		wait(for: [expectationImage, expectationVideo, expectationAudio, expectationModel], timeout: 120)
 	}
 	
 	func testMediaTypeCheckerFromUrlExtension() {

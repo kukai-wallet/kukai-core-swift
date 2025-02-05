@@ -68,6 +68,7 @@ public class MediaProxyService: NSObject {
 		case image
 		case audio
 		case video
+		case model
 	}
 	
 	/// Helper to parse a collection of media types to understand its contents
@@ -76,6 +77,7 @@ public class MediaProxyService: NSObject {
 		case audioOnly
 		case videoOnly
 		case imageAndAudio
+		case model
 	}
 	
 	private var getMediaTypeCompletion: ((Result<[MediaType], KukaiError>) -> Void)? = nil
@@ -84,6 +86,7 @@ public class MediaProxyService: NSObject {
 	private static let videoFormats = ["mp4", "mov", "webm"]
 	private static let audioFormats = ["mpeg", "mpg", "mp3"]
 	private static let imageFormats = ["png", "jpeg", "jpg", "bmp", "tif", "tiff", "svg", "gif", "webp"]
+	private static let modelFormats = ["gltf-binary", "gltf+json", "glb"]
 	private static let permanentCache = SDImageCache(namespace: "permanent")
 	private static let temporaryCache = SDImageCache(namespace: "temporary")
 	private static let detailCache = SDImageCache(namespace: "detail")
@@ -220,6 +223,9 @@ public class MediaProxyService: NSObject {
 			} else if format.mimeType.starts(with: "image/") || format.mimeType.starts(with: "application/") {
 				types.append(.image)
 				
+			} else if format.mimeType.starts(with: "model/") {
+				types.append(.model)
+				
 			} else if !format.mimeType.contains("/"), let type = checkFileExtension(fileExtension: format.mimeType) {
 				
 				// Some tokens have a mimetype that doesn't conform to standard, and only includes the file format
@@ -272,7 +278,10 @@ public class MediaProxyService: NSObject {
 		}
 		
 		let duplicatesRemoved = NSOrderedSet(array: types).map({ $0 as? MediaType })
-		if duplicatesRemoved.contains(where: { $0 == .audio }) && duplicatesRemoved.contains(where: { $0 == .image }) {
+		if duplicatesRemoved.contains(where: { $0 == .model }) {
+			return .model
+			
+		} else if duplicatesRemoved.contains(where: { $0 == .audio }) && duplicatesRemoved.contains(where: { $0 == .image }) {
 			return .imageAndAudio
 			
 		} else if duplicatesRemoved.contains(where: { $0 == .video }) {
@@ -296,6 +305,9 @@ public class MediaProxyService: NSObject {
 				
 			} else if MediaProxyService.videoFormats.contains(fileExtension) {
 				return .video
+				
+			} else if MediaProxyService.modelFormats.contains(fileExtension) {
+				return .model
 			}
 		}
 		
@@ -500,6 +512,9 @@ extension MediaProxyService: URLSessionDownloadDelegate {
 			
 		} else if contentType.contains("audio/") {
 			completion(Result.success([.audio]))
+			
+		} else if contentType.contains("model/") {
+			completion(Result.success([.model]))
 			
 		} else {
 			completion(Result.success([.image]))
