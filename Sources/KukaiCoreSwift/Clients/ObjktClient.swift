@@ -144,7 +144,7 @@ public class ObjktClient {
 				lowest_ask,
 				metadata,
 				name,
-				attributes {
+				attributes(where: {attribute: {type: {_nlike: "_objktcom"}}}) {
 					attribute {
 						name,
 						value,
