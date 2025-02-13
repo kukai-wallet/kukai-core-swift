@@ -18,6 +18,8 @@ public struct TezosNodeClientConfig {
 		case mainnet
 		case ghostnet
 		case protocolnet
+		case nextnet
+		case experimental
 	}
 	
 	/// Allow switching between local forging or remote forging+parsing
