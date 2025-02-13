@@ -153,7 +153,13 @@ public struct TezosNodeClientConfig {
 				objktApiURL = TezosNodeClientConfig.defaultGhostnetURLs.objktApiURL
 			
 			case .protocolnet:
-				fatalError("No defaults for networkType protocolnet. Must be user supplied")
+				fatalError("No defaults for networkType protocolnet. Must be supplied by user")
+				
+			case .nextnet:
+				fatalError("No defaults for networkType nextnet. Must be supplied by user")
+				
+			case .experimental:
+				fatalError("No defaults for networkType experimental. Must be supplied by user")
 		}
 	}
 	
