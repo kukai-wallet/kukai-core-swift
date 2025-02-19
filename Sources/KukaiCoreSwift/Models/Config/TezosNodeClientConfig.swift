@@ -158,7 +158,7 @@ public struct TezosNodeClientConfig {
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		return TezosNodeClientConfig(
 			nodeURLs: nodeURLs,
 			forgingType: .local,
@@ -177,7 +177,7 @@ public struct TezosNodeClientConfig {
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		if nodeURLs.count >= 2 {
 			fatalError("remote forging requires using different servers to prevent against man in the middle attacks. You must supply at least 2 URLs")
 		}
