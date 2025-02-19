@@ -196,7 +196,8 @@ public class DiskService {
 		DispatchQueue.global(qos: .background).async {
 			do {
 				print("clearFiles - starting do")
-				let directoryContent = try FileManager.default.contentsOfDirectory(at: fullFolderPath, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles)
+				let fileManager = FileManager()
+				let directoryContent = try fileManager.contentsOfDirectory(at: fullFolderPath, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles)
 				for url in directoryContent {
 					let resources = try url.resourceValues(forKeys: [.creationDateKey])
 					

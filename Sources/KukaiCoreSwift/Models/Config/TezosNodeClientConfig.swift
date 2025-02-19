@@ -78,10 +78,10 @@ public struct TezosNodeClientConfig {
 	public let tzktURL: URL
 	
 	/// The URL to use for `TezosDomainsClient`
-	public let tezosDomainsURL: URL
+	public let tezosDomainsURL: URL?
 	
 	/// The URL to use for `TezosDomainsClient`
-	public let objktApiURL: URL
+	public let objktApiURL: URL?
 	
 	/// The `URLSession` that will be used for all network communication. If looking to mock this library, users should create their own `URLSessionMock` and pass it in.
 	public var urlSession: URLSession
@@ -105,7 +105,7 @@ public struct TezosNodeClientConfig {
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	*/
-	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) {
+	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) {
 		self.nodeURLs = nodeURLs
 		self.forgingType = forgingType
 		self.tzktURL = tzktURL

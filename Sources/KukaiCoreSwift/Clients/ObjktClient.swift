@@ -122,6 +122,11 @@ public class ObjktClient {
 	 Find the metadata of a list of contracts, used recurrisvely to find all collections while limited to request query size
 	 */
 	public func resolveCollectionsPage(addresses: ArraySlice<String>, completion: @escaping ((Result<GraphQLResponse<ObjktCollections>, KukaiError>) -> Void)) {
+		guard let objktURL = self.config.objktApiURL else {
+			completion(Result.success(GraphQLResponse<ObjktCollections>(errors: nil, data: nil)))
+			return
+		}
+		
 		var addressArray = ""
 		for add in addresses {
 			addressArray += "\"\(add)\","
@@ -130,13 +135,18 @@ public class ObjktClient {
 		let queryDict = ["query": "query { fa(where: {contract: {_in: [\(addressArray)] }}) { contract, name, logo, floor_price, twitter, website, owners, editions, creator { address, alias, website, twitter } }}"]
 		let data = try? JSONEncoder().encode(queryDict)
 		
-		self.networkService.request(url: self.config.objktApiURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktCollections>.self, completion: completion)
+		self.networkService.request(url: objktURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktCollections>.self, completion: completion)
 	}
 	
 	/**
 	 Find the meatdata of a specific token
 	 */
 	public func resolveToken(address: String, tokenId: Decimal, forOwnerWalletAddress walletAddress: String, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
+		guard let objktURL = self.config.objktApiURL else {
+			completion(Result.success(GraphQLResponse<ObjktTokenReponse>(errors: nil, data: nil)))
+			return
+		}
+		
 		var query = """
 		query {
 			token(where: {fa_contract: {_eq: "\(address)"}, token_id: {_eq: "\(tokenId)"}}) {
@@ -182,7 +192,7 @@ public class ObjktClient {
 		let data = try? JSONEncoder().encode(["query": query])
 		
 		
-		self.networkService.request(url: self.config.objktApiURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktTokenReponse>.self) { [weak self] result in
+		self.networkService.request(url: objktURL, isPOST: true, withBody: data, forReturnType: GraphQLResponse<ObjktTokenReponse>.self) { [weak self] result in
 			guard let res = try? result.get() else {
 				completion(Result.failure(result.getFailure()))
 				return

@@ -142,7 +142,7 @@ class DiskServiceTests: XCTestCase {
 				XCTAssert(size == 0, "folder is not empty")
 			}
 			
-			print("testRemoteFetch_2 - fulfil")
+			print("testRemoteFetch_2 - response")
 			expectation.fulfill()
 		}
 		
