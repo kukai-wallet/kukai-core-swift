@@ -41,9 +41,6 @@ public struct TezosNodeClientConfig {
 		/// The default mainnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
 		public static let tzktURL = URL(string: "https://api.tzkt.io/")!
 		
-		/// The default mainnet URL to use for `betterCallDevURL`, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html
-		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
-		
 		/// The default mainnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
 		public static let tezosDomainsURL = URL(string: "https://api.tezos.domains/graphql")!
 		
@@ -59,9 +56,6 @@ public struct TezosNodeClientConfig {
 		
 		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
 		public static let tzktURL = URL(string: "https://api.ghostnet.tzkt.io/")!
-		
-		/// The default testnet URL to use for `betterCallDevURL`, For more information on this service, see: https://api.better-call.dev/v1/docs/index.html
-		public static let betterCallDevURL = URL(string: "https://api.better-call.dev/")!
 		
 		/// The default testnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
 		public static let tezosDomainsURL = URL(string: "https://ghostnet-api.tezos.domains/graphql")!
@@ -82,9 +76,6 @@ public struct TezosNodeClientConfig {
 	
 	/// The URL to use for `TzKTClient`
 	public let tzktURL: URL
-	
-	/// The URL to use for `BetterCallDevClient`
-	public let betterCallDevURL: URL
 	
 	/// The URL to use for `TezosDomainsClient`
 	public let tezosDomainsURL: URL
@@ -110,16 +101,14 @@ public struct TezosNodeClientConfig {
 	- parameter nodeURLs: An array of URLs to use to estiamte and inject operations. Default to first and fallback to others as needed
 	- parameter forgeType: Enum to indicate whether to use local or remote forging.
 	- parameter tzktURL: The URL to use for `TzKTClient`.
-	- parameter betterCallDevURL: The URL to use for `BetterCallDevClient`.
 	- parameter tezosDomainsURL: The URL to use for `TezosDomainsClient`.
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	*/
-	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) {
+	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) {
 		self.nodeURLs = nodeURLs
 		self.forgingType = forgingType
 		self.tzktURL = tzktURL
-		self.betterCallDevURL = betterCallDevURL
 		self.tezosDomainsURL = tezosDomainsURL
 		self.objktApiURL = objktApiURL
 		self.urlSession = urlSession
@@ -140,7 +129,6 @@ public struct TezosNodeClientConfig {
 				nodeURLs = TezosNodeClientConfig.defaultMainnetURLs.nodeURLs
 				forgingType = .local
 				tzktURL = TezosNodeClientConfig.defaultMainnetURLs.tzktURL
-				betterCallDevURL = TezosNodeClientConfig.defaultMainnetURLs.betterCallDevURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL
 				objktApiURL = TezosNodeClientConfig.defaultMainnetURLs.objktApiURL
 			
@@ -148,7 +136,6 @@ public struct TezosNodeClientConfig {
 				nodeURLs = TezosNodeClientConfig.defaultGhostnetURLs.nodeURLs
 				forgingType = .local
 				tzktURL = TezosNodeClientConfig.defaultGhostnetURLs.tzktURL
-				betterCallDevURL = TezosNodeClientConfig.defaultGhostnetURLs.betterCallDevURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultGhostnetURLs.tezosDomainsURL
 				objktApiURL = TezosNodeClientConfig.defaultGhostnetURLs.objktApiURL
 			
@@ -167,17 +154,15 @@ public struct TezosNodeClientConfig {
 	Creates an instance of `TezosNodeClientConfig` with only the required properties needed when using local forge.
 	- parameter nodeURLs: An array of URLs to use to estiamte and inject operations. Default to first and fallback to others as needed
 	- parameter tzktURL: The URL to use for `TzKTClient`.
-	- parameter betterCallDevURL: The URL to use for `BetterCallDevClient`.
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		return TezosNodeClientConfig(
 			nodeURLs: nodeURLs,
 			forgingType: .local,
 			tzktURL: tzktURL,
-			betterCallDevURL: betterCallDevURL,
 			tezosDomainsURL: tezosDomainsURL,
 			objktApiURL: objktApiURL,
 			urlSession: urlSession,
@@ -188,12 +173,11 @@ public struct TezosNodeClientConfig {
 	Creates an instance of `TezosNodeClientConfig` with the required properties for remote forging. Note: function will casue a `fatalError` if supplied with less than 2 `nodeURLs`
 	- parameter nodeURLs: An array of URLs to use to estiamte and inject operations. Default to first and fallback to others as needed
 	- parameter tzktURL: The URL to use for `TzKTClient`.
-	- parameter betterCallDevURL: The URL to use for `BetterCallDevClient`.
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL, betterCallDevURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL, tezosDomainsURL: URL, objktApiURL: URL, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		if nodeURLs.count >= 2 {
 			fatalError("remote forging requires using different servers to prevent against man in the middle attacks. You must supply at least 2 URLs")
 		}
@@ -202,7 +186,6 @@ public struct TezosNodeClientConfig {
 			nodeURLs: nodeURLs,
 			forgingType: .remote,
 			tzktURL: tzktURL,
-			betterCallDevURL: betterCallDevURL,
 			tezosDomainsURL: tezosDomainsURL,
 			objktApiURL: objktApiURL,
 			urlSession: urlSession,

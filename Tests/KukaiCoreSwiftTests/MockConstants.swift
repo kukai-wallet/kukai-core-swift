@@ -23,7 +23,6 @@ public struct MockConstants {
 	public let loggingConfig: LoggingConfig
 	public let networkService: NetworkService
 	public let tezosNodeClient: TezosNodeClient
-	public let betterCallDevClient: BetterCallDevClient
 	public let tzktClient: TzKTClient
     public let tzktClientMainent: TzKTClient
 	public let tezosDomainsClient: TezosDomainsClient
@@ -50,14 +49,8 @@ public struct MockConstants {
 		// Setup URL mocks
 		let baseURL = config.nodeURLs[0]
 		let secondBaseURL = config.nodeURLs[1]
-		let bcdURL = config.betterCallDevURL
 		let tzktURL = config.tzktURL
 		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
-		
-		var bcdTokenBalanceURL = bcdURL.appendingPathComponent("v1/account/ithacanet/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/token_balances")
-		bcdTokenBalanceURL.appendQueryItem(name: "offset", value: 0)
-		bcdTokenBalanceURL.appendQueryItem(name: "size", value: 50)
-		bcdTokenBalanceURL.appendQueryItem(name: "hide_empty", value: "true")
 		
 		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")
 		tzktHistoryMainURL.appendQueryItem(name: "type", value: "delegation,origination,transaction,staking")
@@ -261,10 +254,6 @@ public struct MockConstants {
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/storage"): (MockConstants.jsonStub(fromFilename: "token-pool"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/balance"): (MockConstants.jsonStub(fromFilename: "xtz-pool"), MockConstants.http200),
 			
-			// BCD URLs
-			bcdURL.appendingPathComponent("v1/opg/ooVTdEf3WVFgubEHRpJGPkwUfidsfNiTESY3D6i5PbaNNisZjZ8"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
-			bcdURL.appendingPathComponent("v1/opg/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "bcd_more-detailed-error"), MockConstants.http200),
-			
 			// TzKT URLs
 			tzktURL.appendingPathComponent("v1/operations/ooT5uBirxWi9GXRqf6eGCEjoPhQid3U8yvsbP9JQHBXifVsinY8"): (MockConstants.jsonStub(fromFilename: "tzkt_operation"), MockConstants.http200),
 			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
@@ -389,24 +378,9 @@ public struct MockConstants {
 		dipDupClient = DipDupClient(networkService: networkService, config: config)
 		objktClient = ObjktClient(networkService: networkService, config: config)
 		tezosNodeClient.feeEstimatorService = FeeEstimatorService(config: config, operationService: opService, networkService: networkService)
-		betterCallDevClient = BetterCallDevClient(networkService: networkService, config: config)
-		tzktClient = TzKTClient(networkService: networkService, config: config, betterCallDevClient: betterCallDevClient, dipDupClient: dipDupClient)
-        tzktClientMainent = TzKTClient(networkService: networkService, config: configMainent, betterCallDevClient: betterCallDevClient, dipDupClient: dipDupClient)
+		tzktClient = TzKTClient(networkService: networkService, config: config, dipDupClient: dipDupClient)
+        tzktClientMainent = TzKTClient(networkService: networkService, config: configMainent, dipDupClient: dipDupClient)
 		tezosDomainsClient = TezosDomainsClient(networkService: networkService, config: config)
-	}
-	
-	public static func bcdURL(withPath: String, queryParams: [String: String], andConfig config: TezosNodeClientConfig) -> URL {
-		var bcdURL = config.betterCallDevURL.appendingPathComponent(withPath)
-		
-		for key in queryParams.keys {
-			bcdURL.appendQueryItem(name: key, value: queryParams[key] ?? "")
-		}
-		
-		return bcdURL
-	}
-	
-	public static func bcdTokenMetadataURL(config: TezosNodeClientConfig, contract: String) -> URL {
-		return MockConstants.bcdURL(withPath: "v1/tokens/ithacanet/metadata", queryParams: ["contract": contract], andConfig: config)
 	}
 	
 	
