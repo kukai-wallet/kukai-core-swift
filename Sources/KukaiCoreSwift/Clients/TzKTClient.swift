@@ -31,7 +31,6 @@ public class TzKTClient {
 	
 	private let networkService: NetworkService
 	private let config: TezosNodeClientConfig
-	private let betterCallDevClient: BetterCallDevClient
 	private let dipDupClient: DipDupClient
 	
 	private var tempTransactions: [TzKTTransaction] = []
@@ -53,16 +52,14 @@ public class TzKTClient {
 	// MARK: - Init
 	
 	/**
-	Init a `TzKTClient` with a `NetworkService` and a `TezosNodeClientConfig` and a `BetterCallDevClient`.
+	Init a `TzKTClient` with a `NetworkService` and a `TezosNodeClientConfig`.
 	- parameter networkService: `NetworkService` used to manage network communication.
 	- parameter config: `TezosNodeClientConfig` used to apss in settings.
-	- parameter betterCallDevClient: `BetterCallDevClient` used to fetch more detailed errors about operation failures involving smart contracts.
 	- parameter dipDupClient: `DipDupClient` used to fetch additional information about the tokens owned.
 	*/
-	public init(networkService: NetworkService, config: TezosNodeClientConfig, betterCallDevClient: BetterCallDevClient, dipDupClient: DipDupClient) {
+	public init(networkService: NetworkService, config: TezosNodeClientConfig, dipDupClient: DipDupClient) {
 		self.networkService = networkService
 		self.config = config
-		self.betterCallDevClient = betterCallDevClient
 		self.tokenBalanceQueue = DispatchQueue(label: "TzKTClient.tokens", qos: .background, attributes: [], autoreleaseFrequency: .inherit, target: nil)
 		self.dipDupClient = dipDupClient
 	}
