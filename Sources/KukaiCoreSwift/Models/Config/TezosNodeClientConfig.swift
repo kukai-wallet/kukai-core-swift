@@ -28,6 +28,10 @@ public struct TezosNodeClientConfig {
 		case remote
 	}
 	
+	public enum ConfigError: Error, Equatable {
+		case missingBaseURL
+	}
+	
 	
 	
 	// MARK: - Public Constants
@@ -75,7 +79,7 @@ public struct TezosNodeClientConfig {
 	public let forgingType: ForgingType
 	
 	/// The URL to use for `TzKTClient`
-	public let tzktURL: URL
+	public let tzktURL: URL?
 	
 	/// The URL to use for `TezosDomainsClient`
 	public let tezosDomainsURL: URL?
@@ -105,7 +109,7 @@ public struct TezosNodeClientConfig {
 	- parameter urlSession: The URLSession object that will perform all the network operations.
 	- parameter networkType: Enum indicating the network type.
 	*/
-	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) {
+	private init(nodeURLs: [URL], forgingType: ForgingType, tzktURL: URL?, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) {
 		self.nodeURLs = nodeURLs
 		self.forgingType = forgingType
 		self.tzktURL = tzktURL
@@ -158,7 +162,7 @@ public struct TezosNodeClientConfig {
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithLocalForge(nodeURLs: [URL], tzktURL: URL?, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		return TezosNodeClientConfig(
 			nodeURLs: nodeURLs,
 			forgingType: .local,
@@ -177,7 +181,7 @@ public struct TezosNodeClientConfig {
 	- parameter networkType: Enum indicating the network type.
 	- returns TezosNodeClientConfig
 	*/
-	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
+	public static func configWithRemoteForge(nodeURLs: [URL], parseNodeURL: URL, tzktURL: URL?, tezosDomainsURL: URL?, objktApiURL: URL?, urlSession: URLSession, networkType: NetworkType) -> TezosNodeClientConfig {
 		if nodeURLs.count >= 2 {
 			fatalError("remote forging requires using different servers to prevent against man in the middle attacks. You must supply at least 2 URLs")
 		}

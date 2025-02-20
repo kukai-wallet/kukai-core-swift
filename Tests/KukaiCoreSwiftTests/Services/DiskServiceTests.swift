@@ -128,21 +128,15 @@ class DiskServiceTests: XCTestCase {
 		let folderName = "models"
 		let expectation = XCTestExpectation(description: "diskservice-remote-2")
 		
-		print("testRemoteFetch_2 - starting logic")
 		DiskService.clearFiles(inFolder: folderName, olderThanDays: 0) { error in
-			print("testRemoteFetch_2 - response")
-			
 			if let err = error {
-				print("testRemoteFetch_2 - error")
 				XCTFail("error'd removing file: \(err)")
 				
 			} else {
-				print("testRemoteFetch_2 - success")
 				let size = DiskService.sizeOfFolder(folderName) ?? 0
 				XCTAssert(size == 0, "folder is not empty")
 			}
 			
-			print("testRemoteFetch_2 - response")
 			expectation.fulfill()
 		}
 		

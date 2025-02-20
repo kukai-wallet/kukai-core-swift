@@ -123,7 +123,7 @@ public class ObjktClient {
 	 */
 	public func resolveCollectionsPage(addresses: ArraySlice<String>, completion: @escaping ((Result<GraphQLResponse<ObjktCollections>, KukaiError>) -> Void)) {
 		guard let objktURL = self.config.objktApiURL else {
-			completion(Result.success(GraphQLResponse<ObjktCollections>(errors: nil, data: nil)))
+			completion(Result.failure(KukaiError.missingBaseURL()))
 			return
 		}
 		
@@ -143,7 +143,7 @@ public class ObjktClient {
 	 */
 	public func resolveToken(address: String, tokenId: Decimal, forOwnerWalletAddress walletAddress: String, completion: @escaping ((Result<GraphQLResponse<ObjktTokenReponse>, KukaiError>) -> Void)) {
 		guard let objktURL = self.config.objktApiURL else {
-			completion(Result.success(GraphQLResponse<ObjktTokenReponse>(errors: nil, data: nil)))
+			completion(Result.failure(KukaiError.missingBaseURL()))
 			return
 		}
 		

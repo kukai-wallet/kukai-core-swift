@@ -31,3 +31,11 @@ public extension Error {
 		return (self as NSError).userInfo[NSUnderlyingErrorKey] as? NSError
 	}
 }
+
+extension Error where Self: Equatable {
+	
+	func isEqualTo(other: Error) -> Bool {
+		if let o = other as? Self { return self == o }
+		return false
+	}
+}

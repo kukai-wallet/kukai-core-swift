@@ -52,7 +52,7 @@ public class TezosDomainsClient {
 	/// Get Tezos domain response for a given address
 	public func getDomainFor(address: String, url: URL? = nil, completion: @escaping ((Result<GraphQLResponse<TezosDomainsDomainResponse>, KukaiError>) -> Void)) {
 		guard let url = (url ?? self.config.tezosDomainsURL) else {
-			completion(Result.success(GraphQLResponse<TezosDomainsDomainResponse>(errors: nil, data: nil)))
+			completion(Result.failure(KukaiError.missingBaseURL()))
 			return
 		}
 		
@@ -117,7 +117,7 @@ public class TezosDomainsClient {
 	/// Find the tz address of a given domain
 	public func getAddressFor(domain: String, completion: @escaping ((Result<GraphQLResponse<TezosDomainsAddressResponse>, KukaiError>) -> Void)) {
 		guard let url = self.config.tezosDomainsURL else {
-			completion(Result.success(GraphQLResponse<TezosDomainsAddressResponse>(errors: nil, data: nil)))
+			completion(Result.failure(KukaiError.missingBaseURL()))
 			return
 		}
 		
@@ -142,7 +142,7 @@ public class TezosDomainsClient {
 	/// Bulk function for fetching domains for an array of addresses
 	public func getDomainsFor(addresses: [String], url: URL? = nil, completion: @escaping ((Result<GraphQLResponse<TezosDomainsDomainBulkResponse>, KukaiError>) -> Void)) {
 		guard let url = (url ?? self.config.tezosDomainsURL) else {
-			completion(Result.success(GraphQLResponse<TezosDomainsDomainBulkResponse>(errors: nil, data: nil)))
+			completion(Result.failure(KukaiError.missingBaseURL()))
 			return
 		}
 		
@@ -230,7 +230,7 @@ public class TezosDomainsClient {
 	/// Bulk function to find all domains for a list of addresses
 	public func getAddressesFor(domains: [String], completion: @escaping ((Result<GraphQLResponse<TezosDomainsAddressBulkResponse>, KukaiError>) -> Void)) {
 		guard let url = self.config.tezosDomainsURL else {
-			completion(Result.success(GraphQLResponse<TezosDomainsAddressBulkResponse>(errors: nil, data: nil)))
+			completion(Result.failure(KukaiError.missingBaseURL()))
 			return
 		}
 		

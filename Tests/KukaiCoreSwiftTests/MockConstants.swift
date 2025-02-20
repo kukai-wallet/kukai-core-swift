@@ -49,7 +49,7 @@ public struct MockConstants {
 		// Setup URL mocks
 		let baseURL = config.nodeURLs[0]
 		let secondBaseURL = config.nodeURLs[1]
-		let tzktURL = config.tzktURL
+		let tzktURL = config.tzktURL!
 		let bakingBadURL = URL(string: "https://api.baking-bad.org/")!
 		
 		var tzktHistoryMainURL = tzktURL.appendingPathComponent("v1/accounts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/operations")

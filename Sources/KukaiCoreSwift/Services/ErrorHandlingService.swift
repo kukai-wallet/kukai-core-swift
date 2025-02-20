@@ -106,6 +106,10 @@ public struct KukaiError: CustomStringConvertible, Error {
 		return KukaiError(errorType: .unknown, knownErrorMessage: nil, subType: nil, rpcErrorString: withString, failWith: nil, requestURL: nil, requestJSON: nil, responseJSON: nil, httpStatusCode: nil)
 	}
 	
+	public static func missingBaseURL() -> KukaiError {
+		return KukaiError(errorType: .system, knownErrorMessage: nil, subType: TezosNodeClientConfig.ConfigError.missingBaseURL, rpcErrorString: nil, failWith: nil)
+	}
+	
 	
 	
 	// MARK: - Modifiers
@@ -116,6 +120,18 @@ public struct KukaiError: CustomStringConvertible, Error {
 		self.requestJSON = String(data: requestJSON ?? Data(), encoding: .utf8)
 		self.responseJSON = String(data: responseJSON ?? Data(), encoding: .utf8)
 		self.httpStatusCode = httpStatusCode
+	}
+	
+	
+	
+	// MARK: - Helpers
+	
+	public func isMissingBaseURLError() -> Bool {
+		if self.errorType == .system, let subType = self.subType, TezosNodeClientConfig.ConfigError.missingBaseURL.isEqualTo(other: subType) {
+			return true
+		}
+		
+		return false
 	}
 	
 	

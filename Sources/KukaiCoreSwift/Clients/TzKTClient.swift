@@ -77,7 +77,11 @@ public class TzKTClient {
 	 - parameter completion: A completion block called, returning a Swift Result type
 	 */
 	public func getStorage<T: Codable>(forContract contract: String, ofType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/contracts/\(contract)/storage")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: T.self, completion: completion)
@@ -90,7 +94,11 @@ public class TzKTClient {
 	 - parameter completion: A completion block called, returning a Swift Result type
 	 */
 	public func getBigMap<T: Codable>(forId id: String, ofType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/bigmaps/\(id)/keys")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: T.self, completion: completion)
@@ -104,7 +112,11 @@ public class TzKTClient {
 	 - parameter completion: A completion block called, returning a Swift Result type
 	 */
 	public func getBigMapKey<T: Codable>(forId id: String, key: String, ofType: T.Type, completion: @escaping ((Result<T, KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/bigmaps/\(id)/keys")
 		url.appendQueryItem(name: "key", value: key)
 		
@@ -119,7 +131,11 @@ public class TzKTClient {
 	 Call https://api.tzkt.io/v1/suggest/accounts/... appending the supplied string, in an attempt to search for an account with a known alias
 	 */
 	public func suggestAccount(forString: String, completion: @escaping ((Result<TzKTAddress?, KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/suggest/accounts/\(forString)")
 		url.appendQueryItem(name: "limit", value: 1)
 		
@@ -150,7 +166,11 @@ public class TzKTClient {
 	
 	/// Get the last N voting periods
 	public func votingPeriods(limit: Int = 15, completion: @escaping ((Result<[TzKTVotingPeriod], KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/voting/periods")
 		url.appendQueryItem(name: "sort.desc", value: "id")
 		url.appendQueryItem(name: "limit", value: limit)
@@ -160,7 +180,11 @@ public class TzKTClient {
 	
 	/// Get the last N transactions a given baker has performed related to voting (e.g. casting ballot or upvoting a proposal)
 	public func bakerVotes(forAddress: String, limit: Int = 15, completion: @escaping ((Result<[TzKTTransaction], KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
 		url.appendQueryItem(name: "type", value: "ballot,proposal")
 		url.appendQueryItem(name: "limit", value: limit)
@@ -234,7 +258,11 @@ public class TzKTClient {
 			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTBaker].self, completion: completion)
 			
 		} else {
-			var url = config.tzktURL
+			guard var url = config.tzktURL else {
+				completion(Result.failure(KukaiError.missingBaseURL()))
+				return
+			}
+			
 			url.appendPathComponent("v1/delegates")
 			url.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
 			url.appendQueryItem(name: "active", value: "true")
@@ -287,19 +315,19 @@ public class TzKTClient {
 					return
 				}
 				
-				var stakingUrl = self?.config.tzktURL.appendingPathComponent("v1/operations/set_delegate_parameters")
-				stakingUrl?.appendQueryItem(name: "sender", value: forAddress)
-				stakingUrl?.appendQueryItem(name: "status", value: "applied")
-				stakingUrl?.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
-				stakingUrl?.appendQueryItem(name: "sort.desc", value: "id")
-				stakingUrl?.appendQueryItem(name: "limit", value: 1)
-				
-				guard let sURL = stakingUrl else {
-					completion(Result.failure(KukaiError.internalApplicationError(error: TzKTServiceError.invalidURL)))
+				guard let configUrl = self?.config.tzktURL else {
+					completion(Result.failure(KukaiError.missingBaseURL()))
 					return
 				}
 				
-				self?.networkService.request(url: sURL, isPOST: false, withBody: nil, forReturnType: [[String: Decimal]].self) { result2 in
+				var stakingUrl = configUrl.appendingPathComponent("v1/operations/set_delegate_parameters")
+				stakingUrl.appendQueryItem(name: "sender", value: forAddress)
+				stakingUrl.appendQueryItem(name: "status", value: "applied")
+				stakingUrl.appendQueryItem(name: "select", value: "limitOfStakingOverBaking,edgeOfBakingOverStaking")
+				stakingUrl.appendQueryItem(name: "sort.desc", value: "id")
+				stakingUrl.appendQueryItem(name: "limit", value: 1)
+				
+				self?.networkService.request(url: stakingUrl, isPOST: false, withBody: nil, forReturnType: [[String: Decimal]].self) { result2 in
 					guard let res2 = try? result2.get() else {
 						completion(Result.failure(result2.getFailure()))
 						return
@@ -317,7 +345,11 @@ public class TzKTClient {
 			
 			
 		} else {
-			var url = config.tzktURL
+			guard var url = config.tzktURL else {
+				completion(Result.failure(KukaiError.missingBaseURL()))
+				return
+			}
+			
 			url.appendPathComponent("v1/delegates/\(forAddress)")
 			
 			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: Data.self) { result in
@@ -352,7 +384,11 @@ public class TzKTClient {
 	 Call https://api.tzkt.io/v1/rewards/delegators/...?limit=... to get the config settings for the given baker
 	 */
 	public func delegatorRewards(forAddress: String, limit: Int = 25, completion: @escaping ((Result<[TzKTDelegatorReward], KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/rewards/delegators/\(forAddress)")
 		url.appendQueryItem(name: "limit", value: limit)
 		
@@ -617,7 +653,11 @@ public class TzKTClient {
 		
 		let _ = addressString.removeLast()
 		
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/accounts/\(forAddress)/operations")
 		url.appendQueryItem(name: "limit", value: 1)
 		url.appendQueryItem(name: "type", value: "transaction")
@@ -676,7 +716,11 @@ public class TzKTClient {
 	 Fetch staking update operations for a given user, optionally filter by a specific type, that haven't completed yet (currentCycle - 4)
 	 */
 	public func pendingStakingUpdates(forAddress: String, ofType: String?, completion: @escaping ((Result<[TzKTStakingUpdate], KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/staking/updates")
 		url.appendQueryItem(name: "staker", value: forAddress)
 		url.appendQueryItem(name: "sort.desc", value: "id")
@@ -705,7 +749,11 @@ public class TzKTClient {
 	 Fetch the head from TzKT from `.../v1/head`
 	 */
 	public func head(completion: @escaping ((Result<TzKTHead, KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/head")
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: TzKTHead.self, completion: completion)
@@ -715,7 +763,11 @@ public class TzKTClient {
 	 Call https://api.tzkt.io/v1/cycles?limit=... to get the 10 most recent cycles
 	 */
 	public func cycles(limit: Int = 25, completion: @escaping ((Result<[TzKTCycle], KukaiError>) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/cycles")
 		url.appendQueryItem(name: "limit", value: limit)
 		
@@ -767,7 +819,11 @@ public class TzKTClient {
 	- parameter completion: A completion colsure called when the request is done.
 	*/
 	public func getOperation(byHash hash: String, completion: @escaping (([TzKTOperation]?, KukaiError?) -> Void)) {
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(nil, KukaiError.missingBaseURL())
+			return
+		}
+		
 		url.appendPathComponent("v1/operations/" + hash)
 		
 		networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: [TzKTOperation].self) { (result) in
@@ -796,7 +852,10 @@ public class TzKTClient {
 		addressesToWatch = addresses
 		isListening = true
 		
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			return
+		}
+		
 		url.appendPathComponent("v1/ws")
 		
 		if withDebugging {
@@ -864,7 +923,11 @@ public class TzKTClient {
 			return
 		}
 		
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/tokens/balances/count")
 		url.appendQueryItem(name: "account", value: forAddress)
 		url.appendQueryItem(name: "balance.gt", value: 0)
@@ -886,7 +949,11 @@ public class TzKTClient {
 			return
 		}
 		
-		var url = config.tzktURL
+		guard var url = config.tzktURL else {
+			completion(Result.failure(KukaiError.missingBaseURL()))
+			return
+		}
+		
 		url.appendPathComponent("v1/tokens/balances")
 		url.appendQueryItem(name: "account", value: forAddress)
 		url.appendQueryItem(name: "balance.gt", value: 0)
@@ -1137,7 +1204,11 @@ public class TzKTClient {
 		tempTokenTransfers = []
 		
 		// Main transactions
-		var urlMain = config.tzktURL
+		guard var urlMain = config.tzktURL else {
+			completion([])
+			return
+		}
+		
 		urlMain.appendPathComponent("v1/accounts/\(address)/operations")
 		urlMain.appendQueryItem(name: "type", value: "delegation,origination,transaction,staking")
 		urlMain.appendQueryItem(name: "micheline", value: 1)
@@ -1156,7 +1227,11 @@ public class TzKTClient {
 		}
 		
 		// FA token receives
-		var urlReceive = config.tzktURL
+		guard var urlReceive = config.tzktURL else {
+			completion([])
+			return
+		}
+		
 		urlReceive.appendPathComponent("v1/tokens/transfers")
 		urlReceive.appendQueryItem(name: "anyof.from.to", value: address)
 		urlReceive.appendQueryItem(name: "limit", value: limit)

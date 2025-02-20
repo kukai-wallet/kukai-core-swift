@@ -181,48 +181,36 @@ public class DiskService {
 	 Check the contents of a folder and delete the files if older than a given date
 	 */
 	public static func clearFiles(inFolder: String, olderThanDays: Int, completion: @escaping ((Error?) -> Void)) {
-		print("clearFiles - entered")
 		let calendar = Calendar.current
 		
 		guard let docDirectory = documentsDirectory(), let daysAgo = calendar.date(byAdding: .day, value: olderThanDays * -1, to: Date()) else {
-			print("clearFiles - can't find doc directory")
 			completion(DiskServiceError.documentDirectoryNotFound)
 			return
 		}
 		
 		let fullFolderPath = docDirectory.appendingPathComponent(inFolder)
 		
-		print("clearFiles - starting task")
 		DispatchQueue.global(qos: .background).async {
 			do {
-				print("clearFiles - starting do")
 				let fileManager = FileManager()
 				let directoryContent = try fileManager.contentsOfDirectory(at: fullFolderPath, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles)
 				for url in directoryContent {
 					let resources = try url.resourceValues(forKeys: [.creationDateKey])
 					
 					guard let creationDate = resources.creationDate else {
-						print("clearFiles - file missing creation date")
 						DispatchQueue.main.async { completion(DiskServiceError.noDateCreatedOnFile) }
 						return
 					}
 					
 					if creationDate < daysAgo {
-						print("clearFiles - clearing files")
 						try FileManager.default.removeItem(at: url)
-					} else {
-						print("clearFiles - no files to clear")
 					}
 				}
-				
-				print("clearFiles - finished do")
 			}
 			catch (let error) {
-				print("clearFiles - entered catch")
 				DispatchQueue.main.async { completion(error) }
 			}
 			
-			print("clearFiles - returning as normal")
 			DispatchQueue.main.async { completion(nil) }
 		}
 	}
