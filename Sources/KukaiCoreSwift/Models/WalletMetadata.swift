@@ -291,8 +291,10 @@ public class WalletMetadata: Codable, Hashable {
 	public func hasDomain(onNetwork network: TezosNodeClientConfig.NetworkType) -> Bool {
 		if network == .mainnet {
 			return hasMainnetDomain()
-		} else {
+		} else if network == .ghostnet {
 			return hasGhostnetDomain()
+		} else {
+			return false
 		}
 	}
 	
@@ -315,8 +317,10 @@ public class WalletMetadata: Codable, Hashable {
 	public func primaryDomain(onNetwork network: TezosNodeClientConfig.NetworkType) -> TezosDomainsReverseRecord? {
 		if network == .mainnet {
 			return primaryMainnetDomain()
-		} else {
+		} else if network == .ghostnet{
 			return primaryGhostnetDomain()
+		} else {
+			return nil
 		}
 	}
 	
