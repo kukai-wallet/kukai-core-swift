@@ -35,6 +35,26 @@ class TezosNodeClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 120)
 	}
 	
+	func testAllBalances() {
+		let expectation = XCTestExpectation(description: "tezos node client")
+		MockConstants.shared.tezosNodeClient.getAllBalances(forAddress: MockConstants.defaultHdWallet.address) { result in
+			switch result {
+				case .success(let tuple):
+					XCTAssert(tuple.balance.normalisedRepresentation == "0.097575", tuple.balance.normalisedRepresentation)
+					XCTAssert(tuple.staked.normalisedRepresentation == "0.43", tuple.staked.normalisedRepresentation)
+					XCTAssert(tuple.unstaked.normalisedRepresentation == "0.0015", tuple.unstaked.normalisedRepresentation)
+					XCTAssert(tuple.finalisable.normalisedRepresentation == "0.00035", tuple.finalisable.normalisedRepresentation)
+					
+				case .failure(let error):
+					XCTFail(error.description)
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
 	func testDelegate() {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.getDelegate(forAddress: MockConstants.defaultHdWallet.address) { result in
@@ -177,6 +197,25 @@ class TezosNodeClientTests: XCTestCase {
 			
 			expectation.fulfill()
 		})
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
+	func testLiquidityBakingAddresses() {
+		let expectation = XCTestExpectation(description: "tezos node client")
+		MockConstants.shared.tezosNodeClient.getLiquidityBakingAddresses { result in
+			switch result {
+				case .success(let tuple):
+					XCTAssert(tuple.cpmm == "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5", tuple.cpmm)
+					XCTAssert(tuple.tzbtc == "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN", tuple.tzbtc)
+					XCTAssert(tuple.sirs == "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo", tuple.sirs)
+					
+				case .failure(let error):
+					XCTFail(error.description)
+			}
+			
+			expectation.fulfill()
+		}
 		
 		wait(for: [expectation], timeout: 120)
 	}

@@ -249,10 +249,14 @@ public struct MockConstants {
 			secondBaseURL.appendingPathComponent("chains/main/blocks/head/helpers/preapply/operations"): (MockConstants.jsonStub(fromFilename: "preapply"), MockConstants.http200),
 			baseURL.appendingPathComponent("injection/operation"): (MockConstants.jsonStub(fromFilename: "inject"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/balance"): (MockConstants.jsonStub(fromFilename: "balance"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/staked_balance"): (MockConstants.jsonStub(fromFilename: "balance-staked"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/unstaked_frozen_balance"): (MockConstants.jsonStub(fromFilename: "balance-unstaked"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/unstaked_finalizable_balance"): (MockConstants.jsonStub(fromFilename: "balance-finalisable"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss/delegate"): (MockConstants.jsonStub(fromFilename: "delegate"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8/storage"): (MockConstants.jsonStub(fromFilename: "contract_storage"), MockConstants.http200),
-			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/storage"): (MockConstants.jsonStub(fromFilename: "token-pool"), MockConstants.http200),
 			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/balance"): (MockConstants.jsonStub(fromFilename: "xtz-pool"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/context/liquidity_baking/cpmm_address"): (MockConstants.jsonStub(fromFilename: "cpmm"), MockConstants.http200),
+			baseURL.appendingPathComponent("chains/main/blocks/head/context/contracts/KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5/storage"): (MockConstants.jsonStub(fromFilename: "cpmm-storage"), MockConstants.http200),
 			
 			// TzKT URLs
 			tzktURL.appendingPathComponent("v1/operations/ooT5uBirxWi9GXRqf6eGCEjoPhQid3U8yvsbP9JQHBXifVsinY8"): (MockConstants.jsonStub(fromFilename: "tzkt_operation"), MockConstants.http200),

@@ -1,0 +1,20 @@
+{
+    "prim": "Pair",
+    "args": [
+        {
+            "int": "1"
+        },
+        {
+            "int": "36315297118"
+        },
+        {
+            "int": "100"
+        },
+        {
+            "string": "KT1VqarPDicMFn1ejmQqqshUkUXTCTXwmkCN"
+        },
+        {
+            "string": "KT1AafHA1C1vk959wvHWBispY9Y2f3fxBUUo"
+        }
+    ]
+}

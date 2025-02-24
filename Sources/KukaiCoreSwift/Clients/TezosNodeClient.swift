@@ -88,6 +88,134 @@ public class TezosNodeClient {
 		}
 	}
 	
+	/**
+	Gets the staked xtz balance for a given Address.
+	- parameter forAddress: A Tezos network address, starting with `"tz1"`, `"tz2"`, `"tz3"` or `"kt1"`
+	- parameter completion: A callback containing a new `Token` object matching the xtz standard, or an error.
+	*/
+	public func getStakedBalance(forAddress address: String, completion: @escaping ((Result<XTZAmount, KukaiError>) -> Void)) {
+		self.networkService.send(rpc: RPC.xtzStakedBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
+			switch result {
+				case .success(let rpcAmount):
+					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
+					completion(Result.success(xtz))
+				
+				case .failure(let rpcError):
+					completion(Result.failure(rpcError))
+			}
+		}
+	}
+	
+	/**
+	Gets the unstaked xtz balance for a given Address.
+	- parameter forAddress: A Tezos network address, starting with `"tz1"`, `"tz2"`, `"tz3"` or `"kt1"`
+	- parameter completion: A callback containing a new `Token` object matching the xtz standard, or an error.
+	*/
+	public func getUnstakedBalance(forAddress address: String, completion: @escaping ((Result<XTZAmount, KukaiError>) -> Void)) {
+		self.networkService.send(rpc: RPC.xtzUnstakedBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
+			switch result {
+				case .success(let rpcAmount):
+					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
+					completion(Result.success(xtz))
+				
+				case .failure(let rpcError):
+					completion(Result.failure(rpcError))
+			}
+		}
+	}
+	
+	/**
+	Gets the finalisable xtz balance for a given Address.
+	- parameter forAddress: A Tezos network address, starting with `"tz1"`, `"tz2"`, `"tz3"` or `"kt1"`
+	- parameter completion: A callback containing a new `Token` object matching the xtz standard, or an error.
+	*/
+	public func getFinalisableBalance(forAddress address: String, completion: @escaping ((Result<XTZAmount, KukaiError>) -> Void)) {
+		self.networkService.send(rpc: RPC.xtzFinalisableBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
+			switch result {
+				case .success(let rpcAmount):
+					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
+					completion(Result.success(xtz))
+				
+				case .failure(let rpcError):
+					completion(Result.failure(rpcError))
+			}
+		}
+	}
+	
+	/**
+	Gets the XTZ, staked, unstaked and finalisable balance for a give address.
+	- parameter forAddress: A Tezos network address, starting with `"tz1"`, `"tz2"`, `"tz3"` or `"kt1"`
+	- parameter completion: A callback containing `(balance: XTZAmount, staked: XTZAmount, unstaked: XTZAmount, finalisable: XTZAmount)`
+	*/
+	public func getAllBalances(forAddress address: String, completion: @escaping ((Result<(balance: XTZAmount, staked: XTZAmount, unstaked: XTZAmount, finalisable: XTZAmount), KukaiError>) -> Void)) {
+		var error: KukaiError? = nil
+		var balance: XTZAmount = .zero()
+		var staked: XTZAmount = .zero()
+		var unstaked: XTZAmount = .zero()
+		var finalisable: XTZAmount = .zero()
+		
+		let dispatchGroup = DispatchGroup()
+		dispatchGroup.enter()
+		dispatchGroup.enter()
+		dispatchGroup.enter()
+		dispatchGroup.enter()
+		
+		getBalance(forAddress: address) { result in
+			guard let res = try? result.get() else {
+				error = result.getFailure()
+				dispatchGroup.leave()
+				return
+			}
+			
+			balance = res
+			dispatchGroup.leave()
+		}
+		
+		getStakedBalance(forAddress: address) { result in
+			guard let res = try? result.get() else {
+				error = result.getFailure()
+				dispatchGroup.leave()
+				return
+			}
+			
+			staked = res
+			dispatchGroup.leave()
+		}
+		
+		getUnstakedBalance(forAddress: address) { result in
+			guard let res = try? result.get() else {
+				error = result.getFailure()
+				dispatchGroup.leave()
+				return
+			}
+			
+			unstaked = res
+			dispatchGroup.leave()
+		}
+		
+		getFinalisableBalance(forAddress: address) { result in
+			guard let res = try? result.get() else {
+				error = result.getFailure()
+				dispatchGroup.leave()
+				return
+			}
+			
+			finalisable = res
+			dispatchGroup.leave()
+		}
+		
+		
+		// When all requests finished, return on main thread
+		dispatchGroup.notify(queue: .main) {
+			if let err = error {
+				completion(Result.failure(err))
+				
+			} else {
+				completion(Result.success((balance: balance, staked: staked, unstaked: unstaked, finalisable: finalisable)))
+			}
+		}
+	}
+	
 	
 	
 	// MARK: - Delegate
@@ -302,6 +430,38 @@ public class TezosNodeClient {
 				case .failure(let err):
 					completion(Result.failure(err))
 			}
+		}
+	}
+	
+	/**
+	 Get the address of the CPMM contract and the 2 tokens (tzBTC and SIRS) that it manages
+	 - parameter completion: A callback with a `Result` object, with either a `(cpmm: String, tzbtc: String, sirs: String)` or an `Error`
+	*/
+	public func getLiquidityBakingAddresses(completion: @escaping ((Result<(cpmm: String, tzbtc: String, sirs: String), KukaiError>) -> Void)) {
+		let configUrls = config.nodeURLs
+		self.networkService.send(rpc: RPC.liquidtyBakingContractAddress(), withNodeURLs: configUrls) { [weak self] result in
+			guard let res = try? result.get() else {
+				completion(Result.failure(result.getFailure()))
+				return
+			}
+			
+			self?.networkService.send(rpc: RPC.contractStorage(contractAddress: res), withNodeURLs: configUrls, completion: { innerResult in
+				guard let innerRes = try? innerResult.get(),
+					let json = try? JSONSerialization.jsonObject(with: innerRes) as? [String: Any],
+					let argsArray = json["args"] as? [Any],
+					argsArray.count > 4,
+					let address1Obj = argsArray[3] as? [String: String],
+					let address1 = address1Obj["string"],
+					let address2Obj = argsArray[4] as? [String: String],
+					let address2 = address2Obj["string"]
+				else {
+					completion(Result.failure(innerResult.getFailure()))
+					return
+				}
+				
+				let tuple = (cpmm: res, tzbtc: address1, sirs: address2)
+				completion(Result.success(tuple))
+			})
 		}
 	}
 	
