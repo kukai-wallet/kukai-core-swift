@@ -25,7 +25,7 @@ public struct Account: Codable, Hashable {
 	public let xtzUnstakedBalance: XTZAmount
 	
 	/// The finalised XTZ balance of the wallet. Needs to be feteched seperately, will default to empty
-	public let xtzFinalisedBalance: XTZAmount
+	public let xtzFinalisedBalance: XTZAmount?
 	
 	/// All the wallets FA1.2, FA2 funginble tokens
 	public let tokens: [Token]
@@ -68,7 +68,7 @@ public struct Account: Codable, Hashable {
 	}
 	
 	/// Full init
-	public init(walletAddress: String, xtzBalance: XTZAmount, xtzStakedBalance: XTZAmount, xtzUnstakedBalance: XTZAmount, xtzFinalisedBalance: XTZAmount, tokens: [Token], nfts: [Token], recentNFTs: [NFT], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
+	public init(walletAddress: String, xtzBalance: XTZAmount, xtzStakedBalance: XTZAmount, xtzUnstakedBalance: XTZAmount, xtzFinalisedBalance: XTZAmount?, tokens: [Token], nfts: [Token], recentNFTs: [NFT], liquidityTokens: [DipDupPositionData], delegate: TzKTAccountDelegate?, delegationLevel: Decimal?) {
 		self.walletAddress = walletAddress
 		self.xtzBalance = xtzBalance
 		self.xtzStakedBalance = xtzStakedBalance
