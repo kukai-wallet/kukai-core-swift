@@ -74,21 +74,6 @@ extension RPC where T == String {
 		return RPC<String>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/balance", payload: nil, responseType: String.self)
 	}
 	
-	/// Creates an RPC to fetch the amount of staked XTZ the address has
-	public static func xtzStakedBalance(forAddress address: String) -> RPC<String> {
-		return RPC<String>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/staked_balance", payload: nil, responseType: String.self)
-	}
-	
-	/// Creates an RPC to fetch the amount of unstaked XTZ the address has
-	public static func xtzUnstakedBalance(forAddress address: String) -> RPC<String> {
-		return RPC<String>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/unstaked_frozen_balance", payload: nil, responseType: String.self)
-	}
-	
-	/// Creates an RPC to fetch the amount of finalisable XTZ the address has
-	public static func xtzFinalisableBalance(forAddress address: String) -> RPC<String> {
-		return RPC<String>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/unstaked_finalizable_balance", payload: nil, responseType: String.self)
-	}
-	
 	/// Creates an RPC to fetch a deelgate for a given Address
 	public static func getDelegate(forAddress address: String) -> RPC<String> {
 		return RPC<String>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/delegate", payload: nil, responseType: String.self)
@@ -125,6 +110,24 @@ extension RPC where T == String {
 		}
 		
 		return RPC<String>(endpoint: "injection/operation", payload: payloadData, responseType: String.self)
+	}
+}
+
+extension RPC where T == String? {
+	
+	/// Creates an RPC to fetch the amount of staked XTZ the address has
+	public static func xtzStakedBalance(forAddress address: String) -> RPC<String?> {
+		return RPC<String?>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/staked_balance", payload: nil, responseType: String?.self)
+	}
+	
+	/// Creates an RPC to fetch the amount of unstaked XTZ the address has
+	public static func xtzUnstakedBalance(forAddress address: String) -> RPC<String?> {
+		return RPC<String?>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/unstaked_frozen_balance", payload: nil, responseType: String?.self)
+	}
+	
+	/// Creates an RPC to fetch the amount of finalisable XTZ the address has
+	public static func xtzFinalisableBalance(forAddress address: String) -> RPC<String?> {
+		return RPC<String?>(endpoint: "chains/main/blocks/head/context/contracts/\(address)/unstaked_finalizable_balance", payload: nil, responseType: String?.self)
 	}
 }
 

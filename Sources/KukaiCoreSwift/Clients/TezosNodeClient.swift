@@ -97,7 +97,7 @@ public class TezosNodeClient {
 		self.networkService.send(rpc: RPC.xtzStakedBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
 			switch result {
 				case .success(let rpcAmount):
-					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
+					let xtz = XTZAmount(fromRpcAmount: rpcAmount ?? "0") ?? XTZAmount.zero()
 					completion(Result.success(xtz))
 				
 				case .failure(let rpcError):
@@ -115,7 +115,7 @@ public class TezosNodeClient {
 		self.networkService.send(rpc: RPC.xtzUnstakedBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
 			switch result {
 				case .success(let rpcAmount):
-					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
+					let xtz = XTZAmount(fromRpcAmount: rpcAmount ?? "0") ?? XTZAmount.zero()
 					completion(Result.success(xtz))
 				
 				case .failure(let rpcError):
@@ -133,7 +133,7 @@ public class TezosNodeClient {
 		self.networkService.send(rpc: RPC.xtzFinalisableBalance(forAddress: address), withNodeURLs: config.nodeURLs) { (result) in
 			switch result {
 				case .success(let rpcAmount):
-					let xtz = XTZAmount(fromRpcAmount: rpcAmount) ?? XTZAmount.zero()
+					let xtz = XTZAmount(fromRpcAmount: rpcAmount ?? "0") ?? XTZAmount.zero()
 					completion(Result.success(xtz))
 				
 				case .failure(let rpcError):

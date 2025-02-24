@@ -35,6 +35,23 @@ class TezosNodeClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 120)
 	}
 	
+	func testStakedBalanceNull() {
+		let expectation = XCTestExpectation(description: "tezos node client")
+		MockConstants.shared.tezosNodeClient.getStakedBalance(forAddress: MockConstants.defaultLinearWallet.address) { result in
+			switch result {
+				case .success(let amount):
+					XCTAssert(amount.normalisedRepresentation == "0", amount.normalisedRepresentation)
+					
+				case .failure(let error):
+					XCTFail(error.description)
+			}
+			
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
 	func testAllBalances() {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		MockConstants.shared.tezosNodeClient.getAllBalances(forAddress: MockConstants.defaultHdWallet.address) { result in
