@@ -406,6 +406,7 @@ public class TzKTClient {
 		var bakerConfigs: [String: TzKTBaker] = [:]
 		var bakerPayoutAddresses: [String: TzKTAddress] = [:]
 		var mostRecentTransaction: TzKTTransaction? = nil
+		var earlyExit = false
 		
 		
 		// Get cycles, find the current and preivous
@@ -414,6 +415,7 @@ public class TzKTClient {
 		getCyclesAndRewards(forAddress: forAddress) { [weak self] result in
 			guard let res = try? result.get() else {
 				DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles"))) }
+				earlyExit = true
 				return
 			}
 			
@@ -429,6 +431,7 @@ public class TzKTClient {
 				self?.bakerConfig(forAddress: bakerAddress.address, forceMainnet: forceMainnet, completion: { bakerResult in
 					guard let bakerRes = try? bakerResult.get() else {
 						DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get baker config"))) }
+						earlyExit = true
 						return
 					}
 					
@@ -459,6 +462,7 @@ public class TzKTClient {
 		
 		// Gather all data and process into something meaningful
 		dispatchGroup.notify(queue: .global(qos: .background)) {
+			guard !earlyExit else { return }
 			
 			var previousReward: RewardDetails? = nil
 			var estimatedPreviousReward: RewardDetails? = nil
@@ -669,6 +673,7 @@ public class TzKTClient {
 	/// Combine fetching cycles and rewards into one function to simplify logic
 	private func getCyclesAndRewards(forAddress: String, completion: @escaping ((Result<(cycles: [TzKTCycle], rewards: [TzKTDelegatorReward]), KukaiError>) -> Void)) {
 		let dispatchGroup = DispatchGroup()
+		var earlyExit = false
 		
 		var currentCycles: [TzKTCycle] = []
 		var currentRewards: [TzKTDelegatorReward] = []
@@ -677,6 +682,7 @@ public class TzKTClient {
 		cycles { result in
 			guard let res = try? result.get() else {
 				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles")))
+				earlyExit = true
 				return
 			}
 			
@@ -688,6 +694,7 @@ public class TzKTClient {
 		delegatorRewards(forAddress: forAddress, completion: { result in
 			guard let res = try? result.get() else {
 				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
+				earlyExit = true
 				return
 			}
 			
@@ -708,6 +715,8 @@ public class TzKTClient {
 		})
 		
 		dispatchGroup.notify(queue: .global(qos: .background)) {
+			guard !earlyExit else { return }
+			
 			completion(Result.success((cycles: currentCycles, rewards: currentRewards)))
 		}
 	}
