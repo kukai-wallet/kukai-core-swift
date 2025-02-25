@@ -414,8 +414,10 @@ public class TzKTClient {
 		dispatchGroup.enter()
 		getCyclesAndRewards(forAddress: forAddress) { [weak self] result in
 			guard let res = try? result.get() else {
-				DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles"))) }
-				earlyExit = true
+				if !earlyExit {
+					DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles"))) }
+					earlyExit = true
+				}
 				return
 			}
 			
@@ -430,8 +432,10 @@ public class TzKTClient {
 				dispatchGroup.enter()
 				self?.bakerConfig(forAddress: bakerAddress.address, forceMainnet: forceMainnet, completion: { bakerResult in
 					guard let bakerRes = try? bakerResult.get() else {
-						DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get baker config"))) }
-						earlyExit = true
+						if !earlyExit {
+							DispatchQueue.main.async { completion(Result.failure(KukaiError.unknown(withString: "failed to get baker config"))) }
+							earlyExit = true
+						}
 						return
 					}
 					
@@ -681,8 +685,10 @@ public class TzKTClient {
 		dispatchGroup.enter()
 		cycles { result in
 			guard let res = try? result.get() else {
-				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles")))
-				earlyExit = true
+				if !earlyExit {
+					completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse cycles")))
+					earlyExit = true
+				}
 				return
 			}
 			
@@ -693,8 +699,10 @@ public class TzKTClient {
 		dispatchGroup.enter()
 		delegatorRewards(forAddress: forAddress, completion: { result in
 			guard let res = try? result.get() else {
-				completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
-				earlyExit = true
+				if !earlyExit {
+					completion(Result.failure(KukaiError.unknown(withString: "failed to get or parse rewards")))
+					earlyExit = true
+				}
 				return
 			}
 			
