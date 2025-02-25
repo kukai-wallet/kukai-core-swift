@@ -197,13 +197,17 @@ public class TzKTClient {
 		let dispatchGroupVoting = DispatchGroup()
 		dispatchGroupVoting.enter()
 		dispatchGroupVoting.enter()
+		var earlyExit = false
 		
 		var periods: [TzKTVotingPeriod] = []
 		var transactions: [TzKTTransaction] = []
 		
 		votingPeriods(limit: limit) { votingResult in
 			guard let votingRes = try? votingResult.get() else {
-				completion(Result.failure(votingResult.getFailure()))
+				if !earlyExit {
+					completion(Result.failure(votingResult.getFailure()))
+					earlyExit = true
+				}
 				return
 			}
 			
@@ -213,7 +217,10 @@ public class TzKTClient {
 		
 		bakerVotes(forAddress: forAddress, limit: limit) { votesResult in
 			guard let votesRes = try? votesResult.get() else {
-				completion(Result.failure(votesResult.getFailure()))
+				if !earlyExit {
+					completion(Result.failure(votesResult.getFailure()))
+					earlyExit = true
+				}
 				return
 			}
 			
@@ -223,6 +230,8 @@ public class TzKTClient {
 		
 		
 		dispatchGroupVoting.notify(queue: .global(qos: .background)) {
+			guard !earlyExit else { return }
+			
 			var results: [Bool] = []
 			for period in periods {
 				guard period.kind == .proposal || period.kind == .exploration || period.kind == .promotion else {
