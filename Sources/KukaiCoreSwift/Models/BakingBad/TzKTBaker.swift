@@ -27,6 +27,15 @@ public struct TzKTBakerSettings: Codable {
 	public let capacity: Decimal
 	public let freeSpace: Decimal
 	public let estimatedApy: Double
+	
+	public init(enabled: Bool, minBalance: Decimal, fee: Double, capacity: Decimal, freeSpace: Decimal, estimatedApy: Double) {
+		self.enabled = enabled
+		self.minBalance = minBalance
+		self.fee = fee
+		self.capacity = capacity
+		self.freeSpace = freeSpace
+		self.estimatedApy = estimatedApy
+	}
 }
 
 /// Data representing a baker from TzKT or Baking-Bad
