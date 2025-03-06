@@ -57,8 +57,8 @@ class TezosNodeClientTests: XCTestCase {
 		MockConstants.shared.tezosNodeClient.getAllBalances(forAddress: MockConstants.defaultHdWallet.address) { result in
 			switch result {
 				case .success(let tuple):
-					XCTAssert(tuple.balance.normalisedRepresentation == "0.097575", tuple.balance.normalisedRepresentation)
-					XCTAssert(tuple.staked.normalisedRepresentation == "0.43", tuple.staked.normalisedRepresentation)
+					XCTAssert(tuple.balance.normalisedRepresentation == "0.527575", tuple.balance.normalisedRepresentation)
+					XCTAssert(tuple.staked.normalisedRepresentation == "0.43035", tuple.staked.normalisedRepresentation)
 					XCTAssert(tuple.unstaked.normalisedRepresentation == "0.0015", tuple.unstaked.normalisedRepresentation)
 					XCTAssert(tuple.finalisable.normalisedRepresentation == "0.00035", tuple.finalisable.normalisedRepresentation)
 					
