@@ -215,7 +215,7 @@ public class TezosNodeClient {
 				// The node however returns the available balance, staked, and finalisable seperately.
 				// The entire library has been built around the tzkt approach, assuming "balance" is available + staked. And seperately that staked will include finalisable.
 				// The library contains multiple helpers, used everywhere, that deduct these values. So we need to artifically add them together here, so that calls to `account.avaialbleBalance` return the correct thing
-				completion(Result.success((balance: (balance + staked), staked: (staked + finalisable), unstaked: unstaked, finalisable: finalisable)))
+				completion(Result.success((balance: (balance + staked + finalisable), staked: (staked + finalisable), unstaked: unstaked, finalisable: finalisable)))
 			}
 		}
 	}
