@@ -269,13 +269,63 @@ class TzKTClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 120)
 	}
 	
-	func testTransactionHistoryOldAndNew() {
+	func testTransactionHistory_transferBatchSmallAccount() {
 		let expectation = XCTestExpectation(description: "tzkt-testTransactionHistory")
 		
 		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.hdWallet_withPassphrase.address) { transactions in
 			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.hdWallet_withPassphrase.address)
 			
-			//XCTAssert(groups.count == 27, "\(groups.count)")
+			XCTAssert(groups.count == 27, "\(groups.count)")
+			
+			for (index, group) in groups.enumerated() {
+				
+				switch index {
+					case 0:
+						XCTAssert(group.groupType == .send, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "opaWxncYFsRtfJR2mxaDy2j3R9YSP1d6CArJuU5BCVh6Sd1e3op", group.hash)
+						
+					case 1:
+						XCTAssert(group.groupType == .send, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 21, group.transactions.count.description)
+						XCTAssert(group.hash == "oop26DbWP1zCDz4Zn1vwZ84SKg6diAT4nXBPHqcPEXXA8McoPko", group.hash)
+						XCTAssert(group.primaryToken?.tokenContractAddress == "KT1CQPWGQb8E2eessT4whXECWbhwEcGHkqpF", group.primaryToken?.tokenContractAddress ?? "-")
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "1", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						XCTAssert(group.primaryToken?.name == "Catami #553", group.primaryToken?.name ?? "-")
+						
+					case 2:
+						XCTAssert(group.groupType == .send, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "ooPUBCDGAX9Gkb7icrRAdPdUdTXBWqRD9jWuAUh6zpoZrVi6YTT", group.hash)
+						
+					case 3:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "ooWUADYANNWw6yobc3cqGmLQ2Q9HywJUH3PNFPBhdwtUszZVqFf", group.hash)
+						
+					case 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "opFawEFU3pRhRmtBf7xVtYNQKFV5fTVpqdFu7z1kcFiGj5r8S4H", group.hash)
+						
+					case 25:
+						XCTAssert(group.groupType == .contractCall, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "opFawEFU3pRhRmtBf7xVtYNQKFV5fTVpqdFu7z1kcFiGj5r8S4H", group.hash)
+						XCTAssert(group.entrypointCalled == "mint", group.entrypointCalled ?? "-")
+						
+					case 26:
+						XCTAssert(group.groupType == .receive, group.groupType.rawValue)
+						XCTAssert(group.transactions.count == 1, group.transactions.count.description)
+						XCTAssert(group.hash == "oobTbeXGDxHWcbnNTBKj7DTb8B11aDksxeKPKTF3A9kxVTVPsQ4", group.hash)
+						XCTAssert(group.primaryToken?.balance.normalisedRepresentation == "66.358637", group.primaryToken?.balance.normalisedRepresentation ?? "-")
+						
+						
+					default:
+						XCTFail("Missing test for transaction")
+				}
+			}
+			
 			expectation.fulfill()
 		}
 		
