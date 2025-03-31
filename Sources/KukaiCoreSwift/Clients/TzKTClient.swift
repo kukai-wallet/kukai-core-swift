@@ -1295,8 +1295,8 @@ public class TzKTClient {
 	}
 	
 	private func mergeTokenTransfersWithTransactions() {
-		var transactionsToRemove: [Int] = []
-		var transfersToRemove: [Int] = []
+		var transactionsToRemove: Set<Int> = []
+		var transfersToRemove: Set<Int> = []
 		
 		for (transferIndex, transfer) in self.tempTokenTransfers.enumerated() {
 			for (transactionIndex, transaction) in self.tempTransactions.enumerated() {
@@ -1307,9 +1307,9 @@ public class TzKTClient {
 					if transaction.tokenTransfersCount == nil {
 						self.tempTransactions[transactionIndex].tzktTokenTransfer = transfer
 						self.tempTransactions[transactionIndex].target = transfer.to ?? transfer.token.contract // replace target == contract, with the final wallet destination (if available)
-						transfersToRemove.append(transferIndex)
+						transfersToRemove.insert(transferIndex)
 					} else {
-						transactionsToRemove.append(transactionIndex)
+						transactionsToRemove.insert(transactionIndex)
 					}
 				}
 			}

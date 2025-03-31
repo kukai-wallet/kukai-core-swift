@@ -269,6 +269,19 @@ class TzKTClientTests: XCTestCase {
 		wait(for: [expectation], timeout: 120)
 	}
 	
+	func testTransactionHistoryOldAndNew() {
+		let expectation = XCTestExpectation(description: "tzkt-testTransactionHistory")
+		
+		MockConstants.shared.tzktClient.fetchTransactions(forAddress: MockConstants.hdWallet_withPassphrase.address) { transactions in
+			let groups = MockConstants.shared.tzktClient.groupTransactions(transactions: transactions, currentWalletAddress: MockConstants.hdWallet_withPassphrase.address)
+			
+			//XCTAssert(groups.count == 27, "\(groups.count)")
+			expectation.fulfill()
+		}
+		
+		wait(for: [expectation], timeout: 120)
+	}
+	
 	func testGetAllBalances() {
 		let expectation = XCTestExpectation(description: "tzkt-testGetAllBalances")
 		MockConstants.shared.tzktClient.getAllBalances(forAddress: MockConstants.defaultHdWallet.address) { result in

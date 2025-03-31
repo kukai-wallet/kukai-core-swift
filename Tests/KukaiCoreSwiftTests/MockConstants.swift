@@ -63,6 +63,17 @@ public struct MockConstants {
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "offset", value: 0)
 		tzktHistoryNativeReceiveURL.appendQueryItem(name: "sort.desc", value: "id")
 		
+		var tzktHistoryMainURL2 = tzktURL.appendingPathComponent("v1/accounts/tz1ZTLPBs6c7KVmRatGetf5Ds1zTaUrEXtT7/operations")
+		tzktHistoryMainURL2.appendQueryItem(name: "type", value: "delegation,origination,transaction,staking")
+		tzktHistoryMainURL2.appendQueryItem(name: "micheline", value: "1")
+		tzktHistoryMainURL2.appendQueryItem(name: "limit", value: "50")
+		
+		var tzktHistoryNativeReceiveURL2 = tzktURL.appendingPathComponent("v1/tokens/transfers")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "anyof.from.to", value: "tz1ZTLPBs6c7KVmRatGetf5Ds1zTaUrEXtT7")
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "limit", value: 50)
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "offset", value: 0)
+		tzktHistoryNativeReceiveURL2.appendQueryItem(name: "sort.desc", value: "id")
+		
 		var tzktBigmapUserRewardsURL = tzktURL.appendingPathComponent("v1/bigmaps/1494/keys")
 		tzktBigmapUserRewardsURL.appendQueryItem(name: "key", value: "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss")
 		
@@ -264,6 +275,8 @@ public struct MockConstants {
 			tzktURL.appendingPathComponent("v1/operations/oo5XsmdPjxvBAbCyL9kh3x5irUmkWNwUFfi2rfiKqJGKA6Sxjzf"): (MockConstants.jsonStub(fromFilename: "tzkt_operation-error"), MockConstants.http200),
 			tzktHistoryMainURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main"), MockConstants.http200),
 			tzktHistoryNativeReceiveURL: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-transfers"), MockConstants.http200),
+			tzktHistoryMainURL2: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-main_2"), MockConstants.http200),
+			tzktHistoryNativeReceiveURL2: (MockConstants.jsonStub(fromFilename: "tzkt_transactions-transfers_2"), MockConstants.http200),
 			tzktURL.appendingPathComponent("v1/contracts/KT1WBLrLE2vG8SedBqiSJFm4VVAZZBytJYHc/storage"): (MockConstants.jsonStub(fromFilename: "tzkt_storage_quipu"), MockConstants.http200),
 			tzktBigmapUserRewardsURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_userrewards"), MockConstants.http200),
 			tzktBigmapLedgerURL: (MockConstants.jsonStub(fromFilename: "tzkt_bigmap_ledger"), MockConstants.http200),

@@ -20,6 +20,10 @@ extension Array {
 		self[self.startIndex ..< self.endIndex]
 	}
 	
+	mutating func remove(elementsAtIndices indicesToRemove: Set<Int>) -> [Element] {
+		return self.remove(elementsAtIndices: Array<Int>(indicesToRemove))
+	}
+	
 	mutating func remove(elementsAtIndices indicesToRemove: [Int]) -> [Element] {
 		guard !indicesToRemove.isEmpty else {
 			return []
