@@ -27,7 +27,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: MockConstants.sendOperationWithReveal, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 2)
@@ -57,7 +57,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: suggestOperationsWithFees, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: suggestOperationsWithFees, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 2)
@@ -84,7 +84,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation1 = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 3)
@@ -128,7 +128,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation1 = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 10, result.operations.count.description)
@@ -172,7 +172,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation1 = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 3, result.operations.count.description)
@@ -216,7 +216,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation1 = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 1, result.operations.count.description)
@@ -254,7 +254,7 @@ class FeeEstimatorServiceTests: XCTestCase {
 		let expectation1 = XCTestExpectation(description: "Estimation service")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key) { result in
+		estimationService.estimate(operations: jsonRequestOps1, operationMetadata: MockConstants.operationMetadata, constants: MockConstants.networkConstants, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 1, result.operations.count.description)

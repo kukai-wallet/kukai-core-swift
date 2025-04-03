@@ -81,7 +81,7 @@ public class FeeEstimatorService {
 	- parameter withWallet: The `Wallet` object used for signing the transaction.
 	- parameter completion: A callback containing the same operations passed in, modified to include fees.
 	*/
-	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
+	public func estimate(operations: [Operation], operationMetadata: OperationMetadata, constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, isRemote: Bool, completion: @escaping ((Result<EstimationResult, KukaiError>) -> Void)) {
 		let operationPayload = OperationFactory.operationPayload(fromMetadata: operationMetadata, andOperations: operations, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey)
 		let originalRemoteOps = operations.copyOperations()
 		let preparedOperationsCopy = operationPayload.contents.copyOperations()
@@ -95,7 +95,8 @@ public class FeeEstimatorService {
 			// To handle issues with sending max Tez, and simulation API not ignoring burn fees etc
 			// modify the operationPayload contents to send 1 mutez instead of real amount
 			// This won't effect the returned operations later, as we've made a deep copy first and will use that afte rthe estimation
-			if $0.operationKind == .transaction, let transOp = $0 as? OperationTransaction, (transOp.destination.prefix(3) != "KT1" && transOp.parameters == nil && transOp.destination != walletAddress) {
+			// only do this for non-remote transactions
+			if !isRemote, $0.operationKind == .transaction, let transOp = $0 as? OperationTransaction, (transOp.destination.prefix(3) != "KT1" && transOp.parameters == nil && transOp.destination != walletAddress) {
 				transOp.amount = "1" // rpc representation of 1 mutez
 			}
 		}

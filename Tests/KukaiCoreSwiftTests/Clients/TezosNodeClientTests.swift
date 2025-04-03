@@ -93,7 +93,7 @@ class TezosNodeClientTests: XCTestCase {
 		let expectation = XCTestExpectation(description: "tezos node client")
 		let address = MockConstants.defaultHdWallet.address
 		let key = MockConstants.defaultHdWallet.publicKeyBase58encoded()
-		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, walletAddress: address, base58EncodedPublicKey: key) { result in
+		MockConstants.shared.tezosNodeClient.estimate(operations: MockConstants.sendOperationWithReveal, walletAddress: address, base58EncodedPublicKey: key, isRemote: false) { result in
 			switch result {
 				case .success(let result):
 					XCTAssert(result.operations.count == 2)

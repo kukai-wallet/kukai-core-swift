@@ -244,10 +244,10 @@ public class TezosNodeClient {
 	- parameter wallet: The `Wallet` that will sign the operation
 	- parameter completion: A callback containing an updated array of `Operation`'s with fees set correctly, or an error.
 	*/
-	public func estimate(operations: [Operation], walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<FeeEstimatorService.EstimationResult, KukaiError>) -> Void)) {
+	public func estimate(operations: [Operation], walletAddress: String, base58EncodedPublicKey: String, isRemote: Bool, completion: @escaping ((Result<FeeEstimatorService.EstimationResult, KukaiError>) -> Void)) {
 		
 		if let constants = self.networkConstants {
-			self.estimate(operations: operations, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
+			self.estimate(operations: operations, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, isRemote: isRemote, completion: completion)
 			
 		} else {
 			self.getNetworkInformation { [weak self] (success, error) in
@@ -256,17 +256,17 @@ public class TezosNodeClient {
 					return
 				}
 				
-				self?.estimate(operations: operations, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
+				self?.estimate(operations: operations, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, isRemote: isRemote, completion: completion)
 			}
 		}
 	}
 	
 	/// Internal function to break up code and make it easier to read. Public function checks to see if the network constants are present, if not will query them and then estimate
-	private func estimate(operations: [Operation], constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, completion: @escaping ((Result<FeeEstimatorService.EstimationResult, KukaiError>) -> Void)) {
+	private func estimate(operations: [Operation], constants: NetworkConstants, walletAddress: String, base58EncodedPublicKey: String, isRemote: Bool, completion: @escaping ((Result<FeeEstimatorService.EstimationResult, KukaiError>) -> Void)) {
 		getOperationMetadata(forWalletAddress: walletAddress) { [weak self] (result) in
 			switch result {
 				case .success(let metadata):
-					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, completion: completion)
+					self?.feeEstimatorService.estimate(operations: operations, operationMetadata: metadata, constants: constants, walletAddress: walletAddress, base58EncodedPublicKey: base58EncodedPublicKey, isRemote: isRemote, completion: completion)
 					
 				case .failure(let error):
 					Logger.kukaiCoreSwift.error("Unable to fetch metadata: \(error)")
