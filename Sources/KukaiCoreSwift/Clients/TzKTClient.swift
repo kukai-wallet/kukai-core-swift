@@ -193,7 +193,7 @@ public class TzKTClient {
 	}
 	
 	/// Check how many of the last N voting periods that a given baker has particiapted in. This does not track what way the baker voted, merely that they cast a ballot one way or the other, or upvoted a proposal
-	public func checkBakerVoteParticipation(forAddress: String, limit: Int = 15, completion: @escaping ((Result<[Bool], KukaiError>) -> Void)) {
+	public func checkBakerVoteParticipation(forAddress: String, limit: Int = 20, completion: @escaping ((Result<[Bool], KukaiError>) -> Void)) {
 		let dispatchGroupVoting = DispatchGroup()
 		dispatchGroupVoting.enter()
 		dispatchGroupVoting.enter()
@@ -234,7 +234,7 @@ public class TzKTClient {
 			
 			var results: [Bool] = []
 			for period in periods {
-				guard period.kind == .proposal || period.kind == .exploration || period.kind == .promotion else {
+				guard (period.kind == .proposal && period.status != .noProposals) || period.kind == .exploration || period.kind == .promotion else {
 					continue
 				}
 				

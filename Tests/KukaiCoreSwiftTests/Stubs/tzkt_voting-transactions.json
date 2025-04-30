@@ -1,6 +1,58 @@
 [
     {
         "type": "ballot",
+        "id": 1735694407958528,
+        "level": 8549390,
+        "timestamp": "2025-04-10T22:26:16Z",
+        "block": "BLSHziF8RAtkzC6giLqTXjdNUbaBSbV2EV8AtnuTPXkLCMPNSsc",
+        "hash": "oonF3xugJcNaUDGKwH5EXjngQmx9RvMq4GmVai755RRUkgTZ8jE",
+        "period": {
+            "index": 145,
+            "epoch": 72,
+            "kind": "promotion",
+            "firstLevel": 8460289,
+            "lastLevel": 8613888
+        },
+        "proposal": {
+            "alias": "Rio",
+            "hash": "PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1134043880461,
+        "vote": "yay",
+        "rolls": 189
+    },
+    {
+        "type": "ballot",
+        "id": 1673262707769344,
+        "level": 8250711,
+        "timestamp": "2025-03-14T00:17:00Z",
+        "block": "BMBeYmK2yxe1f87nfSH69GafS5sGGKnwYQB5EGEiYQ6zhGTa9Yg",
+        "hash": "opaUKAokVy81rrDHkB2grS8owqZADQ1zvpxkwLaja4Nwz2UMrrK",
+        "period": {
+            "index": 143,
+            "epoch": 72,
+            "kind": "exploration",
+            "firstLevel": 8153089,
+            "lastLevel": 8306688
+        },
+        "proposal": {
+            "alias": "Rio",
+            "hash": "PsRiotumaAMotcRoDWW1bysEhQy2n1M5fy8JgRp8jjRfHGmfeA7"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 1210650208366,
+        "vote": "yay",
+        "rolls": 201
+    },
+    {
+        "type": "ballot",
         "id": 1508431505653760,
         "level": 7464560,
         "timestamp": "2024-12-25T07:06:10Z",
@@ -14,7 +66,6 @@
             "lastLevel": 7569408
         },
         "proposal": {
-            "alias": "Quebec",
             "hash": "PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg"
         },
         "delegate": {
@@ -40,7 +91,6 @@
             "lastLevel": 7323648
         },
         "proposal": {
-            "alias": "Quebec",
             "hash": "PsQuebecnLByd3JwTiGadoG4nGWi3HYiLXUjkibeFV8dCFeVMUg"
         },
         "delegate": {
@@ -388,5 +438,83 @@
         "votingPower": 370163555295,
         "vote": "yay",
         "rolls": 61
+    },
+    {
+        "type": "proposal",
+        "id": 705215269437440,
+        "level": 4060006,
+        "timestamp": "2023-08-15T22:06:32Z",
+        "block": "BLAq4AJwzxEWmhYTufNLcDcAfJbTomWUwFpUTejzudSnVsNEswr",
+        "hash": "opJe3srW7Bsjk6sdSL8sW4Amu4CrJ79zzMs6HZqEmExPyo2hLY2",
+        "period": {
+            "index": 103,
+            "epoch": 50,
+            "kind": "proposal",
+            "firstLevel": 4005889,
+            "lastLevel": 4087808
+        },
+        "proposal": {
+            "alias": "Oslo",
+            "hash": "ProsLoUXggfdnzDcqhXZLs6efD3pLYjhjnbZ9d62UB9ToYSKVbW"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 348291855012,
+        "duplicated": false,
+        "rolls": 58
+    },
+    {
+        "type": "ballot",
+        "id": 587229884841984,
+        "level": 3598542,
+        "timestamp": "2023-05-26T15:32:54Z",
+        "block": "BMUX5E3mtebeR1duVcPQfeBmiP9uC7rxMimMp7N9mSfoG4GhtQZ",
+        "hash": "opNj575QnCPkxSsEGQ3ystSSxYWEUyeNMnn3NpAvnfEj9zCaR1T",
+        "period": {
+            "index": 98,
+            "epoch": 46,
+            "kind": "promotion",
+            "firstLevel": 3596289,
+            "lastLevel": 3678208
+        },
+        "proposal": {
+            "alias": "Nairobi",
+            "hash": "PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 330981263179,
+        "vote": "yay",
+        "rolls": 55
+    },
+    {
+        "type": "ballot",
+        "id": 550611044007936,
+        "level": 3462266,
+        "timestamp": "2023-05-02T17:35:35Z",
+        "block": "BMQMHtdhD1nUpFcAJENQKq4JKZkK76ah3ESusgKUiHC2gTP284W",
+        "hash": "oohg24pTsU9a58BbXS59Msy1h8Lk3BsV3buadJxeWJxrChrCbMC",
+        "period": {
+            "index": 96,
+            "epoch": 46,
+            "kind": "exploration",
+            "firstLevel": 3432449,
+            "lastLevel": 3514368
+        },
+        "proposal": {
+            "alias": "Nairobi",
+            "hash": "PtNairobiyssHuh87hEhfVBGCVrK3WnS8Z2FT4ymB5tAa4r1nQf"
+        },
+        "delegate": {
+            "alias": "Baking Benjamins",
+            "address": "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur"
+        },
+        "votingPower": 318032291094,
+        "vote": "yay",
+        "rolls": 53
     }
 ]

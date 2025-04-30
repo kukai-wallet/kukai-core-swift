@@ -653,7 +653,7 @@ class TzKTClientTests: XCTestCase {
 				XCTAssert(votes.count == 5, votes.count.description)
 				
 				let filterOnlyTrue = votes.filter({ $0 }).count
-				XCTAssert(filterOnlyTrue == 5, filterOnlyTrue.description)
+				XCTAssert(filterOnlyTrue == 4, filterOnlyTrue.description)
 				
 				case .failure(let error):
 					XCTFail("Error: \(error)")
