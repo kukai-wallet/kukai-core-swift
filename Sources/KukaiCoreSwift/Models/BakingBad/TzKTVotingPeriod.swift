@@ -42,4 +42,5 @@ public struct TzKTVotingPeriod: Codable {
 	let lastLevel: Decimal
 	let kind: TzKTVotingKind
 	let status: TzKTVotingStatus?
+	let proposalsCount: Int?
 }

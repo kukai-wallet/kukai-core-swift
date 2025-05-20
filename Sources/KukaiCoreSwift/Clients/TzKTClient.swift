@@ -234,7 +234,7 @@ public class TzKTClient {
 			
 			var results: [Bool] = []
 			for period in periods {
-				guard (period.kind == .proposal && period.status != .noProposals) || period.kind == .exploration || period.kind == .promotion else {
+				guard (period.kind == .proposal && period.proposalsCount != 0) || period.kind == .exploration || period.kind == .promotion else {
 					continue
 				}
 				
