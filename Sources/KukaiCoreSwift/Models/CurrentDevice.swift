@@ -22,7 +22,11 @@ public enum CurrentDevice {
 	
 	/// Is the current device a simulator
 	public static var isSimulator: Bool {
-		return TARGET_OS_SIMULATOR == 1
+		#if targetEnvironment(simulator)
+		return true
+		#else
+		return false
+		#endif
 	}
 	
 	// Check what type of biometrics is available to the app. Will return .none if user has opted to not give permission
