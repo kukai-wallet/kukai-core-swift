@@ -27,11 +27,8 @@ class TaquitoServiceTests: XCTestCase {
 	
 	override func setUpWithError() throws {
 		payload1 = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops1, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
-		payload1?.addProtcol(fromMetadata: MockConstants.operationMetadata)
 		payload2 = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops2, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
-		payload2?.addProtcol(fromMetadata: MockConstants.operationMetadata)
 		payload3 = OperationFactory.operationPayload(fromMetadata: MockConstants.operationMetadata, andOperations: ops3, walletAddress: MockConstants.defaultLinearWallet.address, base58EncodedPublicKey: MockConstants.defaultLinearWallet.publicKeyBase58encoded())
-		payload3?.addProtcol(fromMetadata: MockConstants.operationMetadata)
 	}
 
 	override func tearDownWithError() throws {
