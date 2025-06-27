@@ -25,10 +25,15 @@ public class TaquitoService {
 	/// Private flag to prevent multiple simultaneous parse's
 	private var isParsing = false
 	
+	/// Local forger now needs to be aware of the protocol version, so setup can't be done in the init
+	/// Setup must be checked at runtime where we can execute an RPC call
+	private var isSetup: Bool = false
+	
 	/// Unique TaquitoService errors
 	public enum TaquitoServiceError: Error {
 		case alreadyForging
 		case alreadyParsing
+		case forgerNotSetup
 	}
 	
 	private var lastForgeCompletionHandler: ((Result<String, KukaiError>) -> Void)? = nil
@@ -58,19 +63,28 @@ public class TaquitoService {
 				lastParse(Result.failure(KukaiError.unknown(withString: exception?.toString() ?? "")))
 			}
 		}
+	}
+	
+	private func setup(protocolHash: String?) -> Bool {
+		guard !isSetup else { return true } // Simply calling logic, allow it to always be called
+		guard let hash = protocolHash else { return false }
 		
 		if let jsSourcePath = Bundle.module.url(forResource: "taquito_local_forging", withExtension: "js") {
 			do {
 				let jsSourceContents = try String(contentsOf: jsSourcePath)
 				self.jsContext.evaluateScript(jsSourceContents)
-				self.jsContext.evaluateScript("var forger = new taquito_local_forging.LocalForger();")
+				self.jsContext.evaluateScript("var forger = new taquito_local_forging.LocalForger(\"\(hash)\");")
+				self.isSetup = true
+				return true
 				
 			} catch (let error) {
 				Logger.taquitoService.error("Error parsing dexter javascript file: \(error)")
+				return false
 			}
 		}
+		
+		return false
 	}
-	
 	
 	
 	
@@ -85,6 +99,11 @@ public class TaquitoService {
 	- parameter completion: The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting hex string.
 	*/
 	public func forge(operationPayload: OperationPayload, completion: @escaping((Result<String, KukaiError>) -> Void)) {
+		if !setup(protocolHash: operationPayload.protocol) {
+			completion(Result.failure(KukaiError.internalApplicationError(error: TaquitoServiceError.forgerNotSetup)))
+			return
+		}
+		
 		if isForging {
 			// To avoid setting up a delgate pattern for something that should be synchronous, we only include 1 set of success/errors handlers inside the code at any 1 time
 			// Calling it multiple times at the same time could result in strange behaviour
@@ -141,12 +160,17 @@ public class TaquitoService {
 	
 	/**
 	Wrapper around the node package @taquito/local-forging's prase method. Giving the ability to locally parse a hex string back into an `OperationPayload`, without the need to use an RPC on a tezos node.
-	Note: Currently only one parse can take place at a time. Multiple simultaneous calls will result in an error being returned.
+	Note: Currently only one parse can take place at a time. Multiple simultaneous calls will result in an error being returned
 	See package: https://github.com/ecadlabs/taquito/tree/master/packages/taquito-local-forging, and docs: https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html
 	- parameter hex: The string that needs to be parsed into an `OperationPayload`.
 	- parameter completion: The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting object
 	*/
 	public func parse(hex: String, completion: @escaping((Result<OperationPayload, KukaiError>) -> Void)) {
+		if !isSetup {
+			completion(Result.failure(KukaiError.internalApplicationError(error: TaquitoServiceError.forgerNotSetup)))
+			return
+		}
+		
 		if isParsing {
 			// To avoid setting up a delgate pattern for something that should be synchronous, we only include 1 set of success/errors handlers inside the code at any 1 time
 			// Calling it multiple times at the same time could result in strange behaviour
