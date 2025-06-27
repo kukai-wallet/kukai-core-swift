@@ -42,12 +42,6 @@
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
               <li class="nav-group-task">
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -675,6 +687,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
               </li>
             </ul>
           </li>
@@ -1188,6 +1203,32 @@ E.g. In situations where GraphQL returns a malformed object instead of an error,
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift0A5ErrorV14missingBaseURLACyFZ"></a>
+                    <a name="//apple_ref/swift/Method/missingBaseURL()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift0A5ErrorV14missingBaseURLACyFZ">missingBaseURL()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">missingBaseURL</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">KukaiError</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -1222,6 +1263,45 @@ E.g. In situations where GraphQL returns a malformed object instead of an error,
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">addNetworkData</span><span class="p">(</span><span class="nv">requestURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">requestJSON</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?,</span> <span class="nv">responseJSON</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?,</span> <span class="nv">httpStatusCode</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Helpers"></a>
+                <a name="//apple_ref/swift/Section/Helpers" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Helpers"></a>
+                  <h3 class="section-name"><span>Helpers</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift0A5ErrorV21isMissingBaseURLErrorSbyF"></a>
+                    <a name="//apple_ref/swift/Method/isMissingBaseURLError()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift0A5ErrorV21isMissingBaseURLErrorSbyF">isMissingBaseURLError()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">isMissingBaseURLError</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -1365,7 +1445,7 @@ E.g. In situations where GraphQL returns a malformed object instead of an error,
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

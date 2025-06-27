@@ -42,12 +42,6 @@
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
               <li class="nav-group-task">
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -675,6 +687,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
               </li>
             </ul>
           </li>
@@ -1066,6 +1081,33 @@ A type must be passed in when creating an instance of this object, this will be 
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14KukaiCoreSwift3RPCCAASSRszrlE29liquidtyBakingContractAddressACySSGyFZ"></a>
+                    <a name="//apple_ref/swift/Method/liquidtyBakingContractAddress()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift3RPCCAASSRszrlE29liquidtyBakingContractAddressACySSGyFZ">liquidtyBakingContractAddress()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get the address of the liquidity baking main contract</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">liquidtyBakingContractAddress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">RPC</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14KukaiCoreSwift3RPCCAASSRszrlE5forge16operationPayloadACySSGSgAA09OperationG0V_tFZ"></a>
                     <a name="//apple_ref/swift/Method/forge(operationPayload:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:14KukaiCoreSwift3RPCCAASSRszrlE5forge16operationPayloadACySSGSgAA09OperationG0V_tFZ">forge(operationPayload:<wbr>)</a>
@@ -1111,6 +1153,100 @@ A type must be passed in when creating an instance of this object, this will be 
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">inject</span><span class="p">(</span><span class="nv">signedBytes</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">RPC</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Available%20where%20%60T%60%20%3D%3D%20%60String%60%3F"></a>
+                <a name="//apple_ref/swift/Section/Available where `T` == `String`?" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Available%20where%20%60T%60%20%3D%3D%20%60String%60%3F"></a>
+                  <h3 class="section-name"><span>Available where <code>T</code> == <code>String</code>?</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift3RPCCAASSSgRszrlE16xtzStakedBalance10forAddressACyADGSS_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/xtzStakedBalance(forAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift3RPCCAASSSgRszrlE16xtzStakedBalance10forAddressACyADGSS_tFZ">xtzStakedBalance(forAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates an RPC to fetch the amount of staked XTZ the address has</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">xtzStakedBalance</span><span class="p">(</span><span class="n">forAddress</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">RPC</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift3RPCCAASSSgRszrlE18xtzUnstakedBalance10forAddressACyADGSS_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/xtzUnstakedBalance(forAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift3RPCCAASSSgRszrlE18xtzUnstakedBalance10forAddressACyADGSS_tFZ">xtzUnstakedBalance(forAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates an RPC to fetch the amount of unstaked XTZ the address has</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">xtzUnstakedBalance</span><span class="p">(</span><span class="n">forAddress</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">RPC</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift3RPCCAASSSgRszrlE21xtzFinalisableBalance10forAddressACyADGSS_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/xtzFinalisableBalance(forAddress:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift3RPCCAASSSgRszrlE21xtzFinalisableBalance10forAddressACyADGSS_tFZ">xtzFinalisableBalance(forAddress:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates an RPC to fetch the amount of finalisable XTZ the address has</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">xtzFinalisableBalance</span><span class="p">(</span><span class="n">forAddress</span> <span class="nv">address</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">RPC</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -1483,7 +1619,7 @@ A type must be passed in when creating an instance of this object, this will be 
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

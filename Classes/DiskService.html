@@ -42,12 +42,6 @@
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
               <li class="nav-group-task">
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -675,6 +687,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
               </li>
             </ul>
           </li>
@@ -864,6 +879,100 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/Fetch"></a>
+                <a name="//apple_ref/swift/Section/Fetch" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Fetch"></a>
+                  <h3 class="section-name"><span>Fetch</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11DiskServiceC15fetchRemoteFile3url13storeInFolder10completiony10Foundation3URLV_SSSgys6ResultOyAJs5Error_pGctFZ"></a>
+                    <a name="//apple_ref/swift/Method/fetchRemoteFile(url:storeInFolder:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11DiskServiceC15fetchRemoteFile3url13storeInFolder10completiony10Foundation3URLV_SSSgys6ResultOyAJs5Error_pGctFZ">fetchRemoteFile(url:<wbr>storeInFolder:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fetch a remote file and optionally store it in a supplied folder in the documents directory</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">fetchRemoteFile</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">storeInFolder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11DiskServiceC10clearFiles8inFolder13olderThanDays10completionySS_Siys5Error_pSgctFZ"></a>
+                    <a name="//apple_ref/swift/Method/clearFiles(inFolder:olderThanDays:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11DiskServiceC10clearFiles8inFolder13olderThanDays10completionySS_Siys5Error_pSgctFZ">clearFiles(inFolder:<wbr>olderThanDays:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Check the contents of a folder and delete the files if older than a given date</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">clearFiles</span><span class="p">(</span><span class="nv">inFolder</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">olderThanDays</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift11DiskServiceC12sizeOfFolderySiSgSSFZ"></a>
+                    <a name="//apple_ref/swift/Method/sizeOfFolder(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift11DiskServiceC12sizeOfFolderySiSgSSFZ">sizeOfFolder(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return the size, in bytes, of a given folder in the documents directory</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">sizeOfFolder</span><span class="p">(</span><span class="n">_</span> <span class="nv">folder</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/Delete"></a>
                 <a name="//apple_ref/swift/Section/Delete" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -1029,7 +1138,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

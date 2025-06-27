@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>BetterCallDevClient Class Reference</title>
+    <title>TzKTVotingStatus Enumeration Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/BetterCallDevClient" class="dashAnchor"></a>
-    <a title="BetterCallDevClient Class Reference"></a>
+    <a name="//apple_ref/swift/Enum/TzKTVotingStatus" class="dashAnchor"></a>
+    <a title="TzKTVotingStatus Enumeration Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html"> Docs</a> (100% documented)</p>
@@ -30,9 +30,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">Index</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Classes.html">Classes</a>
+        <a href="../Enums.html">Enumerations</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        KukaiCoreSwift.BetterCallDevClient Class Reference
+        KukaiCoreSwift.TzKTVotingStatus Enumeration Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -41,12 +41,6 @@
           <li class="nav-group-name">
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
               <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -676,6 +688,9 @@
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
               </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -700,17 +715,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>BetterCallDevClient</h1>
+            <h1>TzKTVotingStatus</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">BetterCallDevClient</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TzKTVotingStatus</span> <span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">Codable</span></code></pre>
 
                 </div>
               </div>
-            <p>BetterCallDev (BCD) is an indexer/smart contract debugging tool, used for the Tezos blockchain.
-This class allows developers to interact with their API, to fetch data that would otherwise be impossible for a mobile app to fetch from the Tezos RPC</p>
-
+            
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -718,9 +731,9 @@ This class allows developers to interact with their API, to fetch data that woul
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift19BetterCallDevClientC0defG5ErrorO"></a>
-                    <a name="//apple_ref/swift/Enum/BetterCallDevClientError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift19BetterCallDevClientC0defG5ErrorO">BetterCallDevClientError</a>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO6activeyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/active" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO6activeyA2CmF">active</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -728,40 +741,25 @@ This class allows developers to interact with their API, to fetch data that woul
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Dedicated BCD errors</p>
-
-                        <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html" class="slightly-smaller">See more</a>
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">BetterCallDevClientError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">active</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Init"></a>
-                <a name="//apple_ref/swift/Section/Init" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Init"></a>
-                  <h3 class="section-name"><span>Init</span>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift19BetterCallDevClientC14networkService6configAcA07NetworkI0C_AA09TezosNodeG6ConfigVtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(networkService:config:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift19BetterCallDevClientC14networkService6configAcA07NetworkI0C_AA09TezosNodeG6ConfigVtcfc">init(networkService:<wbr>config:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO11noProposalsyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/noProposals" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO11noProposalsyA2CmF">noProposals</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -769,70 +767,25 @@ This class allows developers to interact with their API, to fetch data that woul
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Init a <code>BetterCallDevClient</code> with a <code><a href="../Classes/NetworkService.html">NetworkService</a></code> and a <code><a href="../Structs/TezosNodeClientConfig.html">TezosNodeClientConfig</a></code>.</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">networkService</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkService.html">NetworkService</a></span><span class="p">,</span> <span class="nv">config</span><span class="p">:</span> <span class="kt"><a href="../Structs/TezosNodeClientConfig.html">TezosNodeClientConfig</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noProposals</span> <span class="o">=</span> <span class="s">"no_proposals"</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>networkService</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p><code><a href="../Classes/NetworkService.html">NetworkService</a></code> used to manage network communication.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>config</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p><code><a href="../Structs/TezosNodeClientConfig.html">TezosNodeClientConfig</a></code> used to apss in settings.</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Errors"></a>
-                <a name="//apple_ref/swift/Section/Errors" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Errors"></a>
-                  <h3 class="section-name"><span>Errors</span>
-</h3>
-                </div>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift19BetterCallDevClientC20getMoreDetailedError6byHash10completionySS_yAA0def9OperationK0VSg_AA0aK0VSgtctF"></a>
-                    <a name="//apple_ref/swift/Method/getMoreDetailedError(byHash:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift19BetterCallDevClientC20getMoreDetailedError6byHash10completionySS_yAA0def9OperationK0VSg_AA0aK0VSgtctF">getMoreDetailedError(byHash:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO8noQuorumyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/noQuorum" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO8noQuorumyA2CmF">noQuorum</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -840,48 +793,145 @@ This class allows developers to interact with their API, to fetch data that woul
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Primarily the <code><a href="../Classes/TzKTClient.html">TzKTClient</a></code> is used to fetch details on operations. However for more complex calls involving smart contracts, TzKT will only return limited error message info.
-BetterCallDev includles all the details needed to display messages. This function allows developers to query the detailed error message.</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getMoreDetailedError</span><span class="p">(</span><span class="n">byHash</span> <span class="nv">hash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt"><a href="../Structs/BetterCallDevOperationError.html">BetterCallDevOperationError</a></span><span class="p">?,</span> <span class="kt"><a href="../Structs/KukaiError.html">KukaiError</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noQuorum</span> <span class="o">=</span> <span class="s">"no_quorum"</span></code></pre>
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>byHash</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The hash String of the operation.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>completion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Called with the result.</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO15noSupermajorityyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/noSupermajority" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO15noSupermajorityyA2CmF">noSupermajority</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noSupermajority</span> <span class="o">=</span> <span class="s">"no_supermajority"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO14noSingleWinneryA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/noSingleWinner" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO14noSingleWinneryA2CmF">noSingleWinner</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">noSingleWinner</span> <span class="o">=</span> <span class="s">"no_single_winner"</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO7successyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/success" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO7successyA2CmF">success</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">success</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift16TzKTVotingStatusO7unknownyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/unknown" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift16TzKTVotingStatusO7unknownyA2CmF">unknown</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">unknown</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:Se4fromxs7Decoder_p_tKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:Se4fromxs7Decoder_p_tKcfc">init(from:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">from</span> <span class="nv">decoder</span><span class="p">:</span> <span class="kt">Decoder</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
                       </div>
                     </section>
                   </div>
@@ -891,7 +941,7 @@ BetterCallDev includles all the details needed to display messages. This functio
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

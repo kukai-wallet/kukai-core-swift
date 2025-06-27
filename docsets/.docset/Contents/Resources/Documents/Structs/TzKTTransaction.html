@@ -42,12 +42,6 @@
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
               <li class="nav-group-task">
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -675,6 +687,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
               </li>
             </ul>
           </li>
@@ -1006,9 +1021,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV7counterSo9NSDecimalavp"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV7counterSo9NSDecimalaSgvp"></a>
                     <a name="//apple_ref/swift/Property/counter" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV7counterSo9NSDecimalavp">counter</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV7counterSo9NSDecimalaSgvp">counter</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1022,7 +1037,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">counter</span><span class="p">:</span> <span class="kt">Decimal</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">counter</span><span class="p">:</span> <span class="kt">Decimal</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1058,9 +1073,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6senderAA0D9KTAddressVvp"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6senderAA0D9KTAddressVSgvp"></a>
                     <a name="//apple_ref/swift/Property/sender" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6senderAA0D9KTAddressVvp">sender</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6senderAA0D9KTAddressVSgvp">sender</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1074,7 +1089,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTAddress.html">TzKTAddress</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1084,9 +1099,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV8bakerFeeAA9XTZAmountCvp"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV8bakerFeeAA9XTZAmountCSgvp"></a>
                     <a name="//apple_ref/swift/Property/bakerFee" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV8bakerFeeAA9XTZAmountCvp">bakerFee</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV8bakerFeeAA9XTZAmountCSgvp">bakerFee</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1100,7 +1115,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bakerFee</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bakerFee</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1110,9 +1125,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV10storageFeeAA9XTZAmountCvp"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV10storageFeeAA9XTZAmountCSgvp"></a>
                     <a name="//apple_ref/swift/Property/storageFee" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV10storageFeeAA9XTZAmountCvp">storageFee</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV10storageFeeAA9XTZAmountCSgvp">storageFee</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1126,7 +1141,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">storageFee</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">storageFee</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1136,9 +1151,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV13allocationFeeAA9XTZAmountCvp"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV13allocationFeeAA9XTZAmountCSgvp"></a>
                     <a name="//apple_ref/swift/Property/allocationFee" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV13allocationFeeAA9XTZAmountCvp">allocationFee</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV13allocationFeeAA9XTZAmountCSgvp">allocationFee</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1152,7 +1167,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">allocationFee</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">allocationFee</span><span class="p">:</span> <span class="kt"><a href="../Classes/XTZAmount.html">XTZAmount</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1266,9 +1281,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6amountAA11TokenAmountCvp"></a>
-                    <a name="//apple_ref/swift/Property/amount" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6amountAA11TokenAmountCvp">amount</a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6periodAA0D14KTVotingPeriodVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/period" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6periodAA0D14KTVotingPeriodVSgvp">period</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1282,7 +1297,33 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">period</span><span class="p">:</span> <span class="kt"><a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6amountAA11TokenAmountCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/amount" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6amountAA11TokenAmountCSgvp">amount</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt"><a href="../Classes/TokenAmount.html">TokenAmount</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1318,9 +1359,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6statusAC17TransactionStatusOvp"></a>
+                    <a name="/s:14KukaiCoreSwift15TzKTTransactionV6statusAC17TransactionStatusOSgvp"></a>
                     <a name="//apple_ref/swift/Property/status" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6statusAC17TransactionStatusOvp">status</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift15TzKTTransactionV6statusAC17TransactionStatusOSgvp">status</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1334,7 +1375,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionStatus.html">TransactionStatus</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/TzKTTransaction/TransactionStatus.html">TransactionStatus</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -2161,7 +2202,7 @@ e.g. DipDup client can fetch all tokens from dexes, containing all token info. U
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

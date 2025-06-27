@@ -42,12 +42,6 @@
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
               <li class="nav-group-task">
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -675,6 +687,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
               </li>
             </ul>
           </li>
@@ -1019,9 +1034,9 @@ This avoids the need to ask users to enter a fee, which is not a very user frien
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift19FeeEstimatorServiceC8estimate10operations17operationMetadata9constants13walletAddress22base58EncodedPublicKey10completionySayAA9OperationCG_AA0sJ0VAA16NetworkConstantsVS2Sys6ResultOyAC010EstimationV0VAA0A5ErrorVGctF"></a>
-                    <a name="//apple_ref/swift/Method/estimate(operations:operationMetadata:constants:walletAddress:base58EncodedPublicKey:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift19FeeEstimatorServiceC8estimate10operations17operationMetadata9constants13walletAddress22base58EncodedPublicKey10completionySayAA9OperationCG_AA0sJ0VAA16NetworkConstantsVS2Sys6ResultOyAC010EstimationV0VAA0A5ErrorVGctF">estimate(operations:<wbr>operationMetadata:<wbr>constants:<wbr>walletAddress:<wbr>base58EncodedPublicKey:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift19FeeEstimatorServiceC8estimate10operations17operationMetadata9constants13walletAddress22base58EncodedPublicKey8isRemote10completionySayAA9OperationCG_AA0uJ0VAA16NetworkConstantsVS2SSbys6ResultOyAC010EstimationX0VAA0A5ErrorVGctF"></a>
+                    <a name="//apple_ref/swift/Method/estimate(operations:operationMetadata:constants:walletAddress:base58EncodedPublicKey:isRemote:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift19FeeEstimatorServiceC8estimate10operations17operationMetadata9constants13walletAddress22base58EncodedPublicKey8isRemote10completionySayAA9OperationCG_AA0uJ0VAA16NetworkConstantsVS2SSbys6ResultOyAC010EstimationX0VAA0A5ErrorVGctF">estimate(operations:<wbr>operationMetadata:<wbr>constants:<wbr>walletAddress:<wbr>base58EncodedPublicKey:<wbr>isRemote:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1037,7 +1052,7 @@ If the supplied operations contain suggested fees (e.g. from a dApp) this functi
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">estimate</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">],</span> <span class="nv">operationMetadata</span><span class="p">:</span> <span class="kt"><a href="../Structs/OperationMetadata.html">OperationMetadata</a></span><span class="p">,</span> <span class="nv">constants</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkConstants.html">NetworkConstants</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">base58EncodedPublicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/FeeEstimatorService/EstimationResult.html">EstimationResult</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/KukaiError.html">KukaiError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">estimate</span><span class="p">(</span><span class="nv">operations</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/Operation.html">Operation</a></span><span class="p">],</span> <span class="nv">operationMetadata</span><span class="p">:</span> <span class="kt"><a href="../Structs/OperationMetadata.html">OperationMetadata</a></span><span class="p">,</span> <span class="nv">constants</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkConstants.html">NetworkConstants</a></span><span class="p">,</span> <span class="nv">walletAddress</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">base58EncodedPublicKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">isRemote</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/FeeEstimatorService/EstimationResult.html">EstimationResult</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/KukaiError.html">KukaiError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
 
                         </div>
                       </div>
@@ -1338,7 +1353,7 @@ If the supplied operations contain suggested fees (e.g. from a dApp) this functi
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -42,12 +42,6 @@
             <a href="../Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/BetterCallDevClient/BetterCallDevClientError.html">– BetterCallDevClientError</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/BetterCallDevTokenMetadata.html">BetterCallDevTokenMetadata</a>
               </li>
               <li class="nav-group-task">
@@ -266,6 +260,9 @@
                 <a href="../Enums/DipDupTokenStandard.html">DipDupTokenStandard</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/DiskServiceError.html">DiskServiceError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/FaVersion.html">FaVersion</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +291,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/TzKTBakerStatus.html">TzKTBakerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingKind.html">TzKTVotingKind</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TzKTVotingStatus.html">TzKTVotingStatus</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Enums/WalletCacheError.html">WalletCacheError</a>
@@ -602,6 +605,9 @@
                 <a href="../Structs/TezosNodeClientConfig/ForgingType.html">– ForgingType</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TezosNodeClientConfig/ConfigError.html">– ConfigError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TezosNodeClientConfig/defaultMainnetURLs.html">– defaultMainnetURLs</a>
               </li>
               <li class="nav-group-task">
@@ -647,10 +653,16 @@
                 <a href="../Structs/TzKTDelegatorReward.html">TzKTDelegatorReward</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Structs/TzKTHead.html">TzKTHead</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Structs/TzKTOperation.html">TzKTOperation</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTOperationError.html">TzKTOperationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TzKTStakingUpdate.html">TzKTStakingUpdate</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTokenTransfer.html">TzKTTokenTransfer</a>
@@ -675,6 +687,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TzKTTransactionGroup.html">TzKTTransactionGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs.html#/s:14KukaiCoreSwift16TzKTVotingPeriodV">TzKTVotingPeriod</a>
               </li>
             </ul>
           </li>
@@ -773,6 +788,33 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ForgingType</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV0G5ErrorO"></a>
+                    <a name="//apple_ref/swift/Enum/ConfigError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV0G5ErrorO">ConfigError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="../Structs/TezosNodeClientConfig/ConfigError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ConfigError</span> <span class="p">:</span> <span class="kt">Error</span><span class="p">,</span> <span class="kt">Equatable</span></code></pre>
 
                         </div>
                       </div>
@@ -918,9 +960,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV7tzktURL10Foundation0I0Vvp"></a>
+                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV7tzktURL10Foundation0I0VSgvp"></a>
                     <a name="//apple_ref/swift/Property/tzktURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV7tzktURL10Foundation0I0Vvp">tzktURL</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV7tzktURL10Foundation0I0VSgvp">tzktURL</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -935,7 +977,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">tzktURL</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">tzktURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -945,36 +987,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV16betterCallDevURL10Foundation0K0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/betterCallDevURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV16betterCallDevURL10Foundation0K0Vvp">betterCallDevURL</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The URL to use for <code><a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a></code></p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">betterCallDevURL</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV15tezosDomainsURL10Foundation0J0Vvp"></a>
+                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV15tezosDomainsURL10Foundation0J0VSgvp"></a>
                     <a name="//apple_ref/swift/Property/tezosDomainsURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV15tezosDomainsURL10Foundation0J0Vvp">tezosDomainsURL</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV15tezosDomainsURL10Foundation0J0VSgvp">tezosDomainsURL</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -989,7 +1004,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">tezosDomainsURL</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">tezosDomainsURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -999,9 +1014,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV11objktApiURL10Foundation0J0Vvp"></a>
+                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV11objktApiURL10Foundation0J0VSgvp"></a>
                     <a name="//apple_ref/swift/Property/objktApiURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV11objktApiURL10Foundation0J0Vvp">objktApiURL</a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV11objktApiURL10Foundation0J0VSgvp">objktApiURL</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1016,7 +1031,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">objktApiURL</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">objktApiURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1166,9 +1181,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV20configWithLocalForge8nodeURLs7tzktURL013betterCallDevO0012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_A4NSo12NSURLSessionCAC07NetworkZ0OtFZ"></a>
-                    <a name="//apple_ref/swift/Method/configWithLocalForge(nodeURLs:tzktURL:betterCallDevURL:tezosDomainsURL:objktApiURL:urlSession:networkType:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV20configWithLocalForge8nodeURLs7tzktURL013betterCallDevO0012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_A4NSo12NSURLSessionCAC07NetworkZ0OtFZ">configWithLocalForge(nodeURLs:<wbr>tzktURL:<wbr>betterCallDevURL:<wbr>tezosDomainsURL:<wbr>objktApiURL:<wbr>urlSession:<wbr>networkType:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV20configWithLocalForge8nodeURLs7tzktURL012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_AMSgA2OSo12NSURLSessionCAC07NetworkW0OtFZ"></a>
+                    <a name="//apple_ref/swift/Method/configWithLocalForge(nodeURLs:tzktURL:tezosDomainsURL:objktApiURL:urlSession:networkType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV20configWithLocalForge8nodeURLs7tzktURL012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_AMSgA2OSo12NSURLSessionCAC07NetworkW0OtFZ">configWithLocalForge(nodeURLs:<wbr>tzktURL:<wbr>tezosDomainsURL:<wbr>objktApiURL:<wbr>urlSession:<wbr>networkType:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1183,7 +1198,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">configWithLocalForge</span><span class="p">(</span><span class="nv">nodeURLs</span><span class="p">:</span> <span class="p">[</span><span class="kt">URL</span><span class="p">],</span> <span class="nv">tzktURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">betterCallDevURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">tezosDomainsURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">objktApiURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">urlSession</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">,</span> <span class="nv">networkType</span><span class="p">:</span> <span class="kt"><a href="../Structs/TezosNodeClientConfig/NetworkType.html">NetworkType</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TezosNodeClientConfig</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">configWithLocalForge</span><span class="p">(</span><span class="nv">nodeURLs</span><span class="p">:</span> <span class="p">[</span><span class="kt">URL</span><span class="p">],</span> <span class="nv">tzktURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">tezosDomainsURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">objktApiURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">urlSession</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">,</span> <span class="nv">networkType</span><span class="p">:</span> <span class="kt"><a href="../Structs/TezosNodeClientConfig/NetworkType.html">NetworkType</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TezosNodeClientConfig</span></code></pre>
 
                         </div>
                       </div>
@@ -1212,18 +1227,6 @@
                               <td>
                                 <div>
                                   <p>The URL to use for <code><a href="../Classes/TzKTClient.html">TzKTClient</a></code>.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>betterCallDevURL</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The URL to use for <code><a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a></code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1260,9 +1263,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV21configWithRemoteForge8nodeURLs05parseE3URL04tzktO0013betterCallDevO0012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_A5OSo12NSURLSessionCAC11NetworkTypeOtFZ"></a>
-                    <a name="//apple_ref/swift/Method/configWithRemoteForge(nodeURLs:parseNodeURL:tzktURL:betterCallDevURL:tezosDomainsURL:objktApiURL:urlSession:networkType:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV21configWithRemoteForge8nodeURLs05parseE3URL04tzktO0013betterCallDevO0012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_A5OSo12NSURLSessionCAC11NetworkTypeOtFZ">configWithRemoteForge(nodeURLs:<wbr>parseNodeURL:<wbr>tzktURL:<wbr>betterCallDevURL:<wbr>tezosDomainsURL:<wbr>objktApiURL:<wbr>urlSession:<wbr>networkType:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift21TezosNodeClientConfigV21configWithRemoteForge8nodeURLs05parseE3URL04tzktO0012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_A2NSgA2PSo12NSURLSessionCAC07NetworkX0OtFZ"></a>
+                    <a name="//apple_ref/swift/Method/configWithRemoteForge(nodeURLs:parseNodeURL:tzktURL:tezosDomainsURL:objktApiURL:urlSession:networkType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift21TezosNodeClientConfigV21configWithRemoteForge8nodeURLs05parseE3URL04tzktO0012tezosDomainsO008objktApiO010urlSession11networkTypeACSay10Foundation0O0VG_A2NSgA2PSo12NSURLSessionCAC07NetworkX0OtFZ">configWithRemoteForge(nodeURLs:<wbr>parseNodeURL:<wbr>tzktURL:<wbr>tezosDomainsURL:<wbr>objktApiURL:<wbr>urlSession:<wbr>networkType:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1277,7 +1280,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">configWithRemoteForge</span><span class="p">(</span><span class="nv">nodeURLs</span><span class="p">:</span> <span class="p">[</span><span class="kt">URL</span><span class="p">],</span> <span class="nv">parseNodeURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">tzktURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">betterCallDevURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">tezosDomainsURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">objktApiURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">urlSession</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">,</span> <span class="nv">networkType</span><span class="p">:</span> <span class="kt"><a href="../Structs/TezosNodeClientConfig/NetworkType.html">NetworkType</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TezosNodeClientConfig</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">configWithRemoteForge</span><span class="p">(</span><span class="nv">nodeURLs</span><span class="p">:</span> <span class="p">[</span><span class="kt">URL</span><span class="p">],</span> <span class="nv">parseNodeURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">tzktURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">tezosDomainsURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">objktApiURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?,</span> <span class="nv">urlSession</span><span class="p">:</span> <span class="kt">URLSession</span><span class="p">,</span> <span class="nv">networkType</span><span class="p">:</span> <span class="kt"><a href="../Structs/TezosNodeClientConfig/NetworkType.html">NetworkType</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TezosNodeClientConfig</span></code></pre>
 
                         </div>
                       </div>
@@ -1306,18 +1309,6 @@
                               <td>
                                 <div>
                                   <p>The URL to use for <code><a href="../Classes/TzKTClient.html">TzKTClient</a></code>.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>betterCallDevURL</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The URL to use for <code><a href="../Classes/BetterCallDevClient.html">BetterCallDevClient</a></code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1356,7 +1347,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-11-18)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
