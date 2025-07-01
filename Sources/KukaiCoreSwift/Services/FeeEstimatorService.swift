@@ -108,7 +108,7 @@ public class FeeEstimatorService {
 		
 		switch self.config.forgingType {
 			case .local:
-				TaquitoService.shared.forge(operationPayload: operationPayload) { [weak self] forgedResult in
+				TaquitoService.shared.forge(operationPayload: operationPayload, protocolHash: operationMetadata.protocol) { [weak self] forgedResult in
 					self?.handleForge(forgeResult: forgedResult,
 									  operationPayload: operationPayload,
 									  operationMetadata: operationMetadata,

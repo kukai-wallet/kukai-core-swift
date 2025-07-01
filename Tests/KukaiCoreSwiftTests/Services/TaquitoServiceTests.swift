@@ -42,7 +42,7 @@ class TaquitoServiceTests: XCTestCase {
 		}
 		
 		let expectation = XCTestExpectation(description: "Forge payload 1")
-		TaquitoService.shared.forge(operationPayload: payload) { [weak self] forgeResult in
+		TaquitoService.shared.forge(operationPayload: payload, protocolHash: MockConstants.operationMetadata.protocol) { [weak self] forgeResult in
 			
 			switch forgeResult {
 				case .success(let forgedString):
@@ -65,7 +65,7 @@ class TaquitoServiceTests: XCTestCase {
 		}
 		
 		let expectation = XCTestExpectation(description: "Forge payload 2")
-		TaquitoService.shared.forge(operationPayload: payload) { [weak self] forgeResult in
+		TaquitoService.shared.forge(operationPayload: payload, protocolHash: MockConstants.operationMetadata.protocol) { [weak self] forgeResult in
 			
 			switch forgeResult {
 				case .success(let forgedString):
@@ -88,7 +88,7 @@ class TaquitoServiceTests: XCTestCase {
 		}
 		
 		let expectation = XCTestExpectation(description: "Forge payload 3")
-		TaquitoService.shared.forge(operationPayload: payload) { [weak self] forgeResult in
+		TaquitoService.shared.forge(operationPayload: payload, protocolHash: MockConstants.operationMetadata.protocol) { [weak self] forgeResult in
 			
 			switch forgeResult {
 				case .success(let forgedString):
@@ -111,7 +111,7 @@ class TaquitoServiceTests: XCTestCase {
 		let payload = OperationFactory.operationPayload(fromMetadata: errorMetaData, andOperations: [], walletAddress: address, base58EncodedPublicKey: key)
 		
 		let expectation = XCTestExpectation(description: "Forge payload Error")
-		TaquitoService.shared.forge(operationPayload: payload) { forgeResult in
+		TaquitoService.shared.forge(operationPayload: payload, protocolHash: MockConstants.operationMetadata.protocol) { forgeResult in
 			
 			switch forgeResult {
 				case .success(_):

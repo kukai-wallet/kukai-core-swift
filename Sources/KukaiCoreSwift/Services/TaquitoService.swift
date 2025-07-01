@@ -96,10 +96,11 @@ public class TaquitoService {
 	Note: Currently only one forge can take place at a time. Multiple simultaneous calls will result in an error being returned.
 	See package: https://github.com/ecadlabs/taquito/tree/master/packages/taquito-local-forging, and docs: https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html
 	- parameter operationPayload: The payload to forge. Can be constructed using `OperationFactory.operationPayload(...)`.
+	- parameter protocolHash: The payload has an optional slot for protocol, however the RPC will return an error on some RPCs, if its included due to strict JSON rules. So we need to duplicate this field as forging is too early in the process
 	- parameter completion: The underlying javascript code uses a Promise. In order to wrap this up into native Swift, we need to provide a completion callback to return the resulting hex string.
 	*/
-	public func forge(operationPayload: OperationPayload, completion: @escaping((Result<String, KukaiError>) -> Void)) {
-		if !setup(protocolHash: operationPayload.protocol) {
+	public func forge(operationPayload: OperationPayload, protocolHash: String, completion: @escaping((Result<String, KukaiError>) -> Void)) {
+		if !setup(protocolHash: protocolHash) {
 			completion(Result.failure(KukaiError.internalApplicationError(error: TaquitoServiceError.forgerNotSetup)))
 			return
 		}

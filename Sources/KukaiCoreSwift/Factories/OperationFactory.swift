@@ -368,7 +368,7 @@ public class OperationFactory {
 		}
 		
 		// return the structure the RPC is expecting to see
-		return OperationPayload(branch: metadata.branch, contents: ops, protocol: metadata.protocol)
+		return OperationPayload(branch: metadata.branch, contents: ops)
 	}
 	
 	/**
