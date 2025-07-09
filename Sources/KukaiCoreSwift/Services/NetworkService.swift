@@ -119,14 +119,12 @@ public class NetworkService {
 			
 			if let kukaiError = ErrorHandlingService.searchForSystemError(data: data, response: response, networkError: error, requestURL: url, requestData: body) {
 				NetworkService.logRequestFailed(loggingConfig: self?.loggingConfig, isPost: isPOST, fullURL: url, payload: body, error: error, statusCode: kukaiError.httpStatusCode, responseData: data)
-				//DispatchQueue.main.async { completion(Result.failure( kukaiError )) }
 				completion(Result.failure( kukaiError ))
 				return
 			}
 			
 			// If no errors found, check we have a valid data object
 			guard let d = data else {
-				//DispatchQueue.main.async { completion(Result.failure( KukaiError.unknown() )) }
 				completion(Result.failure( KukaiError.unknown() ))
 				return
 			}
@@ -137,7 +135,6 @@ public class NetworkService {
 			do {
 				// If the response type passed in is `Data`, just return the raw value without doing any parsing
 				if T.self == Data.self, let dt = d as? T {
-					//DispatchQueue.main.async { completion(Result.success(dt)) }
 					completion(Result.success(dt))
 					return
 				}
@@ -147,11 +144,9 @@ public class NetworkService {
 				
 				// Check for RPC errors, if none, return success
 				if let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode) {
-					//DispatchQueue.main.async { completion(Result.failure(rpcOperationError)) }
 					completion(Result.failure(rpcOperationError))
 					
 				} else {
-					//DispatchQueue.main.async { completion(Result.success(parsedResponse)) }
 					completion(Result.success(parsedResponse))
 				}
 				
@@ -163,9 +158,7 @@ public class NetworkService {
 				   let parsedResponse = try? JSONDecoder().decode([OperationResponse].self, from: d),
 				   let rpcOperationError = self?.checkForRPCOperationErrors(parsedResponse: parsedResponse, withRequestURL: url, requestPayload: body, responsePayload: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode)
 				{
-					//DispatchQueue.main.async { completion(Result.failure(rpcOperationError)) }
 					completion(Result.failure(rpcOperationError))
-					
 				}
 				
 				/// In extreme situations, where something completely incorrect is sent to the RPC (think i'll formed addresses or negative numbers). Instead of an object containing errors, you will just get a string containing something looking like a stacktrace
@@ -175,23 +168,19 @@ public class NetworkService {
 				{
 					var errorToReturn = KukaiError.unknown(withString: parsedResponse)
 					errorToReturn.addNetworkData(requestURL: url, requestJSON: body, responseJSON: d, httpStatusCode: (response as? HTTPURLResponse)?.statusCode)
-					
-					//DispatchQueue.main.async { completion(Result.failure( errorToReturn )) }
 					completion(Result.failure( errorToReturn ))
 				}
 				
 				/// If those don't work, just return the original error
 				else
 				{
-					//DispatchQueue.main.async {
-						if error is DecodingError {
-							// Specifically tag DecodingErrors, as can be an issue with GraphQL that clients want to more easily catch
-							completion(Result.failure( KukaiError.decodingError(error: error) ))
-							
-						} else {
-							completion(Result.failure( KukaiError.internalApplicationError(error: error) ))
-						}
-					//}
+					if error is DecodingError {
+						// Specifically tag DecodingErrors, as can be an issue with GraphQL that clients want to more easily catch
+						completion(Result.failure( KukaiError.decodingError(error: error) ))
+						
+					} else {
+						completion(Result.failure( KukaiError.internalApplicationError(error: error) ))
+					}
 				}
 				
 				return
