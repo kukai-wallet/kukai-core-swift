@@ -383,6 +383,7 @@ public class MediaProxyService: NSObject {
 		}
 		
 		context[.imageCache] = imageCache(forType: cacheType)
+		context[.callbackQueue] = SDCallbackQueue.global
 		
 		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
 		
