@@ -390,7 +390,13 @@ public class MediaProxyService: NSObject {
 		imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage, .retryFailed], context: context) { _, _, _ in
 			
 		} completed: { image, error, _, _ in
-			if let _ = error {
+			if let e = error {
+				if e.code == 2002 {
+					// Cancelled
+					completion?(nil)
+					return
+				}
+				
 				Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: error))")
 				imageView.image = fallback
 				completion?(nil)
