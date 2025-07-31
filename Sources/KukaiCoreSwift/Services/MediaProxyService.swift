@@ -366,52 +366,57 @@ public class MediaProxyService: NSObject {
 	 - parameter completion: returns when operation finished, if successful it will return the downloaded image's CGSize
 	 */
 	public static func load(url: URL?, to imageView: UIImageView, withCacheType cacheType: CacheType, fallback: UIImage, downSampleSize: CGSize? = nil, maxAnimatedImageSize: UInt? = nil, completion: ((CGSize?) -> Void)? = nil) {
-		guard let url = url else {
-			imageView.image = fallback
-			if let comp = completion { comp(nil) }
-			return
-		}
-		
-		
 		// Don't donwload real images during unit tests. Investigate mocking kingfisher
 		if Thread.current.isRunningXCTest { return }
 		
 		
-		var context: [SDWebImageContextOption: Any] = [:]
-		if let downSampleSize = downSampleSize {
-			context[.imageTransformer] = SDImageResizingTransformer(size: downSampleSize, scaleMode: .fill)
-		}
-		
-		context[.imageCache] = imageCache(forType: cacheType)
-		
-		imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
-		
-		// Set the image, but avoid auto setting it, so we can run some checks first, e.g. check if the animated image is too massive
-		imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage, .retryFailed], context: context) { _, _, _ in
-			
-		} completed: { image, error, _, _ in
-			if let e = error {
-				if e.code == 2002 {
-					// Cancelled
-					completion?(nil)
-					return
+		DispatchQueue.global(qos: .background).async {
+			guard let url = url else {
+				DispatchQueue.main.async { imageView.image = fallback }
+				if let comp = completion {
+					DispatchQueue.main.async { comp(nil) }
 				}
-				
-				Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: error))")
-				imageView.image = fallback
-				completion?(nil)
 				return
 			}
 			
-			
-			if (image?.images?.count ?? 0) > 0, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory {
-				imageView.image = image?.images?.first
-				
-			} else {
-				imageView.image = image
+			var context: [SDWebImageContextOption: Any] = [:]
+			if let downSampleSize = downSampleSize {
+				context[.imageTransformer] = SDImageResizingTransformer(size: downSampleSize, scaleMode: .fill)
 			}
 			
-			completion?(image?.size)
+			context[.imageCache] = imageCache(forType: cacheType)
+			
+			imageView.sd_imageIndicator = (isDarkMode) ? SDWebImageActivityIndicator.white : SDWebImageActivityIndicator.gray
+			
+			// Set the image, but avoid auto setting it, so we can run some checks first, e.g. check if the animated image is too massive
+			imageView.sd_setImage(with: url, placeholderImage: nil, options: [.avoidAutoSetImage, .retryFailed], context: context) { _, _, _ in
+				
+			} completed: { image, error, _, _ in
+				if let e = error {
+					if e.code == 2002 {
+						// Cancelled
+						DispatchQueue.main.async { completion?(nil) }
+						return
+					}
+					
+					Logger.kukaiCoreSwift.error("Error fetching: \(url.absoluteString), Error: \(String(describing: error))")
+					DispatchQueue.main.async {
+						imageView.image = fallback
+						completion?(nil)
+					}
+					return
+				}
+				
+				
+				if (image?.images?.count ?? 0) > 0, let maxMemory = maxAnimatedImageSize, (image?.sd_memoryCost ?? 0) > maxMemory {
+					DispatchQueue.main.async { imageView.image = image?.images?.first }
+					
+				} else {
+					DispatchQueue.main.async { imageView.image = image }
+				}
+				
+				DispatchQueue.main.async { completion?(image?.size) }
+			}
 		}
 	}
 	
