@@ -803,9 +803,9 @@ The JS can now be found on each github release here: <a href="https://github.com
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14KukaiCoreSwift14TaquitoServiceC5forge16operationPayload10completionyAA09OperationH0V_ys6ResultOySSAA0A5ErrorVGctF"></a>
-                    <a name="//apple_ref/swift/Method/forge(operationPayload:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14KukaiCoreSwift14TaquitoServiceC5forge16operationPayload10completionyAA09OperationH0V_ys6ResultOySSAA0A5ErrorVGctF">forge(operationPayload:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14KukaiCoreSwift14TaquitoServiceC5forge16operationPayload12protocolHash10completionyAA09OperationH0V_SSys6ResultOySSAA0A5ErrorVGctF"></a>
+                    <a name="//apple_ref/swift/Method/forge(operationPayload:protocolHash:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14KukaiCoreSwift14TaquitoServiceC5forge16operationPayload12protocolHash10completionyAA09OperationH0V_SSys6ResultOySSAA0A5ErrorVGctF">forge(operationPayload:<wbr>protocolHash:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -822,7 +822,7 @@ See package: <a href="https://github.com/ecadlabs/taquito/tree/master/packages/t
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">forge</span><span class="p">(</span><span class="nv">operationPayload</span><span class="p">:</span> <span class="kt"><a href="../Structs/OperationPayload.html">OperationPayload</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span> <span class="kt"><a href="../Structs/KukaiError.html">KukaiError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">forge</span><span class="p">(</span><span class="nv">operationPayload</span><span class="p">:</span> <span class="kt"><a href="../Structs/OperationPayload.html">OperationPayload</a></span><span class="p">,</span> <span class="nv">protocolHash</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span> <span class="kt"><a href="../Structs/KukaiError.html">KukaiError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
 
                         </div>
                       </div>
@@ -839,6 +839,18 @@ See package: <a href="https://github.com/ecadlabs/taquito/tree/master/packages/t
                               <td>
                                 <div>
                                   <p>The payload to forge. Can be constructed using <code><a href="../Classes/OperationFactory.html#/s:14KukaiCoreSwift16OperationFactoryC16operationPayload12fromMetadata13andOperations13walletAddress22base58EncodedPublicKeyAA0dG0VAA0dI0V_SayAA0D0CGS2StFZ">OperationFactory.operationPayload(...)</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>protocolHash</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The payload has an optional slot for protocol, however the RPC will return an error on some RPCs, if its included due to strict JSON rules. So we need to duplicate this field as forging is too early in the process</p>
                                 </div>
                               </td>
                             </tr>
@@ -874,7 +886,7 @@ See package: <a href="https://github.com/ecadlabs/taquito/tree/master/packages/t
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Wrapper around the node package @taquito/local-forging&rsquo;s prase method. Giving the ability to locally parse a hex string back into an <code><a href="../Structs/OperationPayload.html">OperationPayload</a></code>, without the need to use an RPC on a tezos node.
-Note: Currently only one parse can take place at a time. Multiple simultaneous calls will result in an error being returned.
+Note: Currently only one parse can take place at a time. Multiple simultaneous calls will result in an error being returned
 See package: <a href="https://github.com/ecadlabs/taquito/tree/master/packages/taquito-local-forging">https://github.com/ecadlabs/taquito/tree/master/packages/taquito-local-forging</a>, and docs: <a href="https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html">https://tezostaquito.io/typedoc/modules/_taquito_local_forging.html</a></p>
 
                       </div>
@@ -925,7 +937,7 @@ See package: <a href="https://github.com/ecadlabs/taquito/tree/master/packages/t
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-06-27)</p>
+          <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-08-01)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
