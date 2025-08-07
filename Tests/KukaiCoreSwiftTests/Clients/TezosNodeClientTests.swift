@@ -210,7 +210,7 @@ class TezosNodeClientTests: XCTestCase {
 			XCTAssert(success)
 			XCTAssert(error == nil)
 			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.isMainnet() == false)
-			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.chainName() == "ithacanet", MockConstants.shared.tezosNodeClient.networkVersion?.chainName() ?? "-")
+			XCTAssert(MockConstants.shared.tezosNodeClient.networkVersion?.chainName() == "ghostnet", MockConstants.shared.tezosNodeClient.networkVersion?.chainName() ?? "-")
 			
 			expectation.fulfill()
 		})

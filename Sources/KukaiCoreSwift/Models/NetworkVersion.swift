@@ -12,6 +12,8 @@ import Foundation
 public struct NetworkVersion: Codable {
 	
 	public static let chainName_mainnet = "mainnet"
+	public static let chainName_ghostnet = "ghostnet"
+	public static let chainName_ithacanet = "ithacanet"
 	
 	let network_version: network_version
 	
@@ -26,7 +28,15 @@ public struct NetworkVersion: Codable {
 			return "unknown"
 		}
 		
-		return chainComponents[1].lowercased()
+		let chainName = chainComponents[1].lowercased()
+		if chainName == NetworkVersion.chainName_ithacanet {
+			// ithacanet is a long long dead network, that ghostnet was spun up from. It doesn't exist anymore but ghostnet still refers to itself as ithacanet
+			// Anywhere this is seen, it is now only refering to ghostnet
+			return NetworkVersion.chainName_ghostnet
+			
+		} else {
+			return chainComponents[1].lowercased()
+		}
 	}
 	
 	public func isMainnet() -> Bool {
