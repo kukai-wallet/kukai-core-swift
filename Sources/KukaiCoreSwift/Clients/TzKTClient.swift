@@ -907,12 +907,18 @@ public class TzKTClient {
 				
 			} catch (let error) {
 				Logger.tzkt.error("Failed to parse incoming websocket data: \(error)")
-				self?.signalrConnection?.stop()
+				
+				DispatchQueue.global(qos: .background).async { [weak self] in
+					self?.signalrConnection?.stop()
+				}
 				self?.isListening = false
 			}
 		})
 		signalrConnection?.delegate = self
-		signalrConnection?.start()
+		
+		DispatchQueue.global(qos: .background).async { [weak self] in
+			self?.signalrConnection?.start()
+		}
 	}
 	
 	/**
@@ -920,7 +926,9 @@ public class TzKTClient {
 	 */
 	public func stopListeningForAccountChanges() {
 		Logger.tzkt.info("Cancelling listenForAccountChanges")
-		signalrConnection?.stop()
+		DispatchQueue.global(qos: .background).async { [weak self] in
+			self?.signalrConnection?.stop()
+		}
 		isListening = false
 	}
 	
@@ -1400,7 +1408,11 @@ extension TzKTClient: HubConnectionDelegate {
 		signalrConnection?.invoke(method: "SubscribeToAccounts", subscription) { [weak self] error in
 			if let error = error {
 				Logger.tzkt.error("Subscribe to account changes failed: \(error)")
-				self?.signalrConnection?.stop()
+				
+				DispatchQueue.global(qos: .background).async { [weak self] in
+					self?.signalrConnection?.stop()
+				}
+				
 				self?.isListening = false
 			} else {
 				Logger.tzkt.info("Subscribe to account changes succeeded, waiting for objects")
