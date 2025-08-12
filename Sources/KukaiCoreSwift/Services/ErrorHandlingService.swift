@@ -297,6 +297,9 @@ public class ErrorHandlingService {
 			case "tez.subtraction_underflow":
 				return "Your account does not have enough XTZ to complete the transaction."
 				
+			case "operation.cannot_stake_with_unfinalizable_unstake_requests_to_another_delegate":
+				return "You cannot stake funds with another baker, until your previous staked funds have become available. You can see pending unstake requests by tapping on your XTZ balance on the account tab"
+				
 			
 			// known michelson contract related errors (e.g. insufficent balance for a known token standard)
 			// can appear in 2 places
