@@ -21,7 +21,7 @@ class DataTests: XCTestCase {
 	func testData() {
 		let data = "Hello, World".data(using: .utf8)
 		
-		XCTAssert(data?.bytes == [72, 101, 108, 108, 111, 44, 32, 87, 111, 114, 108, 100], "\(data?.bytes ?? [0])")
+		XCTAssert(data?.bytes() == [72, 101, 108, 108, 111, 44, 32, 87, 111, 114, 108, 100], "\(data?.bytes() ?? [0])")
 		XCTAssert(data?.hexString == "48656c6c6f2c20576f726c64", data?.hexString ?? "-")
 	}
 }
