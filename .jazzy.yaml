@@ -5,4 +5,4 @@ xcodebuild_arguments:
   - "-scheme"
   - "KukaiCoreSwift"
   - "-destination"
-  - "platform=iOS Simulator,OS=18.0,name=iPhone 16"
+  - "platform=iOS Simulator,OS=26.0,name=iPhone 17"

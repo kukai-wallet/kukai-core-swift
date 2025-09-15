@@ -14,7 +14,7 @@ jobs:
     runs-on: macos-14
     steps:
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_15.2.app/Contents/Developer'
+        run: sudo xcode-select -s '/Applications/Xcode_26.app/Contents/Developer'
         
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
@@ -28,7 +28,7 @@ jobs:
          languages: "swift"
 
       - name: Test
-        run: xcodebuild -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=17.2,name=iPhone 15" -resultBundlePath "~/xcode-$NOW.xcresult"
+        run: xcodebuild -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=26.0,name=iPhone 17" -resultBundlePath "~/xcode-$NOW.xcresult"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
