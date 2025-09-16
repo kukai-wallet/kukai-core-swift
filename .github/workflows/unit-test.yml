@@ -13,42 +13,28 @@ on:
 jobs:
   setup:
     uses: kukai-wallet/ios_shared_ci/.github/workflows/shared_setup.yml@main
-
-  process-setup:
+    
+  test:
+    name: Running unit tests
     needs: setup
     runs-on: ${{ fromJSON(needs.setup.outputs.IOS_SHARED_SETUP_RUNS_ON) }}
     steps:
+      - name: Select Xcode version
+        run: sudo xcode-select -s ${{ needs.setup.outputs.IOS_SHARED_SETUP_XCODE_VERSION }}
+        
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Get current date
+        run: echo "NOW=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
 
       - name: Test
-        run: |
-          echo "IOS_SHARED_SETUP_RUNS_ON: ${{ needs.setup.outputs.IOS_SHARED_SETUP_RUNS_ON }}"
-          echo "IOS_SHARED_SETUP_RUNS_ON: ${{ needs.setup.outputs.IOS_SHARED_SETUP_XCODE_VERSION }}"
-          echo "IOS_SHARED_SETUP_RUNS_ON: ${{ needs.setup.outputs.IOS_SHARED_SETUP_SIMULATOR_VERSION }}"
+        run: xcodebuild test -scheme KukaiCoreSwift -destination ${{ needs.setup.outputs.IOS_SHARED_SETUP_SIMULATOR_VERSION }} -enableCodeCoverage YES -resultBundlePath "~/xcode-$NOW.xcresult"
 
-
-
-  # test:
-  #   name: Running unit tests
-  #   runs-on: macos-15
-  #   steps:
-  #     - name: Select Xcode version
-  #       #run: sudo xcode-select -s '/Applications/Xcode_14.3.1.app/Contents/Developer'
-  #       run: sudo xcode-select -s '/Applications/Xcode_26.0.app/Contents/Developer'
-        
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4.1.1
-
-  #     - name: Get current date
-  #       run: echo "NOW=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
-
-  #     - name: Test
-  #       #run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=16.4,name=iPhone 14" -enableCodeCoverage YES -resultBundlePath "~/xcode-$NOW.xcresult"
-  #       run: xcodebuild test -scheme KukaiCoreSwift -destination "platform=iOS Simulator,OS=26.0,name=iPhone 17" -enableCodeCoverage YES -resultBundlePath "~/xcode-$NOW.xcresult"
-
-  #     - name: Upload results
-  #       if: ${{ success() || failure() }}
-  #       uses: actions/upload-artifact@v4.3.1
-  #       with:
-  #         name: "results-${{ env.NOW }}.xcresult"
-  #         path: "~/xcode-${{ env.NOW }}.xcresult"
+      - name: Upload results
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: "results-${{ env.NOW }}.xcresult"
+          path: "~/xcode-${{ env.NOW }}.xcresult"
       
