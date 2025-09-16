@@ -16,7 +16,7 @@ jobs:
 
   process-setup:
     needs: setup
-    runs-on: ${{ needs.setup.outputs.IOS_SHARED_SETUP_RUNS_ON }}
+    runs-on: ${{ fromJSON(needs.setup.outputs.IOS_SHARED_SETUP_RUNS_ON) }}
     steps:
 
       - name: Test
