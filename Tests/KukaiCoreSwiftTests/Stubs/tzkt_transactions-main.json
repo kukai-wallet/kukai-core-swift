@@ -1014,8 +1014,7 @@
             "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
         },
         "stakingUpdatesCount": 1,
-        "status": "applied",
-        "kind": "unstake"
+        "status": "applied"
     },
     {
         "type": "staking",
@@ -1039,8 +1038,7 @@
             "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
         },
         "stakingUpdatesCount": 2,
-        "status": "applied",
-        "kind": "stake"
+        "status": "applied"
     },
     {
         "type": "staking",
@@ -1064,7 +1062,6 @@
             "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
         },
         "stakingUpdatesCount": 2,
-        "status": "applied",
-        "kind": "finalize"
+        "status": "applied"
     }
 ]

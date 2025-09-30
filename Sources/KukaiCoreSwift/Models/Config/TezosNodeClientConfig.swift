@@ -17,6 +17,7 @@ public struct TezosNodeClientConfig {
 	public enum NetworkType: String {
 		case mainnet
 		case ghostnet
+		case shadownet
 		case protocolnet
 		case nextnet
 		case experimental
@@ -49,6 +50,22 @@ public struct TezosNodeClientConfig {
 		public static let tezosDomainsURL = URL(string: "https://api.tezos.domains/graphql")!
 		
 		/// The default mainnet URL to use for `objktApiURL`, For more information on this service, see: https://public-api-v3-20221206.objkt.com/docs/
+		public static let objktApiURL = URL(string: "https://data.objkt.com/v3/graphql")!
+	}
+	
+	/// Preconfigured struct with all the URL's needed to work with Tezos testnet
+	public struct defaultShadownetURLs {
+		
+		/// The default testnet URLs to use for estimating and injecting operations
+		public static let nodeURLs = [URL(string: "https://rpc.shadownet.teztnets.com")!]
+		
+		/// The default testnet URL to use for `tzktURL`, For more information on this service, see: https://api.tzkt.io/
+		public static let tzktURL = URL(string: "https://api.shadownet.tzkt.io/")!
+		
+		/// The default testnet URL to use for `tezosDomainsURL`, For more information on this service, see: https://tezos.domains/
+		public static let tezosDomainsURL = URL(string: "https://shadownet-api.tezos.domains/graphql")!
+		
+		/// The default testnet URL to use for `objktApiURL`, For more information on this service, see: https://public-api-v3-20221206.objkt.com/docs/
 		public static let objktApiURL = URL(string: "https://data.objkt.com/v3/graphql")!
 	}
 	
@@ -135,6 +152,13 @@ public struct TezosNodeClientConfig {
 				tzktURL = TezosNodeClientConfig.defaultMainnetURLs.tzktURL
 				tezosDomainsURL = TezosNodeClientConfig.defaultMainnetURLs.tezosDomainsURL
 				objktApiURL = TezosNodeClientConfig.defaultMainnetURLs.objktApiURL
+			
+			case .shadownet:
+				nodeURLs = TezosNodeClientConfig.defaultShadownetURLs.nodeURLs
+				forgingType = .local
+				tzktURL = TezosNodeClientConfig.defaultShadownetURLs.tzktURL
+				tezosDomainsURL = TezosNodeClientConfig.defaultShadownetURLs.tezosDomainsURL
+				objktApiURL = TezosNodeClientConfig.defaultShadownetURLs.objktApiURL
 			
 			case .ghostnet:
 				nodeURLs = TezosNodeClientConfig.defaultGhostnetURLs.nodeURLs
