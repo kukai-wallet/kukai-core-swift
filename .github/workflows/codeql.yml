@@ -11,7 +11,7 @@ on:
 jobs:
   deploy:
     name: Running unit tests
-    runs-on: macos-14
+    runs-on: macos-26
     steps:
       - name: Select Xcode version
         run: sudo xcode-select -s '/Applications/Xcode_26.0.app/Contents/Developer'
