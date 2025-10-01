@@ -1063,5 +1063,31 @@
         },
         "stakingUpdatesCount": 2,
         "status": "applied"
+    },
+    {
+        "type": "staking",
+        "id": 2090186195337216,
+        "level": 1672987,
+        "timestamp": "2025-09-20T15:39:44Z",
+        "hash": "opSBBKCBEHYf8tPjZznPD6ceWNXnABCJU5i9pzzF8x7yyk94M2F",
+        "sender": {
+            "address": "tz1i92Eptw7UZ8JSb8j8jBFJ9Poa4TTnSQwZ"
+        },
+        "staker": {
+            "address": "tz1Ue76bLW7boAcJEZf2kSGcamdBKVi4Kpss"
+        },
+        "counter": 178264716,
+        "gasLimit": 2169,
+        "gasUsed": 1661,
+        "storageLimit": 0,
+        "bakerFee": 493,
+        "action": "finalize",
+        "requestedAmount": 0,
+        "amount": 980000,
+        "baker": {
+            "address": "tz1YgDUQV2eXm8pUWNz3S5aWP86iFzNp4jnD"
+        },
+        "stakingUpdatesCount": 1,
+        "status": "applied"
     }
 ]

@@ -80,6 +80,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	public let counter: Decimal?
 	public let initiater: TzKTAddress?
 	public let sender: TzKTAddress?
+	public let staker: TzKTAddress?
 	public var bakerFee: XTZAmount?
 	public var storageFee: XTZAmount?
 	public var allocationFee: XTZAmount?
@@ -132,7 +133,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 	// MARK: - Codable Protocol
 	
 	public enum CodingKeys: String, CodingKey {
-		case type, id, level, timestamp, hash, counter, initiater, sender, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, baker, period, amount, parameter, status, subType, entrypointCalled, primaryToken, hasInternals, tokenTransfersCount, errors, action
+		case type, id, level, timestamp, hash, counter, initiater, sender, staker, bakerFee, storageFee, allocationFee, target, prevDelegate, newDelegate, baker, period, amount, parameter, status, subType, entrypointCalled, primaryToken, hasInternals, tokenTransfersCount, errors, action
 	}
 	
 	/// Manually init a `TzKTTransaction`
@@ -146,6 +147,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.counter = counter
 		self.initiater = initiater
 		self.sender = sender
+		self.staker = nil
 		self.bakerFee = bakerFee
 		self.storageFee = storageFee
 		self.allocationFee = allocationFee
@@ -177,6 +179,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		self.counter = 0
 		self.initiater = sourceAddress
 		self.sender = sourceAddress ?? from.token.contract
+		self.staker = nil
 		self.bakerFee = .zero()
 		self.storageFee = .zero()
 		self.allocationFee = .zero()
@@ -211,6 +214,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		counter = try container.decodeIfPresent(Decimal.self, forKey: .counter)
 		initiater = try? container.decode(TzKTAddress.self, forKey: .initiater)
 		sender = try container.decodeIfPresent(TzKTAddress.self, forKey: .sender)
+		staker = try container.decodeIfPresent(TzKTAddress.self, forKey: .staker)
 		target = try? container.decode(TzKTAddress.self, forKey: .target)
 		prevDelegate = try? container.decode(TzKTAddress.self, forKey: .prevDelegate)
 		newDelegate = try? container.decode(TzKTAddress.self, forKey: .newDelegate)
@@ -264,6 +268,7 @@ public struct TzKTTransaction: Codable, CustomStringConvertible, Hashable, Ident
 		try container.encode(counter, forKey: .counter)
 		try container.encode(initiater, forKey: .initiater)
 		try container.encode(sender, forKey: .sender)
+		try container.encode(staker, forKey: .staker)
 		try container.encode(target, forKey: .target)
 		try container.encode(prevDelegate, forKey: .prevDelegate)
 		try container.encode(newDelegate, forKey: .newDelegate)
