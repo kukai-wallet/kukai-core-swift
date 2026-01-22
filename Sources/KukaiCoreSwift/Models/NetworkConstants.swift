@@ -36,7 +36,7 @@ public struct NetworkConstants: Codable {
 	}
 	
 	public func maxGasPerBlock() -> Int {
-		return Int(hard_gas_limit_per_block) ?? 1386666
+		return Int(hard_gas_limit_per_block) ?? 1040000
 	}
 	
 	public func maxStoragePerOperation() -> Int {
