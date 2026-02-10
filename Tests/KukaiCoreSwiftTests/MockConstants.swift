@@ -222,9 +222,9 @@ public struct MockConstants {
 		tzktLastBakerRewardURL7.appendQueryItem(name: "sender.in", value: "tz1S5WxdZR5f9NzsPXhr7L9L1vrEb5spZFur,tz1gnuBF9TbBcgHPV2mUE96tBrW7PxqRmx1h")
 		
 		var tzktDelegatesURL = tzktURL.appendingPathComponent("v1/delegates")
-		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
+		tzktDelegatesURL.appendQueryItem(name: "select.values", value: "address,alias,balance,stakedBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
 		tzktDelegatesURL.appendQueryItem(name: "active", value: "true")
-		tzktDelegatesURL.appendQueryItem(name: "sort.desc", value: "stakingBalance")
+		tzktDelegatesURL.appendQueryItem(name: "sort.desc", value: "stakedBalance")
 		tzktDelegatesURL.appendQueryItem(name: "limit", value: 10)
 		
 		var simulateURL1 = baseURL.appendingPathComponent("chains/main/blocks/head/helpers/scripts/simulate_operation")

@@ -273,9 +273,9 @@ public class TzKTClient {
 			}
 			
 			url.appendPathComponent("v1/delegates")
-			url.appendQueryItem(name: "select.values", value: "address,alias,balance,stakingBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
+			url.appendQueryItem(name: "select.values", value: "address,alias,balance,stakedBalance,limitOfStakingOverBaking,edgeOfBakingOverStaking")
 			url.appendQueryItem(name: "active", value: "true")
-			url.appendQueryItem(name: "sort.desc", value: "stakingBalance")
+			url.appendQueryItem(name: "sort.desc", value: "stakedBalance")
 			url.appendQueryItem(name: "limit", value: 10)
 			
 			networkService.request(url: url, isPOST: false, withBody: nil, forReturnType: Data.self) { result in
@@ -371,7 +371,7 @@ public class TzKTClient {
 					let address = json["address"],
 					let alias = json["alias"],
 					let balance = json["balance"],
-					let stakingBalance = json["stakingBalance"],
+					let stakingBalance = json["stakedBalance"],
 					let limit = json["limitOfStakingOverBaking"],
 					let edge = json["edgeOfBakingOverStaking"] {
 					
